@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref, defineEmits, watch, onMounted } from 'vue'
+import { Ref, ref, watch, onMounted } from 'vue'
 import NoChoseRadio from '@/assets/img/no-chose-radio.png'
 import HasChoseRadio from '@/assets/img/has-chose-radio.png'
 import { PATTERNANALYSIS, FILTERDATA, SUBSIDY, Subsidy } from './data'

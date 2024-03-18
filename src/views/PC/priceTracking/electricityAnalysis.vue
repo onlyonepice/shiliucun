@@ -283,7 +283,7 @@ onMounted(() => {
   @include widthAndHeight(100%, 418px);
 }
 
-::v-deep(.no-close-one) {
+:deep(.no-close-one) {
   .el-select__tags {
 
     // padding-right: 9px !important;

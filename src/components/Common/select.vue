@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, defineProps,ref,defineEmits } from 'vue'
+import { watch,ref } from 'vue'
 const emit = defineEmits(['onChange'])
 const props = defineProps({
   // 筛选项宽度
@@ -133,7 +133,7 @@ function handleChange(data){
   @include font(14px,400,#1C232F,22px);
   border-left: 1px solid #E5E6EA;
 }
-::v-deep .select__input .el-input__wrapper{
+:deep .select__input .el-input__wrapper{
   @include widthAndHeight(100%,32px);
   background: rgba(255,255,255,0);
   border: 1px solid rgba(0,0,0,0);
@@ -141,7 +141,7 @@ function handleChange(data){
     box-shadow: none;
   }
 }
-::v-deep .select__input .el-input__wrapper.is-focus{
+:deep .select__input .el-input__wrapper.is-focus{
   background: #ffffff !important;
   box-sizing: border-box;
   box-shadow: none;

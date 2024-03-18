@@ -60,7 +60,7 @@ import image from '@/assets/img/icon_hint_nor.png';
 import ElectricityAnalysis from './electricityAnalysis.vue'
 import ElectricityPricePeriod from './electricityPricePeriod.vue'
 import ExportCanvasDialog from './components/exportCanvasDialog.vue'
-import { onMounted, defineProps, computed, watch, Ref, ref, onBeforeUnmount } from 'vue'
+import { onMounted, computed, watch, Ref, ref, onBeforeUnmount } from 'vue'
 import { eChartsOptionCommon, computedColor, titleStyle, textStyle, flexStyle } from '@/utils/eCharts'
 import { vLoading } from 'element-plus'
 const eChartsOption: Ref<any> = ref({
@@ -203,7 +203,7 @@ function handleSelectPriceType(id) {
     handlePriceDifferenceData()
   }
 }
-/* 
+/*
   getData
 */
 // 获取放电策略
@@ -269,7 +269,7 @@ async function getMonthByTimes() {
     loading.value = false
   }
 }
-/* 
+/*
   change
 */
 // 地区 change

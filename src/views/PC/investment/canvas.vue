@@ -29,7 +29,7 @@
 
 <script lang="ts" setup>
 import { cloneDeep } from 'lodash'
-import { ref, Ref, onMounted, defineProps, computed, defineEmits, watch } from 'vue'
+import { ref, Ref, onMounted, computed, watch } from 'vue'
 import * as echarts from 'echarts'
 import 'echarts/lib/chart/line'
 import { eChartsOptionCommon, computedColor, titleStyle, textStyle, flexStyle } from '@/utils/eCharts'

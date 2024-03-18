@@ -15,7 +15,7 @@ interface NAVLIST {
   text: string;
   path: string
 }
-import { onMounted, Ref, ref, defineEmits } from 'vue'
+import { onMounted, Ref, ref } from 'vue'
 import { useRouter } from "vue-router";
 import EnergyLogo from '@/assets/img/energy-logo.png'
 const emit = defineEmits(['onHashChange'])

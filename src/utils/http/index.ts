@@ -10,7 +10,9 @@ import {
   PureHttpRequestConfig,
   defaultProjectConfig
 } from "./types.d";
+import { encrypt } from "@EESA/components/src/librarys/jsencrypt";
 import { ElMessage } from "element-plus"
+import { getToken } from "@/utils/auth";
 import { stringify } from "qs";
 const { VITE_GLOB_API_URL } = import.meta.env;
 
@@ -61,6 +63,22 @@ class PureHttp {
 
         // 定义请求链接
         config.url = `${VITE_GLOB_API_URL}${config.url}`;
+        // 接口加密
+        config.headers["sign"] = encrypt(config);
+        // 添加token
+        const token = getToken();
+        if (token) {
+          config.headers["Authorization"] = "Bearer " + token;
+        } else {
+          config.headers["Authorization"] =
+            "Basic " +
+            window.btoa(
+              defaultProjectConfig.clientId +
+                ":" +
+                defaultProjectConfig.clientSecret
+            );
+        }
+
         return config
       },
       error => {
