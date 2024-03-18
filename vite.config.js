@@ -6,7 +6,6 @@ import { warpperEnv } from "./build";
 import { getPluginsList } from "./build/plugins";
 import { include, exclude } from "./build/optimize";
 import { loadEnv } from "vite";
-import { VantResolver } from '@vant/auto-import-resolver';
 import Components from 'unplugin-vue-components/vite'
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root = process.cwd();
@@ -58,7 +57,7 @@ export default ({ command, mode }) => {
     },
     plugins: [getPluginsList(command, VITE_CDN, VITE_COMPRESSION),
     Components({
-      resolvers: [VantResolver()],
+      resolvers: [],
     }),],
     // https://cn.vitejs.dev/config/dep-optimization-options.html#dep-optimization-options
     optimizeDeps: {

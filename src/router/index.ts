@@ -25,27 +25,7 @@ const routes = [
     meta: {
       title: "精控能源"
     }
-  },
-  {
-    path: "/ipotisedge/PC/priceTracking",
-    name: "PCPriceTracking",
-    components: {
-      default: () => import("@/views/PC/enter.vue"),
-    },
-    meta: {
-      title: "精控能源"
-    }
-  },
-  {
-    path: "/ipotisedge/mobile",
-    name: "MobilePriceTracking",
-    components: {
-      default: () => import("@/views/MOBILE/enter.vue"),
-    },
-    meta: {
-      title: "精控能源"
-    }
-  },
+  }
 ];
 
 Object.keys(modules).forEach(key => {

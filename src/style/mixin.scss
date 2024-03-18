@@ -14,7 +14,7 @@
 /**
   盒样式
 **/
-@mixin box($padding: none, $margin: none, $background: none, $borderRadius: 0, $border: none, $boxShadow: none) {
+@mixin box( $padding: 'none', $margin: 'none', $background: 'none', $borderRadius: 'none', $border: 'none', $boxShadow: 'none'){
   box-sizing: border-box;
   padding: $padding;
   margin: $margin;
@@ -23,6 +23,7 @@
   border: $border;
   box-shadow: $boxShadow;
 }
+
 
 // 设置 flex 布局
 @mixin flex($align: center, $justify: center, $wrap: wrap) {
@@ -76,4 +77,13 @@
   right: $right;
   bottom: $bottom;
   left: $left;
+}
+
+// 文字超出一行显示省略
+@mixin textOverflow( $number: 1 ) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $number;
+  -webkit-box-orient: vertical;
 }

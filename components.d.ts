@@ -7,14 +7,10 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    MultiplePicker: typeof import('./src/components/MOBLIE/MultiplePicker.vue')['default']
     NavBar: typeof import('./src/components/NavBar.vue')['default']
     Picker: typeof import('./src/components/picker.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/select.vue')['default']
-    VanField: typeof import('vant/es')['Field']
-    VanPicker: typeof import('vant/es')['Picker']
-    VanPopup: typeof import('vant/es')['Popup']
   }
 }
