@@ -29,6 +29,7 @@ onMounted(()=>{
     document.getElementById('app').style.minHeight = 'none'
     router.push('/ipotisedge/mobile')
   }
+  console.log('ppppp')
 })
 </script>
 
