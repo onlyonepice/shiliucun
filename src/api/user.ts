@@ -13,3 +13,14 @@ export const getUserInfo = () => {
   return http.request<{ datas; resp_code }>("get", "/api-user/users/current");
 };
 
+//获取图片域名
+export const configListBefore = params => {
+  return http.request<void>("get", "/api-user/configListBefore/", {
+    params: { value: params }
+  });
+};
+
+// 获取加密密钥
+export const getPublicKeyApi = () => {
+  return http.request<void>("post", "/api-uaa/clients/findPublicKey");
+};
