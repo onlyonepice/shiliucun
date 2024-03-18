@@ -1,0 +1,150 @@
+<template>
+  <div class="select" :style="{'width': width}">
+    <span v-if="props.title !== ''" class="select__title">{{ props.title }}</span>
+    <el-select
+      v-if="props.type === 'select'"
+      v-model="value"
+      placeholder="请选择"
+      class="select__content"
+      @change="handleChange"
+      :disabled="props.disabled"
+    >
+      <el-option
+        v-for="item in options"
+        :key="item[valueKey]"
+        :label="item[labelKey]"
+        :value="item[valueKey]"
+      />
+    </el-select>
+    <div v-if="props.type === 'input'" class="select__input select__content">
+      <el-input v-model="value" placeholder="请输入" :type="props.specialType" :disabled="props.disabled" @input="handleChange" />
+      <span class="select__input-desc">{{inputText}}</span>
+    </div>
+    <div v-if="props.type === 'number'" class="select__input select__content">
+      <el-input-number v-model="value" placeholder="请输入" controls-position="right" :min="0" :max="100" :disabled="props.disabled" @input="handleChange" />
+    </div>
+    <div v-if="props.type === 'cascader'" class="select__input select__content">
+      <el-cascader v-model="value" placeholder="请选择" :options="options" :props="cascaderOption" :disabled="props.disabled" @change="handleChange"  />
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { watch, defineProps,ref,defineEmits } from 'vue'
+const emit = defineEmits(['onChange'])
+const props = defineProps({
+  // 筛选项宽度
+  width: {
+    type: String,
+    default: '48%'
+  },
+  // 输入框/选择器标题
+  title: {
+    type: String,
+    default: ''
+  },
+  // 输入框右边文字
+  inputText: {
+    type: String,
+    default: ''
+  },
+  // 筛选项还是输入框
+  type: {
+    type: String,
+    default: 'select'
+  },
+  specialType: {
+    type: String,
+    default: 'text'
+  },
+  placeholder: {
+    type: String,
+    default: '请选择'
+  },
+  options: {
+    type: Array,
+    default: () => []
+  },
+  valueKey: {
+    type: String,
+    default: 'value'
+  },
+  labelKey: {
+    type: String,
+    default: 'label'
+  },
+  defaultValue: {
+    type: [Number, String],
+    default: ''
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  cascaderOption: {
+    type: Object,
+    default: () => {}
+  }
+})
+const value:any = ref('') // 选中值
+
+watch(
+  ()=>props.defaultValue,
+  val => {value.value = val;},
+  { immediate: true }
+)
+// 通过onChange事件传递值给父组件
+function handleChange(data){
+  emit('onChange',data)
+}
+</script>
+
+<style scoped lang="scss">
+@import "@/style/mixin.scss";
+.select{
+  @include widthAndHeight(30%,32px);
+  @include flex(center,flex-start);
+  @include margin(0,24px,16px,0);
+}
+.select:nth-of-type(2n){
+  @include margin(0,0,16px,0);
+}
+.select__title{
+  @include margin(0,44px,0,0);
+  @include font(14px,400,#5B6985,22px);
+}
+.select__content{
+  flex: 1;
+}
+.select__input{
+  @include widthAndHeight(48%,32px);
+  @include relative();
+  border-radius: 4px;
+  background-color: #F4F5F7;
+  &:hover{
+    box-shadow: none;
+    background-color: #e5e6ec;
+  }
+}
+.select__input-desc{
+  @include widthAndHeight(auto,32px);
+  @include absolute(1,0,0,none,none);
+  @include box(5px 16px,none,none,0);
+  @include font(14px,400,#1C232F,22px);
+  border-left: 1px solid #E5E6EA;
+}
+::v-deep .select__input .el-input__wrapper{
+  @include widthAndHeight(100%,32px);
+  background: rgba(255,255,255,0);
+  border: 1px solid rgba(0,0,0,0);
+  &:hover{
+    box-shadow: none;
+  }
+}
+::v-deep .select__input .el-input__wrapper.is-focus{
+  background: #ffffff !important;
+  box-sizing: border-box;
+  box-shadow: none;
+  border: 1px solid #507EF7;
+}
+</style>

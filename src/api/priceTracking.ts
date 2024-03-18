@@ -1,0 +1,65 @@
+import { http } from "@/utils/http";
+interface Request {
+  code: number
+  data: any
+}
+// 退出登录
+export const loginOutApi = token => {
+  return http.request<Request>(
+    "post",
+    `/api-uaa/oauth/remove/token?access_token=${token}`
+  );
+};
+
+//获取地区数据
+export const apiRegionalData = (params: { type: string } | null) => {
+  return http.request<Request>("get", "/electricity/electricityPriceTracking/front/v1.1/queryRegionIds", { params });
+};
+// 分股价差筛选项
+export const getPeakAndValley = () => {
+  return http.request<Request>("post", '/electricity/electricityPriceTracking/front/v1.1/getPeakValleySpread')
+}
+// 获取电压等级 
+export const getVoltageLevel = (params) => {
+  return http.request<Request>("post", '/electricity/electricityPriceTracking/front/v1.1/getTariffLevelIdByElectricityTypeOneName', { params })
+}
+// 获取月份
+export const getMonth = (params) => {
+  return http.request<Request>("post", '/electricity/electricityPriceTracking/front/v1.1/getYearsByRegionElectricityTypeOneName', { params })
+}
+// 各省峰谷时段
+export const getNewTimeSharing = () => {
+  return http.request<Request>("post", '/electricity/electricityFutureTimeShare/front/v1.1/getNewTimeSharing',)
+}
+// 获取差异排名
+export const getDifferentialRanking = (data) => {
+  return http.request<Request>("post", '/electricity/electricityPriceTracking/front/v1.1/getDifferentialRanking', { data })
+}
+// 时/月-获取用电类型2
+export const getElectricityType = (params) => {
+  return http.request<Request>("get", '/electricity/electricityPriceTracking/front/v1.1/getElectricityType', { params })
+}
+// 分时月份
+export const getMonthByTime = (data) => {
+  return http.request<Request>("post", '/electricity/electricityTimeShare/front/v1.1/getSelectMonth', { data })
+}
+// 分月电价
+export const getMonthPrice = (data) => {
+  return http.request<Request>("post", '/electricity/electricityPriceTracking/front/v1.1/getMonthlyTariff', { data })
+}
+// 分时电价
+export const getTimePrice = (data) => {
+  return http.request<Request>("post", '/electricity/electricityTimeShare/front/v1.1/getTimeElectricityPrice', { data })
+}
+// 获取分月差价
+export const getMonthDifference = (data) => {
+  return http.request<Request>("post", '/electricity/electricityPriceTracking/front/v1.1/getMonthlyDifference', { data })
+}
+// 请求放电策略
+export const getDischargeStrategy = (params) => {
+  return http.request<Request>("get", '/investment/investmentIndustryCommerce/front/v1.1/getChargeDischargeStrategy', { params })
+}
+// 获取各省峰谷时段电价图片
+export const getPeakAndValleyImage = () => {
+  return http.request<Request>("post", '/electricity/electricityFutureTimeShare/front/v1.1/getNewTimeSharingPicture')
+}
