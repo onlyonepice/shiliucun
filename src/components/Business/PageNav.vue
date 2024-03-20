@@ -1,8 +1,8 @@
 <template>
   <nav :class="[ns.b(), ns.m('opacity'), choseExtra ? ns.m('open') : '']">
     <div v-if="opacityBg" :class="['es-commonPage', ns.b('content')]">
-      <img :src="choseExtra ? LogoIconBlue : LogoIcon" alt="">
-      <div :class="[ns.b('list')]" @mouseleave="onChoseLeave()">
+      <img :src="choseExtra ? LogoIconBlue : LogoIcon" alt="" @mouseleave="onChoseLeave()">
+      <div :class="[ns.b('list')]" >
         <div v-for="item in navList" :key="item.id" @mouseenter.stop="onChoseNav(item.id, item.path)" @mouseleave="onChoseNavItemLeave()" :class="choseNavId === item.id ? ns.bm('list','chose') : ''">{{ item.text }}</div>
         <div :class="ns.b('underline')" :style="{ 'left': `${ (88 + 16) * (choseNavId - 1) }px` }"></div>
         <p :class="ns.b('login')">登录/注册</p>
