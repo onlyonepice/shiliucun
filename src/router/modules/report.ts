@@ -7,4 +7,14 @@ export default {
   meta: {
     title: "报告"
   },
+  children: {
+    path: "/reportDetail",
+    name: "ReportDetail",
+    components: {
+      default: () => import("@/views/report/reportDetail/index.vue"),
+    },
+    meta: {
+      title: "报告详情"
+    },
+  }
 };

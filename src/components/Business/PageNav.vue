@@ -59,7 +59,7 @@ const choseExtraContent: Ref<boolean> = ref(false); // 打开下拉菜单
 // 导航栏数组
 const navList: Ref<Array<NavList>> = ref([
   { id: 1, text: '首页', path: ["/home",] },
-  { id: 2, text: '报告', path: ["/report",'','','',''] },
+  { id: 2, text: '报告', path: ["/report",'/reportDetail','','',''] },
   { id: 3, text: '数据', path: ["/data"] },
   { id: 4, text: '分析', path: ["/analyze"] },
   { id: 5, text: '企业', path: ["/enterprise"] },
