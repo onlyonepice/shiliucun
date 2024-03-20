@@ -8,6 +8,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     NavBar: typeof import('./src/components/Business/NavBar.vue')['default']
+    PageBottom: typeof import('./src/components/Business/PageBottom.vue')['default']
+    PageNav: typeof import('./src/components/Business/PageNav.vue')['default']
     Picker: typeof import('./src/components/Common/picker.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

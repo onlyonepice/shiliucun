@@ -61,6 +61,8 @@ class PureHttp {
           return config;
         }
 
+        // 添加平台标识
+        config.headers["tenant"] = defaultProjectConfig.clientId;
         // 定义请求链接
         config.url = `${VITE_GLOB_API_URL}${config.url}`;
         // 接口加密
@@ -103,7 +105,7 @@ class PureHttp {
           PureHttp.initConfig.beforeResponseCallback(response);
           return data;
         }
-        if (code !== 200) {
+        if (code !== 0) {
           ElMessage({ message: data.resp_msg || data.message, type: 'error' })
         }
         return data;

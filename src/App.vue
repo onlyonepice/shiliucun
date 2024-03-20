@@ -1,31 +1,36 @@
 <template>
-  <router-view class="app"/>
+  <PageNav />
+  <el-scrollbar class="es-body" @scroll="onScroll">
+    <div class="es-pageContent">
+      <router-view />
+    </div>
+    <PageBottom></PageBottom>
+  </el-scrollbar>
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, Ref } from 'vue';
 import { useRouter } from "vue-router";
+import PageBottom from '@/components/Business/PageBottom.vue'
+import PageNav from '@/components/Business/PageNav.vue'
 const router = useRouter();
 
 onMounted(()=>{
 
 })
+const onScroll = ({ scrollTop }:any) => {
+
+}
 </script>
 
 <style lang="scss">
 @import "@/style/mixin.scss";
-
-#app {
-  width: 100%;
-  min-width: 1080px;
-  min-height: 100vh;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  overflow-x: hidden;
-  overflow-y: auto;
-  font-size: 12px;
-  background-color: #F8F9FB;
+#app{
+  .es-body{
+    height: 100vh;
+    box-sizing: border-box;
+  }
+  .es-pageContent{
+    background-color: #ffffff;
+  }
 }
-
 </style>
