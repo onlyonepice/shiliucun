@@ -41,7 +41,7 @@ const props = defineProps({
 })
 const choseNav: Ref<string> = ref('') // 选中的导航标签
 const choseNavId: Ref<number> = ref(1) // 选中的导航栏id
-const choseExtra: Ref<boolean> = ref(true) // 打开下拉菜单
+const choseExtra: Ref<boolean> = ref(false) // 打开下拉菜单
 const choseExtraContent: Ref<boolean> = ref(false) // 打开下拉菜单
 // 导航栏数组
 const navList: Ref<Array<NavList>> = ref([
