@@ -19,7 +19,6 @@ npm-lock.yaml*
 *.njsproj
 *.sln
 *.sw?
-src/store/modules/user.ts
 
 # lock
 pnpm-lock.yaml
