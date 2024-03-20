@@ -9,6 +9,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 
@@ -31,7 +32,7 @@ const onSearch = () => {
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .es-home{
-  height: 640px;
+  min-height: 100vh;
   @include padding(344px,0,0,0);
   @include relative();
 }

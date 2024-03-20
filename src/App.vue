@@ -12,13 +12,14 @@ import { onMounted, ref, Ref } from 'vue';
 import { useRouter } from "vue-router";
 import PageBottom from '@/components/Business/PageBottom.vue'
 import PageNav from '@/components/Business/PageNav.vue'
+import { windowScrollStore } from "@/store/modules/windowScroll";
 const router = useRouter();
 
 onMounted(()=>{
 
 })
 const onScroll = ({ scrollTop }:any) => {
-
+  windowScrollStore().SET_SCROLL_TOP(scrollTop)
 }
 </script>
 
