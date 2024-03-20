@@ -361,51 +361,34 @@ import {
   fileUpload,
   recordReportShare,
   recordReportRead,
-  recordReportClick
-} from '@/api'
-import { EsImage, EsButton } from '@/components'
+  recordReportClick,
+  getPayInfoList
+} from '@/api/reportDetail'
+// import { EsImage, EsButton, EsDialog, EsTag } from '@/components/Common'
 import EXPAND from '@/assets/image/common/i-Report-expand.png'
 import NUM_DOWN from '@/assets/image/common/i-Report-number-down.png'
 import NUM_UP from '@/assets/image/common/i-Report-number-up.png'
-import TOP from '@/assets/image/online-report/i-Report-online-top.png'
 import STAR from '@/assets/image/common/i-Report-star.png'
 import STAR_FILL from '@/assets/image/common/i-Report-star-fill.png'
 import UPLOAD from '@/assets/image/common/i-Report-upload.png'
-import EMPTY from '@/assets/image/index/i-Report-empty.png'
+import TOP from '@/assets/image/common/i-Report-online-top.png'
+import EMPTY from '@/assets/image/common/i-Report-empty.png'
+import GO_TOP from '@/assets/image/common/icon_go-top.png'
+import ARROW from '@/assets/image/common/icon_drop_putAway.png'
 
 import { forIn, cloneDeep } from 'lodash'
 import { toType } from '@/utils'
-import { EsDialog, EsTag } from '@/views/V2/components'
 import ClipboardJS from 'clipboard'
-import store from '@/store'
 
-import { SHARE, DOWNLOAD, COLLECT, DETAIL, VIEWER, RECOMMEND, READ, CLICK } from '@/views/V2/views/common/constant'
-
-import { getPayInfoList } from '@/api/buyMembership'
-
+import { SHARE, DOWNLOAD, COLLECT, DETAIL, VIEWER, RECOMMEND, READ, CLICK } from './constant'
 export default {
   name: 'ReportDetailPdfV2',
   components: {
     Loading: () => import('@/components/Loading/index.vue'),
-    EsImage,
-    EsDialog,
-    EsButton, EsTag,
+    // EsImage,
+    // EsDialog,
+    // EsButton, EsTag,
     MembersBuy: () => import('@/views/V2/views/relation-servicer/subscription-member/membersBuy')
-  },
-  // inject: ['Home'],
-  beforeRouteEnter(to, form, next) {
-    store.dispatch('search/setAllShow', true)
-    store.dispatch('search/setSearchShow', false)
-    store.dispatch('search/setCrumbsShow', true)
-
-    next()
-  },
-  beforeRouteLeave(to, form, next) {
-    store.dispatch('search/setAllShow', false)
-    store.dispatch('search/setSearchShow', false)
-    store.dispatch('search/setCrumbsShow', false)
-
-    next()
   },
   data() {
     return {
@@ -442,16 +425,7 @@ export default {
   computed: {
     getIcon() {
       return {
-        EXPAND,
-        NUM_DOWN,
-        NUM_UP,
-        TOP,
-        STAR,
-        STAR_FILL,
-        UPLOAD,
-        EMPTY,
-        GO_TOP: require('@/assets/image/common/icon_go-top.png'),
-        ARROW: require('@/assets/image/home/icon_drop_putAway.png')
+        EXPAND, NUM_DOWN, NUM_UP, TOP, STAR, STAR_FILL, UPLOAD, EMPTY, GO_TOP, ARROW
       }
     },
     getGrade() {
@@ -523,27 +497,13 @@ export default {
         this.pdfPage = val.page
       }, deep: true, immediate: true
     },
-    '$store.getters.isLogin': {
-      handler(val) {
-        if (val) {
-          this.initData()
-          this.getReportInfo()
-          this.getRecommendList()
-          this.getPayList()
-        }
-      }, deep: true, immediate: true
-    }
   },
   created() {
     console.log('%cYES', 'color: red;')
-    if (this.$store.getters.isLogin) {
-      this.initData()
-      this.getReportInfo()
-      this.getRecommendList()
-      this.getPayList()
-    } else {
-      // this.Home.handleOpenLogin()
-    }
+    this.initData()
+    this.getReportInfo()
+    this.getRecommendList()
+    this.getPayList()
   },
   beforeDestroy() {
     window.URL.revokeObjectURL(this.data)
