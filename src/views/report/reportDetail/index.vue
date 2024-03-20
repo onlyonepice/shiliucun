@@ -500,10 +500,10 @@ export default {
   },
   created() {
     console.log('%cYES', 'color: red;')
-    this.initData()
-    this.getReportInfo()
-    this.getRecommendList()
-    this.getPayList()
+    // this.initData()
+    // this.getReportInfo()
+    // this.getRecommendList()
+    // this.getPayList()
   },
   beforeDestroy() {
     window.URL.revokeObjectURL(this.data)
