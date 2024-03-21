@@ -1,17 +1,14 @@
 <template>
-  <nav :class="[ns.b(), opacityBg ? ns.m('opacity') : '', choseExtra ? ns.m('open') : '']">
+  <nav :class="[ns.b(), choseExtra ? ns.m('open') : '']">
     <!-- 子菜单栏展开背景图 -->
     <div :class="[ns.b('extra'), choseExtra ? ns.bm('extra','open') : '' ] "></div>
     <div :class="['es-commonPage', ns.b('content')]">
-      <img :src="choseExtra || !opacityBg ? LogoIconBlue : LogoIcon" alt="">
+      <img :src="choseExtra ? LogoIconBlue : LogoIcon" alt="">
       <div :class="[ns.b('list')]" @mouseleave="onChoseLeave()">
         <div
           v-for="item in navList" :key="item.id"
           @mouseenter="onChoseNav(item.id, item.path)"
-          :class="[
-            ns.bm('list','item'),
-            choseNavId === item.id ? ns.bm('list','chose') : '',
-          ]"
+          :class="[ ns.bm('list','item'), choseNavId === item.id ? ns.bm('list','chose') : '' ]"
         >
           <div :class="ns.bm('item','title')">
             <span>{{ item.text }}</span>
@@ -44,11 +41,9 @@ import { useRouter, useRoute } from "vue-router";
 import LogoIcon from '@/assets/img/common/logo-icon.png'
 import LogoIconBlue from '@/assets/img/common/logo-icon-blue.png'
 import useNamespace from '@/utils/nameSpace'
-import { windowScrollStore } from "@/store/modules/windowScroll";
 const ns = useNamespace('pageNav')
 const router = useRouter();
 const route = useRoute();
-const opacityBg: Ref<boolean> = ref(true); // 是否展示透明背景
 const choseNav: Ref<string> = ref(''); // 选中的导航标签
 const choseNavId: Ref<number> = ref(1); // 选中的导航栏id
 const choseExtra: Ref<boolean> = ref(false); // 打开下拉菜单
@@ -104,32 +99,13 @@ const onChoseNav = (id: number,path: Array<string> | string) => {
 const onChoseLeave = () => {
   choseExtra.value = false
 }
-
-const onChoseNavItemLeave = () => {
-  choseExtraContent.value = false
-}
 // 监听路由改变
 watch(
   () => route.path,
   (path) => {
-    opacityBg.value = path === '/home';
     choseNav.value = path
   },
   { immediate: true },
-)
-// 监听页面滑动
-watch(
-  ()=> windowScrollStore().$state.scrollTop,
-  (val) => {
-    if( route.path === '/home' ){
-      if( val >= 200 ){
-        opacityBg.value = false
-      }else{
-        opacityBg.value = true
-      }
-    }
-  },
-  { immediate: true, deep: true },
 )
 
 // 判断是否要选中某个导航
@@ -137,9 +113,6 @@ const isChoseNav = computed(() => {
   return (list: any) => {
     return list.some((item: string) => item.includes(choseNav.value))
   }
-})
-
-onMounted(()=>{
 })
 
 </script>
@@ -153,7 +126,6 @@ onMounted(()=>{
   transition: all 0.2s linear;
 }
 .es-pageNav--opacity{
-  background-color: rgba(255,255,255,0);
   .es-pageNav-list{
     div{
       color: rgba(255,255,255,0.55);
@@ -229,7 +201,7 @@ onMounted(()=>{
     .es-pageNav-item--box{
       height: 0;
       opacity: 0;
-      transition: all 0.2s ease-out;
+      transition: all 0.5s linear;
       overflow: hidden;
     }
     &:hover .es-pageNav-item--box{
