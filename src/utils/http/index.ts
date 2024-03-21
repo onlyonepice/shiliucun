@@ -69,17 +69,19 @@ class PureHttp {
         config.headers["sign"] = encrypt(config);
         // 添加token
         const token = getToken();
-        if (token) {
-          config.headers["Authorization"] = "Bearer " + token;
-        } else {
-          config.headers["Authorization"] =
-            "Basic " +
-            window.btoa(
-              defaultProjectConfig.clientId +
-                ":" +
-                defaultProjectConfig.clientSecret
-            );
-        }
+
+        config.headers["Authorization"] = "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X3R5cGUiOiJhZG1pbiIsInVzZXJfbmFtZSI6IjE3MDgzMTI5MTE1NzEiLCJzY29wZSI6WyJhbGwiXSwiaWQiOjczNTUsImV4cCI6MTcxMTUyOTY2MCwidHlwZSI6IlJFR0lTVEVSIiwiYXV0aG9yaXRpZXMiOlsiUEVSU09OX01FTUJFUl9VU0VSIl0sImp0aSI6IjdiMzE5N2RlLWU0MjktNGYyMi04NmZmLTdiZGE2MjhhMTYxYyIsImNsaWVudF9pZCI6ImlSZXBvcnQtZnJvbnQifQ.I-rg7B49_pFIy_bvywX8621jqJgW3g-_diLWpBd0bAXh5SciDzz4jCOd2feoO_tRqugzqGwpTTMeJBqBjZAE3nRASqtWZPKGYzz8OKctae-gG83o5tgXbU008xeyG8EawZ_4gZiHyN7dfM0CXWPJCQ0e83mRdmphKv-ORn48a8U";
+        // if (token) {
+        //   config.headers["Authorization"] = "Bearer " + token;
+        // } else {
+        //   config.headers["Authorization"] =
+        //     "Basic " +
+        //     window.btoa(
+        //       defaultProjectConfig.clientId +
+        //         ":" +
+        //         defaultProjectConfig.clientSecret
+        //     );
+        // }
 
         return config
       },

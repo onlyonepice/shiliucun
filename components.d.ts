@@ -7,10 +7,20 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+<<<<<<< HEAD
+=======
+    Breadcrumb: typeof import('./src/components/Common/breadcrumb.vue')['default']
+    Button: typeof import('./src/components/Common/Button/button.vue')['default']
+    Dialog: typeof import('./src/components/Common/Dialog/index.vue')['default']
+    ElImage: typeof import('./src/components/Common/ElImage/index.vue')['default']
+    ImageViewer: typeof import('./src/components/Common/ElImage/image-viewer.vue')['default']
+    Loading: typeof import('./src/components/Common/loading.vue')['default']
+>>>>>>> detail
     PageBottom: typeof import('./src/components/Business/PageBottom.vue')['default']
     PageNav: typeof import('./src/components/Business/PageNav.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/Common/select.vue')['default']
+    Tag: typeof import('./src/components/Common/Tag/index.vue')['default']
   }
 }
