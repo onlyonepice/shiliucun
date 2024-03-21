@@ -33,6 +33,7 @@
     "vuex": "4.0.0"
   },
   "devDependencies": {
+    "crypto-js": "4.1.1",
     "@EESA/components": "1.1.26",
     "@types/node": "^18.15.3",
     "@types/vue": "^2.0.0",

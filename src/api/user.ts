@@ -24,3 +24,18 @@ export const configListBefore = params => {
 export const getPublicKeyApi = () => {
   return http.request<void>("post", "/api-uaa/clients/findPublicKey");
 };
+
+// 获取小程序二维码
+export function getQrCode() {
+  return http.request<void>("post", `/api-user/wx/miniapp/front/v1.0/loginQRCode?tenantId=iReport-front`,{
+    params: { specialBlob: true },
+    responseType: 'blob',
+  });
+}
+
+// 轮询登录
+export function pollLogin(params) {
+  return http.request<void>("post", `/api-user/wx/miniapp/front/v1.0/queryUserLogin`,{
+    params,
+  });
+}

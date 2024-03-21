@@ -23,7 +23,7 @@
           </div>
         </div>
         <!-- 登录/注册 -->
-        <p :class="ns.b('login')">登录/注册</p>
+        <p :class="ns.b('login')" @click="onLogin">登录/注册</p>
       </div>
     </div>
   </nav>
@@ -48,6 +48,7 @@ const choseNav: Ref<string> = ref(''); // 选中的导航标签
 const choseNavId: Ref<number> = ref(1); // 选中的导航栏id
 const choseExtra: Ref<boolean> = ref(false); // 打开下拉菜单
 const choseExtraContent: Ref<boolean> = ref(false); // 打开下拉菜单
+const emit = defineEmits(['onLogin'])
 // 导航栏数组
 const navList: Ref<Array<NavList>> = ref([
   { id: 1, text: '首页', path: ["/home",],
@@ -114,7 +115,9 @@ const isChoseNav = computed(() => {
     return list.some((item: string) => item.includes(choseNav.value))
   }
 })
-
+const onLogin = () => {
+  emit('onLogin')
+}
 </script>
 
 <style scoped lang="scss">
@@ -231,6 +234,7 @@ const isChoseNav = computed(() => {
   will-change: transform;
   transition: all 0.2s ease-out;
   @include relative(10);
+  cursor: pointer;
 }
 
 .es-pageNav-extra{

@@ -9,7 +9,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     Breadcrumb: typeof import('./src/components/Common/breadcrumb.vue')['default']
     Dialog: typeof import('./src/components/Common/Dialog/index.vue')['default']
+    Enter: typeof import('./src/components/Business/Login/enter.vue')['default']
+    Input: typeof import('./src/components/Business/Login/input.vue')['default']
     Loading: typeof import('./src/components/Common/loading.vue')['default']
+    Login: typeof import('./src/components/Business/Login.vue')['default']
     PageBottom: typeof import('./src/components/Business/PageBottom.vue')['default']
     PageNav: typeof import('./src/components/Business/PageNav.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

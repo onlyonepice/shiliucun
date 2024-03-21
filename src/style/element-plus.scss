@@ -153,3 +153,12 @@
 .el-select-dropdown__item.selected {
   @include font(14px, 600, #1C232F, 34px)
 }
+
+.el-input__wrapper:hover{
+  box-shadow: 0 0 0 1px #e5e6ea inset;
+  background-color: #e5e6ea;
+}
+.el-input__wrapper.is-focus{
+  box-shadow: 0 0 0 1px #165dff inset;
+  background-color: #ffffff;
+}

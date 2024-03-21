@@ -1,11 +1,12 @@
 <template>
-  <PageNav class="pageNav" :class="{ 'pageNav-show': showNavBar, 'es-pageNav--opacity': opacityBg }" />
+  <PageNav class="pageNav" :class="{ 'pageNav-show': showNavBar, 'es-pageNav--opacity': opacityBg }" @onLogin="openLogin = true;openLoginAnimate = true" />
   <el-scrollbar class="es-body" @scroll="onScroll">
     <div class="es-pageContent" :style="{ 'background-color': getBg  }">
       <router-view />
     </div>
     <PageBottom></PageBottom>
   </el-scrollbar>
+  <Login v-if="openLoginAnimate" @onCancel="onCancel" class="animate__animated" :class="openLogin ? 'animate__fadeIn' : 'animate__fadeOut'" />
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, Ref, computed, watch } from 'vue';
@@ -16,6 +17,8 @@ const router = useRouter();
 const route = useRoute();
 const showNavBar: Ref<boolean> = ref(true)
 const lastScrollY: Ref<number> = ref(0)
+const openLogin: Ref<boolean> = ref(false) // 登录弹窗
+const openLoginAnimate: Ref<boolean> = ref(false) // 登录动画执行完毕弹窗
 onMounted(()=>{
 
 })
@@ -37,6 +40,12 @@ const onScroll = ({ scrollTop }:any) => {
   if( route.path === '/home' ){
     opacityBg.value = scrollTop < 200
   }
+}
+const onCancel = () => {
+  openLogin.value = false
+  setTimeout(()=>{
+    openLoginAnimate.value = false
+  },500)
 }
 </script>
 

@@ -10,6 +10,7 @@ import {
   PureHttpRequestConfig,
   defaultProjectConfig
 } from "./types.d";
+import { toType } from '../index'
 import { encrypt } from "@EESA/components/src/librarys/jsencrypt";
 import { ElMessage } from "element-plus"
 import { getToken } from "@/utils/auth";
@@ -98,6 +99,9 @@ class PureHttp {
       (response: PureHttpResponse) => {
         const { config, data }  = response
         const code = data.resp_code ?? data.code;
+        if (toType(data) === 'blob') {
+          return response
+        }
         // 优先判断post/get等方法是否传入回掉，否则执行初始化设置等回掉
         if (typeof config.beforeResponseCallback === "function") {
           config.beforeResponseCallback(response);
