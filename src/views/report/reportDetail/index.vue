@@ -583,7 +583,7 @@ export default {
           }
         }).catch(err => {
           if (err.resp_code !== 0) {
-            $router.push('/')
+            // $router.push('/')
             return
           }
         })
