@@ -64,7 +64,7 @@ class PureHttp {
         // 添加平台标识
         config.headers["tenant"] = defaultProjectConfig.clientId;
         // 定义请求链接
-        config.url = `${VITE_GLOB_API_URL}${config.url}`;
+        config.url = config.url.indexOf('http') === -1 ? `${VITE_GLOB_API_URL}${config.url}` : config.url;
         // 接口加密
         config.headers["sign"] = encrypt(config);
         // 添加token

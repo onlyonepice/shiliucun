@@ -2,17 +2,14 @@
   <div class="report-detail">
     <breadcrumb :breadcrumbList="breadcrumbList" />
     <div class="preview-word-wrapper es-commonPage">
-      <Loading
-        v-if="loading"
-        class="loading"
-      />
+      <Loading v-if="loading" class="loading" />
       <div class="iframe-wrapper">
         <div class="custom-toolbar">
           <span
             class="aside-scale-down point custom-toolbar_icon"
             style="opacity: 0; cursor: auto;"
           >
-            <es-image :src="getIcon.EXPAND" />
+            <el-image :src="getIcon.EXPAND" />
           </span>
           <div
             v-if="getPDFInfo.pagesCount && getPDFInfo.pagesCount !== undefined"
@@ -41,14 +38,14 @@
               class="scale-down point custom-toolbar_icon"
               @click="handlePDFZoomOut"
             >
-              <es-image :src="getIcon.NUM_DOWN" />
+              <el-image :src="getIcon.NUM_DOWN" />
             </span>
             <span class="scaling">{{ getPDFInfo.zoom }}%</span>
             <span
               class="scale-up point custom-toolbar_icon"
               @click="handlePDFZoomIn"
             >
-              <es-image :src="getIcon.NUM_UP" />
+              <el-image :src="getIcon.NUM_UP" />
             </span>
           </span>
         </div>
@@ -71,7 +68,7 @@
             @click="handleOpenPaySku"
           >
             立即订阅
-            <es-image
+            <el-image
               class="arrow"
               :src="getIcon.ARROW"
               :lazy="false"
@@ -86,7 +83,7 @@
           }"
           @click="PDFViewerApplication.page = 1"
         >
-          <es-image
+          <el-image
             class="icon"
             :src="getIcon.GO_TOP"
             :lazy="false"
@@ -102,20 +99,8 @@
               :title="report.reportName"
             >{{ report.reportName }}</p>
             <div class="report-sub-info one-hidden-ellipsis text">
-              <span
-                v-if="report.isTopping"
-                class="status"
-              >
-                <es-image :src="getIcon.TOP" />
-              </span>
-
-              <es-tag
-                v-for="tag in report.reportTag"
-                :key="tag"
-                class="tag"
-                type="primary"
-                :text="tag"
-              ></es-tag>
+              <span v-if="report.isTopping" class="status" >置顶</span>
+              <span v-for="tag in report.reportTag" :key="tag" class="tag">{{ tag }}</span>
             </div>
             <div class="split-el solid mg16"></div>
             <div class="annotation text">
@@ -170,7 +155,7 @@
                 @mousemove="handleGradeMoveHovering(item, i)"
                 @click.stop="handleGradeClick(item, i)"
               >
-                <es-image
+                <el-image
                   :src="item.icon"
                   :lazy="false"
                 />
@@ -209,7 +194,7 @@
             v-else
             class="recommend-empty"
           >
-            <es-image
+            <el-image
               class="empty__icon"
               :src="getIcon.EMPTY"
               :lazy="false"
@@ -245,22 +230,20 @@ import {
   recordReportClick,
   getPayInfoList
 } from '@/api/reportDetail'
-import EXPAND from '@/assets/img/common/i-Report-expand.png'
-import NUM_DOWN from '@/assets/img/common/i-Report-number-down.png'
-import NUM_UP from '@/assets/img/common/i-Report-number-up.png'
-import STAR from '@/assets/img/common/i-Report-star.png'
-import STAR_FILL from '@/assets/img/common/i-Report-star-fill.png'
-import UPLOAD from '@/assets/img/common/i-Report-upload.png'
-import TOP from '@/assets/img/common/i-Report-online-top.png'
-import EMPTY from '@/assets/img/common/i-Report-empty.png'
-import GO_TOP from '@/assets/img/common/icon_go-top.png'
-import ARROW from '@/assets/img/common/icon_drop_putAway.png'
+import EXPAND from '@/assets/img/reportDetail/i-Report-expand.png'
+import NUM_DOWN from '@/assets/img/reportDetail/i-Report-number-down.png'
+import NUM_UP from '@/assets/img/reportDetail/i-Report-number-up.png'
+import STAR from '@/assets/img/reportDetail/i-Report-star.png'
+import STAR_FILL from '@/assets/img/reportDetail/i-Report-star-fill.png'
+import UPLOAD from '@/assets/img/reportDetail/i-Report-upload.png'
+import TOP from '@/assets/img/reportDetail/i-Report-online-top.png'
+import EMPTY from '@/assets/img/reportDetail/i-Report-empty.png'
+import GO_TOP from '@/assets/img/reportDetail/icon_go-top.png'
+import ARROW from '@/assets/img/reportDetail/icon_drop_putAway.png'
 import breadcrumb from '@/components/Common/breadcrumb.vue'
-
 import { forIn, cloneDeep } from 'lodash'
 import { toType } from '@/utils'
 import ClipboardJS from 'clipboard'
-
 import { SHARE, DOWNLOAD, COLLECT, DETAIL, VIEWER, RECOMMEND, READ, CLICK } from './constant'
 export default {
   name: 'ReportDetailPdfV2',
@@ -386,15 +369,13 @@ export default {
     console.log('%cYES', 'color: red;')
     this.initData()
     this.getReportInfo()
-    this.getRecommendList()
-    this.getPayList()
+    // this.getPayList()
   },
   beforeDestroy() {
     window.URL.revokeObjectURL(this.data)
 
     document.removeEventListener('contextmenu', this.handleStopContentMenu)
     document.removeEventListener('keydown', this.handleStopDevelopmentConsole)
-
     this.handleClearStopCommand()
 
     clearTimeout(this.readTimer)
@@ -521,7 +502,6 @@ export default {
       if (!fileId) {
         $msg.warning('文件可能已损坏，请联系管理员后再试')
         console.debug('文件可能已损坏，请联系管理员后再试', cloneDeep(fileId))
-
         return
       }
 
@@ -604,15 +584,8 @@ export default {
       const url = RECOMMEND[moduleName]
 
       try {
-        const { resp_code, datas } = await getReportDetailRecommend_V2(url, {
-          id,
-          limit: 10,
-          hideError: true
-        })
-
-        if (resp_code === 0) {
-          this.recommendList = datas
-        }
+        const { resp_code, datas } = await getReportDetailRecommend_V2(url, { id, limit: 10, hideError: true })
+        resp_code === 0 && ( this.recommendList = datas )
       } catch (error) {
         return
       }
@@ -1030,6 +1003,7 @@ export default {
 @import "@/style";
 @import "@/style/mixin.scss";
 .report-detail{
+  min-height: 100vh;
   @include padding(56px,0,24px,0);
 }
 .preview-word-wrapper {
@@ -1237,24 +1211,28 @@ export default {
           font-weight: normal;
           line-height: 22px;
           color: $es-text-color-main;
+          @include flex(center,flex-start);
 
           .status {
             display: inline-block;
-            width: 32px;
-            height: 20px;
+            width: 40px;
+            height: 24px;
             vertical-align: middle;
-            margin-right: $es-mg-4;
+            margin-right: $es-mg-8;
+            background: #F75964;
+            border-radius: 4px;
+            @include flex();
+            @include font(12px,400,rgba(255,255,2550.9),20px);
           }
-
-          .years {}
-
-          .split {
-            display: inline-block;
-            width: 14px;
-            text-align: center;
+          .tag {
+            @include widthAndHeight(40px,24px);
+            background: #FFF3EA;
+            border-radius: 4px;
+            border: 1px solid #FF8D32;
+            @include flex();
+            @include font(12px,400,#FF8D32,20px);
+            margin-right: $es-mg-8;
           }
-
-          .tag {}
         }
 
         .annotation {
@@ -1521,5 +1499,8 @@ export default {
       }
     }
   }
+}
+.more-hidden-ellipsis{
+  @include textOverflow(2)
 }
 </style>
