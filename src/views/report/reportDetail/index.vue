@@ -1,351 +1,232 @@
 <template>
-  <div class="preview-word-wrapper">
-    <Loading
-      v-if="loading"
-      class="loading"
-    />
-    <div class="iframe-wrapper">
-      <div class="custom-toolbar">
-        <span
-          class="aside-scale-down point custom-toolbar_icon"
-          style="opacity: 0; cursor: auto;"
-        >
-          <es-image :src="getIcon.EXPAND" />
-        </span>
-        <div
-          v-if="getPDFInfo.pagesCount && getPDFInfo.pagesCount !== undefined"
-          class="page-number-box"
-        >
-          <span class="text page-number">
-            <span class="current">{{ getPDFInfo.page }}</span>
-            <span class="total">/{{ getPDFInfo.pagesCount }}页</span>
-          </span>
-          <div class="to-page">
-            <span>跳转至</span>
-            <input
-              v-model="pdfPage"
-              autocomplete="off"
-              style="height: 24px;"
-              @focus=" focus($event)"
-              @blur="handleUpdatePage"
-              @keyup.enter="handleUpdatePage"
-            />
-            <span>页</span>
-          </div>
-        </div>
-
-        <span class="text fn-scale">
+  <div class="report-detail">
+    <breadcrumb :breadcrumbList="breadcrumbList" />
+    <div class="preview-word-wrapper es-commonPage">
+      <Loading
+        v-if="loading"
+        class="loading"
+      />
+      <div class="iframe-wrapper">
+        <div class="custom-toolbar">
           <span
-            class="scale-down point custom-toolbar_icon"
-            @click="handlePDFZoomOut"
+            class="aside-scale-down point custom-toolbar_icon"
+            style="opacity: 0; cursor: auto;"
           >
-            <es-image :src="getIcon.NUM_DOWN" />
+            <es-image :src="getIcon.EXPAND" />
           </span>
-          <span class="scaling">{{ getPDFInfo.zoom }}%</span>
-          <span
-            class="scale-up point custom-toolbar_icon"
-            @click="handlePDFZoomIn"
-          >
-            <es-image :src="getIcon.NUM_UP" />
-          </span>
-        </span>
-      </div>
-      <iframe
-        id="iframe"
-        ref="iframe"
-        class="iframe"
-        :src="previewSrc"
-        width="100%"
-        height="100%"
-      ></iframe>
-
-      <div
-        v-show="showMembersWrapper"
-        class="pay-member"
-      >
-        <p class="pay-text">完整内容需订阅会员观看</p>
-        <p
-          class="pay-button pointer"
-          @click="handleOpenPaySku"
-        >
-          立即订阅
-          <es-image
-            class="arrow"
-            :src="getIcon.ARROW"
-            :lazy="false"
-          />
-        </p>
-      </div>
-
-      <div
-        class="go-top hidden point"
-        :class="{
-          show: getPDFInfo.page > 1
-        }"
-        @click="PDFViewerApplication.page = 1"
-      >
-        <es-image
-          class="icon"
-          :src="getIcon.GO_TOP"
-          :lazy="false"
-        />
-      </div>
-    </div>
-
-    <div class="info">
-      <div class="info-wrapper">
-        <div class="report-info">
-          <p
-            class="more-hidden-ellipsis title"
-            :title="report.reportName"
-          >{{ report.reportName }}</p>
-          <div class="report-sub-info one-hidden-ellipsis text">
-            <span
-              v-if="report.isTopping"
-              class="status"
-            >
-              <es-image :src="getIcon.TOP" />
-            </span>
-
-            <es-tag
-              v-for="tag in report.reportTag"
-              :key="tag"
-              class="tag"
-              type="primary"
-              :text="tag"
-            ></es-tag>
-          </div>
-          <div class="split-el solid mg16"></div>
-          <div class="annotation text">
-            <p
-              v-if="getReportAuthor !== '暂无'"
-              class="author one-hidden-ellipsis"
-            >分析师：{{ getReportAuthor }}</p>
-            <p
-              v-if="report.writingTime"
-              class="compose-time one-hidden-ellipsis"
-            >撰写时间：{{ report.writingTime?.slice(0, 10)
-            }}</p>
-          </div>
-        </div>
-
-        <div class="function">
-          <span class="download">
-            <es-button
-              type="primary"
-              class="download"
-              @click="handleDownload"
-            >下载</es-button>
-          </span>
-          <span class="collect">
-            <es-button
-              class="collect"
-              @click="handleCollect"
-            >{{ getCollectText }}</es-button>
-          </span>
-          <span class="share">
-            <es-button
-              id="share"
-              class="share"
-              @click="handleShare"
-            >分享</es-button>
-          </span>
-        </div>
-
-        <div class="score">
-          <p class="score__label">
-            <span class="label-text text">报告评分</span>
-            <span class="grade-text text">{{ getGradeLabel }}</span>
-          </p>
           <div
-            class="score__grade"
-            @mouseleave="handleGradeMoveOver"
+            v-if="getPDFInfo.pagesCount && getPDFInfo.pagesCount !== undefined"
+            class="page-number-box"
           >
-            <span
-              v-for="(item, i) in gradeStars"
-              :key="item.value"
-              class="grade_star"
-              @mousemove="handleGradeMoveHovering(item, i)"
-              @click.stop="handleGradeClick(item, i)"
-            >
-              <es-image
-                :src="item.icon"
-                :lazy="false"
+            <span class="text page-number">
+              <span class="current">{{ getPDFInfo.page }}</span>
+              <span class="total">/{{ getPDFInfo.pagesCount }}页</span>
+            </span>
+            <div class="to-page">
+              <span>跳转至</span>
+              <input
+                v-model="pdfPage"
+                autocomplete="off"
+                style="height: 24px;"
+                @focus=" focus($event)"
+                @blur="handleUpdatePage"
+                @keyup.enter="handleUpdatePage"
               />
+              <span>页</span>
+            </div>
+          </div>
+
+          <span class="text fn-scale">
+            <span
+              class="scale-down point custom-toolbar_icon"
+              @click="handlePDFZoomOut"
+            >
+              <es-image :src="getIcon.NUM_DOWN" />
             </span>
-          </div>
+            <span class="scaling">{{ getPDFInfo.zoom }}%</span>
+            <span
+              class="scale-up point custom-toolbar_icon"
+              @click="handlePDFZoomIn"
+            >
+              <es-image :src="getIcon.NUM_UP" />
+            </span>
+          </span>
         </div>
+        <iframe
+          id="iframe"
+          ref="iframe"
+          class="iframe"
+          :src="previewSrc"
+          width="100%"
+          height="100%"
+        ></iframe>
 
-        <div class="feedback">
-          <es-button
-            class="feedback-btn"
-            @click="handleOpenFeedbackDialog"
-          >内容纠错</es-button>
-        </div>
-      </div>
-
-      <div class="recommend">
-        <p class="recommend-title">推荐报告</p>
         <div
-          v-if="recommendList.length"
-          class="recommend-list"
+          v-show="showMembersWrapper"
+          class="pay-member"
         >
-          <div
-            v-for="item in recommendList"
-            :key="item.id + item.reportName"
-            class="recommend__item"
-            @click="handleSkipRecommend(item)"
+          <p class="pay-text">完整内容需订阅会员观看</p>
+          <p
+            class="pay-button pointer"
+            @click="handleOpenPaySku"
           >
-            <p
-              class="item-label text one-hidden-ellipsis"
-              :title="item.reportName"
-            >{{ item.reportName }}</p>
-            <p class="item-info text one-hidden-ellipsis">{{ getReportTag(item.reportTag) }}</p>
-          </div>
+            立即订阅
+            <es-image
+              class="arrow"
+              :src="getIcon.ARROW"
+              :lazy="false"
+            />
+          </p>
         </div>
+
         <div
-          v-else
-          class="recommend-empty"
+          class="go-top hidden point"
+          :class="{
+            show: getPDFInfo.page > 1
+          }"
+          @click="PDFViewerApplication.page = 1"
         >
           <es-image
-            class="empty__icon"
-            :src="getIcon.EMPTY"
+            class="icon"
+            :src="getIcon.GO_TOP"
             :lazy="false"
           />
-          <p class="empty__text">精彩内容正在努力撰写～</p>
         </div>
       </div>
-    </div>
 
-    <es-dialog
-      :visible="permissionsVisible"
-      width="368px"
-      class="es-dialog permissions-dialog"
-      @cancel="handleClosePermissionsDialog"
-      @confirm="handleSkipPurchase"
-    >
-      <div
-        class="tip-text"
-        v-text="permissionsText"
-      ></div>
-      <div slot="footer">
-        <es-button @click="handleClosePermissionsDialog">我知道了</es-button>
-        <es-button
-          type="primary"
-          @click="handleSkipPurchase"
-        >立即联系</es-button>
-      </div>
-    </es-dialog>
+      <div class="info">
+        <div class="info-wrapper">
+          <div class="report-info">
+            <p
+              class="more-hidden-ellipsis title"
+              :title="report.reportName"
+            >{{ report.reportName }}</p>
+            <div class="report-sub-info one-hidden-ellipsis text">
+              <span
+                v-if="report.isTopping"
+                class="status"
+              >
+                <es-image :src="getIcon.TOP" />
+              </span>
 
-    <es-dialog
-      v-loading="feedbackDialogLoading"
-      :visible="feedbackVisible"
-      class="es-dialog feedback-dialog"
-      title="报告内容纠错"
-      :width="feedbackDialogWidth"
-      @cancel="handleCloseFeedbackDialog"
-    >
-      <el-form
-        ref="feedbackForm"
-        class="feedback-dialog-form"
-        label-position="left"
-        :label-width="feedbackDialogLabelWidth"
-        :model="feedbackDialogForm"
-        :rules="feedbackDialogRules"
-        hide-required-asterisk
-      >
-        <el-form-item prop="name">
-          <div
-            slot="label"
-            class="feedback-dialog-form__label text"
-          >您的姓名</div>
-
-          <div class="feedback-dialog-form__content">
-            <el-input
-              v-model="feedbackDialogForm['name']"
-              placeholder="请输入"
-              size="small"
-              class="input-control"
-            ></el-input>
-          </div>
-        </el-form-item>
-        <el-form-item prop="contactInformation">
-          <div
-            slot="label"
-            class="feedback-dialog-form__label text"
-          >联系方式</div>
-
-          <div class="feedback-dialog-form__content">
-            <el-input
-              v-model="feedbackDialogForm['contactInformation']"
-              placeholder="手机号/邮箱/微信号"
-              size="small"
-            ></el-input>
-          </div>
-        </el-form-item>
-        <el-form-item prop="describe">
-          <div
-            slot="label"
-            class="feedback-dialog-form__label text"
-          >内容描述</div>
-
-          <div class="feedback-dialog-form__content">
-            <el-input
-              v-model="feedbackDialogForm['describe']"
-              type="textarea"
-              maxlength="200"
-              show-word-limit
-              placeholder="请您详述报告中有误的片段，以便我们及时调整（限200字）"
-            ></el-input>
-          </div>
-        </el-form-item>
-        <el-form-item prop="url">
-          <div
-            slot="label"
-            class="feedback-dialog-form__label text"
-          >
-            <p class="label">内容截图</p>
-            <p class="sub-label">(非必填)</p>
+              <es-tag
+                v-for="tag in report.reportTag"
+                :key="tag"
+                class="tag"
+                type="primary"
+                :text="tag"
+              ></es-tag>
+            </div>
+            <div class="split-el solid mg16"></div>
+            <div class="annotation text">
+              <p
+                v-if="getReportAuthor !== '暂无'"
+                class="author one-hidden-ellipsis"
+              >分析师：{{ getReportAuthor }}</p>
+              <p
+                v-if="report.writingTime"
+                class="compose-time one-hidden-ellipsis"
+              >撰写时间：{{ report.writingTime?.slice(0, 10)
+              }}</p>
+            </div>
           </div>
 
-          <div class="feedback-dialog-form__content">
-            <el-upload
-              action="1"
-              size="small"
-              :auto-upload="false"
-              list-type="picture-card"
-              class="feedback-dialog-upload-wrapper"
-              :on-change="handleSelectFeedbackImg"
-              :file-list="feedbackDialogForm.url"
+          <div class="function">
+            <span class="download">
+              <el-button
+                type="primary"
+                class="download"
+                @click="handleDownload"
+              >下载</el-button>
+            </span>
+            <span class="collect">
+              <el-button
+                class="collect"
+                @click="handleCollect"
+              >{{ getCollectText }}</el-button>
+            </span>
+            <span class="share">
+              <el-button
+                id="share"
+                class="share"
+                @click="handleShare"
+              >分享</el-button>
+            </span>
+          </div>
+
+          <div class="score">
+            <p class="score__label">
+              <span class="label-text text">报告评分</span>
+              <span class="grade-text text">{{ getGradeLabel }}</span>
+            </p>
+            <div
+              class="score__grade"
+              @mouseleave="handleGradeMoveOver"
             >
-              <div class="feedback-dialog-upload">
+              <span
+                v-for="(item, i) in gradeStars"
+                :key="item.value"
+                class="grade_star"
+                @mousemove="handleGradeMoveHovering(item, i)"
+                @click.stop="handleGradeClick(item, i)"
+              >
                 <es-image
-                  class="feedback-dialog-upload__icon"
+                  :src="item.icon"
                   :lazy="false"
-                  :src="getIcon.UPLOAD"
-                ></es-image>
-                <p class="feedback-dialog-upload__text">点击上传</p>
-              </div>
-            </el-upload>
+                />
+              </span>
+            </div>
           </div>
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <es-button @click="handleCloseFeedbackDialog">取消</es-button>
-        <es-button
-          type="primary"
-          @click="handleSubmitFeedback"
-        >提交</es-button>
-      </div>
-    </es-dialog>
 
-    <MembersBuy
-      v-if="showMembersBuy"
-      :show-members-buy="showMembersBuy"
-      :product-list="productList"
-      :open-index="targetIndex"
-      @onCancel="onOptionDialog"
-    />
+          <div class="feedback">
+            <el-button
+              class="feedback-btn"
+              @click="handleOpenFeedbackDialog"
+            >内容纠错</el-button>
+          </div>
+        </div>
+
+        <div class="recommend">
+          <p class="recommend-title">推荐报告</p>
+          <div
+            v-if="recommendList.length"
+            class="recommend-list"
+          >
+            <div
+              v-for="item in recommendList"
+              :key="item.id + item.reportName"
+              class="recommend__item"
+              @click="handleSkipRecommend(item)"
+            >
+              <p
+                class="item-label text one-hidden-ellipsis"
+                :title="item.reportName"
+              >{{ item.reportName }}</p>
+              <p class="item-info text one-hidden-ellipsis">{{ getReportTag(item.reportTag) }}</p>
+            </div>
+          </div>
+          <div
+            v-else
+            class="recommend-empty"
+          >
+            <es-image
+              class="empty__icon"
+              :src="getIcon.EMPTY"
+              :lazy="false"
+            />
+            <p class="empty__text">精彩内容正在努力撰写～</p>
+          </div>
+        </div>
+      </div>
+
+      <MembersBuy
+        v-if="showMembersBuy"
+        :show-members-buy="showMembersBuy"
+        :product-list="productList"
+        :open-index="targetIndex"
+        @onCancel="onOptionDialog"
+      />
+    </div>
   </div>
 </template>
 
@@ -364,7 +245,6 @@ import {
   recordReportClick,
   getPayInfoList
 } from '@/api/reportDetail'
-// import { EsImage, EsButton, EsDialog, EsTag } from '@/components/Common'
 import EXPAND from '@/assets/image/common/i-Report-expand.png'
 import NUM_DOWN from '@/assets/image/common/i-Report-number-down.png'
 import NUM_UP from '@/assets/image/common/i-Report-number-up.png'
@@ -375,6 +255,7 @@ import TOP from '@/assets/image/common/i-Report-online-top.png'
 import EMPTY from '@/assets/image/common/i-Report-empty.png'
 import GO_TOP from '@/assets/image/common/icon_go-top.png'
 import ARROW from '@/assets/image/common/icon_drop_putAway.png'
+import breadcrumb from '@/components/Common/breadcrumb.vue'
 
 import { forIn, cloneDeep } from 'lodash'
 import { toType } from '@/utils'
@@ -385,13 +266,16 @@ export default {
   name: 'ReportDetailPdfV2',
   components: {
     Loading: () => import('@/components/Loading/index.vue'),
-    // EsImage,
-    // EsDialog,
-    // EsButton, EsTag,
+    breadcrumb,
     MembersBuy: () => import('@/views/V2/views/relation-servicer/subscription-member/membersBuy')
   },
   data() {
     return {
+      breadcrumbList: [
+        { text: '报告',path: '/report' },
+        { text: '行业洞察',path: '/report' },
+        { text: '报告',path: '/report' },
+      ],
       targetIndex: 0, // 支付会员选中支付哪种
       data: null,
       previewSrc: '',
@@ -500,10 +384,10 @@ export default {
   },
   created() {
     console.log('%cYES', 'color: red;')
-    // this.initData()
-    // this.getReportInfo()
-    // this.getRecommendList()
-    // this.getPayList()
+    this.initData()
+    this.getReportInfo()
+    this.getRecommendList()
+    this.getPayList()
   },
   beforeDestroy() {
     window.URL.revokeObjectURL(this.data)
@@ -681,12 +565,10 @@ export default {
       const { id, moduleName } = getParams
 
       const url = DETAIL[moduleName]
-
       getReportDetail_V2(url, { id })
         .then(({ resp_code, datas }) => {
           if (resp_code === 0) {
             this.report = datas
-
             score.grade = {
               icon: this.getIcon.STAR_FILL,
               level: datas.ratingLevel,
@@ -696,7 +578,7 @@ export default {
 
             handleGradeSetIcon(targetIndex)
           } else {
-            $router.push('/')
+            // $router.push('/')
             return
           }
         }).catch(err => {
@@ -711,6 +593,7 @@ export default {
           this.infoReady = true
 
           if (this.fileReady || this.fileError) this.loading = false
+          this.loading = false
         })
     },
     // 推荐列表
@@ -959,7 +842,7 @@ export default {
 
     // 分享
     async handleShare() {
-      const { $msg } = this
+      const { $msg, $route } = this
 
       const { moduleName, id } = $route.query
 
@@ -1145,15 +1028,16 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/style";
-
+@import "@/style/mixin.scss";
+.report-detail{
+  @include padding(56px,0,24px,0);
+}
 .preview-word-wrapper {
-  height: 100%;
+  height: calc( 100vh - 56px - 48px - 24px );
   display: flex;
-  padding: 0 0 24px;
 
   .loading {
-    width: calc(100% - 48px);
-    height: calc(100% - 24px);
+    @include widthAndHeight(calc(100% - 48px),calc(100% - 24px));
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -1398,7 +1282,7 @@ export default {
         grid-gap: 8px;
 
         &>span {
-          &>.es-button {
+          &>.el-button {
             width: 100%;
           }
         }

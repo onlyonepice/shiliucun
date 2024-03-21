@@ -14,7 +14,8 @@ export default {
       default: () => import("@/views/report/reportDetail/index.vue"),
     },
     meta: {
-      title: "报告详情"
+      title: "报告详情",
+      backgroundColor: "#F2F3F5"
     },
   }
 };
