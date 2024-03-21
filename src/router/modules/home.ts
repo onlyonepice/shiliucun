@@ -1,5 +1,4 @@
 
-const Layout = () => import("@/layout/enter.vue");
 
 export default {
   path: "/home",

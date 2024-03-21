@@ -29,7 +29,7 @@ console.log('pppppp', constantRoutes)
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes: constantRoutes
 })
 
 router.beforeEach(async (to, from, next) => {

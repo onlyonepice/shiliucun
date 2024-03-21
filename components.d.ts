@@ -9,7 +9,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     BiddingDynamics: typeof import('./src/components/Common/BiddingDynamics.vue')['default']
     BiddingDynamicsList: typeof import('./src/components/Common/BiddingDynamicsList.vue')['default']
+    Breadcrumb: typeof import('./src/components/Common/breadcrumb.vue')['default']
+    Dialog: typeof import('./src/components/Common/Dialog/index.vue')['default']
     IndustryInsightList: typeof import('./src/components/Common/IndustryInsightList.vue')['default']
+    Loading: typeof import('./src/components/Common/loading.vue')['default']
     PageBottom: typeof import('./src/components/Business/PageBottom.vue')['default']
     PageNav: typeof import('./src/components/Business/PageNav.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

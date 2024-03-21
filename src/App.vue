@@ -1,7 +1,7 @@
 <template>
   <PageNav />
   <el-scrollbar class="es-body" @scroll="onScroll">
-    <div class="es-pageContent">
+    <div class="es-pageContent" :style="{ 'background-color': route.meta.backgroundColor ? route.meta.backgroundColor : '#ffffff'  }">
       <router-view />
     </div>
     <PageBottom></PageBottom>
@@ -9,16 +9,18 @@
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, Ref } from 'vue';
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import PageBottom from '@/components/Business/PageBottom.vue'
 import PageNav from '@/components/Business/PageNav.vue'
+import { windowScrollStore } from "@/store/modules/windowScroll";
 const router = useRouter();
-
+const route = useRoute();
+console.log('route',route)
 onMounted(()=>{
 
 })
 const onScroll = ({ scrollTop }:any) => {
-
+  windowScrollStore().SET_SCROLL_TOP(scrollTop)
 }
 </script>
 

@@ -13,6 +13,7 @@
       <industryData />
     </div>
   </div>
+
 </template>
 
 
@@ -36,9 +37,9 @@ const onSearch = () => {
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-
-.es-home {
-  @include padding(344px, 0, 0, 0);
+.es-home{
+  min-height: 100vh;
+  @include padding(344px,0,0,0);
   @include relative();
 }
 

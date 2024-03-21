@@ -1,5 +1,13 @@
 import downloadBg from '@/assets/img/eesa-waterMark.png'
 
+// 自定义判断元素类型JS
+export function toType(obj) {
+  return {}.toString
+    .call(obj)
+    .match(/\s([a-zA-Z]+)/)[1]
+    .toLowerCase()
+}
+
 // 下载 blob 文件
 export const downloadBase64 = (base64: string, filename: string) => {
   // 完整的base64编码格式：真正描述文件内容的base64编码前面会有类似于 'data:application/pdf;base64,' 的字符串来描述文件MIME类型（媒体类型，即文件类型相关）
