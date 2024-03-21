@@ -245,16 +245,16 @@ import {
   recordReportClick,
   getPayInfoList
 } from '@/api/reportDetail'
-import EXPAND from '@/assets/image/common/i-Report-expand.png'
-import NUM_DOWN from '@/assets/image/common/i-Report-number-down.png'
-import NUM_UP from '@/assets/image/common/i-Report-number-up.png'
-import STAR from '@/assets/image/common/i-Report-star.png'
-import STAR_FILL from '@/assets/image/common/i-Report-star-fill.png'
-import UPLOAD from '@/assets/image/common/i-Report-upload.png'
-import TOP from '@/assets/image/common/i-Report-online-top.png'
-import EMPTY from '@/assets/image/common/i-Report-empty.png'
-import GO_TOP from '@/assets/image/common/icon_go-top.png'
-import ARROW from '@/assets/image/common/icon_drop_putAway.png'
+import EXPAND from '@/assets/img/common/i-Report-expand.png'
+import NUM_DOWN from '@/assets/img/common/i-Report-number-down.png'
+import NUM_UP from '@/assets/img/common/i-Report-number-up.png'
+import STAR from '@/assets/img/common/i-Report-star.png'
+import STAR_FILL from '@/assets/img/common/i-Report-star-fill.png'
+import UPLOAD from '@/assets/img/common/i-Report-upload.png'
+import TOP from '@/assets/img/common/i-Report-online-top.png'
+import EMPTY from '@/assets/img/common/i-Report-empty.png'
+import GO_TOP from '@/assets/img/common/icon_go-top.png'
+import ARROW from '@/assets/img/common/icon_drop_putAway.png'
 import breadcrumb from '@/components/Common/breadcrumb.vue'
 
 import { forIn, cloneDeep } from 'lodash'
@@ -265,7 +265,7 @@ import { SHARE, DOWNLOAD, COLLECT, DETAIL, VIEWER, RECOMMEND, READ, CLICK } from
 export default {
   name: 'ReportDetailPdfV2',
   components: {
-    Loading: () => import('@/components/Loading/index.vue'),
+    Loading: () => import('@/components/Common/loading.vue'),
     breadcrumb,
     MembersBuy: () => import('@/views/V2/views/relation-servicer/subscription-member/membersBuy')
   },

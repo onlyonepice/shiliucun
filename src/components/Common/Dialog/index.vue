@@ -19,7 +19,7 @@
           </span>
           <es-image
             class="es-image"
-            :src="require('@/assets/image/home/details/cancel.png')"
+            :src="require('@/assets/img/home/details/cancel.png')"
             @click.stop="cancel"
             @keydown.enter="cancel"
             @keydown.space="cancel"
