@@ -29,5 +29,16 @@ export default {
         title: "白皮书"
       },
     },
+    {
+      path: "/industryInsight",
+      name: "IndustryInsight",
+      components: {
+        default: () => import("@/views/report/industryInsight/index.vue"),
+      },
+      meta: {
+        title: "行业洞察",
+        backgroundColor: ""
+      },
+    },
   ]
 };
