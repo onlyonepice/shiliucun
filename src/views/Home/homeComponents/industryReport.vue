@@ -1,8 +1,8 @@
 <template>
-  <div :class="[ns.b()]">
+  <div :class="[ns.b(), 'es-commonPage']">
     <div class="content">
       <div class="title">
-        <p class="title_text">行业洞察。</p>
+        <p class="title_text">行业报告。</p>
         <img :src="rightArrow" alt="" />
       </div>
       <div class="list-box">
@@ -16,19 +16,19 @@
 import { ref } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import rightArrow from '@/assets/img/right-arrow.png'
-import { getWhitePaper } from '@/api/home'
+import { getOnlineReportSelected } from '@/api/home'
 import whiteReportList from '@/components/Common/whiteReportList.vue'
 const ns = useNamespace('home-industryReport')
 const pageData = ref<[]>([])
-const getWhitePaperFn = async () => {
-  const data = await getWhitePaper({
+const getOnlineReportSelectedFn = async () => {
+  const data = await getOnlineReportSelected({
     page: 1, limit: 5, keyword: ''
   })
   if (data.resp_code === 0) {
     pageData.value = data.datas.records
   }
 }
-getWhitePaperFn()
+getOnlineReportSelectedFn()
 
 </script>
 
@@ -36,17 +36,12 @@ getWhitePaperFn()
 @import "@/style/mixin.scss";
 
 .es-home-industryReport {
-  width: 100vw;
   display: flex;
   justify-content: center;
-  margin-bottom: 80px;
+  height: 580px;
 
   .content {
-    @include widthAndHeight(1182px, 494px);
-
-    @media screen and (max-width: 1182px) {
-      width: 100vw;
-    }
+    width: 100%;
 
     .title {
       width: 100%;

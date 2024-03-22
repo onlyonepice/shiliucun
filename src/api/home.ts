@@ -31,11 +31,11 @@ export const getLatestPolicy = (data) => {
     }
   );
 };
-//白皮书
-export const getWhitePaper = (params) => {
+//在线报告
+export const getOnlineReportSelected = (params) => {
   return http.request<{ resp_code: number; datas: any }>(
     "get",
-    `/eesa-report//alliance/whitePaper/front/openApi/v1.1/getWhitePaper`,
+    `/eesa-report/onlineReportNew/front/openApi/v1.1/getOnlineReportSelected`,
     {
       params
     }

@@ -1,5 +1,5 @@
 <template>
-  <div :class="[ns.b()]">
+  <div :class="[ns.b(), 'es-commonPage']">
     <div class="title">
       <p class="title_text">行业数据。</p>
       <img :src="rightArrow" alt="" />
@@ -89,21 +89,26 @@ function preventDefault(event) {
   window.scrollBy(0, 200); // 滚动页面
   var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
   const dom = document.querySelector('.es-home-industryData')
-  const domHeight = dom.clientHeight
   if ((scrollTop.value >= 1320) && scrollTop.value < 1500) {
-    windowScroll.SET_SCROLL_TOP(1320)
     const index = Object.keys(tabList.value).findIndex(item => {
       return item === currentTab.value
     })
     // 在此处理滚轮事件
     if (delta > 0) {
-      currentTab.value = index === 0 ? Object.keys(tabList.value)[0] : Object.keys(tabList.value)[index - 1]
+      if (index !== 0) {
+        currentTab.value = Object.keys(tabList.value)[index - 1]
+        if (event.preventDefault) event.preventDefault();
+        event.returnValue = false;
+      }
     } else if (delta < 0) {
       const lastIndex = Object.keys(tabList.value).length - 1
-      currentTab.value = index === lastIndex ? Object.keys(tabList.value)[lastIndex] : Object.keys(tabList.value)[index + 1]
+      if (index !== lastIndex) {
+        currentTab.value = Object.keys(tabList.value)[index + 1]
+        if (event.preventDefault) event.preventDefault();
+        event.returnValue = false;
+      }
     }
-    if (event.preventDefault) event.preventDefault();
-    event.returnValue = false;
+
   }
 }
 onMounted(() => {
@@ -117,9 +122,8 @@ getLatestTenderFn()
 @import "@/style/mixin.scss";
 
 .es-home-industryData {
-  width: 60vw;
-  min-width: 1080px;
   padding-bottom: 64px;
+  min-width: 1080px;
 
   .title {
     width: 100%;

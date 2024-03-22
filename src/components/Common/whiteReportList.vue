@@ -1,6 +1,6 @@
 <template>
   <div class="white-report-list">
-    <img class="poster" :src="pageData.reportCover" alt="" />
+    <img class="poster" :src="useUserStore.fileUrl + pageData.reportCover" alt="" />
     <p class="title">{{ pageData.reportName }}</p>
     <p class="author">
       <span>分析师</span>
@@ -11,12 +11,14 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStoreHook } from '@/store/modules/user'
 defineProps({
   pageData: {
     type: Object,
     default: () => { { } }
   }
 })
+const useUserStore = useUserStoreHook()
 </script>
 
 <style lang="scss" scoped>
@@ -28,6 +30,8 @@ defineProps({
   .poster {
     @include widthAndHeight(100%, 298px);
     margin-bottom: 16px;
+    border-radius: 8px;
+    border: 1px solid #DBDCE2;
   }
 
   .title {
