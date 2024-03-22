@@ -40,5 +40,16 @@ export default {
         backgroundColor: ""
       },
     },
+    {
+      path: "/quarterlyMonthlyReports",
+      name: "QuarterlyMonthlyReports",
+      components: {
+        default: () => import("@/views/report/quarterlyMonthlyReports/index.vue"),
+      },
+      meta: {
+        title: "季报月报",
+        backgroundColor: ""
+      },
+    },
   ]
 };
