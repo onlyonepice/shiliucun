@@ -9,21 +9,29 @@
       </div>
     </div>
     <div :class="ns.b('homeCenter')">
+      <!-- 行业洞察 -->
       <industryInsight />
+      <!-- 行业数据 -->
       <industryData />
     </div>
+    <!-- 行业分析 -->
+    <industryAnalysis />
+    <!-- 行业报告 -->
+    <industryReport />
   </div>
 
 </template>
 
 
 <script lang="ts" setup>
-import { onMounted, ref, Ref, watch } from 'vue'
+import { ref, Ref, } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import homeTopIcon from '@/assets/img/common/home-top-icon.png'
 import searchIcon from '@/assets/img/common/search-icon.png'
 import industryInsight from './homeComponents/industryInsight.vue'
 import industryData from './homeComponents/industryData.vue'
+import industryAnalysis from './homeComponents/industryAnalysis.vue'
+import industryReport from './homeComponents/industryReport.vue'
 const ns = useNamespace('home')
 const searchContent: Ref<string> = ref('')
 
@@ -37,9 +45,10 @@ const onSearch = () => {
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-.es-home{
+
+.es-home {
   min-height: 100vh;
-  @include padding(344px,0,0,0);
+  @include padding(344px, 0, 0, 0);
   @include relative();
 }
 

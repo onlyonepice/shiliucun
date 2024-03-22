@@ -15,9 +15,9 @@ import { ref } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import rightArrow from '@/assets/img/right-arrow.png'
 import { getReNewsInFormations } from "@/api/home"
-import IndustryInsightList from '@/components/Common/IndustryInsightList.vue'
+import IndustryInsightList from '@/components/Common/industryInsightList.vue'
 const ns = useNamespace('home-industryInsight')
-const pageData = ref<array>([])
+const pageData = ref([])
 const getReNewsInFormationsFn = async () => {
   const data = await getReNewsInFormations({
     page: 1, limit: 5, keyword: ''

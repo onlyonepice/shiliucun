@@ -20,10 +20,10 @@
 import useNamespace from '@/utils/nameSpace'
 import quotationMark from "@/assets/img/quotation-mark.png";
 const ns = useNamespace('industryInsightList')
-const props = defineProps({
+defineProps({
   pageData: {
     type: Object,
-    default: () => { {} }
+    default: () => { { } }
   }
 })
 </script>

@@ -12,8 +12,11 @@
         </p>
       </div>
       <div class="content_wrapper">
-        <div v-if="currentTab === 'biddingDynamics'">
-          <BiddingDynamicsList v-for="(item, index) in pageData" :key="index" :pageData="item" />
+        <div v-show="currentTab === 'biddingDynamics'">
+          <biddingDynamicsList v-for="(item, index) in biddingDynamicsData" :key="index" :pageData="item" />
+        </div>
+        <div v-show="currentTab === 'newPolicy'">
+          <policyList v-for="(item, index) in policyData" :key="index" :pageData="item" />
         </div>
       </div>
     </div>
@@ -21,14 +24,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import rightArrow from '@/assets/img/right-arrow.png'
 import tagActiveBg from '@/assets/img/tag-active-bg.png'
-import BiddingDynamicsList from '@/components/Common/BiddingDynamicsList.vue'
-import { getLatestTender } from '@/api/home'
+import biddingDynamicsList from '@/components/Common/biddingDynamicsList.vue'
+import policyList from '@/components/Common/policyList.vue'
+import { getLatestTender, getLatestPolicy } from '@/api/home'
+import { windowScrollStore } from "@/store/modules/windowScroll";
 const ns = useNamespace('home-industryData')
-const tabList = ref<object>({
+const tabList = ref({
   biddingDynamics: {
     name: '招标动态',
   },
@@ -36,7 +41,8 @@ const tabList = ref<object>({
     name: '最新政策',
   }
 })
-const pageData = ref<array>([])
+const policyData = ref([])
+const biddingDynamicsData = ref([])
 const currentTab = ref(Object.keys(tabList.value)[0])
 const getLatestTenderFn = async () => {
   const data = await getLatestTender({
@@ -46,21 +52,46 @@ const getLatestTenderFn = async () => {
     hideError: true
   })
   if (data.resp_code === 0) {
-    pageData.value = data.datas.records
+    biddingDynamicsData.value = data.datas.records
+  }
+}
+const getLatestPolicyFn = async () => {
+  const data = await getLatestPolicy({
+    keyword: '',
+    limit: 5,
+    page: 1,
+    hideError: true
+  })
+  if (data.resp_code === 0) {
+    policyData.value = data.datas.records
   }
 }
 const handleTabClick = (key) => {
   currentTab.value = key
 }
-function disableScroll(event) {
+
+const windowScroll = windowScrollStore()
+const scrollTop = ref<number>(0)
+watch(windowScroll, (e) => {
+  console.log(e.scrollTop)
+  scrollTop.value = e.scrollTop
+})
+
+function disableScroll() {
+  window.addEventListener('mousewheel', preventDefault, { passive: false }); // Chrome/Safari/Opera
+  window.addEventListener('DOMMouseScroll', preventDefault, { passive: false }); // Firefox
+}
+
+
+// 阻止默认行为的函数
+function preventDefault(event) {
+  event = event || window.event;
+  window.scrollBy(0, 200); // 滚动页面
   var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
   const dom = document.querySelector('.es-home-industryData')
-  const domTop = dom.getBoundingClientRect().top
-  const domHeight = dom.getBoundingClientRect().height
-  console.log(domTop, event)
-  if (domTop <= 70 && domTop >= 0) {
-    event.preventDefault();
-    console.log(event.offsetY)
+  const domHeight = dom.clientHeight
+  if ((scrollTop.value >= 1320) && scrollTop.value < 1500) {
+    windowScroll.SET_SCROLL_TOP(1320)
     const index = Object.keys(tabList.value).findIndex(item => {
       return item === currentTab.value
     })
@@ -68,23 +99,17 @@ function disableScroll(event) {
     if (delta > 0) {
       currentTab.value = index === 0 ? Object.keys(tabList.value)[0] : Object.keys(tabList.value)[index - 1]
     } else if (delta < 0) {
-      const lastIndex = tabList.value.length - 1
+      const lastIndex = Object.keys(tabList.value).length - 1
       currentTab.value = index === lastIndex ? Object.keys(tabList.value)[lastIndex] : Object.keys(tabList.value)[index + 1]
     }
-    console.log(currentTab.value)
-
+    if (event.preventDefault) event.preventDefault();
+    event.returnValue = false;
   }
-
-};
+}
 onMounted(() => {
-
-  window.addEventListener('scroll', function () {
-    // 在这里编写需要执行的代码
-    console.log('页面正在滚动');
-  });
-  window.addEventListener('wheel', disableScroll, { passive: false });
-  // 方式一：使用addEventListener函数监听鼠标滚轮事件
+  disableScroll()
 })
+getLatestPolicyFn()
 getLatestTenderFn()
 </script>
 
