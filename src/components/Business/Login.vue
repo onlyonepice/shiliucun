@@ -6,7 +6,7 @@
         <div :class="ns.b('banner')">
           <p :class="ns.bm('banner','title')">
             <span>{{ loginType === 'password'? '欢迎使用iReport' : '微信登录' }}</span>
-            <img :src="LoginCancel" @click="onCloseDialog(true)" />
+            <img :src="LoginCancel" @click="onCloseDialog()" />
           </p>
           <p :class="ns.bm('banner','desc')">{{ loginType === 'password'? '未注册手机号验证通过后将自动创建新账号' : '请使用微信扫描二维码登录' }}</p :class="ns.bm('banner','title')">
         </div>
