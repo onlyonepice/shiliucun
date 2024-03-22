@@ -3,7 +3,7 @@
     <!-- 子菜单栏展开背景图 -->
     <div :class="[ns.b('extra'), choseExtra ? ns.bm('extra','open') : '' ] "></div>
     <div :class="['es-commonPage', ns.b('content')]">
-      <img :src="choseExtra || !opacityBg ? LogoIconBlue : LogoIcon" alt="">
+      <img :src="choseExtra || !opacityBg ? LogoIconBlue : LogoIcon" alt="" @click="onBackHome">
       <div :class="[ns.b('list')]" @mouseleave="onChoseLeave()">
         <div
           v-for="item in navList" :key="item.id"
@@ -106,6 +106,9 @@ const onChoseNav = (id: number,path: Array<string> | string) => {
 // 选择子菜单
 const onChoseChildTab = (item) => {
   router.push(item.path)
+}
+const onBackHome = () => {
+  router.push('/home')
 }
 const onChoseLeave = () => {
   choseExtra.value = false
