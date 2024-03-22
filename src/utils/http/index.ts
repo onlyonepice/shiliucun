@@ -115,26 +115,28 @@ class PureHttp {
           PureHttp.initConfig.beforeResponseCallback(response);
           return data;
         }
-        switch (code) {
-          // 无登录
-          case 1001:
-            onErrorHandling(1001, '重新登录')
-            break
-          // token过期
-          case 1002:
-            onErrorHandling(1002, '重新登录')
-            break
-          // 请求接口频繁调用
-          case 1003:
-            ElMessage.error(data?.resp_msg || 'Error')
-            break
-          // 小程序登录报错兼容
-          case 2044:
-            break
-          default:
-            if (config.params && config.params.hideError) return data
-            ElMessage.error(data?.resp_msg || 'Error')
-            break
+        if( code !== 0 ){
+          switch (code) {
+            // 无登录
+            case 1001:
+              onErrorHandling(1001, '重新登录')
+              break
+            // token过期
+            case 1002:
+              onErrorHandling(1002, '重新登录')
+              break
+            // 请求接口频繁调用
+            case 1003:
+              ElMessage.error(data?.resp_msg || 'Error')
+              break
+            // 小程序登录报错兼容
+            case 2044:
+              break
+            default:
+              if (config.params && config.params.hideError) return data
+              ElMessage.error(data?.resp_msg || 'Error')
+              break
+          }
         }
         return data;
       },

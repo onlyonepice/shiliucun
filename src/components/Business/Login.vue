@@ -74,6 +74,7 @@ import LoginTopBg from '@/assets/img/login/login-top-bg.png'
 import LoginCancel from '@/assets/img/common/cancel.png'
 import PasswordShow from '@/assets/img/login/icon_password_show.png'
 import PasswordHidden from '@/assets/img/login/icon_password_hidden.png'
+import { NOOP } from '@vue/shared'
 const ns = useNamespace('login')
 const emit = defineEmits(['onCancel'])
 const loginType:Ref<string> = ref('password') // 其他登录方式 weChat: 微信 password: 密码
@@ -119,40 +120,43 @@ const onGetQrCode = async() => {
 }
 onGetQrCode()
 
-// 登录接口
-const onLogin = async() => {
-  try {
-    loginForm.value.grant_type = codeLogin.value ? 'mobile_password' : 'sms_code'
-    codeLogin.value && delete loginForm.value.smsCode
-    !codeLogin.value && delete loginForm.value.password
-    const { datas,resp_code }:any = await login(loginForm.value)
-    if( resp_code === 0 ){
-      setToken(datas)
-      onCloseDialog()
-    }
-  } catch (error) {
-    console.error('error')
-  }
-}
-
 // 轮询登录接口
 const weChatLogin = async ()=> {
   try {
     if (loginCode.value !== '') {
       const { datas, resp_code }:any = await pollLogin({ loginCode: loginCode.value })
-      console.log('oooooopppppp',resp_code)
       if( resp_code === 2044 && loginType.value === 'weChat' && props.openLogin ){
         weChatLogin()
       }
-      // if ( datas.openId) {
-      //   // login({ grant_type: 'openId', openId: datas.openId })
-      // }
+      if ( datas.openId) {
+        sendLogin({ grant_type: 'openId', openId: datas.openId })
+      }
     }
   } catch (error) {
-    // NOOP()
-    console.log('oooooo',error)
+    NOOP()
   }
 }
+// 登录接口
+const onLogin = async(specialLogin?:boolean,) => {
+  loginForm.value.grant_type = codeLogin.value ? 'mobile_password' : 'sms_code'
+  codeLogin.value && delete loginForm.value.smsCode
+  !codeLogin.value && delete loginForm.value.password
+  sendLogin(loginForm.value)
+}
+// 发送登录接口
+const sendLogin = async(data:any) => {
+  try {
+    const { datas,resp_code }:any = await login(data)
+    if( resp_code === 0 ){
+      setToken(datas)
+      onCloseDialog()
+    }
+  } catch (error) {
+    NOOP()
+  }
+}
+
+
 // 倒计时
 const timer = ref(null) // 定时器
 const countDown = ()=> {
@@ -183,7 +187,7 @@ const onSendCode = async ()=> {
     ElMessage.success('发送成功')
     countDown()
   } catch (error) {
-    return false
+    NOOP()
   }
 }
 </script>
