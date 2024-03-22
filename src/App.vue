@@ -6,7 +6,7 @@
     </div>
     <PageBottom></PageBottom>
   </el-scrollbar>
-  <Login v-if="openLoginAnimate" @onCancel="onCancel" class="animate__animated" :class="openLogin ? 'animate__fadeIn' : 'animate__fadeOut'" />
+  <Login v-if="openLoginAnimate" :openLogin="openLogin" @onCancel="onCancel" class="animate__animated" :class="openLogin ? 'animate__fadeIn' : 'animate__fadeOut'" />
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, Ref, computed, watch } from 'vue';

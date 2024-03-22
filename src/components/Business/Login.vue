@@ -12,17 +12,17 @@
         </div>
       </div>
       <template v-if="loginType === 'password'">
-        <el-input placeholder="手机号码" :class="[ns.bm('input','phone'),ns.bm('input','common')]" />
+        <el-input v-model="loginForm.mobile" placeholder="手机号码"  maxlength="11" :class="[ns.bm('input','phone'),ns.bm('input','common')]" />
         <div v-if="!codeLogin" :class="ns.bm('input','code')">
-          <el-input :class="[ns.bm('input','common'),ns.bm('input','commonCode')]" placeholder="验证码" />
-          <span>获取验证码</span>
+          <el-input v-model="loginForm.smsCode" :class="[ns.bm('input','common'),ns.bm('input','commonCode')]" maxlength="6" placeholder="验证码"  />
+          <span @click="onSendCode" :class="[btnDesc.indexOf('s') !== -1 ? ns.bm('input','down') : '' ]">{{ btnDesc }}</span>
         </div>
         <div v-else :class="ns.bm('input','password')">
-          <el-input :class="ns.bm('input','common')" :type="passwordShow ? 'password' : 'text'" placeholder="密码" />
-          <img :src="passwordShow ? PasswordHidden : PasswordShow" @click="onChangePasswordShow" alt="">
+          <el-input v-model="loginForm.password" :class="ns.bm('input','common')" :type="!passwordShow ? 'password' : 'text'" maxlength="16" placeholder="密码" />
+          <img :src="!passwordShow ? PasswordHidden : PasswordShow" @click="passwordShow = !passwordShow" alt="">
         </div>
-        <el-button :class="ns.b('loginBtn')" type="primary">登录/注册</el-button>
-        <p :class="ns.b('switchBtn')" @click="onSwitch">{{ codeLogin ? '验证码登录' : '账号密码登录'}}</p>
+        <el-button :class="ns.b('loginBtn')" type="primary" @click="onLogin">登录/注册</el-button>
+        <p :class="ns.b('switchBtn')" @click="codeLogin = !codeLogin">{{ codeLogin ? '验证码登录' : '账号密码登录'}}</p>
         <!-- 其他登录方式 -->
         <div class="other-login">
           <div class="other-login__title">其他登录方式</div>
@@ -65,7 +65,10 @@
 
 <script lang="ts" setup>
 import { onMounted, Ref, ref } from 'vue'
-import { getQrCode, pollLogin } from '@/api/user'
+import { getQrCode, pollLogin, sendCode, login } from '@/api/user'
+import { setToken } from '@/utils/auth'
+import { regMobile } from '@/utils/rule'
+import { ElMessage } from 'element-plus'
 import useNamespace from '@/utils/nameSpace'
 import LoginTopBg from '@/assets/img/login/login-top-bg.png'
 import LoginCancel from '@/assets/img/common/cancel.png'
@@ -79,7 +82,20 @@ const codeLogin: Ref<boolean> = ref(false) // 账号密码登录/验证码登录
 const passwordShow: Ref<boolean> = ref(false) // 展示/隐藏密码
 const weChatImage: Ref<any> = ref(null) // 微信二维码
 const loginCode: Ref<string> = ref('') // 轮训结果二维码
-const onCloseDialog = (type: boolean) => {
+const btnDesc: Ref<string> = ref('获取验证码') // 倒计时文案
+const loginForm = ref({
+  mobile: '',
+  smsCode: '',
+  password: '',
+  grant_type: 'sms_code' // sms_code 验证码登录 mobile_password 密码登录
+}) // 提交信息
+const props = defineProps({
+  openLogin: {
+    type: Boolean,
+    default: false
+  }
+})
+const onCloseDialog = () => {
   emit('onCancel')
 }
 const handleSwitchProtocol = (type:string)=> {
@@ -89,14 +105,7 @@ const handleSwitchProtocol = (type:string)=> {
 const handleSwitchLogin = (type)=> {
   loginType.value = type
   type === 'password' && onGetQrCode()
-}
-// 切换账号密码/验证码登录
-const onSwitch = () => {
-  codeLogin.value = !codeLogin.value
-}
-// 切换密码展示/隐藏
-const onChangePasswordShow = () => {
-  passwordShow.value =!passwordShow.value
+  type === 'weChat' && weChatLogin()
 }
 // 获取微信登录二维码
 const onGetQrCode = async() => {
@@ -110,17 +119,71 @@ const onGetQrCode = async() => {
 }
 onGetQrCode()
 
+// 登录接口
+const onLogin = async() => {
+  try {
+    loginForm.value.grant_type = codeLogin.value ? 'mobile_password' : 'sms_code'
+    codeLogin.value && delete loginForm.value.smsCode
+    !codeLogin.value && delete loginForm.value.password
+    const { datas,resp_code }:any = await login(loginForm.value)
+    if( resp_code === 0 ){
+      setToken(datas)
+      onCloseDialog()
+    }
+  } catch (error) {
+    console.error('error')
+  }
+}
+
 // 轮询登录接口
 const weChatLogin = async ()=> {
   try {
     if (loginCode.value !== '') {
-      const { datas }:any = await pollLogin({ loginCode: loginCode.value })
-      if ( datas.openId) {
-        // login({ grant_type: 'openId', openId: datas.openId })
+      const { datas, resp_code }:any = await pollLogin({ loginCode: loginCode.value })
+      console.log('oooooopppppp',resp_code)
+      if( resp_code === 2044 && loginType.value === 'weChat' && props.openLogin ){
+        weChatLogin()
       }
+      // if ( datas.openId) {
+      //   // login({ grant_type: 'openId', openId: datas.openId })
+      // }
     }
   } catch (error) {
-    // error.resp_code === 2044 && this.dialogType && this.loginType === 'weChat' && this.weChatLogin()
+    // NOOP()
+    console.log('oooooo',error)
+  }
+}
+// 倒计时
+const timer = ref(null) // 定时器
+const countDown = ()=> {
+  btnDesc.value = '60s 后可重发'
+  timer.value = setInterval(() => {
+    let seconds = Number(btnDesc.value.replace('s 后可重发', ''))
+    seconds--
+    btnDesc.value = seconds + 's 后可重发'
+    if (seconds === 0) {
+      clearInterval(timer.value)
+      btnDesc.value = '重新获取'
+    }
+  }, 1000)
+}
+// 发送验证码
+const onSendCode = async ()=> {
+  try {
+    if (btnDesc.value.indexOf('s') !== -1) {
+      return false
+    }
+    if (loginForm.value.mobile === '') {
+      return ElMessage.error('请输入手机号')
+    }
+    if (!regMobile.test(loginForm.value.mobile)) {
+      return ElMessage.error('请输入正确手机号')
+    }
+    await sendCode({ mobile: loginForm.value.mobile })
+    ElMessage.success('发送成功')
+    countDown()
+  } catch (error) {
+    return false
   }
 }
 </script>
@@ -186,10 +249,12 @@ const weChatLogin = async ()=> {
   @include flex(center,space-between,nowrap);
   span{
     cursor: pointer;
-    width: 136px;
-    height: 40px;
+    @include widthAndHeight(136px,40px);
     padding-left: 10px;
     @include font(14px,500,#165dff,40px);
+  }
+  .es-login-input--down{
+    color: #999999;
   }
 }
 .es-login-input--password{
@@ -214,23 +279,20 @@ const weChatLogin = async ()=> {
     &::before{
       content: '';
       display: inline-block;
-      width: 104px;
-      height: 1px;
+      @include widthAndHeight(104px,1px);
       background: #DBDCE2;
       margin-right: 16px;
     }
     &::after{
       content: '';
       display: inline-block;
-      width: 104px;
-      height: 1px;
+      @include widthAndHeight(104px,1px);
       background: #DBDCE2;
       margin-left: 16px;
     }
   }
   .other-login__icon-weChat{
-    width: 40px;
-    height: 40px;
+    @include widthAndHeight(40px,40px);
     background: #F2F3F5;
     margin: 8px auto 16px;
     background-image: url("@/assets/img/common/weChat-icon.png");

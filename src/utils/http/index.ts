@@ -20,7 +20,7 @@ const { VITE_GLOB_API_URL } = import.meta.env;
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
   // 请求超时时间
-  timeout: 10000,
+  timeout: 1000 * 150,
   headers: {
     Accept: "application/json, text/plain, */*",
     "Content-Type": "application/json",
@@ -32,6 +32,11 @@ const defaultConfig: AxiosRequestConfig = {
   }
 };
 const { clientId } = defaultProjectConfig
+
+// 请求不带token白名单
+const whiteUrlList = ['/api-uaa/oauth/token','/api-user/user/sendLoginSMS','/api-user/wx/miniapp/front/v1.0/loginQRCode','/api-user/wx/miniapp/front/v1.0/queryUserLogin']
+// 导出白名单，设置超长请求接口过期时间
+const exportList = ['/file-service/eesa/report/file/convertFile','/file-service/eesa/report/wordToBase64']
 
 class PureHttp {
   constructor() {
@@ -61,28 +66,27 @@ class PureHttp {
           PureHttp.initConfig.beforeRequestCallback(config);
           return config;
         }
-
+        // 导出报告耗时较长，需要设置超时时间 5分钟
+        exportList.includes(config.url) && ( config.timeout = 1000 * 60 * 5 )
         // 添加平台标识
         config.headers["tenant"] = defaultProjectConfig.clientId;
+        // 添加token
+        const token = getToken();
+        if (token && !whiteUrlList.includes(config.url)) {
+          config.headers["Authorization"] = "Bearer " + token;
+        } else {
+          config.headers["Authorization"] =
+            "Basic " +
+            window.btoa(
+              defaultProjectConfig.clientId +
+                ":" +
+                defaultProjectConfig.clientSecret
+            );
+        }
         // 定义请求链接
         config.url = config.url.indexOf('http') === -1 ? `${VITE_GLOB_API_URL}${config.url}` : config.url;
         // 接口加密
         config.headers["sign"] = encrypt(config);
-        // 添加token
-        const token = getToken();
-
-        config.headers["Authorization"] = "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X3R5cGUiOiJhZG1pbiIsInVzZXJfbmFtZSI6IjE3MDgzMTI5MTE1NzEiLCJzY29wZSI6WyJhbGwiXSwiaWQiOjczNTUsImV4cCI6MTcxMTUyOTY2MCwidHlwZSI6IlJFR0lTVEVSIiwiYXV0aG9yaXRpZXMiOlsiUEVSU09OX01FTUJFUl9VU0VSIl0sImp0aSI6IjdiMzE5N2RlLWU0MjktNGYyMi04NmZmLTdiZGE2MjhhMTYxYyIsImNsaWVudF9pZCI6ImlSZXBvcnQtZnJvbnQifQ.I-rg7B49_pFIy_bvywX8621jqJgW3g-_diLWpBd0bAXh5SciDzz4jCOd2feoO_tRqugzqGwpTTMeJBqBjZAE3nRASqtWZPKGYzz8OKctae-gG83o5tgXbU008xeyG8EawZ_4gZiHyN7dfM0CXWPJCQ0e83mRdmphKv-ORn48a8U";
-        // if (token) {
-        //   config.headers["Authorization"] = "Bearer " + token;
-        // } else {
-        //   config.headers["Authorization"] =
-        //     "Basic " +
-        //     window.btoa(
-        //       defaultProjectConfig.clientId +
-        //         ":" +
-        //         defaultProjectConfig.clientSecret
-        //     );
-        // }
 
         return config
       },
@@ -111,8 +115,26 @@ class PureHttp {
           PureHttp.initConfig.beforeResponseCallback(response);
           return data;
         }
-        if (code !== 0) {
-          ElMessage({ message: data.resp_msg || data.message, type: 'error' })
+        switch (code) {
+          // 无登录
+          case 1001:
+            onErrorHandling(1001, '重新登录')
+            break
+          // token过期
+          case 1002:
+            onErrorHandling(1002, '重新登录')
+            break
+          // 请求接口频繁调用
+          case 1003:
+            ElMessage.error(data?.resp_msg || 'Error')
+            break
+          // 小程序登录报错兼容
+          case 2044:
+            break
+          default:
+            if (config.params && config.params.hideError) return data
+            ElMessage.error(data?.resp_msg || 'Error')
+            break
         }
         return data;
       },
@@ -170,5 +192,17 @@ class PureHttp {
     return this.request<P>("get", url, params, config);
   }
 }
+
+const onErrorHandling = (
+  code,
+  confirmBtn,
+  cancelBtn = '取消',
+  callBack = null
+) => {
+  // store.dispatch('user/resetToken').then(() => {
+  //   location.reload()
+  // })
+}
+
 
 export const http = new PureHttp();

@@ -1,6 +1,6 @@
 <template>
   <div :class="[ns.b()]">
-    <img :class="ns.b('homeBg')" src="https://i-report.eesaenergy.com/3.0/home-head-bg.png" alt="">
+    <img :class="ns.b('homeBg')" src="https://share.eesaexpo.com/report/3.0/home-head-bg.png" alt="">
     <img :class="ns.b('homeTopIcon')" :src="homeTopIcon" alt="" />
     <div :class="ns.b('homeTopSearch')">
       <el-input v-model="searchContent" placeholder="请输入关键字…" @keyup.enter="onSearch"></el-input>
@@ -14,6 +14,7 @@
 
 
 <script lang="ts" setup>
+// 季报月报
 import { onMounted, ref, Ref, watch } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import homeTopIcon from '@/assets/img/common/home-top-icon.png'

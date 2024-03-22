@@ -27,8 +27,8 @@ export const getPublicKeyApi = () => {
 
 // 获取小程序二维码
 export function getQrCode() {
-  return http.request<void>("post", `/api-user/wx/miniapp/front/v1.0/loginQRCode?tenantId=iReport-front`,{
-    params: { specialBlob: true },
+  return http.request<void>("post", `/api-user/wx/miniapp/front/v1.0/loginQRCode`,{
+    params: { tenantId: 'iReport-front', specialBlob: true },
     responseType: 'blob',
   });
 }
@@ -38,4 +38,18 @@ export function pollLogin(params) {
   return http.request<void>("post", `/api-user/wx/miniapp/front/v1.0/queryUserLogin`,{
     params,
   });
+}
+
+// 发送验证码
+export function sendCode(params) {
+  return http.request<void>("get", `/api-user/user/sendLoginSMS`,{
+    params,
+  })
+}
+
+// 登录
+export function login(params) {
+  return http.request<void>("post", `/api-uaa/oauth/token`,{
+    params
+  })
 }
