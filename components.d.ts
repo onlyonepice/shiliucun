@@ -7,17 +7,18 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    BiddingDynamicsList: typeof import('./src/components/Common/biddingDynamicsList.vue')['default']
     Breadcrumb: typeof import('./src/components/Common/breadcrumb.vue')['default']
     Dialog: typeof import('./src/components/Common/Dialog/index.vue')['default']
-    Enter: typeof import('./src/components/Business/Login/enter.vue')['default']
-    Input: typeof import('./src/components/Business/Login/input.vue')['default']
+    IndustryInsightList: typeof import('./src/components/Common/industryInsightList.vue')['default']
     Loading: typeof import('./src/components/Common/loading.vue')['default']
     Login: typeof import('./src/components/Business/Login.vue')['default']
     PageBottom: typeof import('./src/components/Business/PageBottom.vue')['default']
     PageNav: typeof import('./src/components/Business/PageNav.vue')['default']
+    PolicyList: typeof import('./src/components/Common/policyList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/Common/select.vue')['default']
-    Tag: typeof import('./src/components/Common/Tag/index.vue')['default']
+    WhiteReportList: typeof import('./src/components/Common/whiteReportList.vue')['default']
   }
 }
