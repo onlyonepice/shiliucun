@@ -73,7 +73,6 @@ const handleTabClick = (key) => {
 const windowScroll = windowScrollStore()
 const scrollTop = ref<number>(0)
 watch(windowScroll, (e) => {
-  console.log(e.scrollTop)
   scrollTop.value = e.scrollTop
 })
 
