@@ -16,7 +16,6 @@ const ns = useNamespace('whitePaper')
 <style lang="scss">
 @import "@/style/mixin.scss";
 .es-whitePaper{
-  @include padding(56px,0,0,0);
   min-height: 100vh;
 }
 </style>
