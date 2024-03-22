@@ -2,7 +2,7 @@
   <PageNav class="pageNav" :opacityBg="opacityBg" :class="{ 'pageNav-show': showNavBar, 'es-pageNav--opacity': opacityBg }"
     @onLogin="openLogin = true; openLoginAnimate = true" />
   <el-scrollbar ref="scrollbarRef" class="es-body" @scroll="onScroll">
-    <div class="es-pageContent" :style="{ 'background-color': getBg, 'padding-top': route.path === '/home' ? '0' : '56px'  }">
+    <div class="es-pageContent animate__animated animate__fadeIn" :style="{ 'background-color': getBg, 'padding-top': route.path === '/home' ? '0' : '56px'  }">
       <router-view />
     </div>
     <PageBottom></PageBottom>
@@ -70,6 +70,7 @@ useUserStore().getConfigListBefore()
 
   .es-pageContent {
     background-color: #ffffff;
+    min-height: 50vh;
   }
 }
 

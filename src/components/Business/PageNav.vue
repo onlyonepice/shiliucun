@@ -10,7 +10,7 @@
           @mouseenter="onChoseNav(item.id, item.path)"
           :class="[ ns.bm('list','item'), optionChildren ? ns.bm('list--item','chose') : '' ]"
         >
-          <div :class="ns.bm('item','title')">
+          <div :class="ns.bm('item','title')" @click="onToHome()">
             <span>{{ item.text }}</span>
             <div :class="[ns.b('underline')]"></div>
           </div>
@@ -105,6 +105,11 @@ const onChoseNav = (id: number,path: Array<string> | string) => {
 }
 const onChoseLeave = () => {
   choseExtra.value = false
+}
+// 跳转首页
+const onToHome = () => {
+  router.push({ path: '/home' })
+  onChoseLeave()
 }
 const optionChildren: Ref<boolean> = ref(false)
 // 子路由跳转
