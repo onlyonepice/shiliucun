@@ -12,6 +12,7 @@
 import { onMounted, ref, Ref, computed, watch } from 'vue';
 import { useRouter, useRoute } from "vue-router";
 import { windowScrollStore } from "@/store/modules/windowScroll";
+import { useUserStore } from '@/store/modules/user'
 const opacityBg: Ref<boolean> = ref(true); // 是否展示透明背景
 const router = useRouter();
 const route = useRoute();
@@ -47,6 +48,8 @@ const onCancel = () => {
     openLoginAnimate.value = false
   },500)
 }
+// 获取文件前缀
+useUserStore().getConfigListBefore()
 </script>
 
 <style lang="scss">

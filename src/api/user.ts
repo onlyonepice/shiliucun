@@ -15,7 +15,7 @@ export const getUserInfo = () => {
 
 //获取图片域名
 export const configListBefore = params => {
-  return http.request<void>("get", "/api-user/configListBefore/", {
+  return http.request<void>("get", "/api-user/openApi/configListBefore", {
     params: { value: params }
   });
 };

@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import { useUserStoreHook } from "@/store/modules/user";
+import { getToken } from "@/utils/auth";
 /** 自动导入全部静态路由，无需再手动引入！匹配 src/router/modules 目录（任何嵌套级别）中具有 .ts 扩展名的所有文件，除了 remaining.ts 文件
  */
 const modules: Record<string, any> = import.meta.glob(
@@ -25,7 +26,6 @@ Object.keys(modules).forEach(key => {
 export const routerArrays = routes;
 
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(formatFlatteningRoutes(routes));
-console.log('pppppp', constantRoutes)
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -33,13 +33,15 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  window.localStorage.getItem("publicKey") === "null" ||
-  !window.localStorage.getItem("publicKey")
-    ? useUserStoreHook().getPublicKey()
-    : useUserStoreHook().setPublicKey();
+  window.localStorage.getItem("publicKey") === "null" || !window.localStorage.getItem("publicKey") && useUserStoreHook().getPublicKey()
   if (typeof (to.meta?.title) === 'string') {
     document.title = to.meta?.title;
   }
+  if ( getToken() ) {
+    useUserStoreHook().handleGetUserInfo()
+    next()
+  }
+
   next()
 })
 
