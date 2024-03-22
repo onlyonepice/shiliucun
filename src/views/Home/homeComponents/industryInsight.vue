@@ -2,7 +2,7 @@
   <div :class="[ns.b()]">
     <div class="title">
       <p class="title_text">行业洞察。</p>
-      <img :src="rightArrow" alt="" />
+      <img :src="rightArrow" alt="" @click="onEnterList" />
     </div>
     <div class="content">
       <IndustryInsightList v-for="item in pageData" :pageData="item" />
@@ -15,9 +15,14 @@ import { ref } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import rightArrow from '@/assets/img/common/right-arrow.png'
 import { getReNewsInFormations } from "@/api/home"
-import IndustryInsightList from '@/components/Common/industryInsightList.vue'
+import { useRouter } from "vue-router";
+import IndustryInsightList from '@/components/Common/IndustryInsightList.vue'
 const ns = useNamespace('home-industryInsight')
+const router = useRouter();
 const pageData = ref([])
+const onEnterList = () => {
+  router.push('/industryInsight')
+}
 const getReNewsInFormationsFn = async () => {
   const data = await getReNewsInFormations({
     page: 1, limit: 5, keyword: ''
@@ -49,7 +54,8 @@ getReNewsInFormationsFn()
     }
 
     img {
-      @include widthAndHeight(48px, 48px)
+      @include widthAndHeight(48px, 48px);
+      cursor: pointer;
     }
   }
 

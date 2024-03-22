@@ -3,7 +3,7 @@
     <!-- 子菜单栏展开背景图 -->
     <div :class="[ns.b('extra'), choseExtra ? ns.bm('extra','open') : '' ] "></div>
     <div :class="['es-commonPage', ns.b('content')]">
-      <img :src="choseExtra || !opacityBg ? LogoIconBlue : LogoIcon" alt="">
+      <img :src="choseExtra || !opacityBg ? LogoIconBlue : LogoIcon" alt="" @click="onBackHome">
       <div :class="[ns.b('list')]" @mouseleave="onChoseLeave()">
         <div
           v-for="item in navList" :key="item.id"
@@ -16,7 +16,7 @@
           </div>
           <div :class="ns.bm('item','box')" >
             <div v-for="_item in item.children" :key="_item.id">
-              <div :class="ns.bm('item','text')" @click="onChildrenPath(_item.path)">
+              <div :class="ns.bm('item','text')" @click="onChoseChildTab(_item)">
                 {{ _item.text }}
               </div>
             </div>
@@ -62,7 +62,7 @@ const navList: Ref<Array<NavList>> = ref([
   },
   { id: 2, text: '报告', path: ["/report",'/reportDetail','','',''],
     children: [
-      { id: 1, text: '行业洞察', path: '/report?source=行业洞察' },
+      { id: 1, text: '行业洞察', path: '/industryInsight' },
       { id: 2, text: '季报月报', path: '/report?source=季报月报' },
       { id: 3, text: '原创报告', path: '/report?source=原创报告' },
       { id: 4, text: '白皮书', path: '/reportWhitePaper' }
@@ -102,6 +102,13 @@ const onChoseNav = (id: number,path: Array<string> | string) => {
   choseNavId.value = id
   choseExtra.value = true
   choseExtraContent.value = true
+}
+// 选择子菜单
+const onChoseChildTab = (item) => {
+  router.push(item.path)
+}
+const onBackHome = () => {
+  router.push('/home')
 }
 const onChoseLeave = () => {
   choseExtra.value = false
