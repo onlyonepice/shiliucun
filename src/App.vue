@@ -69,6 +69,7 @@ useUserStore().getConfigListBefore()
   }
 
   .es-pageContent {
+    padding-top: 56px;
     background-color: #ffffff;
   }
 }
