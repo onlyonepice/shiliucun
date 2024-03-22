@@ -1,5 +1,5 @@
 <template>
-  <PageNav class="pageNav" :class="{ 'pageNav-show': showNavBar, 'es-pageNav--opacity': opacityBg }"
+  <PageNav class="pageNav" :opacityBg="opacityBg" :class="{ 'pageNav-show': showNavBar, 'es-pageNav--opacity': opacityBg }"
     @onLogin="openLogin = true; openLoginAnimate = true" />
   <el-scrollbar ref="scrollbarRef" class="es-body" @scroll="onScroll">
     <div class="es-pageContent" :style="{ 'background-color': getBg }">

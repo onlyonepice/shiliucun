@@ -3,20 +3,20 @@
     <!-- 子菜单栏展开背景图 -->
     <div :class="[ns.b('extra'), choseExtra ? ns.bm('extra','open') : '' ] "></div>
     <div :class="['es-commonPage', ns.b('content')]">
-      <img :src="choseExtra ? LogoIconBlue : LogoIcon" alt="">
+      <img :src="choseExtra || !opacityBg ? LogoIconBlue : LogoIcon" alt="">
       <div :class="[ns.b('list')]" @mouseleave="onChoseLeave()">
         <div
           v-for="item in navList" :key="item.id"
           @mouseenter="onChoseNav(item.id, item.path)"
-          :class="[ ns.bm('list','item'), choseNavId === item.id ? ns.bm('list','chose') : '' ]"
+          :class="[ ns.bm('list','item'), optionChildren ? ns.bm('list--item','chose') : '' ]"
         >
           <div :class="ns.bm('item','title')">
             <span>{{ item.text }}</span>
             <div :class="[ns.b('underline')]"></div>
           </div>
-          <div :class="ns.bm('item','box')">
+          <div :class="ns.bm('item','box')" >
             <div v-for="_item in item.children" :key="_item.id">
-              <div :class="ns.bm('item','text')" >
+              <div :class="ns.bm('item','text')" @click="onChildrenPath(_item.path)">
                 {{ _item.text }}
               </div>
             </div>
@@ -49,6 +49,12 @@ const choseNavId: Ref<number> = ref(1); // 选中的导航栏id
 const choseExtra: Ref<boolean> = ref(false); // 打开下拉菜单
 const choseExtraContent: Ref<boolean> = ref(false); // 打开下拉菜单
 const emit = defineEmits(['onLogin'])
+const props = defineProps({
+  opacityBg: {
+    type: Boolean,
+    default: false
+  }
+})
 // 导航栏数组
 const navList: Ref<Array<NavList>> = ref([
   { id: 1, text: '首页', path: ["/home",],
@@ -59,7 +65,7 @@ const navList: Ref<Array<NavList>> = ref([
       { id: 1, text: '行业洞察', path: '/report?source=行业洞察' },
       { id: 2, text: '季报月报', path: '/report?source=季报月报' },
       { id: 3, text: '原创报告', path: '/report?source=原创报告' },
-      { id: 4, text: '白皮书', path: '/report?source=白皮书' }
+      { id: 4, text: '白皮书', path: '/reportWhitePaper' }
     ]
   },
   { id: 3, text: '数据', path: ["/data"],
@@ -99,6 +105,18 @@ const onChoseNav = (id: number,path: Array<string> | string) => {
 }
 const onChoseLeave = () => {
   choseExtra.value = false
+}
+const optionChildren: Ref<boolean> = ref(false)
+// 子路由跳转
+const onChildrenPath = (path: string | Array<string>) => {
+  optionChildren.value = true
+  if( route.path !== path || route.path !== path[0] ){
+    router.push(Array.isArray(path) ? path[0] : path)
+    onChoseLeave()
+    setTimeout(()=>{
+      optionChildren.value = false
+    })
+  }
 }
 // 监听路由改变
 watch(
@@ -210,6 +228,12 @@ const onLogin = () => {
     &:hover .es-pageNav-item--box{
       height: auto;
       opacity: 1;
+    }
+  }
+  .es-pageNav-list--item--chose{
+    .es-pageNav-item--box{
+      height: 0 !important;
+      opacity: 0 !important;
     }
   }
 }
