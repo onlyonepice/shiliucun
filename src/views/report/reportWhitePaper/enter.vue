@@ -1,6 +1,9 @@
 <template>
   <div :class="[ns.b(),'es-commonPage']">
-
+    <div v-for="item in 2" :key="index">
+      <div></div>
+      <div></div>
+    </div>
   </div>
 </template>
 
