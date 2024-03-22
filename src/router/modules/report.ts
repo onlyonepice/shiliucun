@@ -7,7 +7,8 @@ export default {
   meta: {
     title: "报告"
   },
-  children: {
+  children: [
+    {
     path: "/reportDetail",
     name: "ReportDetail",
     components: {
@@ -17,5 +18,18 @@ export default {
       title: "报告详情",
       backgroundColor: "#F2F3F5"
     },
-  }
+  },
+  {
+    path: "/industryInsight",
+    name: "IndustryInsight",
+    components: {
+      default: () => import("@/views/report/industryInsight/index.vue"),
+    },
+    meta: {
+      title: "行业洞察",
+      backgroundColor: ""
+    },
+  },
+
+]
 };
