@@ -1,18 +1,19 @@
 <template>
-    <div :class="ns.bm('list', 'item')">
+    <div :class="ns.bm('list', 'item')" @mouseenter="onEnterBox" @mouseleave="onLeaveBox">
         <div :class="ns.bm('item', 'header')">
             <img :src="list.pic" alt="">
         </div>
         <div :class="ns.b('body')">
-            <div :class="ns.bm('body', 'item')" v-for="item in list.list" :key="item.id">
-                <div :class="[ns.bm('item', 'index'), item.id === 1 ? 'first' : item.id === 2 ? 'second' : item.id === 3 ? 'three' : 'default']">
-                    {{ item.id }}
+            <div :class="ns.bm('body', 'item')" v-for="(item, index) in list.list" :key="item.id" v-infinite-scroll="handleDropdownLoading" infinite-scroll-distance="20" @click="onDetailReport(item)">
+                <div :class="[ns.bm('item', 'index'), index + 1 === 1 ? 'first' : index + 1 === 2 ? 'second' : index + 1 === 3 ? 'three' : 'default']">
+                    {{ index + 1 }}
                 </div>
                 <div :class="ns.bm('item', 'main')">
-                    <p class="item-title">{{ item.title }}</p>
-                    <p class="item-date">{{ item.date }}</p>
+                    <p class="item-title" :title="item.reportName">{{ item.reportName }}</p>
+                    <p class="item-date">{{ item.writingTime }}</p>
                 </div>
             </div>
+            <div :class="ns.b('footer')">- The End -</div>
         </div>
     </div>
 </template>
@@ -22,13 +23,26 @@
 import { onMounted, ref, watch } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 const ns = useNamespace('timeList')
-defineProps({
+const props = defineProps({
     list: {
         type: Object,
         default: () => {}
     }
 })
-// const emits = defineEmits(['handleDropdownLoading']);
+const operateItem = ref('')
+const emits = defineEmits(['dropdownLoading', 'detailReport']);
+const handleDropdownLoading = () => {
+    emits('dropdownLoading', operateItem.value);
+}
+const onEnterBox = () => {
+    operateItem.value = props.list.type;
+}
+const onLeaveBox = () => {
+    operateItem.value = '';
+}
+const onDetailReport = (item) => {
+    emits('detailReport', item)
+}
 
 </script>
 
@@ -51,7 +65,7 @@ defineProps({
 
     .es-timeList-body {
         height: 600px;
-        @include padding(16px, 24px, 16px, 24px);
+        @include padding(16px, 8px, 16px, 16px);
         overflow-y: scroll;
         .es-timeList-body--item {
              @include flex(flex-start, flex-start);
@@ -65,7 +79,7 @@ defineProps({
                 @include flex();
                 @include widthAndHeight(20px, 20px);
                 border-radius: 10px;
-                @include margin(0,8px,0,0);
+                @include margin(0,8px,0,8px);
                 min-width: 20px;
              }
              .first {
@@ -86,10 +100,16 @@ defineProps({
              .es-timeList-item--main {
                 .item-title {
                     @include font(14px,400,rgba(0,0,0,0.9),22px);
+                    width: 292px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
-                    
+                    @media (max-width: 1250px) {
+                        width: 278px;
+                    }
+                    @media (max-width: 1180px) {
+                        width: 245px;
+                    }
                 }
                 .item-date {
                     @include font(12px,400,rgba(0,0,0,0.6),20px);
@@ -99,10 +119,19 @@ defineProps({
              &:hover {
                 cursor: pointer;
              }
+             &:hover {
+                background: #F2F3F5;
+                border-radius: 4px;
+             }
         }
     }
     &:hover {
         box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+    }
+    .es-timeList-footer {
+        @include flex();
+        @include font(14px,400,#5b6985,28px);
+        opacity: .5;
     }
 }
 </style>
