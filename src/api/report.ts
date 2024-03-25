@@ -41,6 +41,13 @@ export const getFreeOnlineReportSelected = (params) => {
     }
   );
 };
+//报告标签列表
+export const getReportTagList = () => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    `/eesa-report/onlineReportNewTag/front/v1.0/list`,
+  );
+};
 
 // 获取季报月报列表
 export const reportList = (data) => {
