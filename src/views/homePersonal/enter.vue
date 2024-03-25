@@ -49,9 +49,9 @@ const tabList: Ref<Array<any>> = ref([
 ])
 const choseTab: Ref<number> = ref(1)
 
-onMounted({
-  choseTab.value = route.query.source
-})
+// onMounted({
+//   // choseTab.value = Number(route.query.source)
+// })
 </script>
 
 <style lang="scss" scoped>
