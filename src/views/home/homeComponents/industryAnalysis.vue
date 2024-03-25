@@ -1,28 +1,24 @@
 <template>
   <div :class="[ns.b()]">
     <img :class="ns.b('header-bg')" :src="selected_articles_bg" alt="" />
-    <div class="es-commonPage">
-      <div class="content">
-        <p :class="ns.b('title')">行业分析。</p>
-        <div :class="ns.b('tab-list')">
-          <div class="tab-item" @click="handleTabClick(index)" v-for="( item, index ) in  tabData ">
-            <p class="tab-name" :class="currentTab === index ? 'active' : ''">
-              {{ item.name }}
-            </p>
-            <p v-if="currentTab === index" class="line"></p>
-          </div>
+    <div class="content">
+      <p :class="ns.b('title')">行业分析。</p>
+      <div :class="ns.b('tab-list')">
+        <div class="tab-item" @click="handleTabClick(index)" v-for="( item, index ) in  tabData ">
+          <p class="tab-name" :class="currentTab === index ? 'active' : ''">
+            {{ item.name }}
+          </p>
+          <p v-if="currentTab === index" class="line"></p>
         </div>
-        <swiper @swiper="setControlledSwiper" :modules="modules" :controller="{ control: controlledSwiper }"
-          :width="bannerWidth" :loop="true" :space-between="50" :autoplay="{ delay: 4000, disableOnInteraction: false }"
-          :pagination="{ clickable: true }" :scrollbar="{ draggable: false }" class="swiperBox"
-          @slideChange="onSlideChange">
-          <swiper-slide v-for=" item  in  tabData " :key="item.name">
-            <div :class="ns.b('carousel-item')">
-              <img class="banner-img" :src="item.img" alt="">
-            </div>
-          </swiper-slide>
-        </swiper>
       </div>
+      <swiper @swiper="setControlledSwiper" :modules="modules" :control="controlledSwiper" :width="bannerWidth"
+        :loop="true" :space-between="50" class="swiperBox" @slideChange="onSlideChange">
+        <swiper-slide v-for=" item  in  tabData " :key="item.name">
+          <div :class="ns.b('carousel-item')">
+            <img class="banner-img" :src="item.img" alt="">
+          </div>
+        </swiper-slide>
+      </swiper>
     </div>
 
   </div>
@@ -76,7 +72,7 @@ const tabData = ref([
 
   },
 ])
-const controlledSwiper = ref();
+const controlledSwiper = ref(null);
 const currentTab = ref(0)
 const setControlledSwiper = (swiper: any) => {
   controlledSwiper.value = swiper;
@@ -94,11 +90,14 @@ onMounted(() => {
 })
 </script>
 <style lang="scss">
-.swiper-slide {
-  width: 61.66vw !important;
+.swiperBox {
+  width: 100%;
+  overflow-x: hidden;
+}
 
-  @media screen and (max-width: 1536px) {
-    width: 100% !important;
+.swiper-slide {
+  @media screen and (max-width: 1250px) {
+    width: 1080px !important;
   }
 }
 </style>
@@ -114,13 +113,18 @@ onMounted(() => {
     width: 1536px;
     height: 100%;
     justify-content: flex-end;
+    margin: 0 0 0 auto;
 
     @media screen and (max-width: 1536px) {
-      width: 100%;
+      width: 1152px;
+      margin: 0 auto;
+
     }
 
     @media screen and (max-width: 1250px) {
       width: 1080px;
+      margin: 0 auto;
+
     }
   }
 
@@ -175,7 +179,9 @@ onMounted(() => {
     cursor: pointer;
 
     img {
-      @include widthAndHeight(100%, 100%)
+      @include widthAndHeight(100%, 100%);
+      min-width: 1080px;
+      max-width: 1150px;
     }
   }
 }

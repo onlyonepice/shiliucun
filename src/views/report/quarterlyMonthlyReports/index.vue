@@ -32,7 +32,8 @@ const templateList = ref([
             limit: 12,
         },
         list: [],
-        isEnd: false
+        isEnd: false,
+        isLoading: false
     },
     {
         pic: monthlyPic,
@@ -44,7 +45,8 @@ const templateList = ref([
             limit: 12,
         },
         list: [],
-        isEnd: false
+        isEnd: false,
+        isLoading: false
     },
     {
         pic: quarterlyPic,
@@ -56,11 +58,13 @@ const templateList = ref([
             limit: 12,
         },
         list: [],
-        isEnd: false
+        isEnd: false,
+        isLoading: false
     },
 ])
 // 获取报告列表
 const getReportList = async(index, type) => {
+    templateList.value[index].isLoading = true;
     const queryData = {
         page: templateList.value[index].data.page,
         limit: templateList.value[index].data.limit,
@@ -73,13 +77,11 @@ const getReportList = async(index, type) => {
         })
         templateList.value[index].pages = res.datas.pages;
         templateList.value[index].total = res.datas.total;
-        if (templateList.value[index].list.length === res.datas.total) {
-            templateList.value[index].isEnd = true;
-        } else {
-            templateList.value[index].isEnd = false;
-        }
+        templateList.value[index].isEnd = templateList.value[index].list.length === res.datas.total;
+        templateList.value[index].isLoading = true;
     } else {
         ElMessage.error(res.resp_msg);
+        templateList.value[index].isLoading = false;
     }
 }
 const reportTypesMap = {
@@ -88,13 +90,13 @@ const reportTypesMap = {
   'quarterly': 2,
 };
 // 下拉加载
-const dropdownLoading = (type) => {
+const dropdownLoading = async (type) => {
     const index = reportTypesMap[type];
-    if (index == null) return;
+    if (!index && index !== 0) return;
     const listData = templateList.value[index].data;
     if (listData.page * listData.limit < templateList.value[index].total) {
         listData.page += 1;
-        getReportList(index, `${type.toUpperCase()}_REPORT`);
+       await getReportList(index, `${type.toUpperCase()}_REPORT`);
     }
 }
 // 跳转报告详情

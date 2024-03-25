@@ -3,8 +3,8 @@
         <div :class="ns.bm('item', 'header')">
             <img :src="list.pic" alt="">
         </div>
-        <div :class="ns.b('body')">
-            <div :class="ns.bm('body', 'item')" v-for="(item, index) in list.list" :key="item.id" v-infinite-scroll="handleDropdownLoading" infinite-scroll-distance="20" @click="onDetailReport(item)">
+        <div :class="ns.b('body')" v-infinite-scroll="handleDropdownLoading">
+            <div :class="ns.bm('body', 'item')" v-for="(item, index) in list.list" :key="item.id" infinite-scroll-distance="20" @click="onDetailReport(item)" >
                 <div :class="[ns.bm('item', 'index'), index + 1 === 1 ? 'first' : index + 1 === 2 ? 'second' : index + 1 === 3 ? 'three' : 'default']">
                     {{ index + 1 }}
                 </div>
@@ -13,7 +13,10 @@
                     <p class="item-date">{{ item.writingTime }}</p>
                 </div>
             </div>
-            <div :class="ns.b('footer')">- The End -</div>
+            <div :class="ns.b('footer')" v-if="list.isEnd">- The End -</div>
+            <div :class="ns.b('loading')" v-if="list.isLoading && !list.isEnd">
+                <img :src="loadingPic" alt="">
+            </div>
         </div>
     </div>
 </template>
@@ -22,6 +25,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue'
 import useNamespace from '@/utils/nameSpace'
+import loadingPic from '@/assets/img/common/list-loading.gif'
 const ns = useNamespace('timeList')
 const props = defineProps({
     list: {
@@ -132,6 +136,14 @@ const onDetailReport = (item) => {
         @include flex();
         @include font(14px,400,#5b6985,28px);
         opacity: .5;
+    }
+    .es-timeList-loading {
+        @include flex();
+        height: 64px;
+        img {
+            height: 100%;
+            width: auto;
+        }
     }
 }
 </style>
