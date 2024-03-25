@@ -23,7 +23,13 @@
           </div>
         </div>
         <!-- 登录/注册 -->
-        <p :class="ns.b('login')" @click="onLogin">登录/注册</p>
+        <div v-if="getToken()" @mouseleave="showAvatar = false">
+          <img :class="ns.b('avatar')" @mouseenter="showAvatar = true"  :src="PersonalAvatar" alt="">
+          <div :class="[ns.b('extraAvatar'),showAvatar ? ns.bm('extraAvatar','show') : '']">
+            <p v-for="item in extraAvatar" :key="item.id" @click="onPersonal(item.path)">{{ item.text }}</p>
+          </div>
+        </div>
+        <p v-else :class="ns.b('login')" @click="onLogin">登录/注册</p>
       </div>
     </div>
   </nav>
@@ -40,6 +46,8 @@ import { onMounted, Ref, ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from "vue-router";
 import LogoIcon from '@/assets/img/common/logo-icon.png'
 import LogoIconBlue from '@/assets/img/common/logo-icon-blue.png'
+import PersonalAvatar from '@/assets/img/common/personal-avatar.png'
+import { getToken } from "@/utils/auth";
 import useNamespace from '@/utils/nameSpace'
 const ns = useNamespace('pageNav')
 const router = useRouter();
@@ -48,13 +56,21 @@ const choseNav: Ref<string> = ref(''); // 选中的导航标签
 const choseNavId: Ref<number> = ref(1); // 选中的导航栏id
 const choseExtra: Ref<boolean> = ref(false); // 打开下拉菜单
 const choseExtraContent: Ref<boolean> = ref(false); // 打开下拉菜单
+const showAvatar: Ref<boolean> = ref(false) // 展开个人中心页面
 const emit = defineEmits(['onLogin'])
-const props = defineProps({
+defineProps({
   opacityBg: {
     type: Boolean,
     default: false
   }
 })
+const extraAvatar: Ref<any> = ref([
+  {id: 1, text: '基本信息', path: '/homePersonal?source=基本信息'},
+  {id: 2, text: '我的收藏', path: '/homePersonal?source=我的收藏'},
+  {id: 3, text: '我的订单', path: '/homePersonal?source=我的订单'},
+  {id: 4, text: '修改密码', path: '/homePersonal?source=修改密码'},
+  {id: 5, text: '退出登录', path: ''}
+])
 // 导航栏数组
 const navList: Ref<Array<NavList>> = ref([
   { id: 1, text: '首页', path: ["/home",],
@@ -106,6 +122,13 @@ const onChoseNav = (id: number,path: Array<string> | string) => {
 // 选择子菜单
 const onChoseChildTab = (item) => {
   router.push(item.path)
+}
+// 跳转个人中心
+const onPersonal = (path:string) => {
+  if( path !== '' ){
+    router.push(path)
+  }
+  showAvatar.value = false
 }
 const onBackHome = () => {
   router.push('/home')
@@ -176,11 +199,13 @@ const onLogin = () => {
   height: 100%;
   @include margin(0,auto,0,auto);
   @include flex(center,space-between,nowrap);
+  @include relative();
   img{
     @include widthAndHeight(64px,30px);
     @include relative(10);
   }
   .es-pageNav-list{
+
     div{
       color: rgba(0,0,0,0.6);
     }
@@ -192,7 +217,41 @@ const onLogin = () => {
     color: rgba(0,0,0,0.9);
   }
 }
-
+.es-pageNav-extraAvatar{
+  @include widthAndHeight(120px,0);
+  @include absolute(2,38px,0,none,none);
+  background-image: url('@/assets/img/common/avatar-extra.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  transition: all 0.2s linear;
+  overflow: hidden;
+  p{
+    @include widthAndHeight(104px,24px);
+    margin: 0 auto 4px;
+    @include font(12px,400,rgba(0,0,0,0.6),24px);
+    padding-left: 8px;
+    cursor: pointer;
+    &:nth-last-of-type(1){
+      @include widthAndHeight(120px,39px);
+      border-top: 1px solid #DBDCE2;
+      @include font(12px,400,#F75964,39px);
+      padding-left: 16px;
+    }
+    &:nth-of-type(1){
+      @include widthAndHeight(104px,24px);
+      margin: 14px auto 4px;
+    }
+  }
+}
+.es-pageNav-extraAvatar p:not(:last-child):hover{
+  background: #F2F3F5;
+  border-radius: 2px;
+  color: rgba(0,0,0,0.9);
+}
+.es-pageNav-extraAvatar--show{
+  @include widthAndHeight(120px,170px);
+}
 .es-pageNav--open{
   background-color: #ffffff;
   .es-pageNav-list{
@@ -270,6 +329,10 @@ const onLogin = () => {
   will-change: transform;
   transition: all 0.2s ease-out;
   @include relative(10);
+  cursor: pointer;
+}
+.es-pageNav-content .es-pageNav-avatar{
+  @include widthAndHeight(24px,24px);
   cursor: pointer;
 }
 

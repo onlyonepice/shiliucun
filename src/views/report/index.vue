@@ -7,7 +7,7 @@
 import { onMounted, ref, watch } from 'vue'
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .home{
   height: calc(50vh - 56px);

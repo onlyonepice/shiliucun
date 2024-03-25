@@ -8,5 +8,19 @@ export default {
   },
   meta: {
     title: "首页"
-  }
+  },
+  children: [
+    {
+      path: "/homePersonal",
+      name: "HomePersonal",
+      components: {
+        default: () => import("@/views/homePersonal/enter.vue"),
+      },
+      meta: {
+        title: "个人中心",
+        backgroundColor: "#F2F3F5"
+      }
+    },
+
+  ]
 };

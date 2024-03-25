@@ -36,21 +36,21 @@ const getWhitePaperList = async () => {
 }
 // 跳转白皮书详情
 const onDetail = (data:any) => {
-  window.open(`${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${data.id}&parent=白皮书&moduleName=${data.moduleName}`,'_blank')
+  window.open(`${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${data.id}&parent=白皮书&moduleName=${data.moduleName}&from=/alliance-insight/white-paper`,'_blank')
 }
 onMounted(() => {
   getWhitePaperList()
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .es-whitePaper{
   padding-top: 80px;
   @include padding(80px,0,80px,0);
 }
 .es-whitePaper-list{
-  @include flex(flex-start,center);
+  @include flex(flex-start,center,nowrap);
 }
 .es-whitePaper-list--content{
   max-width: 760px;
@@ -82,7 +82,8 @@ onMounted(() => {
   cursor: pointer;
 }
 .es-whitePaper-list--cover{
-  @include widthAndHeight(368px,526px);
+  @include widthAndHeight(368px,426px);
+  object-fit: cover;
 
 }
 </style>
