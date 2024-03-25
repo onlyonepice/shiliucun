@@ -44,7 +44,6 @@ const industryQueryData = ref({
 })
 const industryInsightList: Ref<Array<List>> = ref([])
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`)
   industryQueryData.value.page  = val;
   getReNewsInfoList()
 }
