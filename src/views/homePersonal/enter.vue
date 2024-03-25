@@ -6,19 +6,23 @@
       <div :class="ns.b('box')">
         <div :class="ns.be('box','left')">
           <div :class="ns.be('left','tab')">
-            <div v-for="item in tabList" :key="item.id" :class="choseTab === item.id ? ns.bem('left','tab','chose') : ''">
+            <div v-for="item in tabList" :key="item.id" :class="choseTab === item.id ? ns.bem('left','tab','chose') : ''" @click="onClickTab(item.id)">
               <img :src="choseTab === item.id ? item.iconChose : item.icon" alt="">
               <p>{{ item.text }}</p>
             </div>
           </div>
           <div :class="ns.bm('left','list')"></div>
         </div>
-        <div :class="ns.bm('box','right')"></div>
+        <div :class="ns.bm('box','right')" v-if="useUserStoreHook().$state.userInfo.id !== undefined">
+          <infoComponent v-if="choseTab === 1" />
+          <collectionComponent v-if="choseTab === 2"  />
+          <orderComponent v-if="choseTab === 3"  />
+          <passwordComponent v-if="choseTab === 4"  />
+        </div>
       </div>
     </div>
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { onMounted, ref, Ref, watch } from 'vue'
@@ -33,9 +37,14 @@ import OrderChose from '@/assets/img/homePersonal/order-chose.png'
 import Password from '@/assets/img/homePersonal/password.png'
 import PasswordChose from '@/assets/img/homePersonal/password-chose.png'
 import Logout from '@/assets/img/homePersonal/logout.png'
+import { useUserStoreHook } from "@/store/modules/user";
+import infoComponent from './components/info.vue'
+import collectionComponent from './components/collection.vue'
+import orderComponent from './components/order.vue'
+import passwordComponent from './components/password.vue'
 const ns = useNamespace('homePersonal')
 const route = useRoute()
-
+const router = useRouter()
 const breadcrumbList: Ref<Array<any>> = ref([
   { text: '首页',path: '/home' },
   { text: '个人中心',path: '' }
@@ -55,6 +64,15 @@ watch(
   },
   { immediate: true }
 )
+// 点击左侧边栏
+const onClickTab = (id: number) => {
+  if( id !== 5 ){
+    choseTab.value = id
+  }else{
+    useUserStoreHook().logOut()
+    router.push('/home')
+  }
+}
 onMounted(()=>{
   route.query.id && ( choseTab.value = Number(route.query.id) )
 })
@@ -76,6 +94,8 @@ onMounted(()=>{
 .es-homePersonal-box--right{
   background: #FFFFFF;
   border-radius: 8px;
+  @include padding(24px,24px,24px,24px);
+  flex: 1;
 }
 .es-homePersonal-left__tab{
   @include widthAndHeight(100%,296px);

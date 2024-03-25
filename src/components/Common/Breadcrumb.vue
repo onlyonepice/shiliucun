@@ -34,14 +34,14 @@ const props = defineProps({
 @import "@/style/mixin.scss";
 
 .es-breadcrumb {
-  height: 48px;
   line-height: 48px;
-  width: 100vw;
+  @include widthAndHeight(100vw,48px);
   background-color: #F2F3F5;
 }
 </style>
 <style lang="scss">
 .es-breadcrumb {
+  min-width: 1080px;
   .el-breadcrumb {
     height: 48px;
 

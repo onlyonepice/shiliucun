@@ -186,6 +186,16 @@ h3{
   font-weight: 600;
   color: rgba(0,0,0,0.9);
 }
+h5{
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.9);
+}
+h6{
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.9);
+}
 
 .page__title {
   @include font(16px, 600, #1C232F, 24px);

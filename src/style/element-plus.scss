@@ -162,3 +162,13 @@
   box-shadow: 0 0 0 1px #165dff inset;
   background-color: #ffffff;
 }
+
+#app{
+  .el-switch.is-checked .el-switch__core{
+    background-color: #244BF1;
+    border-color: #244BF1;
+  }
+  .el-switch__core{
+    background-color: #dcdfe6;
+  }
+}
