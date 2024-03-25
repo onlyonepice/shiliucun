@@ -62,10 +62,10 @@ defineProps({
   }
 })
 const extraAvatar: Ref<any> = ref([
-  {id: 1, text: '基本信息', path: '/homePersonal?source=基本信息'},
-  {id: 2, text: '我的收藏', path: '/homePersonal?source=我的收藏'},
-  {id: 3, text: '我的订单', path: '/homePersonal?source=我的订单'},
-  {id: 4, text: '修改密码', path: '/homePersonal?source=修改密码'},
+  {id: 1, text: '基本信息', path: '/homePersonal?source=1'},
+  {id: 2, text: '我的收藏', path: '/homePersonal?source=2'},
+  {id: 3, text: '我的订单', path: '/homePersonal?source=3'},
+  {id: 4, text: '修改密码', path: '/homePersonal?source=4'},
   {id: 5, text: '退出登录', path: ''}
 ])
 // 导航栏数组
@@ -124,8 +124,9 @@ const onChoseNav = (id: number, path: Array<string> | string) => {
   choseExtraContent.value = true
 }
 // 选择子菜单
-const onChoseChildTab = (item) => {
+const onChoseChildTab = (item:any) => {
   router.push(item.path)
+  onChildrenPath(item.path)
 }
 // 跳转个人中心
 const onPersonal = (path:string) => {
