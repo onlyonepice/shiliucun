@@ -1,4 +1,4 @@
-import downloadBg from '@/assets/img/eesa-waterMark.png'
+// import downloadBg from '@/assets/img/eesa-waterMark.png'
 
 // 自定义判断元素类型JS
 export function toType(obj) {
@@ -38,7 +38,7 @@ function loadImage(src: string) {
  * **/
 export const exportImg = (type = 'png', downLoadName: string, picInfo, incomingBg = null, watermarkWidth = 489, watermarkHeight = 319) => {
   const contentImagePromise = loadImage(picInfo)
-  const watermarkImagePromise = loadImage(incomingBg || downloadBg)
+  const watermarkImagePromise = loadImage(incomingBg)
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
   return new Promise((resolve, reject) => {
@@ -70,7 +70,7 @@ export const exportImg = (type = 'png', downLoadName: string, picInfo, incomingB
 // H5导出canvas
 export const exportCanvas = (title:string, desc:string, downLoadName: string, picInfo, incomingBg = null, watermarkWidth = 489, watermarkHeight = 319) => {
   const contentImagePromise = loadImage(picInfo)
-  const watermarkImagePromise = loadImage(incomingBg || downloadBg)
+  const watermarkImagePromise = loadImage(incomingBg)
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
   return new Promise((resolve, reject) => {
