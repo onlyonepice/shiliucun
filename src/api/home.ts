@@ -31,11 +31,22 @@ export const getLatestPolicy = (data) => {
     }
   );
 };
-//白皮书
-export const getWhitePaper = (params) => {
+
+//首页搜索详情
+export const globalSearch = (params) => {
   return http.request<{ resp_code: number; datas: any }>(
-    "get",
-    `/eesa-report//alliance/whitePaper/front/openApi/v1.1/getWhitePaper`,
+    "post",
+    `/eesa-report/homePage/homepageFrontier/front/openApi/V1.0/globalSearch`,
+    {
+      params
+    }
+  );
+};
+//储能前沿搜索详情
+export const getByKeyword = (params) => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "post",
+    `/eesa-report/homePage/homepageFrontier/front/openApi/V1.0/getByKeyword`,
     {
       params
     }

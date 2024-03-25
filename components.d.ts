@@ -13,12 +13,12 @@ declare module 'vue' {
     IndustryInsightList: typeof import('./src/components/Common/IndustryInsightList.vue')['default']
     Loading: typeof import('./src/components/Common/loading.vue')['default']
     Login: typeof import('./src/components/Business/Login.vue')['default']
+    OnLineReportList: typeof import('./src/components/Common/onLineReportList.vue')['default']
     PageBottom: typeof import('./src/components/Business/PageBottom.vue')['default']
     PageNav: typeof import('./src/components/Business/PageNav.vue')['default']
     PolicyList: typeof import('./src/components/Common/policyList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/Common/select.vue')['default']
-    WhiteReportList: typeof import('./src/components/Common/whiteReportList.vue')['default']
   }
 }

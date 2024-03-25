@@ -30,6 +30,16 @@ export default {
       },
     },
     {
+      path: "/reportOnLine",
+      name: "ReportOnLine",
+      components: {
+        default: () => import("@/views/report/reportOnLine/enter.vue"),
+      },
+      meta: {
+        title: "原创报告"
+      },
+    },
+    {
       path: "/industryInsight",
       name: "IndustryInsight",
       components: {
@@ -37,6 +47,17 @@ export default {
       },
       meta: {
         title: "行业洞察",
+        backgroundColor: ""
+      },
+    },
+    {
+      path: "/quarterlyMonthlyReports",
+      name: "QuarterlyMonthlyReports",
+      components: {
+        default: () => import("@/views/report/quarterlyMonthlyReports/index.vue"),
+      },
+      meta: {
+        title: "季报月报",
         backgroundColor: ""
       },
     },
