@@ -52,3 +52,15 @@ export const getByKeyword = (params) => {
     }
   );
 };
+//首页行业报告
+//免费在线报告
+export const getHomeOnlineReportSelected = (params) => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    `/eesa-report/onlineReportNew/front/openApi/v1.1/getHomeOnlineReport`,
+    {
+      params
+    }
+  );
+};
+

@@ -41,6 +41,7 @@ const useUserStore = useUserStoreHook()
     border-radius: 8px;
     border: 1px solid #DBDCE2;
     object-fit: scale-down;
+    border: 1px solid #DBDCE2;
   }
 
   .tag {

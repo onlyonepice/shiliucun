@@ -172,6 +172,7 @@ onMounted(() => {
 
   .es-home-industryAnalysis-carousel-item {
     @include widthAndHeight(100%, 698px);
+    cursor: pointer;
 
     img {
       @include widthAndHeight(100%, 100%)

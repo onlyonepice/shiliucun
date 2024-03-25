@@ -1,6 +1,6 @@
 <template>
   <div :class="[ns.b(''), 'es-commonPage']">
-    <p class="page-title">原创报告。</p>
+    <p class="page-title">在线报告。</p>
     <div class="content">
       <el-tree ref="treeRef" :data="treeData" show-checkbox default-expand-all node-key="id" highlight-current
         :props="defaultProps">
