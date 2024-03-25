@@ -16,16 +16,16 @@
 import { ref } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import rightArrow from '@/assets/img/common/right-arrow.png'
-import { getOnlineReportSelected } from '@/api/report'
+import { getHomeOnlineReportSelected } from '@/api/home'
 import onLineReportList from '@/components/Common/onLineReportList.vue'
 const ns = useNamespace('home-industryReport')
 const pageData = ref<[]>([])
 const getOnlineReportSelectedFn = async () => {
-  const data = await getOnlineReportSelected({
+  const data = await getHomeOnlineReportSelected({
     page: 1, limit: 5, keyword: ''
   })
   if (data.resp_code === 0) {
-    pageData.value = data.datas.records
+    pageData.value = data.datas
   }
 }
 getOnlineReportSelectedFn()
@@ -54,7 +54,8 @@ getOnlineReportSelectedFn()
       }
 
       img {
-        @include widthAndHeight(48px, 48px)
+        @include widthAndHeight(48px, 48px);
+        cursor: pointer;
       }
     }
 

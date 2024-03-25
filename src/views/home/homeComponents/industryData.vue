@@ -135,7 +135,8 @@ getLatestTenderFn()
     }
 
     img {
-      @include widthAndHeight(48px, 48px)
+      @include widthAndHeight(48px, 48px);
+      cursor: pointer;
     }
   }
 

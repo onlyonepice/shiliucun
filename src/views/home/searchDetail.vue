@@ -60,7 +60,7 @@ const pageOptions = ref<any>({
   REAL_TIME_INFORMATION: { name: '行业洞察' },
   QUARTERLY_AND_MONTHLY_REPORTS: { name: '季报月报' },
   WHITE_PAPER: { name: '白皮书' },
-  ONLINE_REPORT: { name: '原创报告' },
+  ONLINE_REPORT: { name: '在线报告' },
 }) as any
 // 搜索事件
 const onSearch = () => {

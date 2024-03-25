@@ -36,7 +36,7 @@ export default {
         default: () => import("@/views/report/reportOnLine/enter.vue"),
       },
       meta: {
-        title: "原创报告"
+        title: "在线报告"
       },
     },
     {

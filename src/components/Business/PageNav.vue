@@ -79,7 +79,7 @@ const navList: Ref<Array<NavList>> = ref([
     children: [
       { id: 1, text: '行业洞察', path: '/industryInsight' },
       { id: 2, text: '季报月报', path: '/quarterlyMonthlyReports' },
-      { id: 3, text: '原创报告', path: '/reportOnLine?source=原创报告' },
+      { id: 3, text: '在线报告', path: '/reportOnLine?source=在线报告' },
       { id: 4, text: '白皮书', path: '/reportWhitePaper' }
     ]
   },
@@ -88,7 +88,7 @@ const navList: Ref<Array<NavList>> = ref([
     children: [
       { id: 1, text: '招标', path: '/report?source=行业洞察' },
       { id: 2, text: '中标', path: '/report?source=季报月报' },
-      { id: 3, text: '电价', path: '/report?source=原创报告' },
+      { id: 3, text: '电价', path: '/report?source=在线报告' },
       { id: 4, text: '政策', path: '/report?source=白皮书' },
       { id: 5, text: '行业数据库', path: '/report?source=白皮书' },
     ]

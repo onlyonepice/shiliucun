@@ -12,7 +12,6 @@
         </template>
       </el-breadcrumb>
     </div>
-
   </div>
 </template>
 
