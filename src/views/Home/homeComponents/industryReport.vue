@@ -6,7 +6,7 @@
         <img :src="rightArrow" alt="" />
       </div>
       <div class="list-box">
-        <whiteReportList :pageData="item" v-for="item in pageData" />
+        <onLineReportList :pageData="item" v-for="item in pageData" />
       </div>
     </div>
   </div>
@@ -17,7 +17,7 @@ import { ref } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import rightArrow from '@/assets/img/right-arrow.png'
 import { getOnlineReportSelected } from '@/api/home'
-import whiteReportList from '@/components/Common/whiteReportList.vue'
+import onLineReportList from '@/components/Common/onLineReportList.vue'
 const ns = useNamespace('home-industryReport')
 const pageData = ref<[]>([])
 const getOnlineReportSelectedFn = async () => {

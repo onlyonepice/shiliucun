@@ -37,7 +37,6 @@ const props = defineProps({
 .es-breadcrumb {
   height: 48px;
   line-height: 48px;
-  @include fixed(99, 56px, 0, none, 0);
   width: 100vw;
   background-color: #F2F3F5;
 }

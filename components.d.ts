@@ -13,6 +13,8 @@ declare module 'vue' {
     IndustryInsightList: typeof import('./src/components/Common/industryInsightList.vue')['default']
     Loading: typeof import('./src/components/Common/loading.vue')['default']
     Login: typeof import('./src/components/Business/Login.vue')['default']
+    OnlineReportList: typeof import('./src/components/Common/onlineReportList.vue')['default']
+    OnLineReportList: typeof import('./src/components/Common/onLineReportList.vue')['default']
     PageBottom: typeof import('./src/components/Business/PageBottom.vue')['default']
     PageNav: typeof import('./src/components/Business/PageNav.vue')['default']
     PolicyList: typeof import('./src/components/Common/policyList.vue')['default']

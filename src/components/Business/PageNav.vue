@@ -64,7 +64,7 @@ const navList: Ref<Array<NavList>> = ref([
     children: [
       { id: 1, text: '行业洞察', path: '/report?source=行业洞察' },
       { id: 2, text: '季报月报', path: '/report?source=季报月报' },
-      { id: 3, text: '原创报告', path: '/report?source=原创报告' },
+      { id: 3, text: '原创报告', path: '/reportOnLine?source=原创报告' },
       { id: 4, text: '白皮书', path: '/reportWhitePaper' }
     ]
   },
