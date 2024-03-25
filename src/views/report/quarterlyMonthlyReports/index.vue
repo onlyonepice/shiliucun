@@ -3,7 +3,7 @@
         <div :class="ns.b('main')">
             <div :class="ns.bm('main', 'title')">月报季报。</div>
             <div :class="ns.b('list')">
-                <TimeList :list="listItem"  v-for="(listItem, index) in templateList" :key="index"/>
+                <TimeList :list="listItem"  v-for="(listItem, index) in templateList" :key="index" @dropdownLoading="dropdownLoading" />
             </div>
         </div>
     </div>
@@ -17,132 +17,93 @@ import TimeList from './components/TimeList.vue'
 import weeklyPic from '@/assets/img/report/weekly-bg-pic.png'
 import monthlyPic from '@/assets/img/report/month-bg-pic.png'
 import quarterlyPic from '@/assets/img/report/quarterly-bg-pic.png'
+import { reportList } from '@/api/report'
+import { ElMessage } from 'element-plus'
 const ns = useNamespace('quarterlyMonthly');
 const templateList = ref([
     {
         pic: weeklyPic,
-        list: [{
-        id: 1,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    },
-    {
-        id: 2,
-        title: '储能项目招标&中标信息(20240207~ 0221)',
-        date: '2024-02-21'
-    }, {
-        id: 3,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 4,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 5,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 6,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 7,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 8,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 9,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    },]
+        type: 'weekly',
+        pages: 0,
+        total: 0,
+        data: {
+            page: 1,
+            limit: 12,
+        },
+        list: [],
+        isEnd: false
     },
     {
         pic: monthlyPic,
-        list: [{
-        id: 1,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    },
-    {
-        id: 2,
-        title: '储能项目招标&中标信息(20240207~ 0221)',
-        date: '2024-02-21'
-    }, {
-        id: 3,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 4,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 5,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 6,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 7,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 8,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 9,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    },]
+        type: 'monthly',
+        pages: 0,
+        total: 0,
+        data: {
+            page: 1,
+            limit: 12,
+        },
+        list: [],
+        isEnd: false
     },
     {
         pic: quarterlyPic,
-        list: [{
-        id: 1,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    },
-    {
-        id: 2,
-        title: '储能项目招标&中标信息(20240207~ 0221)',
-        date: '2024-02-21'
-    }, {
-        id: 3,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 4,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 5,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 6,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 7,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 8,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    }, {
-        id: 9,
-        title: '储能项目招标&中标信息(20240221~ 0229)',
-        date: '2024-02-28'
-    },]
+        type: 'quarterly',
+        pages: 0,
+        total: 0,
+        data: {
+            page: 1,
+            limit: 12,
+        },
+        list: [],
+        isEnd: false
     },
 ])
+// 获取报告列表
+const getReportList = async(index, type) => {
+    const queryData = {
+        page: templateList.value[index].data.page,
+        limit: templateList.value[index].data.limit,
+        type: type
+    }
+    const res = await reportList(queryData);
+    if (res.resp_code === 0) {
+        res.datas.records.forEach(item => {
+            templateList.value[index].list.push(item);
+        })
+        templateList.value[index].pages = res.datas.pages;
+        templateList.value[index].total = res.datas.total;
+        console.log(templateList.value[index].list, 'templateList.value[index].list',templateList.value[index].list.length, res.datas.total);
+        if (templateList.value[index].list.length === res.datas.total) {
+            templateList.value[index].isEnd = true;
+        } else {
+            templateList.value[index].isEnd = false;
+        }
+    } else {
+        ElMessage.error(res.resp_msg);
+    }
+}
+const reportTypesMap = {
+  'weekly': 0,
+  'monthly': 1,
+  'quarterly': 2,
+};
+// 下拉加载
+const dropdownLoading = (type) => {
+    const index = reportTypesMap[type];
+    if (index == null) return;
+    const listData = templateList.value[index].data;
+    if (listData.page * listData.limit < templateList.value[index].total) {
+        listData.page += 1;
+        getReportList(index, `${type.toUpperCase()}_REPORT`);
+    }
+}
+onMounted(() => {
+    Promise.all([
+        getReportList(0,'WEEKLY_REPORT'),
+        getReportList(1,'MONTHLY_REPORT'),
+        getReportList(2,'QUARTERLY_REPORT')
+    ])
+})
 </script>
 
 <style lang="scss">

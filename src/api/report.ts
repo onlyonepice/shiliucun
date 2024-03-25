@@ -11,3 +11,12 @@ export const getPaperList = () => {
 export const getReNewsInformations = (params: { limit: number, page: number }) => {
   return http.request<{ datas; resp_code }>("get", "/eesa-report/alliance/newsInformation/front/openApi/v1.1/getReNewsInformations",{params});
 };
+
+// 获取季报月报列表
+export const reportList = (data) => {
+  return http.request<{ resp_code: number; datas: any; resp_msg: string }>(
+    "get",
+    `/eesa-report/alliance/quarterlyMonthlyReport/front/openApi/v1.1/getMonthlyReport`,
+    {params: data}
+  );
+}
