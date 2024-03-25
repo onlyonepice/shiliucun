@@ -4,8 +4,8 @@
     <div :class="[ns.b('extra'), choseExtra ? ns.bm('extra', 'open') : '']"></div>
     <div :class="['es-commonPage', ns.b('content')]">
       <img :src="choseExtra || !opacityBg ? LogoIconBlue : LogoIcon" alt="" @click="onBackHome">
-      <div :class="[ns.b('list')]" @mouseleave="onChoseLeave()">
-        <div v-for="item in navList" :key="item.id" @mouseenter="onChoseNav(item.id, item.path)"
+      <div :class="[ns.b('list')]" >
+        <div v-for="item in navList" :key="item.id" @mouseleave="onChoseLeave()" @mouseenter="onChoseNav(item.id, item.path)"
           :class="[ns.bm('list', 'item'), optionChildren ? ns.bm('list--item', 'chose') : '']">
           <div :class="ns.bm('item', 'title')" @click="onToHome()">
             <span>{{ item.text }}</span>
@@ -20,7 +20,7 @@
           </div>
         </div>
         <!-- 登录/注册 -->
-        <div v-if="getToken()" @mouseleave="showAvatar = false">
+        <div v-if="showLogin" @mouseleave="showAvatar = false">
           <img :class="ns.b('avatar')" @mouseenter="showAvatar = true"  :src="PersonalAvatar" alt="">
           <div :class="[ns.b('extraAvatar'),showAvatar ? ns.bm('extraAvatar','show') : '']">
             <p v-for="item in extraAvatar" :key="item.id" @click="onPersonal(item.path)">{{ item.text }}</p>
@@ -44,8 +44,8 @@ import { useRouter, useRoute } from "vue-router";
 import LogoIcon from '@/assets/img/common/logo-icon.png'
 import LogoIconBlue from '@/assets/img/common/logo-icon-blue.png'
 import PersonalAvatar from '@/assets/img/common/personal-avatar.png'
-import { getToken } from "@/utils/auth";
 import useNamespace from '@/utils/nameSpace'
+import { useUserStoreHook } from "@/store/modules/user";
 const ns = useNamespace('pageNav')
 const router = useRouter();
 const route = useRoute();
@@ -55,6 +55,7 @@ const choseExtra: Ref<boolean> = ref(false); // 打开下拉菜单
 const choseExtraContent: Ref<boolean> = ref(false); // 打开下拉菜单
 const showAvatar: Ref<boolean> = ref(false) // 展开个人中心页面
 const emit = defineEmits(['onLogin'])
+const showLogin: Ref<boolean> = ref(false) // 展示登录按钮
 defineProps({
   opacityBg: {
     type: Boolean,
@@ -62,10 +63,10 @@ defineProps({
   }
 })
 const extraAvatar: Ref<any> = ref([
-  {id: 1, text: '基本信息', path: '/homePersonal?source=1'},
-  {id: 2, text: '我的收藏', path: '/homePersonal?source=2'},
-  {id: 3, text: '我的订单', path: '/homePersonal?source=3'},
-  {id: 4, text: '修改密码', path: '/homePersonal?source=4'},
+  {id: 1, text: '基本信息', path: '/homePersonal?id=1'},
+  {id: 2, text: '我的收藏', path: '/homePersonal?id=2'},
+  {id: 3, text: '我的订单', path: '/homePersonal?id=3'},
+  {id: 4, text: '修改密码', path: '/homePersonal?id=4'},
   {id: 5, text: '退出登录', path: ''}
 ])
 // 导航栏数组
@@ -132,6 +133,8 @@ const onChoseChildTab = (item:any) => {
 const onPersonal = (path:string) => {
   if( path !== '' ){
     router.push(path)
+  }else{
+    useUserStoreHook().logOut()
   }
   showAvatar.value = false
 }
@@ -166,7 +169,14 @@ watch(
   },
   { immediate: true },
 )
-
+// 监听登录
+watch(
+  () => useUserStoreHook().$state.token,
+  (token) => {
+    showLogin.value = token !== ''
+  },
+  { immediate: true },
+)
 // 判断是否要选中某个导航
 const isChoseNav = computed(() => {
   return (list: any) => {
@@ -231,9 +241,10 @@ const onLogin = () => {
   background-image: url('@/assets/img/common/avatar-extra.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-position: 0 0;
+  background-position: 0 10px;
   transition: all 0.2s linear;
   overflow: hidden;
+  padding-top: 10px;
   p{
     @include widthAndHeight(104px,24px);
     margin: 0 auto 4px;
@@ -258,7 +269,7 @@ const onLogin = () => {
   color: rgba(0,0,0,0.9);
 }
 .es-pageNav-extraAvatar--show{
-  @include widthAndHeight(120px,170px);
+  @include widthAndHeight(120px,180px);
 }
 .es-pageNav--open{
   background-color: #ffffff;
@@ -304,11 +315,13 @@ const onLogin = () => {
   .es-pageNav-list--item {
     @include widthAndHeight(88px, 56px);
     @include flex(flex-start, center, wrap);
-    @include margin(0, 16px, 0, 0);
+    @include padding(0, 16px, 0, 0);
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease-out;
-
+    &:nth-of-type(7){
+      @include padding(0, 0, 0, 0);
+    }
     .es-pageNav-underline {
       @include widthAndHeight(0, 2px);
       background-color: #244BF1;
@@ -336,6 +349,7 @@ const onLogin = () => {
     }
   }
 
+
   .es-pageNav-list--item--chose {
     .es-pageNav-item--box {
       height: 0 !important;
@@ -343,7 +357,6 @@ const onLogin = () => {
     }
   }
 }
-
 .es-pageNav-item--title {
   @include widthAndHeight(88px, 56px);
   line-height: 56px;
@@ -373,6 +386,7 @@ const onLogin = () => {
 .es-pageNav-content .es-pageNav-avatar{
   @include widthAndHeight(24px,24px);
   cursor: pointer;
+  margin-left: 16px;
 }
 
 .es-pageNav-extra {

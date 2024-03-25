@@ -75,6 +75,7 @@ import LoginCancel from '@/assets/img/common/cancel.png'
 import PasswordShow from '@/assets/img/login/icon_password_show.png'
 import PasswordHidden from '@/assets/img/login/icon_password_hidden.png'
 import { NOOP } from '@vue/shared'
+import { useUserStore } from '@/store/modules/user'
 const ns = useNamespace('login')
 const emit = defineEmits(['onCancel'])
 const loginType:Ref<string> = ref('password') // 其他登录方式 weChat: 微信 password: 密码
@@ -150,6 +151,7 @@ const sendLogin = async(data:any) => {
     if( resp_code === 0 ){
       setToken(datas)
       onCloseDialog()
+      useUserStore().$state.token = datas.access_token
     }
   } catch (error) {
     NOOP()

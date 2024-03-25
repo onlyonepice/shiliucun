@@ -14,6 +14,7 @@ const { VITE_ENV } = import.meta.env;
 export const useUserStore = defineStore({
   id: "pure-user",
   state: (): userType => ({
+    token: '', // 用户token 用于判断用户登录还是退出 通过watch监听
     fileUrl: "", // 文件路径
     userInfo: {}, // 用户信息
   }),
@@ -53,6 +54,7 @@ export const useUserStore = defineStore({
     },
     /** 前端登出（不调用接口） */
     logOut() {
+      this.token = ''
       removeToken();
       // router.push("/");
     },

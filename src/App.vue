@@ -15,6 +15,7 @@ import { onMounted, ref, Ref, computed, watch } from 'vue';
 import { useRouter, useRoute } from "vue-router";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 import { useUserStore } from '@/store/modules/user'
+import { getToken } from "@/utils/auth";
 const opacityBg: Ref<boolean> = ref(true); // 是否展示透明背景
 const router = useRouter();
 const route = useRoute();
@@ -23,7 +24,7 @@ const lastScrollY: Ref<number> = ref(0)
 const openLogin: Ref<boolean> = ref(false) // 登录弹窗
 const openLoginAnimate: Ref<boolean> = ref(false) // 登录动画执行完毕弹窗
 onMounted(() => {
-
+  useUserStore().token === '' && getToken() && ( useUserStore().$state.token = getToken() )
 })
 // 监听路由改变
 const windowScroll = windowScrollStore()

@@ -21,7 +21,7 @@
 
 
 <script lang="ts" setup>
-import { onMounted, ref, Ref, } from 'vue'
+import { onMounted, ref, Ref, watch } from 'vue'
 import { useRouter, useRoute } from "vue-router";
 import useNamespace from '@/utils/nameSpace'
 import Info from '@/assets/img/homePersonal/info.png'
@@ -48,10 +48,16 @@ const tabList: Ref<Array<any>> = ref([
   { id: 5, text: '退出登录', icon: Logout }
 ])
 const choseTab: Ref<number> = ref(1)
-
-// onMounted({
-//   // choseTab.value = Number(route.query.source)
-// })
+watch(
+  () => route.query.id,
+  (val: string) => {
+    choseTab.value = Number(val)
+  },
+  { immediate: true }
+)
+onMounted(()=>{
+  route.query.id && ( choseTab.value = Number(route.query.id) )
+})
 </script>
 
 <style lang="scss" scoped>

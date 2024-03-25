@@ -39,4 +39,5 @@ export type userType = {
   userAccountMobile?: string;
   userAccountPsd?: string;
   publicKey?: any;
+  token: string
 };
