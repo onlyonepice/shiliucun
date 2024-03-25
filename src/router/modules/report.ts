@@ -30,6 +30,16 @@ export default {
       },
     },
     {
+      path: "/reportOnLine",
+      name: "ReportOnLine",
+      components: {
+        default: () => import("@/views/report/reportOnLine/enter.vue"),
+      },
+      meta: {
+        title: "原创报告"
+      },
+    },
+    {
       path: "/industryInsight",
       name: "IndustryInsight",
       components: {

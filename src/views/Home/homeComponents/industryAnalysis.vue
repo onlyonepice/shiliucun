@@ -1,41 +1,45 @@
 <template>
   <div :class="[ns.b()]">
     <img :class="ns.b('header-bg')" :src="selected_articles_bg" alt="" />
-    <p :class="ns.b('title')">行业分析。</p>
-    <div :class="ns.b('tab-list')">
-      <div class="tab-item" @click="handleTabClick(index)" v-for="(item, index) in tabData">
-        <p class="tab-name" :class="currentTab === index ? 'active' : ''">
-          {{ item.name }}
-        </p>
-        <p v-if="currentTab === index" class="line"></p>
+    <div class="es-commonPage">
+      <div class="content">
+        <p :class="ns.b('title')">行业分析。</p>
+        <div :class="ns.b('tab-list')">
+          <div class="tab-item" @click="handleTabClick(index)" v-for="( item, index ) in  tabData ">
+            <p class="tab-name" :class="currentTab === index ? 'active' : ''">
+              {{ item.name }}
+            </p>
+            <p v-if="currentTab === index" class="line"></p>
+          </div>
+        </div>
+        <swiper @swiper="setControlledSwiper" :modules="modules" :controller="{ control: controlledSwiper }"
+          :width="bannerWidth" :loop="true" :space-between="50" :autoplay="{ delay: 4000, disableOnInteraction: false }"
+          :pagination="{ clickable: true }" :scrollbar="{ draggable: false }" class="swiperBox"
+          @slideChange="onSlideChange">
+          <swiper-slide v-for=" item  in  tabData " :key="item.name">
+            <div :class="ns.b('carousel-item')">
+              <img class="banner-img" :src="item.img" alt="">
+            </div>
+          </swiper-slide>
+        </swiper>
       </div>
     </div>
-    <swiper @swiper="setControlledSwiper" :modules="modules" :controller="{ control: controlledSwiper }"
-      :width="bannerWidth" :loop="true" :space-between="50" :autoplay="{ delay: 4000, disableOnInteraction: false }"
-      :pagination="{ clickable: true }" :scrollbar="{ draggable: false }" class="swiperBox"
-      @slideChange="onSlideChange">
-      <swiper-slide v-for="item in tabData" :key="item.name">
-        <div :class="ns.b('carousel-item')">
-          <img :src="item.img" alt="">
-        </div>
-      </swiper-slide>
 
-    </swiper>
   </div>
+
 </template>
 
 <script setup lang="ts">
 //页面引入vue-awesome-swiper 及其样式
-import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Swiper, SwiperSlide, } from 'swiper/vue';
 import 'swiper/css';
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import { Controller } from 'swiper/modules';
 import selected_articles_bg from '@/assets/img/selected_articles_bg.png'
 import diagram_business_and_industry from '@/assets/img/diagram/diagram_business_and_industry.png'
 const ns = useNamespace('home-industryAnalysis')
 const modules = [Controller];
-const bannerWidth = ref(window.screen.width * 0.6166)
 const tabData = ref([
   {
     name: '工商业投资回报性分析',
@@ -74,35 +78,54 @@ const tabData = ref([
 ])
 const controlledSwiper = ref();
 const currentTab = ref(0)
-const setControlledSwiper = (swiper:any) => {
-    controlledSwiper.value = swiper;
+const setControlledSwiper = (swiper: any) => {
+  controlledSwiper.value = swiper;
 };
 const onSlideChange = (e) => {
   currentTab.value = e.activeIndex
 }
 const handleTabClick = (index) => {
   currentTab.value = index
-  controlledSwiper.value?.slideTo(index,500)
+  controlledSwiper.value?.slideTo(index, 500)
 }
+const bannerWidth = ref<number>(0)
+onMounted(() => {
+  bannerWidth.value = document.querySelector('.banner-img').clientWidth
+})
 </script>
 <style lang="scss">
 .swiper-slide {
   width: 61.66vw !important;
+
+  @media screen and (max-width: 1536px) {
+    width: 100% !important;
+  }
 }
 </style>
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 
 .es-home-industryAnalysis {
-  width: 100vw;
   position: relative;
-  padding-top: 144px;
-  padding-left: 20vw;
   height: 1080px;
-  padding-bottom: 80px;
+  padding: 144px 0 80px 0;
+
+  .content {
+    width: 1536px;
+    height: 100%;
+    justify-content: flex-end;
+
+    @media screen and (max-width: 1536px) {
+      width: 100%;
+    }
+
+    @media screen and (max-width: 1250px) {
+      width: 1080px;
+    }
+  }
 
   .es-home-industryAnalysis-header-bg {
-    width: 100%;
+    width: 100vw;
     height: 480px;
     @include absolute(-1, 0, none, none, 0)
   }
@@ -148,7 +171,7 @@ const handleTabClick = (index) => {
   }
 
   .es-home-industryAnalysis-carousel-item {
-    @include widthAndHeight(60vw, 698px);
+    @include widthAndHeight(100%, 698px);
 
     img {
       @include widthAndHeight(100%, 100%)

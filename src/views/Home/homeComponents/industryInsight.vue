@@ -1,5 +1,5 @@
 <template>
-  <div :class="[ns.b()]">
+  <div :class="[ns.b(), 'es-commonPage']">
     <div class="title">
       <p class="title_text">行业洞察。</p>
       <img :src="rightArrow" alt="" @click="onEnterList" />
@@ -39,10 +39,8 @@ getReNewsInFormationsFn()
 @import "@/style/mixin.scss";
 
 .es-home-industryInsight {
-  width: 60vw;
-  min-width: 1080px;
   padding-bottom: 56px;
-
+  min-width: 1080px;
   .title {
     width: 100%;
     display: flex;
