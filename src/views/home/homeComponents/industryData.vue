@@ -28,8 +28,6 @@ import { ref, onMounted, watch } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import rightArrow from '@/assets/img/common/right-arrow.png'
 import tagActiveBg from '@/assets/img/tag-active-bg.png'
-import biddingDynamicsList from '@/components/Common/biddingDynamicsList.vue'
-import policyList from '@/components/Common/policyList.vue'
 import { getLatestTender, getLatestPolicy } from '@/api/home'
 import { windowScrollStore } from "@/store/modules/windowScroll";
 const ns = useNamespace('home-industryData')
