@@ -3,7 +3,7 @@
         <div :class="ns.b('main')">
             <div :class="ns.bm('main', 'title')">月报季报。</div>
             <div :class="ns.b('list')">
-                <TimeList :list="listItem"  v-for="(listItem, index) in templateList" :key="index" @dropdownLoading="dropdownLoading" />
+                <TimeList :list="listItem"  v-for="(listItem, index) in templateList" :key="index" @dropdownLoading="dropdownLoading" @detailReport="onDetailReport" />
             </div>
         </div>
     </div>
@@ -19,6 +19,7 @@ import monthlyPic from '@/assets/img/report/month-bg-pic.png'
 import quarterlyPic from '@/assets/img/report/quarterly-bg-pic.png'
 import { reportList } from '@/api/report'
 import { ElMessage } from 'element-plus'
+const { VITE_IREPOET_URL } = import.meta.env
 const ns = useNamespace('quarterlyMonthly');
 const templateList = ref([
     {
@@ -72,7 +73,6 @@ const getReportList = async(index, type) => {
         })
         templateList.value[index].pages = res.datas.pages;
         templateList.value[index].total = res.datas.total;
-        console.log(templateList.value[index].list, 'templateList.value[index].list',templateList.value[index].list.length, res.datas.total);
         if (templateList.value[index].list.length === res.datas.total) {
             templateList.value[index].isEnd = true;
         } else {
@@ -96,6 +96,10 @@ const dropdownLoading = (type) => {
         listData.page += 1;
         getReportList(index, `${type.toUpperCase()}_REPORT`);
     }
+}
+// 跳转报告详情
+const onDetailReport = (item) => {
+    window.open(`${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${item.id}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/white-paper`,'_blank')
 }
 onMounted(() => {
     Promise.all([

@@ -4,17 +4,17 @@
             <img :src="list.pic" alt="">
         </div>
         <div :class="ns.b('body')">
-            <div :class="ns.bm('body', 'item')" v-for="(item, index) in list.list" :key="item.id" v-infinite-scroll="handleDropdownLoading" infinite-scroll-distance="20">
+            <div :class="ns.bm('body', 'item')" v-for="(item, index) in list.list" :key="item.id" v-infinite-scroll="handleDropdownLoading" infinite-scroll-distance="20" @click="onDetailReport(item)">
                 <div :class="[ns.bm('item', 'index'), index + 1 === 1 ? 'first' : index + 1 === 2 ? 'second' : index + 1 === 3 ? 'three' : 'default']">
                     {{ index + 1 }}
                 </div>
                 <div :class="ns.bm('item', 'main')">
-                    <p class="item-title">{{ item.reportName }}</p>
+                    <p class="item-title" :title="item.reportName">{{ item.reportName }}</p>
                     <p class="item-date">{{ item.writingTime }}</p>
                 </div>
             </div>
+            <div :class="ns.b('footer')">- The End -</div>
         </div>
-        <div :class="ns.b('footer')">- The End -</div>
     </div>
 </template>
 
@@ -30,7 +30,7 @@ const props = defineProps({
     }
 })
 const operateItem = ref('')
-const emits = defineEmits(['dropdownLoading']);
+const emits = defineEmits(['dropdownLoading', 'detailReport']);
 const handleDropdownLoading = () => {
     emits('dropdownLoading', operateItem.value);
 }
@@ -39,6 +39,9 @@ const onEnterBox = () => {
 }
 const onLeaveBox = () => {
     operateItem.value = '';
+}
+const onDetailReport = (item) => {
+    emits('detailReport', item)
 }
 
 </script>
@@ -62,7 +65,7 @@ const onLeaveBox = () => {
 
     .es-timeList-body {
         height: 600px;
-        @include padding(16px, 24px, 16px, 24px);
+        @include padding(16px, 8px, 16px, 16px);
         overflow-y: scroll;
         .es-timeList-body--item {
              @include flex(flex-start, flex-start);
@@ -76,7 +79,7 @@ const onLeaveBox = () => {
                 @include flex();
                 @include widthAndHeight(20px, 20px);
                 border-radius: 10px;
-                @include margin(0,8px,0,0);
+                @include margin(0,8px,0,8px);
                 min-width: 20px;
              }
              .first {
@@ -105,7 +108,7 @@ const onLeaveBox = () => {
                         width: 278px;
                     }
                     @media (max-width: 1180px) {
-                        width: 248px;
+                        width: 245px;
                     }
                 }
                 .item-date {
@@ -116,6 +119,10 @@ const onLeaveBox = () => {
              &:hover {
                 cursor: pointer;
              }
+             &:hover {
+                background: #F2F3F5;
+                border-radius: 4px;
+             }
         }
     }
     &:hover {
@@ -124,6 +131,7 @@ const onLeaveBox = () => {
     .es-timeList-footer {
         @include flex();
         @include font(14px,400,#5b6985,28px);
+        opacity: .5;
     }
 }
 </style>
