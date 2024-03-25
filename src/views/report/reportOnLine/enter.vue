@@ -36,7 +36,6 @@ const ns = useNamespace('report-onLine')
 import { ElTree } from 'element-plus'
 import { ref, watch } from 'vue'
 import { getOnlineReportSelected, getTopOnlineReportSelected, getFreeOnlineReportSelected } from '@/api/report'
-import onLineReportList from '@/components/Common/onLineReportList.vue'
 const treeRef = ref<InstanceType<typeof ElTree>>()
 const defaultProps = {
   children: 'children',
