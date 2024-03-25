@@ -33,12 +33,14 @@ const useUserStore = useUserStoreHook()
 .white-report-list {
   width: 211px;
   position: relative;
+  cursor: pointer;
 
   .poster {
     @include widthAndHeight(100%, 298px);
     margin-bottom: 16px;
     border-radius: 8px;
     border: 1px solid #DBDCE2;
+    object-fit: scale-down;
   }
 
   .tag {

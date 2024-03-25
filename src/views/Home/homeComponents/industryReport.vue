@@ -15,8 +15,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import useNamespace from '@/utils/nameSpace'
-import rightArrow from '@/assets/img/right-arrow.png'
-import { getOnlineReportSelected } from '@/api/home'
+import rightArrow from '@/assets/img/common/right-arrow.png'
+import { getOnlineReportSelected } from '@/api/report'
 import onLineReportList from '@/components/Common/onLineReportList.vue'
 const ns = useNamespace('home-industryReport')
 const pageData = ref<[]>([])

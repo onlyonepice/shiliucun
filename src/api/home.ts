@@ -31,16 +31,7 @@ export const getLatestPolicy = (data) => {
     }
   );
 };
-//在线报告
-export const getOnlineReportSelected = (params) => {
-  return http.request<{ resp_code: number; datas: any }>(
-    "get",
-    `/eesa-report/onlineReportNew/front/openApi/v1.1/getOnlineReportSelected`,
-    {
-      params
-    }
-  );
-};
+
 //首页搜索详情
 export const globalSearch = (params) => {
   return http.request<{ resp_code: number; datas: any }>(
