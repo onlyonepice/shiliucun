@@ -17,7 +17,6 @@ import { ref } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import rightArrow from '@/assets/img/common/right-arrow.png'
 import { getHomeOnlineReportSelected } from '@/api/home'
-import onLineReportList from '@/components/Common/onLineReportList.vue'
 const ns = useNamespace('home-industryReport')
 const pageData = ref<[]>([])
 const getOnlineReportSelectedFn = async () => {
