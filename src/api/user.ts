@@ -53,3 +53,29 @@ export function login(params) {
     params
   })
 }
+
+// 更新用户信息
+export function updateUserInfo(data:any) {
+  return http.request<void>("post", `/api-user/account/updateAccountInfo`,{
+    data
+  })
+}
+// 修改手机号发送验证码
+export function modifyMbCode() {
+  return http.request<void>("get", `/api-user/account/sendBoundMobileSMS`)
+}
+export function modifyMbCode1(params) {
+  return http.request<void>("get", `/api-user/account/sendBoundMobileSMS?mobile=${params}`)
+}
+// 验证原手机验证码
+export function verifyMbCode(params) {
+  return http.request<void>("get", `/api-user/account/nextStep`,{
+    params
+  })
+}
+// 修改手机号
+export function modifyMb(data:any) {
+  return http.request<void>("post", `/api-user/account/modifyMobile`,{
+    data
+  })
+}

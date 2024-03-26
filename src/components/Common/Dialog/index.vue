@@ -1,148 +1,91 @@
 <template>
-  <div
-    v-if="visible"
-    class="es-dialog"
+  <el-dialog v-model="dialogVisible"
+    :title="title"
+    :class="ns.b()"
+    :show-close="false"
+    :close-on-click-modal="false"
+    :append-to-body="true"
+    :style="{ 'width': width, 'height': height }"
   >
-    <div
-      class="es-dialog__wrapper"
-      :style="`--width: ${width}`"
-    >
-      <div
-        v-if="title || $slots.title"
-        class="es-dialog__header"
-      >
-        <p class="title">
-          <slot
-            name="title"
-            class="title-wrapper"
-          >{{ title }}</slot>
-          </span>
-          <es-image
-            class="es-image"
-            :src="require('@/assets/img/home/details/cancel.png')"
-            @click.stop="cancel"
-            @keydown.enter="cancel"
-            @keydown.space="cancel"
-          />
-        </p>
+    <img :class="ns.b('cancel')" :src="CancelIcon" @click="handleClose(false)" alt="">
+    <slot name="content" />
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="handleClose(false)">{{ cancelText }}</el-button>
+        <el-button type="primary" @click="handleClose(true)">{{ confirmText }}</el-button>
       </div>
-      <div class="es-dialog__body">
-        <slot></slot>
-      </div>
-      <div
-        class="es-dialog__footer"
-        :style="`--text-align: ${buttonAlign}`"
-      >
-        <slot name="footer">
-          <es-button
-            @click.stop="cancel"
-            @keydown.enter="cancel"
-            @keydown.space="cancel"
-          >{{ cancelText }}</es-button>
-          <es-button
-            type="primary"
-            @click.stop="confirm"
-            @keydown.enter="confirm"
-            @keydown.space="confirm"
-          >{{ confirmText }}</es-button>
-        </slot>
-      </div>
-    </div>
-  </div>
+    </template>
+  </el-dialog>
 </template>
 
-<script>
-import { EsImage, EsButton } from '@/components'
-export default {
-  name: 'EsDialog',
-  components: {
-    EsButton,
-    EsImage
+<script setup lang="ts">
+import { Ref, ref, watch } from 'vue'
+import { useUserStoreHook } from '@/store/modules/user'
+import useNamespace from '@/utils/nameSpace'
+import CancelIcon from '@/assets/img/common/cancel.png'
+const ns = useNamespace('dialog')
+const useUserStore = useUserStoreHook()
+const dialogVisible: Ref<boolean> = ref(false)
+const emits = defineEmits(['onHandleClose'])
+const props = defineProps({
+  visible: { type: Boolean, default: false },
+  title: { type: String, default: false },
+  cancelText: { type: String, default: '取消' },
+  confirmText: { type: String, default: '确定' },
+  width: { type: String, default: '' },
+  height: { type: String, default: '' }
+})
+watch(
+  () => props.visible,
+  () => {
+    dialogVisible.value = props.visible
   },
-  props: {
-    title: {
-      type: String,
-      default: () => ''
-    },
-    visible: {
-      type: Boolean
-    },
-    buttonAlign: {
-      type: String,
-      default: () => 'right'
-    },
-    width: {
-      type: String,
-      default: () => ''
-    },
-    confirmText: {
-      type: String,
-      default: '确认'
-    },
-    cancelText: {
-      type: String,
-      default: '取消'
-    }
-  },
-  data() {
-    return {}
-  },
-  created() {},
-  methods: {
-    confirm() {
-      this.$emit('confirm')
-    },
-    cancel() {
-      this.$emit('cancel')
-    }
-  }
+  { immediate: true }
+)
+const handleClose = (type: boolean) => {
+  emits('onHandleClose',type)
 }
 </script>
 
-<style lang="scss" scoped>
-.es-dialog {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(000, 000, 000, 0.5);
-  z-index: 2000;
-  .es-dialog__wrapper {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 24px;
-    width: var(--width);
-    .es-dialog__header {
-      padding-bottom: 8px;
-      .title {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        .title-wrapper {
-          color: #1d232e;
-          font-weight: bold;
-          font-size: 24px;
-          line-height: 32px;
-        }
-        .es-image {
-          width: 24px;
-          height: 24px;
-          cursor: pointer;
-        }
-      }
-    }
-    .es-dialog__body {
-    }
-    .es-dialog__footer {
-      text-align: var(--text-align);
-      padding-top: 8px;
-    }
+<style lang="scss">
+@import "@/style/mixin.scss";
+.es-dialog{
+  @include absolute(1,50%,0,0,50%);
+  @include margin(0,0,0,0);
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  .el-dialog__header{
+    font-weight: 600;
+    line-height: 26px;
+    color: rgba(0,0,0,1);
+    @include padding(24px,24px,24px,24px);
+    margin-right: 0;
+    text-align: center;
   }
+  .el-dialog__body{
+    height: auto;
+    line-height: 22px;
+    @include padding(0,24px,0,24px);
+  }
+  .el-dialog__headerbtn .el-dialog__close{
+    font-size: 24px;
+  }
+  .el-dialog__headerbtn{
+    right: 14px;
+  }
+  .el-dialog__footer{
+    @include padding(24px,24px,24px,24px);
+  }
+  .el-button{
+    @include widthAndHeight(88px,32px);
+  }
+  .el-button+.el-button{
+    margin-left: 8px;
+  }
+}
+.es-dialog-cancel{
+  @include widthAndHeight(28px,28px);
+  @include absolute(1,24px,18px,none,none);
+  cursor: pointer;
 }
 </style>
