@@ -3,7 +3,7 @@
     <div class="content">
       <div class="title">
         <p class="title_text">行业报告。</p>
-        <img :src="rightArrow" alt="" />
+        <img @click="handleListClick" :src="rightArrow" alt="" />
       </div>
       <div class="list-box">
         <onLineReportList :pageData="item" v-for="item in pageData" />
@@ -17,6 +17,8 @@ import { ref } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import rightArrow from '@/assets/img/common/right-arrow.png'
 import { getHomeOnlineReportSelected } from '@/api/home'
+import { useRouter } from "vue-router";
+const router = useRouter()
 const ns = useNamespace('home-industryReport')
 const pageData = ref<[]>([])
 const getOnlineReportSelectedFn = async () => {
@@ -26,6 +28,9 @@ const getOnlineReportSelectedFn = async () => {
   if (data.resp_code === 0) {
     pageData.value = data.datas
   }
+}
+const handleListClick = () => {
+  router.push('/reportOnLine')
 }
 getOnlineReportSelectedFn()
 
