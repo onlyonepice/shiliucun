@@ -76,11 +76,11 @@ useUserStore().getConfigListBefore()
 }
 
 .pageNav {
-  @include fixed(99999, -56px, 0, 0, 0);
+  @include fixed(2000, -56px, 0, 0, 0);
 }
 
 .pageNav-show {
-  @include fixed(99999, 0, 0, 0, 0);
+  @include fixed(2000, 0, 0, 0, 0);
 }
 
 .es-pageNav--opacity {

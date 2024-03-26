@@ -29,6 +29,7 @@
         <p v-else :class="ns.b('login')" @click="onLogin">登录/注册</p>
       </div>
     </div>
+    <Logout :visible="visible" @onHandleClose="onHandleClose" />
   </nav>
 </template>
 
@@ -118,6 +119,7 @@ const navList: Ref<Array<NavList>> = ref([
     children: []
   }
 ])
+const visible: Ref<boolean> = ref(false)
 // 选择导航栏
 const onChoseNav = (id: number, path: Array<string> | string) => {
   choseNavId.value = id
@@ -134,9 +136,17 @@ const onPersonal = (path:string) => {
   if( path !== '' ){
     router.push(path)
   }else{
-    useUserStoreHook().logOut()
+    visible.value = true
   }
   showAvatar.value = false
+}
+// 退出登录
+const onHandleClose = (type: boolean) => {
+  visible.value = false
+  if( type ){
+    useUserStoreHook().logOut()
+    router.push({ path: '/home' })
+  }
 }
 const onBackHome = () => {
   router.push('/home')
@@ -213,8 +223,7 @@ const onLogin = () => {
   }
 }
 .es-pageNav-content{
-  width: 1156px;
-  height: 100%;
+  @include widthAndHeight(1156px,100%);
   @include margin(0,auto,0,auto);
   @include flex(center,space-between,nowrap);
   @include relative();

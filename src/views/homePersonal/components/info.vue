@@ -44,7 +44,17 @@
           <el-switch v-model="showInfo.email" />
         </div>
       </div>
-      <div :class="[ns.be('content','right')]"></div>
+      <div :class="[ns.be('content','right')]">
+        <div :class="[ns.be('right','bg')]"></div>
+        <div>
+          <h3 :class="ns.be('right','title')">{{ userInfo.realName }} | {{ userInfo.position }}</h3>
+          <h5 :class="ns.be('right','company')">{{ userInfo.company }}</h5>
+          <h5 v-if="showInfo.mobile" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">手机：{{ userInfo.mobile }}</h5>
+          <h5 v-if="showInfo.weChat" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">微信：{{ userInfo.weCat }}</h5>
+          <h5 v-if="showInfo.email" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">邮箱：{{ userInfo.email }}</h5>
+        </div>
+        <img :class="ns.be('right','headImgUrl')" :src="useUserStore().fileUrl + userInfo.headImgUrl" alt="">
+      </div>
     </div>
   </div>
 </template>
@@ -63,6 +73,9 @@ const showInfo: Ref<any> = ref({
 })
 onMounted(()=>{
   userInfo.value = useUserStore().$state.userInfo
+  showInfo.value.mobile = !userInfo.value.mobileHide
+  showInfo.value.weChat = !userInfo.value.wecatHide
+  showInfo.value.email = !userInfo.value.emailHide
 })
 </script>
 
@@ -82,11 +95,41 @@ onMounted(()=>{
 }
 .es-homePersonalInfo-content__right{
   @include widthAndHeight(392px,220px);
-  background: #FFFFFF;
   box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.1);
   border-radius: 8px;
   border: 1px solid #DBDCE2;
   @include margin(0,0,0,24px);
+  @include relative();
+  @include padding(24px,24px,24px,24px);
+  overflow: hidden;
+  @include flex(flex-start,space-between,nowrap);
+}
+.es-homePersonalInfo-right__bg{
+  @include widthAndHeight(379.2px,60px);
+  @include absolute(-1,0,0,none,none);
+  background: linear-gradient( rgba(36,75,241,0.4), #ffffff);
+  filter: blur(40px);
+}
+.es-homePersonalInfo-right__top{
+  @include flex(center,space-between,nowrap);
+}
+.es-homePersonalInfo-right__title{
+  @include font(20px,600,rgba(0,0,0,0.9),28px);
+}
+.es-homePersonalInfo-right__company{
+  @include font(14px,400,rgba(0,0,0,0.6),22px);
+  @include margin(8px,0,15px,0);
+  padding-bottom: 16px;
+  @include widthAndHeight(224px,39px);
+  border-bottom: 1px solid #DBDCE2;
+}
+.es-homePersonalInfo-right__common{
+  @include font(14px,400,rgba(0,0,0,0.6),22px);
+  @include margin(0,0,8px,0);
+}
+.es-homePersonalInfo-right__headImgUrl{
+  @include widthAndHeight(96px,96px);
+  border-radius: 4px;
 }
 .es-homePersonalInfo-content__item{
   width: 394px;

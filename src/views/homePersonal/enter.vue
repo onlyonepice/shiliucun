@@ -21,6 +21,7 @@
         </div>
       </div>
     </div>
+    <Logout :visible="visible" @onHandleClose="onHandleClose" />
   </div>
 </template>
 
@@ -36,7 +37,7 @@ import Order from '@/assets/img/homePersonal/order.png'
 import OrderChose from '@/assets/img/homePersonal/order-chose.png'
 import Password from '@/assets/img/homePersonal/password.png'
 import PasswordChose from '@/assets/img/homePersonal/password-chose.png'
-import Logout from '@/assets/img/homePersonal/logout.png'
+import LogoutImg from '@/assets/img/homePersonal/logout.png'
 import { useUserStoreHook } from "@/store/modules/user";
 import infoComponent from './components/info.vue'
 import collectionComponent from './components/collection.vue'
@@ -54,9 +55,10 @@ const tabList: Ref<Array<any>> = ref([
   { id: 2, text: '我的收藏', iconChose: CollectionChose, icon: Collection },
   { id: 3, text: '我的订单', iconChose: OrderChose, icon: Order },
   { id: 4, text: '修改密码', iconChose: PasswordChose, icon: Password },
-  { id: 5, text: '退出登录', icon: Logout }
+  { id: 5, text: '退出登录', icon: LogoutImg }
 ])
 const choseTab: Ref<number> = ref(1)
+const visible: Ref<boolean> = ref(false)
 watch(
   () => route.query.id,
   (val: string) => {
@@ -69,10 +71,18 @@ const onClickTab = (id: number) => {
   if( id !== 5 ){
     choseTab.value = id
   }else{
-    useUserStoreHook().logOut()
-    router.push('/home')
+    visible.value = true
   }
 }
+// 退出登录
+const onHandleClose = (type: boolean) => {
+  visible.value = false
+  if( type ){
+    useUserStoreHook().logOut()
+    router.push({ path: '/home' })
+  }
+}
+// 监听路由变化
 onMounted(()=>{
   route.query.id && ( choseTab.value = Number(route.query.id) )
 })
