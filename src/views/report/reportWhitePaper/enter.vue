@@ -75,6 +75,7 @@ onMounted(() => {
 .es-whitePaper-more--left{
   img{
     @include widthAndHeight(auto,40px);
+    @include margin(0,24px,0,0);
   }
 }
 .es-whitePaper-more--right{
