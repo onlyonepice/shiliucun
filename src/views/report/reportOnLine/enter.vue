@@ -34,6 +34,9 @@ import useNamespace from '@/utils/nameSpace'
 const ns = useNamespace('report-onLine')
 import { ElTree } from 'element-plus'
 import { ref, nextTick } from 'vue'
+import { windowScrollStore } from "@/store/modules/windowScroll";
+const windowScroll = windowScrollStore()
+windowScroll.SET_SCROLL_TOP(0)
 import { getOnlineReportSelected, getTopOnlineReportSelected, getFreeOnlineReportSelected, getReportTagList } from '@/api/report'
 const treeRef = ref<InstanceType<typeof ElTree>>()
 const defaultProps = {
@@ -76,7 +79,7 @@ const getReportTagListFn = async () => {
 
   }
 }
-const changeTag = (e) => {
+const changeTag = () => {
   const ids = treeRef.value.getCheckedKeys()
   checkedTagIds.value = ids.filter(item => {
     return item !== -1
