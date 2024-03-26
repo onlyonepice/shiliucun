@@ -34,6 +34,13 @@ import useNamespace from '@/utils/nameSpace'
 import { Controller } from 'swiper/modules';
 import selected_articles_bg from '@/assets/img/selected_articles_bg.png'
 import diagram_business_and_industry from '@/assets/img/diagram/diagram_business_and_industry.png'
+import diagram_electricity_price from '@/assets/img/diagram/diagram_electricity_price.png'
+import diagram_invite_tenders_area from '@/assets/img/diagram/diagram_invite_tenders_area.png'
+import diagram_invite_tenders_month from '@/assets/img/diagram/diagram_invite_tenders_month.png'
+import diagram_invite_tenders_enterprise from '@/assets/img/diagram/diagram_invite_tenders_enterprise.png'
+import diagram_bidder_price from '@/assets/img/diagram/diagram_bidder_price.png'
+import diagram_bidder_enterprise from '@/assets/img/diagram/diagram_bidder_enterprise.png'
+
 const ns = useNamespace('home-industryAnalysis')
 const modules = [Controller];
 const tabData = ref([
@@ -43,32 +50,32 @@ const tabData = ref([
   },
   {
     name: '电价分析',
-    img: diagram_business_and_industry
+    img: diagram_electricity_price
 
   },
   {
     name: '招标地区分析',
-    img: diagram_business_and_industry
+    img: diagram_invite_tenders_area
 
   },
   {
     name: '招标月度分析',
-    img: diagram_business_and_industry
+    img: diagram_invite_tenders_month
 
   },
   {
     name: '招标企业分析',
-    img: diagram_business_and_industry
+    img: diagram_invite_tenders_enterprise
 
   },
   {
     name: '中标价格分析',
-    img: diagram_business_and_industry
+    img: diagram_bidder_price
 
   },
   {
     name: '中标企业分析',
-    img: diagram_business_and_industry
+    img: diagram_bidder_enterprise
 
   },
 ])
