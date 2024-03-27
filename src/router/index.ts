@@ -45,8 +45,9 @@ router.beforeEach(async (to, from, next) => {
     useUserStoreHook().handleGetUserInfo()
     next()
   }else{
-    next('/')
+    to.path === '/homePersonal' && next('/home')
   }
+  next()
 })
 
 /**
