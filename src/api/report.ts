@@ -45,7 +45,7 @@ export const getFreeOnlineReportSelected = (params) => {
 export const getReportTagList = () => {
   return http.request<{ resp_code: number; datas: any }>(
     "get",
-    `/eesa-report/onlineReportNewTag/front/v1.0/list`,
+    `/eesa-report/front/openApi/v1.0/tagList`,
   );
 };
 
