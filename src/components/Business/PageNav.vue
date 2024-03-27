@@ -7,7 +7,7 @@
       <div :class="[ns.b('list')]" >
         <div v-for="item in navList" :key="item.id" @mouseleave="onChoseLeave()" @mouseenter="onChoseNav(item.id, item.path)"
           :class="[ns.bm('list', 'item'), optionChildren ? ns.bm('list--item', 'chose') : '']">
-          <div :class="ns.bm('item', 'title')" @click="onToHome()">
+          <div :class="ns.bm('item', 'title')" @click="onToHome(item)">
             <span>{{ item.text }}</span>
             <div :class="[ns.b('underline')]"></div>
           </div>
@@ -47,6 +47,7 @@ import LogoIconBlue from '@/assets/img/common/logo-icon-blue.png'
 import PersonalAvatar from '@/assets/img/common/personal-avatar.png'
 import useNamespace from '@/utils/nameSpace'
 import { useUserStoreHook } from "@/store/modules/user";
+const { VITE_IREPOET_URL, VITE_INDUSTRIALMAP_URL } = import.meta.env
 const ns = useNamespace('pageNav')
 const router = useRouter();
 const route = useRoute();
@@ -88,34 +89,34 @@ const navList: Ref<Array<NavList>> = ref([
   {
     id: 3, text: '数据', path: ["/data"],
     children: [
-      { id: 1, text: '招标', path: '/report?source=行业洞察' },
-      { id: 2, text: '中标', path: '/report?source=季报月报' },
-      { id: 3, text: '电价', path: '/report?source=在线报告' },
-      { id: 4, text: '政策', path: '/report?source=白皮书' },
-      { id: 5, text: '行业数据库', path: '/report?source=白皮书' },
+      { id: 1, text: '招标', path: VITE_IREPOET_URL + '#/stored-leading/tenderDynamics' },
+      { id: 2, text: '中标', path: VITE_IREPOET_URL + '#/bid-price-tracking' },
+      { id: 3, text: '电价', path: VITE_IREPOET_URL + '#/stored-leading/electricity-price' },
+      { id: 4, text: '政策', path: VITE_IREPOET_URL + '#/stored-leading/policy-trace' },
+      { id: 5, text: '行业数据库', path: VITE_IREPOET_URL + '#/relation-servicer?name=企业数据服务' },
     ]
   },
   {
     id: 4, text: '分析', path: ["/analyze"],
     children: [
-      { id: 1, text: '工商业投资测算', path: '/report?source=行业洞察' },
+      { id: 1, text: '工商业测算', path: VITE_IREPOET_URL + '#/stored-leading/invest-ROE/business' },
     ]
   },
   {
     id: 5, text: '企业', path: ["/enterprise"],
     children: [
-      { id: 1, text: '产业链地图', path: '/report?source=行业洞察' },
+      { id: 1, text: '产业链地图', path: VITE_INDUSTRIALMAP_URL },
     ]
   },
   {
     id: 6, text: '资源', path: ["/resource"],
     children: [
-      { id: 1, text: '融资方案', path: '/report?source=行业洞察' },
+      { id: 1, text: '融资方案', path: VITE_IREPOET_URL + '#/stored-leading/financing-plan' },
       { id: 2, text: '供需对接', path: '/report?source=行业洞察' },
     ]
   },
   {
-    id: 7, text: '开通VIP', path: ["/vip"],
+    id: 7, text: '开通VIP', path: [VITE_IREPOET_URL + "#/relation-servicer?name=订阅会员"],
     children: []
   }
 ])
@@ -128,7 +129,11 @@ const onChoseNav = (id: number, path: Array<string> | string) => {
 }
 // 选择子菜单
 const onChoseChildTab = (item:any) => {
-  router.push(item.path)
+  if( item.path.indexOf('http') !== -1 ){
+    window.open(item.path,'externalWindow')
+  }else{
+    router.push(item.path)
+  }
   onChildrenPath(item.path)
 }
 // 跳转个人中心
@@ -155,8 +160,12 @@ const onChoseLeave = () => {
   choseExtra.value = false
 }
 // 跳转首页
-const onToHome = () => {
-  router.push({ path: '/home' })
+const onToHome = (data:any) => {
+  if( data.children.length !== 0 ){
+    return
+  }
+  data.path[0].indexOf('http') === -1 && router.push({ path: data.path[0] })
+  data.path[0].indexOf('http') !== -1 && window.open( data.path[0],'externalWindow')
   onChoseLeave()
 }
 const optionChildren: Ref<boolean> = ref(false)
@@ -370,13 +379,12 @@ const onLogin = () => {
   @include widthAndHeight(88px, 56px);
   line-height: 56px;
   @include relative();
-
 }
 
 .es-pageNav-item--text {
-  @include widthAndHeight(88px, 46px);
+  @include widthAndHeight(100%, 46px);
   @include padding(24px, 0, 0, 0);
-
+  text-align: center;
   &:hover {
     font-weight: 600;
   }
