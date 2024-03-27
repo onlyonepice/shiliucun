@@ -30,6 +30,7 @@
       </div>
     </div>
     <Logout :visible="visible" @onHandleClose="onHandleClose" />
+    <MiniAppNeed :visible="miniAppVisible" @onHandleClose="miniAppVisible = false" />
   </nav>
 </template>
 
@@ -51,13 +52,14 @@ const { VITE_IREPOET_URL, VITE_INDUSTRIALMAP_URL } = import.meta.env
 const ns = useNamespace('pageNav')
 const router = useRouter();
 const route = useRoute();
+const emit = defineEmits(['onLogin'])
 const choseNav: Ref<string> = ref(''); // 选中的导航标签
 const choseNavId: Ref<number> = ref(1); // 选中的导航栏id
 const choseExtra: Ref<boolean> = ref(false); // 打开下拉菜单
 const choseExtraContent: Ref<boolean> = ref(false); // 打开下拉菜单
 const showAvatar: Ref<boolean> = ref(false) // 展开个人中心页面
-const emit = defineEmits(['onLogin'])
 const showLogin: Ref<boolean> = ref(false) // 展示登录按钮
+const miniAppVisible: Ref<boolean> = ref(false) // 小程序二维码
 defineProps({
   opacityBg: {
     type: Boolean,
@@ -112,7 +114,7 @@ const navList: Ref<Array<NavList>> = ref([
     id: 6, text: '资源', path: ["/resource"],
     children: [
       { id: 1, text: '融资方案', path: VITE_IREPOET_URL + '#/stored-leading/financing-plan' },
-      { id: 2, text: '供需对接', path: '/report?source=行业洞察' },
+      { id: 2, text: '供需对接', path: '' },
     ]
   },
   {
@@ -131,8 +133,10 @@ const onChoseNav = (id: number, path: Array<string> | string) => {
 const onChoseChildTab = (item:any) => {
   if( item.path.indexOf('http') !== -1 ){
     window.open(item.path,'externalWindow')
-  }else{
+  }else if( item.path !== '' ){
     router.push(item.path)
+  }else{
+    miniAppVisible.value = true
   }
   onChildrenPath(item.path)
 }

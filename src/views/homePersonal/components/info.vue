@@ -7,7 +7,7 @@
     <div :class="[ns.b('content')]">
       <div :class="[ns.be('content','left')]">
         <div :class="ns.be('content','item')">
-          <h5>真是姓名</h5>
+          <h5>真实姓名</h5>
           <div :class="ns.be('item','value')">{{ userInfo.realName }}</div>
         </div>
         <div :class="ns.be('content','item')">
@@ -20,7 +20,7 @@
         </div>
         <div :class="ns.be('content','item')">
           <h5>所在地区</h5>
-          <div :class="ns.be('item','value')">{{ userInfo.position }}</div>
+          <div :class="ns.be('item','value')">{{ onGetRegionInfo }}</div>
         </div>
         <div :class="[ns.be('content','item'), ns.bem('content','item','special')]">
           <div>
@@ -78,18 +78,19 @@
 
 
 <script lang="ts" setup>
-import { onMounted, ref, Ref, watch } from 'vue'
+import { onMounted, ref, Ref, watch, computed } from 'vue'
 import useNamespace from '@/utils/nameSpace'
 import { useUserStore } from '@/store/modules/user'
 import { ElMessage } from 'element-plus'
 import { NOOP } from '@vue/shared'
 import { regMobile } from '@/utils/rule'
-import { updateUserInfo, modifyMbCode, modifyMbCode1, verifyMbCode, modifyMb } from '@/api/user'
+import { updateUserInfo, modifyMbCode, modifyMbCode1, verifyMbCode, modifyMb, getUserDetailInfo } from '@/api/user'
 const ns = useNamespace('homePersonalInfo')
 const userInfo: Ref<any> = ref({})
 const visibleMobile: Ref<boolean> = ref(false) // 修改手机号弹窗
 const btnDesc: Ref<string> = ref('获取验证码') // 倒计时文案
 const timer = ref(null) // 定时器
+const userDetailInfo: Ref<any> = ref() // 用户详细信息
 const modifyMbForm: Ref<any> = ref({
   mobile: '',
   code: ""
@@ -105,6 +106,17 @@ onMounted(()=>{
   showInfo.value.mobile = userInfo.value.mobileHide
   showInfo.value.weChat = userInfo.value.wecatHide
   showInfo.value.email = userInfo.value.emailHide
+  onGetUserInfo()
+})
+// 获取用户详细信息
+const onGetUserInfo = async() => {
+  const { resp_code, datas } = await getUserDetailInfo()
+  resp_code === 0 && ( userDetailInfo.value = datas )
+}
+// 获取用户地区信息
+const onGetRegionInfo = computed(()=>{
+  const info = userDetailInfo.value
+  return info !== undefined ? info.region.subRegion.subRegion.name + '/' + info.region.subRegion.subRegion.subRegion.name : '未填写'
 })
 // 修改手机号
 const onModifyMobile = () => {
@@ -218,6 +230,7 @@ const onSendCode = async ()=> {
 }
 .es-homePersonalInfo-right__title{
   @include font(20px,600,rgba(0,0,0,0.9),28px);
+  @include textOverflow();
 }
 .es-homePersonalInfo-right__company{
   @include font(14px,400,rgba(0,0,0,0.6),22px);

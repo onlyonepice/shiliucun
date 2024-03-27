@@ -12,6 +12,10 @@ export const loginOutApi = token => {
 export const getUserInfo = () => {
   return http.request<{ datas; resp_code }>("get", "/api-user/users/current");
 };
+// 获取用户详细信息
+export const getUserDetailInfo = () => {
+  return http.request<{ datas; resp_code }>("post", "/api-user/account/getAccountInfo");
+};
 
 //获取图片域名
 export const configListBefore = params => {
