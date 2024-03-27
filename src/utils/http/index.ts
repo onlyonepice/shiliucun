@@ -16,6 +16,7 @@ import { ElMessage } from "element-plus"
 import { getToken } from "@/utils/auth";
 import { stringify } from "qs";
 const { VITE_GLOB_API_URL } = import.meta.env;
+import { useUserStoreHook } from "@/store/modules/user";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -204,6 +205,7 @@ const onErrorHandling = (
   // store.dispatch('user/resetToken').then(() => {
   //   location.reload()
   // })
+  useUserStoreHook().logOut();
 }
 
 

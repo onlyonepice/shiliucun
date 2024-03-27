@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { store } from "@/store";
 import { userType } from "./types";
-// import { router } from "@/router";
 import {
   getUserInfo,
   configListBefore
@@ -9,6 +8,9 @@ import {
 import { getPublicKeyApi } from "@/api/user";
 import { setToken, removeToken } from "@/utils/auth";
 import { ElMessage } from "element-plus";
+// import { useRouter, useRoute } from "vue-router";
+// const router = useRouter()
+import router from '@/router'
 const { VITE_ENV } = import.meta.env;
 
 export const useUserStore = defineStore({
@@ -56,7 +58,7 @@ export const useUserStore = defineStore({
     logOut() {
       this.token = ''
       removeToken();
-      // router.push("/");
+      router.push('/home')
     },
     /** 获取用户信息 */
     async handleGetUserInfo() {

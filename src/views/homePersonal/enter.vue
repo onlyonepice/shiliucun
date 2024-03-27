@@ -38,12 +38,13 @@ import OrderChose from '@/assets/img/homePersonal/order-chose.png'
 import Password from '@/assets/img/homePersonal/password.png'
 import PasswordChose from '@/assets/img/homePersonal/password-chose.png'
 import LogoutImg from '@/assets/img/homePersonal/logout.png'
-import { useUserStoreHook } from "@/store/modules/user";
+import { useUserStoreHook } from "@/store/modules/user"
 import infoComponent from './components/info.vue'
 import collectionComponent from './components/collection.vue'
 import orderComponent from './components/order.vue'
 import passwordComponent from './components/password.vue'
 const ns = useNamespace('homePersonal')
+const { VITE_IREPOET_URL } = import.meta.env
 const route = useRoute()
 const router = useRouter()
 const breadcrumbList: Ref<Array<any>> = ref([
@@ -69,7 +70,8 @@ watch(
 // 点击左侧边栏
 const onClickTab = (id: number) => {
   if( id !== 5 ){
-    choseTab.value = id
+    id === 1 && ( choseTab.value = id )
+    id !== 1 && window.open(VITE_IREPOET_URL + '#/account-setting','externalWindow')
   }else{
     visible.value = true
   }
@@ -84,7 +86,12 @@ const onHandleClose = (type: boolean) => {
 }
 // 监听路由变化
 onMounted(()=>{
-  route.query.id && ( choseTab.value = Number(route.query.id) )
+  if( route.query.id !== '1' ){
+    choseTab.value === 1
+    window.open(VITE_IREPOET_URL + '#/account-setting','externalWindow')
+  }else{
+    route.query.id === '1' && ( choseTab.value = Number(route.query.id) )
+  }
 })
 </script>
 
