@@ -1,5 +1,5 @@
 <template>
-  <div class="white-report-list" :style="{ width: props.width }">
+  <div class="white-report-list" @click="onDetailReport(pageData)" :style="{ width: props.width }">
     <img class="poster" :src="useUserStore.fileUrl + pageData.reportCover" alt="" />
     <div class="top-tag tag" v-if="pageData.isTopping === 1">置顶</div>
     <div class="free-tag tag" v-if="pageData.isFree === 1">免费</div>
@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import { useUserStoreHook } from '@/store/modules/user'
+const { VITE_IREPOET_URL } = import.meta.env
 const props = defineProps({
   pageData: {
     type: Object,
@@ -24,6 +25,10 @@ const props = defineProps({
     default: '211px'
   }
 })
+// 跳转报告详情
+const onDetailReport = (item) => {
+  window.open(`${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${item.id}&parent=在线报告&moduleName=${item.moduleName}&from=/online-report`, '_blank')
+}
 const useUserStore = useUserStoreHook()
 </script>
 
