@@ -3,8 +3,8 @@
   <div :class="['es-commonPage',ns.b()]">
     <div v-for="item in paperList" :key="item.id" :class="ns.b('list')">
       <div :class="ns.bm('list','content')">
-        <div :class="[ns.bm('content','year'),ns.bm('content','title')]">{{ item.reportName.split(' ')[0] }}年</div>
-        <div :class="[ns.bm('content','title')]">{{ item.reportName.split(' ')[1] }}</div>
+        <div :class="[ns.bm('content','year'),ns.bm('content','title')]">{{ item.writingTime.split('-')[0] }}年</div>
+        <div :class="[ns.bm('content','title')]">{{ item.reportName }}</div>
         <div :class="[ns.bm('content','line')]" />
         <div :class="[ns.bm('content','desc')]">{{ item.contentOverview }}</div>
         <div :class="[ns.bm('content','more')]">
@@ -51,9 +51,10 @@ onMounted(() => {
 }
 .es-whitePaper-list{
   @include flex(flex-start,center,nowrap);
+  margin-bottom: 40px;
 }
 .es-whitePaper-list--content{
-  max-width: 760px;
+  width: 760px;
   @include margin(0,24px,0,0);
   @include relative();
 }

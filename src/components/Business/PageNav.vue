@@ -131,8 +131,14 @@ const onChoseNav = (id: number, path: Array<string> | string) => {
 }
 // 选择子菜单
 const onChoseChildTab = (item:any) => {
+
   if( item.path.indexOf('http') !== -1 ){
-    window.open(item.path,'externalWindow')
+    optionChildren.value = true
+    onChoseLeave()
+    setTimeout(() => {
+      optionChildren.value = false
+    })
+    return window.open(item.path,'externalWindow')
   }else if( item.path !== '' ){
     router.push(item.path)
   }else{
