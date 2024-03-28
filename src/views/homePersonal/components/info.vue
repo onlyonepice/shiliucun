@@ -201,10 +201,10 @@ const onGetUserInfo = async() => {
     const _modifyInfo = modifyInfo.value
     // 重置用户信息
     Object.assign(_modifyInfo,datas)
-    _modifyInfo.postType = await positionTypeList.value.filter(item=>{
+    datas.postType !== null && (_modifyInfo.postType = await positionTypeList.value.filter(item=>{
       return item.id === datas.postType
-    })[0].label
-    _modifyInfo.regionCode = datas.region.subRegion.subRegion.subRegion.code || datas.region.subRegion.subRegion.code
+    })[0].label)
+    datas.region !== null && (_modifyInfo.regionCode = datas.region.subRegion.subRegion.subRegion.code || datas.region.subRegion.subRegion.code)
     modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo))
   }
 }
@@ -212,7 +212,7 @@ const onGetUserInfo = async() => {
 const onGetRegionInfo = computed(()=>{
   const info = userDetailInfo.value
   let _data = ''
-  if( info === undefined ){
+  if( info === undefined || info.region === null ){
     _data = '未填写'
   }else{
     if( info.region.subRegion.subRegion.subRegion.subRegion === null ){
