@@ -57,3 +57,11 @@ export const reportList = (data) => {
     {params: data}
   );
 }
+
+// 获取是否可以查看季报月报详情
+export const quarterlyMonthlyLimits = () => {
+  return http.request<{ resp_code: number; datas: any; resp_msg: string }>(
+    "get",
+    `/eesa-report/alliance/quarterlyMonthlyReport/front/v1.1/getQuarterlyMonthlyLimits`
+  );
+}
