@@ -69,7 +69,7 @@ export function modifyMbCode() {
   return http.request<void>("get", `/api-user/account/sendBoundMobileSMS`)
 }
 export function modifyMbCode1(params) {
-  return http.request<void>("get", `/api-user/account/sendBoundMobileSMS?mobile=${params}`)
+  return http.request<void>("get", `/api-user/account/sendMobileSMS?mobile=${params}`)
 }
 // 验证原手机验证码
 export function verifyMbCode(params) {
@@ -80,6 +80,21 @@ export function verifyMbCode(params) {
 // 修改手机号
 export function modifyMb(data:any) {
   return http.request<void>("post", `/api-user/account/modifyMobile`,{
+    data
+  })
+}
+
+// 获取岗位类型
+export function getPositionTypeApi() {
+  return http.request<void>("post", `/api-user/sysDict/front/V1.0/frontSelectTreeByType/positionType`)
+}
+// 获取地区信息
+export function getAreaApi() {
+  return http.request<void>("get", `/eesa-report/region/openApi/getRegions?level=5&page=1&limit=1000&pcode=156`)
+}
+// 编辑用户信息
+export function editUserInfoApi(data:any) {
+  return http.request<void>("post", `/api-user/account/updateAccountInfo`,{
     data
   })
 }

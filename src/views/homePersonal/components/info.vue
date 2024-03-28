@@ -2,21 +2,21 @@
   <div :class="[ns.b(),'animate__animated animate__fadeIn']">
     <div :class="[ns.b('top')]">
       <h3>基本信息</h3>
-      <!-- <el-button type="primary" :class="ns.be('top','button')">编辑信息</el-button> -->
+      <el-button type="primary" :class="ns.be('top','button')" @click='visibleInfo = true'>编辑信息</el-button>
     </div>
     <div :class="[ns.b('content')]">
       <div :class="[ns.be('content','left')]">
         <div :class="ns.be('content','item')">
           <h5>真实姓名</h5>
-          <div :class="ns.be('item','value')">{{ userInfo.realName }}</div>
+          <div :class="ns.be('item','value')">{{ modifyInfoFreeze.realName }}</div>
         </div>
         <div :class="ns.be('content','item')">
           <h5>企业名称</h5>
-          <div :class="ns.be('item','value')">{{ userInfo.company }}</div>
+          <div :class="ns.be('item','value')">{{ modifyInfoFreeze.company }}</div>
         </div>
         <div :class="ns.be('content','item')">
           <h5>岗位类型</h5>
-          <div :class="ns.be('item','value')">{{ userInfo.position }}</div>
+          <div :class="ns.be('item','value')">{{ modifyInfoFreeze.postType }}</div>
         </div>
         <div :class="ns.be('content','item')">
           <h5>所在地区</h5>
@@ -25,21 +25,21 @@
         <div :class="[ns.be('content','item'), ns.bem('content','item','special')]">
           <div>
             <h5>手机号码 | <span @click="onModifyMobile">修改</span></h5>
-            <div :class="ns.be('item','value')">{{ userInfo.mobile }}</div>
+            <div :class="ns.be('item','value')">{{ modifyInfoFreeze.mobile }}</div>
           </div>
           <el-switch v-model="showInfo.mobile" @change="val=>{ return onChangeSwitch(val,'mobile') }" />
         </div>
         <div :class="[ns.be('content','item'),ns.bem('content','item','special')]">
           <div>
             <h5>微信号码</h5>
-            <div :class="ns.be('item','value')">{{ userInfo.weCat }}</div>
+            <div :class="ns.be('item','value')">{{ modifyInfoFreeze.weCat }}</div>
           </div>
           <el-switch v-model="showInfo.weChat" @change="val=>{ return onChangeSwitch(val,'weChat') }" />
         </div>
         <div :class="[ns.be('content','item'),ns.bem('content','item','special')]">
           <div>
             <h5>常用邮箱</h5>
-            <div :class="ns.be('item','value')">{{ userInfo.email }}</div>
+            <div :class="ns.be('item','value')">{{ modifyInfoFreeze.email }}</div>
           </div>
           <el-switch v-model="showInfo.email" @change="val=>{ return onChangeSwitch(val,'email') }" />
         </div>
@@ -47,20 +47,20 @@
       <div :class="[ns.be('content','right')]">
         <div :class="[ns.be('right','bg')]"></div>
         <div>
-          <h3 :class="ns.be('right','title')">{{ userInfo.realName }} | {{ userInfo.position }}</h3>
-          <h5 :class="ns.be('right','company')">{{ userInfo.company }}</h5>
-          <h5 v-if="showInfo.mobile" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">手机：{{ userInfo.mobile }}</h5>
-          <h5 v-if="showInfo.weChat" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">微信：{{ userInfo.weCat }}</h5>
-          <h5 v-if="showInfo.email" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">邮箱：{{ userInfo.email }}</h5>
+          <h3 :class="ns.be('right','title')">{{ modifyInfoFreeze.realName }} | {{ modifyInfoFreeze.postType }}</h3>
+          <h5 :class="ns.be('right','company')">{{ modifyInfoFreeze.company }}</h5>
+          <h5 v-if="showInfo.mobile" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">手机：{{ modifyInfoFreeze.mobile }}</h5>
+          <h5 v-if="showInfo.weChat" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">微信：{{ modifyInfoFreeze.weCat }}</h5>
+          <h5 v-if="showInfo.email" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">邮箱：{{ modifyInfoFreeze.email }}</h5>
         </div>
-        <img :class="ns.be('right','headImgUrl')" :src="useUserStore().fileUrl + userInfo.headImgUrl" alt="">
+        <img :class="ns.be('right','headImgUrl')" :src="useUserStore().fileUrl + modifyInfo.headImgUrl" alt="">
       </div>
     </div>
     <Dialog title="修改手机号" :visible='visibleMobile' width="560px" height='224px' @onHandleClose='onHandleClose' :confirmText='modifyMbStep === 1 ? "下一步" : "完成"'>
       <template #content>
         <div :class="ns.be('content','mbDialog')" v-if="modifyMbStep === 1">
           <span>手机号码</span>
-          <el-input v-model="userInfo.mobile" maxlength="11" :class="ns.be('mbDialog','mobile')" placeholder="请输入" :disabled='true' />
+          <el-input v-model="modifyInfo.mobile" maxlength="11" :class="ns.be('mbDialog','mobile')" placeholder="请输入" :disabled='true' />
         </div>
         <div :class="ns.be('content','mbDialog')" v-else>
           <span>新手机号码</span>
@@ -70,6 +70,38 @@
           <span>验证码</span>
           <el-input v-model="modifyMbForm.code" :class="ns.be('mbDialog','code')" placeholder="请输入" />
           <div @click="onSendCode" maxlength="6" :class="[ns.bm('input','codeBtn'),btnDesc.indexOf('s') !== -1 ? ns.bm('input','down') : '']">{{ btnDesc }}</div>
+        </div>
+      </template>
+    </Dialog>
+    <Dialog title="编辑信息" :visible='visibleInfo' width="560px" height='474px' @onHandleClose='onHandleCloseInfo' confirmText='保存'>
+      <template #content>
+        <div :class="ns.be('content','infoDialog')">
+          <span required>真实姓名</span>
+          <Select type="input" :defaultValue='modifyInfo.realName' @onChange="val=>{ return onChangeInfo(val,'realName') }" />
+        </div>
+        <div :class="ns.be('content','infoDialog')">
+          <span required>企业名称</span>
+          <Select type="input" :defaultValue='modifyInfo.company' @onChange="val=>{ return onChangeInfo(val,'company') }" />
+        </div>
+        <div :class="ns.be('content','infoDialog')">
+          <span required>岗位类型</span>
+          <Select :options='positionTypeList' :defaultValue='modifyInfo.postType' @onChange="val=>{ return onChangeInfo(val,'postType') }" />
+        </div>
+        <div :class="ns.be('content','infoDialog')">
+          <span >所在地区</span>
+          <Select :options='areaList' :defaultValue='modifyInfo.regionCode' :cascaderOption='cascaderOption' type="cascader" @onChange="val=>{ return onChangeInfo(val,'regionCode') }" />
+        </div>
+        <div :class="ns.be('content','infoDialog')">
+          <span >手机号码</span>
+          <Select type="input" :defaultValue='modifyInfo.mobile' @onChange="val=>{ return onChangeInfo(val,'mobile') }" />
+        </div>
+        <div :class="ns.be('content','infoDialog')">
+          <span >微信号码</span>
+          <Select type="input" :defaultValue='modifyInfo.weCat' @onChange="val=>{ return onChangeInfo(val,'weCat') }" />
+        </div>
+        <div :class="ns.be('content','infoDialog')">
+          <span >常用邮箱</span>
+          <Select type="input" :defaultValue='modifyInfo.email' @onChange="val=>{ return onChangeInfo(val,'email') }" />
         </div>
       </template>
     </Dialog>
@@ -83,12 +115,31 @@ import useNamespace from '@/utils/nameSpace'
 import { useUserStore } from '@/store/modules/user'
 import { ElMessage } from 'element-plus'
 import { NOOP } from '@vue/shared'
-import { regMobile } from '@/utils/rule'
-import { updateUserInfo, modifyMbCode, modifyMbCode1, verifyMbCode, modifyMb, getUserDetailInfo } from '@/api/user'
+import { regMobile, regEmail } from '@/utils/rule'
+import { updateUserInfo, modifyMbCode, modifyMbCode1, verifyMbCode, modifyMb, getUserDetailInfo, getPositionTypeApi, getAreaApi, editUserInfoApi } from '@/api/user'
 const ns = useNamespace('homePersonalInfo')
 const userInfo: Ref<any> = ref({})
 const visibleMobile: Ref<boolean> = ref(false) // 修改手机号弹窗
+const visibleInfo: Ref<boolean> = ref(false) // 编辑信息弹窗
 const btnDesc: Ref<string> = ref('获取验证码') // 倒计时文案
+const positionTypeList: Ref<Array<any>> = ref([]) // 岗位类型数组
+const areaList: Ref<any> = ref([]) // 地区数据
+const cascaderOption: Ref<any> = ref({
+  expandTrigger: 'hover',
+  label: 'name',
+  value: 'code',
+  children: 'regionResps'
+}) // 地区级联配置项
+const modifyInfo: Ref<any> = ref({
+  realName: '',
+  company: '',
+  postType: '',
+  regionCode: '',
+  mobile: '',
+  weCat: '',
+  email: ''
+}) // 修改信息
+const modifyInfoFreeze = ref({})
 const timer = ref(null) // 定时器
 const userDetailInfo: Ref<any> = ref() // 用户详细信息
 const modifyMbForm: Ref<any> = ref({
@@ -107,23 +158,90 @@ onMounted(()=>{
   showInfo.value.weChat = userInfo.value.wecatHide
   showInfo.value.email = userInfo.value.emailHide
   onGetUserInfo()
+  onGetPositionType()
+  onGetArea()
 })
+// 修改用户信息
+const onChangeInfo = (value:any,type:string)=>{
+  type === 'regionCode' && ( modifyInfo.value.regionCode = value[value.length - 1] )
+  type !== 'regionCode' && ( modifyInfo.value[type] = value )
+}
+// 关闭编辑信息
+const onHandleCloseInfo = async ( type:boolean )=>{
+  const _modifyInfo = JSON.parse(JSON.stringify(modifyInfo.value))
+  if( !type ){
+    return visibleInfo.value = false
+  }
+  if( _modifyInfo.realName === '' || _modifyInfo.company === '' || _modifyInfo.postType === '' ){
+    return ElMessage.error('请完善必填项')
+  }
+  if (_modifyInfo.mobile !== '' && !regMobile.test(_modifyInfo.mobile)) {
+    return ElMessage.error('请输入正确手机号')
+  }
+  if (_modifyInfo.email !== '' && !regEmail.test(_modifyInfo.email)) {
+    return ElMessage.error('请输入邮箱')
+  }
+  if( typeof _modifyInfo.postType === 'string' ){
+    _modifyInfo.postType = await positionTypeList.value.filter(item=>{
+      return item.label === _modifyInfo.postType
+    })[0].id
+  }
+  const { resp_code }:any = await editUserInfoApi(_modifyInfo)
+  if( resp_code === 0 ){
+    ElMessage.success('编辑成功')
+    visibleInfo.value = false
+    onGetUserInfo()
+  }
+}
 // 获取用户详细信息
 const onGetUserInfo = async() => {
   const { resp_code, datas } = await getUserDetailInfo()
-  resp_code === 0 && ( userDetailInfo.value = datas )
+  if( resp_code === 0 ){
+    userDetailInfo.value = datas
+    const _modifyInfo = modifyInfo.value
+    // 重置用户信息
+    Object.assign(_modifyInfo,datas)
+    _modifyInfo.postType = await positionTypeList.value.filter(item=>{
+      return item.id === datas.postType
+    })[0].label
+    _modifyInfo.regionCode = datas.region.subRegion.subRegion.subRegion.code || datas.region.subRegion.subRegion.code
+    modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo))
+  }
 }
 // 获取用户地区信息
 const onGetRegionInfo = computed(()=>{
   const info = userDetailInfo.value
-  return info !== undefined ? info.region.subRegion.subRegion.name + '/' + info.region.subRegion.subRegion.subRegion.name : '未填写'
+  let _data = ''
+  if( info === undefined ){
+    _data = '未填写'
+  }else{
+    if( info.region.subRegion.subRegion.subRegion.subRegion === null ){
+      _data = info.region.subRegion.subRegion.name + '/' + info.region.subRegion.subRegion.subRegion.name
+    }else{
+      _data = info.region.subRegion.subRegion.name + '/' + info.region.subRegion.subRegion.subRegion.name + '/' + info.region.subRegion.subRegion.subRegion.subRegion.name
+    }
+  }
+  return _data
 })
+// 获取岗位类型
+const onGetPositionType = async() => {
+  const { resp_code, datas }:any = await getPositionTypeApi()
+  resp_code === 0 && ( positionTypeList.value = datas )
+}
+// 获取地区数据
+const onGetArea = async() => {
+  const { resp_code, datas }:any = await getAreaApi()
+  resp_code === 0 && ( areaList.value = datas.records )
+}
 // 修改手机号
 const onModifyMobile = () => {
   visibleMobile.value = !visibleMobile.value
 }
 // 点击取消或确定按钮
 const onHandleClose = async (type: boolean) => {
+  if( !type ){
+    return onModifyMobile()
+  }
   if( modifyMbStep.value === 1 ){
     const { resp_code }:any = await verifyMbCode({ smsCode: modifyMbForm.value.code })
     if( resp_code === 0 ){
@@ -140,7 +258,7 @@ const onHandleClose = async (type: boolean) => {
       useUserStore().handleGetUserInfo()
     }
   }
-  !type && onModifyMobile()
+
 }
 // 修改对外展示
 const onChangeSwitch = async (val: boolean, type: string) => {
@@ -297,7 +415,27 @@ const onSendCode = async ()=> {
 .es-homePersonalInfo-input--down{
   color: #999999;
 }
+
+
+.es-homePersonalInfo-content__infoDialog{
+  @include widthAndHeight(512px,32px);
+  @include flex();
+  &>span{
+    display: inline-block;
+    line-height: 32px;
+    @include widthAndHeight(72px,100%);
+    text-align: right;
+    margin-right: 8px;
+  }
+  span[required]::before {
+    content: "*"; /* 添加一个星号作为标识符 */
+    color: red; /* 可以根据需要设置颜色 */
+    display: inline-block;
+    margin-right: 4px;
+  }
+}
 </style>
+
 <style lang="scss">
 @import "@/style/mixin.scss";
 .es-homePersonalInfo{
@@ -308,6 +446,15 @@ const onSendCode = async ()=> {
   }
   .el-switch__core{
     @include widthAndHeight(44px,22px);
+  }
+}
+.es-homePersonalInfo-content__infoDialog{
+  @include margin(0,0,16px,0);
+  .select{
+    flex: 1;
+  }
+  &:nth-last-child(1){
+    @include margin(0,0,0,0);
   }
 }
 </style>

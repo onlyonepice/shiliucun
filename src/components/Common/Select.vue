@@ -18,7 +18,7 @@
     </el-select>
     <div v-if="props.type === 'input'" class="select__input select__content">
       <el-input v-model="value" placeholder="请输入" :type="props.specialType" :disabled="props.disabled" @input="handleChange" />
-      <span class="select__input-desc">{{inputText}}</span>
+      <span v-if="inputDesc" class="select__input-desc">{{inputText}}</span>
     </div>
     <div v-if="props.type === 'number'" class="select__input select__content">
       <el-input-number v-model="value" placeholder="请输入" controls-position="right" :min="0" :max="100" :disabled="props.disabled" @input="handleChange" />
@@ -52,6 +52,10 @@ const props = defineProps({
   type: {
     type: String,
     default: 'select'
+  },
+  inputDesc: {
+    type: Boolean,
+    default: false
   },
   specialType: {
     type: String,
@@ -104,7 +108,6 @@ function handleChange(data){
 .select{
   @include widthAndHeight(30%,32px);
   @include flex(center,flex-start);
-  @include margin(0,24px,16px,0);
 }
 .select:nth-of-type(2n){
   @include margin(0,0,16px,0);
