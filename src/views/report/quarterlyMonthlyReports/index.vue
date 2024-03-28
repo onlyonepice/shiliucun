@@ -17,7 +17,7 @@ import TimeList from './components/TimeList.vue'
 import weeklyPic from '@/assets/img/report/weekly-bg-pic.png'
 import monthlyPic from '@/assets/img/report/month-bg-pic.png'
 import quarterlyPic from '@/assets/img/report/quarterly-bg-pic.png'
-import { reportList } from '@/api/report'
+import { reportList, quarterlyMonthlyLimits } from '@/api/report'
 import { ElMessage } from 'element-plus'
 const { VITE_IREPOET_URL } = import.meta.env
 const ns = useNamespace('quarterlyMonthly');
@@ -100,8 +100,16 @@ const dropdownLoading = async (type) => {
     }
 }
 // 跳转报告详情
-const onDetailReport = (item) => {
-    window.open(`${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${item.id}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/white-paper`,'_blank')
+const onDetailReport = async(item) => {
+    const data = await quarterlyMonthlyLimits()
+    if (data.resp_code === 0) {
+        if (data.datas) {
+           window.open(`${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${item.id}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/white-paper`,'_blank') 
+        } else {
+            ElMessage.warning('今日查看季报月报数据已达次数限制，请明日再试');
+        }
+    }
+    
 }
 onMounted(() => {
     Promise.all([
