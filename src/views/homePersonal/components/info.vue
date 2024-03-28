@@ -244,7 +244,7 @@ const onHandleClose = async (type: boolean) => {
     if( resp_code === 0 ){
       ElMessage.success('修改成功')
       onModifyMobile()
-      useUserStore().handleGetUserInfo()
+      onGetUserInfo()
     }
   }
 
@@ -259,7 +259,7 @@ const onChangeSwitch = async (val: boolean, type: string) => {
     userInfo.value.emailHide = val
   }
   const { resp_code }:any = await updateUserInfo(userInfo.value)
-  useUserStore().handleGetUserInfo()
+  onGetUserInfo()
   resp_code === 0 && ElMessage.success('修改成功')
 }
 // 倒计时
