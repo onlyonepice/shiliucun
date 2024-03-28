@@ -4,7 +4,7 @@ import { http } from "@/utils/http";
 export const getPaperList = () => {
   return http.request<{ resp_code: number; datas: any }>(
     "get",
-    `/eesa-report/alliance/whitePaper/front/openApi/v1.1/getTopSelected`,
+    `/eesa-report/alliance/whitePaper/front/openApi/v1.1/getWhitePaper?limit=12&page=1`,
   );
 }
 //获取行业洞察列表数据

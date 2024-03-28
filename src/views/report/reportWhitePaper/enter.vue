@@ -32,7 +32,7 @@ const paperList = ref([]) // 白皮书列表
 // 获取白皮书列表
 const getWhitePaperList = async () => {
   const { datas } = await getPaperList()
-  paperList.value = datas
+  paperList.value = datas.records
 }
 // 跳转白皮书详情
 const onDetail = (data:any) => {
