@@ -179,7 +179,7 @@ const onHandleCloseInfo = async ( type:boolean )=>{
   if ( !_modifyInfo.mobile && !regMobile.test(_modifyInfo.mobile)) {
     return ElMessage.error('请输入正确手机号')
   }
-  if ( !_modifyInfo.email && !regEmail.test(_modifyInfo.email)) {
+  if ( !_modifyInfo.email && ( _modifyInfo.email !== null && _modifyInfo.email !== '' ) && !regEmail.test(_modifyInfo.email)) {
     return ElMessage.error('请输入正确邮箱')
   }
   const { resp_code }:any = await editUserInfoApi(_modifyInfo)
