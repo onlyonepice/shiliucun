@@ -182,6 +182,9 @@ const onHandleCloseInfo = async ( type:boolean )=>{
   if ( !_modifyInfo.email && ( _modifyInfo.email !== null && _modifyInfo.email !== '' ) && !regEmail.test(_modifyInfo.email)) {
     return ElMessage.error('请输入正确邮箱')
   }
+  if( _modifyInfo.email === null || _modifyInfo.email === '' ){
+    delete _modifyInfo.email
+  }
   const { resp_code }:any = await editUserInfoApi(_modifyInfo)
   if( resp_code === 0 ){
     ElMessage.success('编辑成功')
