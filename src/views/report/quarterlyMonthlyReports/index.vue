@@ -101,8 +101,7 @@ const dropdownLoading = async (type) => {
 }
 // 跳转报告详情
 const onDetailReport = async(item) => {
-    window.open(`${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${item.id}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/white-paper`,'_blank')
-    
+    window.open(`${VITE_IREPOET_URL}#/report-detail-pdf_V2?id=${item.id}&type=${item.type}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/quarterly-monthly`,'_blank')
 }
 onMounted(() => {
     Promise.all([
