@@ -2,7 +2,7 @@
   <div :class="[ns.b(),'animate__animated animate__fadeIn']">
     <div :class="[ns.b('top')]">
       <h3>基本信息</h3>
-      <el-button type="primary" :class="ns.be('top','button')" @click='visibleInfo = true'>编辑信息</el-button>
+      <el-button type="primary" :class="ns.be('top','button')" @click='visibleInfo = true,visibleInfoSet = true,onGetUserInfo()'>编辑信息</el-button>
     </div>
     <div :class="[ns.b('content')]">
       <div :class="[ns.be('content','left')]">
@@ -53,7 +53,7 @@
           <h5 v-if="showInfo.weChat" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">微信：{{ modifyInfoFreeze.weCat }}</h5>
           <h5 v-if="showInfo.email" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">邮箱：{{ modifyInfoFreeze.email }}</h5>
         </div>
-        <img :class="ns.be('right','headImgUrl')" :src="useUserStore().fileUrl + modifyInfo.headImgUrl" alt="">
+        <img :class="ns.be('right','headImgUrl')" :src="useUserStore().fileUrl + modifyInfo.companyLogo" alt="">
       </div>
     </div>
     <Dialog title="修改手机号" :visible='visibleMobile' width="560px" height='224px' @onHandleClose='onHandleClose' :confirmText='modifyMbStep === 1 ? "下一步" : "完成"'>
@@ -73,35 +73,35 @@
         </div>
       </template>
     </Dialog>
-    <Dialog title="编辑信息" :visible='visibleInfo' width="560px" height='474px' @onHandleClose='onHandleCloseInfo' confirmText='保存'>
+    <Dialog v-if="visibleInfoSet" title="编辑信息" :visible='visibleInfo' width="560px" height='474px' @onHandleClose='onHandleCloseInfo' confirmText='保存'>
       <template #content>
         <div :class="ns.be('content','infoDialog')">
           <span required>真实姓名</span>
-          <Select type="input" :defaultValue='modifyInfo.realName' @onChange="val=>{ return onChangeInfo(val,'realName') }" />
+          <Select type="input" :defaultValue='modifyInfoFreeze.realName' @onChange="val=>{ return onChangeInfo(val,'realName') }" />
         </div>
         <div :class="ns.be('content','infoDialog')">
           <span required>企业名称</span>
-          <Select type="input" :defaultValue='modifyInfo.company' @onChange="val=>{ return onChangeInfo(val,'company') }" />
+          <Select type="input" :defaultValue='modifyInfoFreeze.company' @onChange="val=>{ return onChangeInfo(val,'company') }" />
         </div>
         <div :class="ns.be('content','infoDialog')">
           <span required>岗位头衔</span>
-          <Select type="input" :defaultValue='modifyInfo.position' @onChange="val=>{ return onChangeInfo(val,'position') }" />
+          <Select type="input" :defaultValue='modifyInfoFreeze.position' @onChange="val=>{ return onChangeInfo(val,'position') }" />
         </div>
         <div :class="ns.be('content','infoDialog')">
           <span >所在地区</span>
-          <Select :options='areaList' :defaultValue='modifyInfo.regionCode' :cascaderOption='cascaderOption' type="cascader" @onChange="val=>{ return onChangeInfo(val,'regionCode') }" />
+          <Select :options='areaList' :defaultValue='modifyInfoFreeze.regionCode' :cascaderOption='cascaderOption' type="cascader" @onChange="val=>{ return onChangeInfo(val,'regionCode') }" />
         </div>
         <div :class="ns.be('content','infoDialog')">
           <span >手机号码</span>
-          <Select type="input" :defaultValue='modifyInfo.mobile' @onChange="val=>{ return onChangeInfo(val,'mobile') }" />
+          <Select type="input" :defaultValue='modifyInfoFreeze.mobile' @onChange="val=>{ return onChangeInfo(val,'mobile') }" />
         </div>
         <div :class="ns.be('content','infoDialog')">
           <span >微信号码</span>
-          <Select type="input" :defaultValue='modifyInfo.weCat' @onChange="val=>{ return onChangeInfo(val,'weCat') }" />
+          <Select type="input" :defaultValue='modifyInfoFreeze.weCat' @onChange="val=>{ return onChangeInfo(val,'weCat') }" />
         </div>
         <div :class="ns.be('content','infoDialog')">
           <span >常用邮箱</span>
-          <Select type="input" :defaultValue='modifyInfo.email' @onChange="val=>{ return onChangeInfo(val,'email') }" />
+          <Select type="input" :defaultValue='modifyInfoFreeze.email' @onChange="val=>{ return onChangeInfo(val,'email') }" />
         </div>
       </template>
     </Dialog>
@@ -122,6 +122,7 @@ const ns = useNamespace('homePersonalInfo')
 const userInfo: Ref<any> = ref({})
 const visibleMobile: Ref<boolean> = ref(false) // 修改手机号弹窗
 const visibleInfo: Ref<boolean> = ref(false) // 编辑信息弹窗
+const visibleInfoSet: Ref<boolean> = ref(false) // 编辑信息弹窗-延迟
 const btnDesc: Ref<string> = ref('获取验证码') // 倒计时文案
 const areaList: Ref<any> = ref([]) // 地区数据
 const cascaderOption: Ref<any> = ref({
@@ -139,7 +140,7 @@ const modifyInfo: Ref<any> = ref({
   weCat: '',
   email: ''
 }) // 修改信息
-const modifyInfoFreeze = ref({})
+const modifyInfoFreeze: Ref<any> = ref({})
 const timer = ref(null) // 定时器
 const userDetailInfo: Ref<any> = ref() // 用户详细信息
 const modifyMbForm: Ref<any> = ref({
@@ -169,7 +170,8 @@ const onChangeInfo = (value:any,type:string)=>{
 const onHandleCloseInfo = async ( type:boolean )=>{
   const _modifyInfo = JSON.parse(JSON.stringify(modifyInfo.value))
   if( !type ){
-    return visibleInfo.value = false
+    visibleInfo.value = false
+    return setTimeout(()=>{visibleInfoSet.value = false},200)
   }
   if( _modifyInfo.realName === '' || _modifyInfo.company === '' || _modifyInfo.position === '' ){
     return ElMessage.error('请完善必填项')
@@ -178,12 +180,13 @@ const onHandleCloseInfo = async ( type:boolean )=>{
     return ElMessage.error('请输入正确手机号')
   }
   if ( _modifyInfo.email !== null && !regEmail.test(_modifyInfo.email)) {
-    return ElMessage.error('请输入邮箱')
+    return ElMessage.error('请输入正确邮箱')
   }
   const { resp_code }:any = await editUserInfoApi(_modifyInfo)
   if( resp_code === 0 ){
     ElMessage.success('编辑成功')
     visibleInfo.value = false
+    setTimeout(()=>{visibleInfoSet.value = false},200)
     onGetUserInfo()
   }
 }
