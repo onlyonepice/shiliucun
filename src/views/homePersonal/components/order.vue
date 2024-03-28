@@ -1,6 +1,7 @@
 <template>
   <div :class="[ns.b()]">
-    我的订单
+    <h3>我的订单</h3>
+    <h1>正在开发中...</h1>
   </div>
 </template>
 
@@ -13,5 +14,10 @@ const ns = useNamespace('homePersonalInfo')
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-
+.es-homePersonalInfo{
+  h1{
+    padding: 100px;
+    text-align: center;
+  }
+}
 </style>

@@ -84,10 +84,6 @@ export function modifyMb(data:any) {
   })
 }
 
-// 获取岗位类型
-export function getPositionTypeApi() {
-  return http.request<void>("post", `/api-user/sysDict/front/V1.0/frontSelectTreeByType/positionType`)
-}
 // 获取地区信息
 export function getAreaApi() {
   return http.request<void>("get", `/eesa-report/region/openApi/getRegions?level=5&page=1&limit=1000&pcode=156`)

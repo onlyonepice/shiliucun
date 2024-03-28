@@ -8,6 +8,19 @@ export function toType(obj) {
     .toLowerCase()
 }
 
+// 获取对象最里层的对象
+export function getInnermostObject(obj) {
+  if (obj === null || typeof obj !== 'object' || Object.keys(obj).length === 0) {
+      return obj;
+  }
+
+  if (obj.hasOwnProperty('subRegion') && obj.subRegion !== null) {
+      return getInnermostObject(obj.subRegion);
+  }
+
+  return obj;
+}
+
 // 下载 blob 文件
 export const downloadBase64 = (base64: string, filename: string) => {
   // 完整的base64编码格式：真正描述文件内容的base64编码前面会有类似于 'data:application/pdf;base64,' 的字符串来描述文件MIME类型（媒体类型，即文件类型相关）

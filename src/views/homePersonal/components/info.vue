@@ -15,8 +15,8 @@
           <div :class="ns.be('item','value')">{{ modifyInfoFreeze.company }}</div>
         </div>
         <div :class="ns.be('content','item')">
-          <h5>岗位类型</h5>
-          <div :class="ns.be('item','value')">{{ modifyInfoFreeze.postType }}</div>
+          <h5>岗位头衔</h5>
+          <div :class="ns.be('item','value')">{{ modifyInfoFreeze.position }}</div>
         </div>
         <div :class="ns.be('content','item')">
           <h5>所在地区</h5>
@@ -47,7 +47,7 @@
       <div :class="[ns.be('content','right')]">
         <div :class="[ns.be('right','bg')]"></div>
         <div>
-          <h3 :class="ns.be('right','title')">{{ modifyInfoFreeze.realName }} | {{ modifyInfoFreeze.postType }}</h3>
+          <h3 :class="ns.be('right','title')">{{ modifyInfoFreeze.realName }} | {{ modifyInfoFreeze.position }}</h3>
           <h5 :class="ns.be('right','company')">{{ modifyInfoFreeze.company }}</h5>
           <h5 v-if="showInfo.mobile" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">手机：{{ modifyInfoFreeze.mobile }}</h5>
           <h5 v-if="showInfo.weChat" :class="[ns.be('right','common'),'animate__animated animate__fadeIn']">微信：{{ modifyInfoFreeze.weCat }}</h5>
@@ -84,8 +84,8 @@
           <Select type="input" :defaultValue='modifyInfo.company' @onChange="val=>{ return onChangeInfo(val,'company') }" />
         </div>
         <div :class="ns.be('content','infoDialog')">
-          <span required>岗位类型</span>
-          <Select :options='positionTypeList' :defaultValue='modifyInfo.postType' @onChange="val=>{ return onChangeInfo(val,'postType') }" />
+          <span required>岗位头衔</span>
+          <Select type="input" :defaultValue='modifyInfo.position' @onChange="val=>{ return onChangeInfo(val,'position') }" />
         </div>
         <div :class="ns.be('content','infoDialog')">
           <span >所在地区</span>
@@ -116,13 +116,13 @@ import { useUserStore } from '@/store/modules/user'
 import { ElMessage } from 'element-plus'
 import { NOOP } from '@vue/shared'
 import { regMobile, regEmail } from '@/utils/rule'
-import { updateUserInfo, modifyMbCode, modifyMbCode1, verifyMbCode, modifyMb, getUserDetailInfo, getPositionTypeApi, getAreaApi, editUserInfoApi } from '@/api/user'
+import { updateUserInfo, modifyMbCode, modifyMbCode1, verifyMbCode, modifyMb, getUserDetailInfo, getAreaApi, editUserInfoApi } from '@/api/user'
+import { getInnermostObject } from '@/utils/index'
 const ns = useNamespace('homePersonalInfo')
 const userInfo: Ref<any> = ref({})
 const visibleMobile: Ref<boolean> = ref(false) // 修改手机号弹窗
 const visibleInfo: Ref<boolean> = ref(false) // 编辑信息弹窗
 const btnDesc: Ref<string> = ref('获取验证码') // 倒计时文案
-const positionTypeList: Ref<Array<any>> = ref([]) // 岗位类型数组
 const areaList: Ref<any> = ref([]) // 地区数据
 const cascaderOption: Ref<any> = ref({
   expandTrigger: 'hover',
@@ -133,7 +133,7 @@ const cascaderOption: Ref<any> = ref({
 const modifyInfo: Ref<any> = ref({
   realName: '',
   company: '',
-  postType: '',
+  position: '',
   regionCode: '',
   mobile: '',
   weCat: '',
@@ -158,7 +158,6 @@ onMounted(()=>{
   showInfo.value.weChat = userInfo.value.wecatHide
   showInfo.value.email = userInfo.value.emailHide
   onGetUserInfo()
-  onGetPositionType()
   onGetArea()
 })
 // 修改用户信息
@@ -172,7 +171,7 @@ const onHandleCloseInfo = async ( type:boolean )=>{
   if( !type ){
     return visibleInfo.value = false
   }
-  if( _modifyInfo.realName === '' || _modifyInfo.company === '' || _modifyInfo.postType === '' ){
+  if( _modifyInfo.realName === '' || _modifyInfo.company === '' || _modifyInfo.position === '' ){
     return ElMessage.error('请完善必填项')
   }
   if ( (_modifyInfo.mobile !== null || _modifyInfo.mobile !== '') && !regMobile.test(_modifyInfo.mobile)) {
@@ -180,11 +179,6 @@ const onHandleCloseInfo = async ( type:boolean )=>{
   }
   if ( ( _modifyInfo.email !== null || _modifyInfo.email !== '' ) && !regEmail.test(_modifyInfo.email)) {
     return ElMessage.error('请输入邮箱')
-  }
-  if( typeof _modifyInfo.postType === 'string' ){
-    _modifyInfo.postType = await positionTypeList.value.filter(item=>{
-      return item.label === _modifyInfo.postType
-    })[0].id
   }
   const { resp_code }:any = await editUserInfoApi(_modifyInfo)
   if( resp_code === 0 ){
@@ -201,10 +195,7 @@ const onGetUserInfo = async() => {
     const _modifyInfo = modifyInfo.value
     // 重置用户信息
     Object.assign(_modifyInfo,datas)
-    datas.postType !== null && (_modifyInfo.postType = await positionTypeList.value.filter(item=>{
-      return item.id === datas.postType
-    })[0].label)
-    datas.region !== null && (_modifyInfo.regionCode = datas.region.subRegion.subRegion.subRegion.code || datas.region.subRegion.subRegion.code)
+    datas.region !== null && (_modifyInfo.regionCode = getInnermostObject(datas.region).code)
     modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo))
   }
 }
@@ -223,11 +214,6 @@ const onGetRegionInfo = computed(()=>{
   }
   return _data
 })
-// 获取岗位类型
-const onGetPositionType = async() => {
-  const { resp_code, datas }:any = await getPositionTypeApi()
-  resp_code === 0 && ( positionTypeList.value = datas )
-}
 // 获取地区数据
 const onGetArea = async() => {
   const { resp_code, datas }:any = await getAreaApi()

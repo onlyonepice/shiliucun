@@ -70,8 +70,7 @@ watch(
 // 点击左侧边栏
 const onClickTab = (id: number) => {
   if( id !== 5 ){
-    id === 1 && ( choseTab.value = id )
-    id !== 1 && window.open(VITE_IREPOET_URL + '#/account-setting','externalWindow')
+    choseTab.value = id
   }else{
     visible.value = true
   }
@@ -86,12 +85,7 @@ const onHandleClose = (type: boolean) => {
 }
 // 监听路由变化
 onMounted(()=>{
-  if( route.query.id !== '1' ){
-    choseTab.value === 1
-    window.open(VITE_IREPOET_URL + '#/account-setting','externalWindow')
-  }else{
-    route.query.id === '1' && ( choseTab.value = Number(route.query.id) )
-  }
+  choseTab.value = Number(route.query.id)
 })
 </script>
 
