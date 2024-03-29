@@ -8,14 +8,17 @@
 </template>
 
 <script setup lang="ts">
-import useNamespace from '@/utils/nameSpace'
-const ns = useNamespace('policyList')
+import useNamespace from "@/utils/nameSpace";
+const ns = useNamespace("policyList");
 const props = defineProps({
   pageData: {
     type: Object,
-    default: () => { { } }
-  }
-})
+    default: () => {
+      {
+      }
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -23,7 +26,7 @@ const props = defineProps({
 
 .es-policyList {
   width: 100%;
-  border-bottom: 1px solid #DBDCE2;
+  border-bottom: 1px solid #dbdce2;
   padding-bottom: 16px;
   margin-bottom: 16px;
   height: 44px;
@@ -33,7 +36,7 @@ const props = defineProps({
 
   &:hover {
     .name {
-      color: #244BF1;
+      color: #244bf1;
     }
   }
 
@@ -48,10 +51,10 @@ const props = defineProps({
 
     p {
       padding: 2px 8px;
-      background: #FFF3EA;
+      background: #fff3ea;
       border-radius: 4px;
-      border: 1px solid #FF8D32;
-      @include font(12px,400,#FF8D32,20px)
+      border: 1px solid #ff8d32;
+      @include font(12px, 400, #ff8d32, 20px);
     }
   }
 }

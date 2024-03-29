@@ -13,27 +13,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import useNamespace from '@/utils/nameSpace'
-import rightArrow from '@/assets/img/common/right-arrow.png'
-import { getHomeOnlineReportSelected } from '@/api/home'
+import { ref } from "vue";
+import useNamespace from "@/utils/nameSpace";
+import rightArrow from "@/assets/img/common/right-arrow.png";
+import { getHomeOnlineReportSelected } from "@/api/home";
 import { useRouter } from "vue-router";
-const router = useRouter()
-const ns = useNamespace('home-industryReport')
-const pageData = ref<[]>([])
+const router = useRouter();
+const ns = useNamespace("home-industryReport");
+const pageData = ref<[]>([]);
 const getOnlineReportSelectedFn = async () => {
   const data = await getHomeOnlineReportSelected({
-    page: 1, limit: 5, keyword: ''
-  })
+    page: 1,
+    limit: 5,
+    keyword: "",
+  });
   if (data.resp_code === 0) {
-    pageData.value = data.datas
+    pageData.value = data.datas;
   }
-}
+};
 const handleListClick = () => {
-  router.push('/reportOnLine')
-}
-getOnlineReportSelectedFn()
-
+  router.push("/reportOnLine");
+};
+getOnlineReportSelectedFn();
 </script>
 
 <style lang="scss" scoped>
@@ -54,7 +55,7 @@ getOnlineReportSelectedFn()
       margin-bottom: 32px;
 
       .title_text {
-        @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px)
+        @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px);
       }
 
       img {
@@ -68,7 +69,6 @@ getOnlineReportSelectedFn()
       display: flex;
       justify-content: space-between;
     }
-
   }
 }
 </style>

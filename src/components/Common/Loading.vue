@@ -1,46 +1,40 @@
 <template>
-  <div
-    ref="loading"
-    class="loading animate__animated animate__fadeIn"
-  >
+  <div ref="loading" class="loading animate__animated animate__fadeIn">
     <div class="container">
-      <Lottie
-        :options="defaultOptions"
-        :height="160"
-        :width="160"
-      />
+      <Lottie :options="defaultOptions" :height="160" :width="160" />
       <p>{{ text }}...</p>
     </div>
   </div>
 </template>
 
 <script>
-import animationData from '@/config/loadingLottieFiles.json';
+import animationData from "@/config/loadingLottieFiles.json";
 export default {
-  name: 'Loading',
+  name: "Loading",
   props: {
     backgroundColor: {
       type: String,
-      default: () => '0,0,0,.7'
+      default: () => "0,0,0,.7",
     },
     text: {
       type: String,
-      default: () => '加载中请稍等'
-    }
+      default: () => "加载中请稍等",
+    },
   },
   data() {
     return {
       defaultOptions: { animationData: animationData },
       animationSpeed: 1,
-      anim: {}
-    }
+      anim: {},
+    };
   },
   mounted() {
     this.$nextTick(() => {
-      this.$refs['loading'] && (this.$refs['loading'].style = `background:${this.backgroundColor}`)
-    })
-  }
-}
+      this.$refs["loading"] &&
+        (this.$refs["loading"].style = `background:${this.backgroundColor}`);
+    });
+  },
+};
 </script>
 
 <style lang="scss" scoped>

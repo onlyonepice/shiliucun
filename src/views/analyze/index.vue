@@ -2,14 +2,13 @@
   <p class="home">分析</p>
 </template>
 
-
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from "vue";
 </script>
 
 <style lang="scss">
 @import "@/style/mixin.scss";
-.home{
+.home {
   height: calc(50vh - 56px);
 }
 </style>

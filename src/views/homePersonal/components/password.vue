@@ -35,7 +35,6 @@
   </div>
 </template>
 
-
 <script lang="ts" setup>
 import { onMounted, ref, Ref, watch } from 'vue'
 import { useUserStore } from '@/store/modules/user'

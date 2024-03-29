@@ -6,8 +6,8 @@ export const getReNewsInFormations = (params) => {
     "get",
     `/eesa-report/alliance/newsInformation/front/openApi/v1.1/getReNewsInformations`,
     {
-      params
-    }
+      params,
+    },
   );
 };
 
@@ -17,8 +17,8 @@ export const getLatestTender = (params) => {
     "get",
     `/eesa-report/Policy/front/openApi/V1.0/getLatestTender`,
     {
-      params
-    }
+      params,
+    },
   );
 };
 //最新政策
@@ -27,8 +27,8 @@ export const getLatestPolicy = (data) => {
     "post",
     `/eesa-report/Policy/front/openApi/all/V1.0/getLatestPolicy`,
     {
-      params:data
-    }
+      params: data,
+    },
   );
 };
 
@@ -38,8 +38,8 @@ export const globalSearch = (params) => {
     "post",
     `/eesa-report/homePage/homepageFrontier/front/openApi/V1.0/globalSearch`,
     {
-      params
-    }
+      params,
+    },
   );
 };
 //储能前沿搜索详情
@@ -48,8 +48,8 @@ export const getByKeyword = (params) => {
     "post",
     `/eesa-report/homePage/homepageFrontier/front/openApi/V1.0/getByKeyword`,
     {
-      params
-    }
+      params,
+    },
   );
 };
 //首页行业报告
@@ -59,8 +59,7 @@ export const getHomeOnlineReportSelected = (params) => {
     "get",
     `/eesa-report/onlineReportNew/front/openApi/v1.1/getHomeOnlineReport`,
     {
-      params
-    }
+      params,
+    },
   );
 };
-

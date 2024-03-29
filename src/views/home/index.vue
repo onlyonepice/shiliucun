@@ -1,11 +1,19 @@
 <template>
   <div :class="[ns.b()]">
-    <img :class="ns.b('homeBg')" src="https://share.eesaexpo.com/report/3.0/home-head-bg.png" alt="">
+    <img
+      :class="ns.b('homeBg')"
+      src="https://share.eesaexpo.com/report/3.0/home-head-bg.png"
+      alt=""
+    />
     <img :class="ns.b('homeTopIcon')" :src="homeTopIcon" alt="" />
     <div :class="ns.b('homeTopSearch')" v-if="else">
-      <el-input v-model="searchContent" placeholder="请输入关键字…" @keyup.enter="onSearch"></el-input>
+      <el-input
+        v-model="searchContent"
+        placeholder="请输入关键字…"
+        @keyup.enter="onSearch"
+      />
       <div :class="ns.b('homeTopSearchIcon')" @click.stop="onSearch">
-        <img :src="searchIcon" alt="">
+        <img :src="searchIcon" alt="" />
       </div>
     </div>
     <div :class="ns.b('homeCenter')">
@@ -19,28 +27,26 @@
     <!-- 行业报告 -->
     <industryReport />
   </div>
-
 </template>
 
-
 <script lang="ts" setup>
-import { ref, Ref, } from 'vue'
-import useNamespace from '@/utils/nameSpace'
-import homeTopIcon from '@/assets/img/common/home-top-icon.png'
-import searchIcon from '@/assets/img/common/search-icon.png'
-import industryInsight from './homeComponents/industryInsight.vue'
-import industryData from './homeComponents/industryData.vue'
-import industryAnalysis from './homeComponents/industryAnalysis.vue'
-import industryReport from './homeComponents/industryReport.vue'
-const ns = useNamespace('home')
-const searchContent: Ref<string> = ref('')
+import { ref, Ref } from "vue";
+import useNamespace from "@/utils/nameSpace";
+import homeTopIcon from "@/assets/img/common/home-top-icon.png";
+import searchIcon from "@/assets/img/common/search-icon.png";
+import industryInsight from "./homeComponents/industryInsight.vue";
+import industryData from "./homeComponents/industryData.vue";
+import industryAnalysis from "./homeComponents/industryAnalysis.vue";
+import industryReport from "./homeComponents/industryReport.vue";
+const ns = useNamespace("home");
+const searchContent: Ref<string> = ref("");
 
 // 搜索事件
 const onSearch = () => {
-  if (searchContent.value === '') {
-    return
+  if (searchContent.value === "") {
+    return;
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -75,7 +81,7 @@ const onSearch = () => {
 .es-home-homeTopSearchIcon {
   @include widthAndHeight(64px, 40px);
   @include absolute(1, 0, 0, 0, none);
-  background: #244BF1;
+  background: #244bf1;
   @include flex(center, center);
 
   img {
