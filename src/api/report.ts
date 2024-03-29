@@ -6,10 +6,17 @@ export const getPaperList = () => {
     "get",
     `/eesa-report/alliance/whitePaper/front/openApi/v1.1/getWhitePaper?limit=12&page=1`,
   );
-}
+};
 //获取行业洞察列表数据
-export const getReNewsInformations = (params: { limit: number, page: number }) => {
-  return http.request<{ datas; resp_code }>("get", "/eesa-report/alliance/newsInformation/front/openApi/v1.1/getReNewsInformations",{params});
+export const getReNewsInformations = (params: {
+  limit: number;
+  page: number;
+}) => {
+  return http.request<{ datas; resp_code }>(
+    "get",
+    "/eesa-report/alliance/newsInformation/front/openApi/v1.1/getReNewsInformations",
+    { params },
+  );
 };
 //在线报告
 export const getOnlineReportSelected = (params) => {
@@ -17,8 +24,8 @@ export const getOnlineReportSelected = (params) => {
     "get",
     `/eesa-report/onlineReportNew/front/openApi/v1.1/getOnlineReportSelected`,
     {
-      params
-    }
+      params,
+    },
   );
 };
 //置顶在线报告
@@ -27,8 +34,8 @@ export const getTopOnlineReportSelected = (params) => {
     "get",
     `/eesa-report/onlineReportNew/front/openApi/v1.1/getTopSelected`,
     {
-      params
-    }
+      params,
+    },
   );
 };
 //免费在线报告
@@ -37,8 +44,8 @@ export const getFreeOnlineReportSelected = (params) => {
     "get",
     `/eesa-report/onlineReportNew/front/openApi/v1.1/getFreeReportSelected`,
     {
-      params
-    }
+      params,
+    },
   );
 };
 //报告标签列表
@@ -54,14 +61,14 @@ export const reportList = (data) => {
   return http.request<{ resp_code: number; datas: any; resp_msg: string }>(
     "get",
     `/eesa-report/alliance/quarterlyMonthlyReport/front/openApi/v1.1/getMonthlyReport`,
-    {params: data}
+    { params: data },
   );
-}
+};
 
 // 获取是否可以查看季报月报详情
 export const quarterlyMonthlyLimits = () => {
   return http.request<{ resp_code: number; datas: any; resp_msg: string }>(
     "get",
-    `/eesa-report/alliance/quarterlyMonthlyReport/front/v1.1/getQuarterlyMonthlyLimits`
+    `/eesa-report/alliance/quarterlyMonthlyReport/front/v1.1/getQuarterlyMonthlyLimits`,
   );
-}
+};

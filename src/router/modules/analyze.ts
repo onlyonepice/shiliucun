@@ -5,6 +5,6 @@ export default {
     default: () => import("@/views/analyze/index.vue"),
   },
   meta: {
-    title: "分析"
+    title: "分析",
   },
 };

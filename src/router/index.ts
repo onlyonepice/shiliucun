@@ -1,54 +1,58 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
 /** 自动导入全部静态路由，无需再手动引入！匹配 src/router/modules 目录（任何嵌套级别）中具有 .ts 扩展名的所有文件，除了 remaining.ts 文件
  */
 const modules: Record<string, any> = import.meta.glob(
-  ["./modules/**/*.ts", "!./modules/**/remaining.ts","./*.ts"],
+  ["./modules/**/*.ts", "!./modules/**/remaining.ts", "./*.ts"],
   {
-    eager: true
-  }
+    eager: true,
+  },
 );
 
 /** 原始静态路由（未做任何处理） */
-const routes:any = [
+const routes: any = [
   {
     path: "/",
     redirect: "/home",
-  }
+  },
 ];
 
-Object.keys(modules).forEach(key => {
+Object.keys(modules).forEach((key) => {
   routes.push(modules[key].default);
 });
 
 // 导出router数据
 export const routerArrays = routes;
 
-export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(formatFlatteningRoutes(routes));
+export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
+  formatFlatteningRoutes(routes),
+);
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes: constantRoutes
-})
+  routes: constantRoutes,
+});
 
 router.beforeEach(async (to, from, next) => {
-  window.localStorage.getItem("publicKey") === "null" || !window.localStorage.getItem("publicKey") && useUserStoreHook().getPublicKey()
-  if (typeof (to.meta?.title) === 'string') {
+  window.localStorage.getItem("publicKey") === "null" ||
+    (!window.localStorage.getItem("publicKey") &&
+      useUserStoreHook().getPublicKey());
+  if (typeof to.meta?.title === "string") {
     document.title = to.meta?.title;
   }
   // 如果跳转的是 home或者重定向到首页直接放行，不然会路由跳转死循环
-  if( to.path === '/home' || to.path === '/' ){
-    next()
+  if (to.path === "/home" || to.path === "/") {
+    next();
   }
-  if ( getToken() ) {
-    useUserStoreHook().handleGetUserInfo()
-    next()
-  }else{
-    to.path === '/homePersonal' && next('/home')
+  if (getToken()) {
+    useUserStoreHook().handleGetUserInfo();
+    next();
+  } else {
+    to.path === "/homePersonal" && next("/home");
   }
-  next()
-})
+  next();
+});
 
 /**
  * 一维数组处理成多级嵌套数组（三级及以上的路由全部拍成二级，keep-alive 只支持到二级缓存）
@@ -67,7 +71,7 @@ function formatTwoStageRoutes(routesList: RouteRecordRaw[]) {
         path: v.path,
         redirect: v.redirect,
         meta: v.meta,
-        children: []
+        children: [],
       });
     } else {
       newRoutesList[0]?.children.push({ ...v });
@@ -94,5 +98,4 @@ function formatFlatteningRoutes(routesList: RouteRecordRaw[]) {
   return hierarchyList;
 }
 
-
-export default router
+export default router;

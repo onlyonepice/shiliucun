@@ -5,6 +5,6 @@ export default {
     default: () => import("@/views/vip/index.vue"),
   },
   meta: {
-    title: "开通VIP"
+    title: "开通VIP",
   },
 };

@@ -5,7 +5,7 @@ export default {
     default: () => import("@/views/report/index.vue"),
   },
   meta: {
-    title: "报告"
+    title: "报告",
   },
   children: [
     // {
@@ -26,7 +26,7 @@ export default {
         default: () => import("@/views/report/reportWhitePaper/enter.vue"),
       },
       meta: {
-        title: "白皮书"
+        title: "白皮书",
       },
     },
     {
@@ -36,7 +36,7 @@ export default {
         default: () => import("@/views/report/reportOnLine/enter.vue"),
       },
       meta: {
-        title: "在线报告"
+        title: "在线报告",
       },
     },
     {
@@ -47,19 +47,20 @@ export default {
       },
       meta: {
         title: "行业洞察",
-        backgroundColor: ""
+        backgroundColor: "",
       },
     },
     {
       path: "/quarterlyMonthlyReports",
       name: "QuarterlyMonthlyReports",
       components: {
-        default: () => import("@/views/report/quarterlyMonthlyReports/index.vue"),
+        default: () =>
+          import("@/views/report/quarterlyMonthlyReports/index.vue"),
       },
       meta: {
         title: "季报月报",
-        backgroundColor: ""
+        backgroundColor: "",
       },
     },
-  ]
+  ],
 };
