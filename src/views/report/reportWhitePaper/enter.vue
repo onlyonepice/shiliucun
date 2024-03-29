@@ -37,12 +37,12 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { getPaperList } from "@/api/report";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import RightArrow from "@/assets/img/common/right-arrow.png";
-const { VITE_IREPOET_URL } = import.meta.env;
+const { VITE_I_REPORT_URL } = import.meta.env;
 const ns = useNamespace("whitePaper");
 const paperList = ref([]); // 白皮书列表
 // 获取白皮书列表
@@ -53,7 +53,7 @@ const getWhitePaperList = async () => {
 // 跳转白皮书详情
 const onDetail = (data: any) => {
   window.open(
-    `${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${data.id}&parent=白皮书&moduleName=${data.moduleName}&from=/alliance-insight/white-paper`,
+    `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${data.id}&parent=白皮书&moduleName=${data.moduleName}&from=/alliance-insight/white-paper`,
     "_blank",
   );
 };
