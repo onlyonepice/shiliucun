@@ -36,9 +36,9 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   if( window.localStorage.getItem("publicKey") === "null" || !window.localStorage.getItem("publicKey") ){
-    useUserStoreHook().getPublicKey()
+    await useUserStoreHook().getPublicKey()
   }else{
-    useUserStoreHook().setPublicKey()
+    await useUserStoreHook().setPublicKey()
   }
   if (typeof (to.meta?.title) === 'string') {
     document.title = to.meta?.title;
