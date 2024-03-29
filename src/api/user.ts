@@ -71,6 +71,21 @@ export function modifyMbCode() {
 export function modifyMbCode1(params) {
   return http.request<void>("get", `/api-user/account/sendMobileSMS?mobile=${params}`)
 }
+// 发送修改密码手机验证码
+export function modifyPasswordCode(params) {
+  return http.request<void>("get", `/api-user/account/sendPasswordSMS`)
+}
+// 校验修改密码手机验证码
+export function checkPasswordCode(params) {
+  return http.request<void>("get", `/api-user/account/front/v1.0/verifyPasswordSMS?smsCode=${params}`)
+}
+// 修改登录密码
+export function modifyPasswordApi(data:any) {
+  return http.request<void>("post", `/api-user/account/modifyPassword`,{
+    data
+  })
+}
+// 校验修改登录密码
 // 验证原手机验证码
 export function verifyMbCode(params) {
   return http.request<void>("get", `/api-user/account/nextStep`,{
@@ -93,4 +108,9 @@ export function editUserInfoApi(data:any) {
   return http.request<void>("post", `/api-user/account/updateAccountInfo`,{
     data
   })
+}
+
+// 获取系列产品
+export function getSeriesApi() {
+  return http.request<void>("get", `/api-user/users/getRecordingTime`)
 }

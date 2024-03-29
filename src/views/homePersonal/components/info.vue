@@ -250,7 +250,6 @@ const onHandleClose = async (type: boolean) => {
       onGetUserInfo()
     }
   }
-
 }
 // 修改对外展示
 const onChangeSwitch = async (val: boolean, type: string) => {
