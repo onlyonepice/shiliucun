@@ -79,8 +79,6 @@ const onCancel = () => {
     openLoginAnimate.value = false;
   }, 500);
 };
-// 获取文件前缀
-useUserStore().getConfigListBefore();
 </script>
 
 <style lang="scss">
