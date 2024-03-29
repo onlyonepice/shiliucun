@@ -3,10 +3,7 @@ import { store } from "@/store";
 import { userType } from "./types";
 import { getUserInfo, configListBefore } from "@/api/user";
 import { getPublicKeyApi } from "@/api/user";
-import { setToken, removeToken } from "@/utils/auth";
-import { ElMessage } from "element-plus";
-// import { useRouter, useRoute } from "vue-router";
-// const router = useRouter()
+import { removeToken } from "@/utils/auth";
 import router from "@/router";
 const { VITE_ENV } = import.meta.env;
 
@@ -16,7 +13,7 @@ export const useUserStore = defineStore({
     token: "", // 用户token 用于判断用户登录还是退出 通过watch监听
     fileUrl: "", // 文件路径
     userInfo: {}, // 用户信息
-    publicKey: '', // 加密密钥 用于监听
+    publicKey: "", // 加密密钥 用于监听
   }),
   getters: {
     getFileUrl(): string {
@@ -36,17 +33,19 @@ export const useUserStore = defineStore({
     // 获取加密密钥
     async getPublicKey() {
       return new Promise((resolve, reject) => {
-        getPublicKeyApi().then(data => {
-          if (data["resp_code"] === 0) {
-            window.localStorage.setItem("publicKey", data["datas"]);
-            this.publicKey = data["datas"]
-            resolve(data);
-          } else {
-            reject(data);s
-          }
-        }).catch(error => {
-          reject(error);
-        });
+        getPublicKeyApi()
+          .then((data) => {
+            if (data["resp_code"] === 0) {
+              window.localStorage.setItem("publicKey", data["datas"]);
+              this.publicKey = data["datas"];
+              resolve(data);
+            } else {
+              reject(data);
+            }
+          })
+          .catch((error) => {
+            reject(error);
+          });
       });
     },
     // 设置加密密钥

@@ -95,8 +95,7 @@ const getReportTagListFn = async () => {
         label: item.tagName,
       };
     });
-    console.log(checkedTagIds.value);
-    nextTick(() => {
+    await nextTick(() => {
       treeRef.value.setCheckedKeys(checkedTagIds.value, true);
     });
   }

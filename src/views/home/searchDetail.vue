@@ -87,7 +87,6 @@ const searchFn = async () => {
   if (_data.resp_code === 0 && _data.datas.length > 0) {
     pageOptions.value.All.data.Energy_Storage_Frontier = _data.datas;
   }
-  console.log(pageOptions.value.All.data);
 };
 searchFn();
 </script>
