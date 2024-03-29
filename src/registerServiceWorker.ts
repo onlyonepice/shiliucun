@@ -3,6 +3,7 @@
 import { register } from "register-service-worker";
 
 if (process.env.NODE_ENV === "production") {
+  console.log(process.env.VITE_ENV)
   register(`${process.env.VITE_ENV}service-worker.js`, {
     ready() {
       console.log(
