@@ -5,6 +5,6 @@ export default {
     default: () => import("@/views/enterprise/index.vue"),
   },
   meta: {
-    title: "企业"
+    title: "企业",
   },
 };

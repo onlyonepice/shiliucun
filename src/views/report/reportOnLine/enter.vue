@@ -2,8 +2,16 @@
   <div :class="[ns.b(''), 'es-commonPage']">
     <p class="page-title">在线报告。</p>
     <div class="content">
-      <el-tree @check="changeTag" ref="treeRef" :data="treeData" show-checkbox default-expand-all node-key="id"
-        highlight-current :props="defaultProps">
+      <el-tree
+        @check="changeTag"
+        ref="treeRef"
+        :data="treeData"
+        show-checkbox
+        default-expand-all
+        node-key="id"
+        highlight-current
+        :props="defaultProps"
+      >
         <template #default="{ node, data }">
           <span class="custom-tree-node">
             <span>{{ node.label }}</span>
@@ -16,13 +24,25 @@
       <div class="report-wrapper">
         <p class="title">精选置顶</p>
         <div class="report-box">
-          <onLineReportList width="198px" v-for="item in topReportList" :page-data="item" />
+          <onLineReportList
+            width="198px"
+            v-for="item in topReportList"
+            :page-data="item"
+          />
         </div>
         <div class="report-box">
-          <onLineReportList width="198px" v-for="item in freeReportList" :page-data="item" />
+          <onLineReportList
+            width="198px"
+            v-for="item in freeReportList"
+            :page-data="item"
+          />
         </div>
         <div class="report-box">
-          <onLineReportList width="198px" v-for="item in reportList" :page-data="item" />
+          <onLineReportList
+            width="198px"
+            v-for="item in reportList"
+            :page-data="item"
+          />
         </div>
       </div>
     </div>
@@ -30,108 +50,108 @@
 </template>
 
 <script setup lang="ts">
-import useNamespace from '@/utils/nameSpace'
-const ns = useNamespace('report-onLine')
-import { ElTree } from 'element-plus'
-import { ref, nextTick } from 'vue'
+import useNamespace from "@/utils/nameSpace";
+const ns = useNamespace("report-onLine");
+import { ElTree } from "element-plus";
+import { ref, nextTick } from "vue";
 import { windowScrollStore } from "@/store/modules/windowScroll";
-const windowScroll = windowScrollStore()
-windowScroll.SET_SCROLL_TOP(0)
-import { getOnlineReportSelected, getTopOnlineReportSelected, getFreeOnlineReportSelected, getReportTagList } from '@/api/report'
-const treeRef = ref<InstanceType<typeof ElTree>>()
+const windowScroll = windowScrollStore();
+windowScroll.SET_SCROLL_TOP(0);
+import {
+  getOnlineReportSelected,
+  getTopOnlineReportSelected,
+  getFreeOnlineReportSelected,
+  getReportTagList,
+} from "@/api/report";
+const treeRef = ref<InstanceType<typeof ElTree>>();
 const defaultProps = {
-  children: 'children',
-  label: 'label',
-}
+  children: "children",
+  label: "label",
+};
 
 interface Tree {
-  id: number | string
-  label: string
-  children?: Tree[]
+  id: number | string;
+  label: string;
+  children?: Tree[];
 }
 const treeData = ref<Tree[]>([
   {
     id: -1,
-    label: '报告分类',
-    children: [
-    ],
+    label: "报告分类",
+    children: [],
   },
-
-])
-const reportList = ref([])
-const topReportList = ref([])
-const freeReportList = ref([])
-const checkedTagIds = ref([])
+]);
+const reportList = ref([]);
+const topReportList = ref([]);
+const freeReportList = ref([]);
+const checkedTagIds = ref([]);
 const getReportTagListFn = async () => {
-  const data = await getReportTagList()
+  const data = await getReportTagList();
   if (data.resp_code === 0) {
-    treeData.value[0].children = data.datas.map(item => {
-      checkedTagIds.value.push(item.id)
+    treeData.value[0].children = data.datas.map((item) => {
+      checkedTagIds.value.push(item.id);
       return {
         id: item.id,
-        label: item.tagName
-      }
-    })
-    console.log(checkedTagIds.value)
+        label: item.tagName,
+      };
+    });
+    console.log(checkedTagIds.value);
     nextTick(() => {
-      treeRef.value.setCheckedKeys(checkedTagIds.value, true,)
-    })
-
+      treeRef.value.setCheckedKeys(checkedTagIds.value, true);
+    });
   }
-}
+};
 const changeTag = () => {
-  const ids = treeRef.value.getCheckedKeys()
-  checkedTagIds.value = ids.filter(item => {
-    return item !== -1
-  })
-  getPageData()
-}
+  const ids = treeRef.value.getCheckedKeys();
+  checkedTagIds.value = ids.filter((item) => {
+    return item !== -1;
+  });
+  getPageData();
+};
 const getOnlineReportSelectedFn = async () => {
   const data = await getOnlineReportSelected({
     limit: 1000,
     page: 1,
-    keyword: '',
-    tagIds: checkedTagIds.value.join(',')
-  })
+    keyword: "",
+    tagIds: checkedTagIds.value.join(","),
+  });
   if (data.resp_code === 0) {
-    reportList.value = data.datas.records
+    reportList.value = data.datas.records;
   }
-}
+};
 const getTopOnlineReportSelectedFn = async () => {
   const data = await getTopOnlineReportSelected({
     limit: 40,
     page: 1,
-    keyword: '',
-    tagIds: checkedTagIds.value.join(',')
-
-  })
+    keyword: "",
+    tagIds: checkedTagIds.value.join(","),
+  });
   if (data.resp_code === 0) {
-    topReportList.value = data.datas.records
+    topReportList.value = data.datas.records;
   }
-}
+};
 const getFreeOnlineReportSelectedFn = async () => {
   const data = await getFreeOnlineReportSelected({
-    keyword: '',
-    tagIds: checkedTagIds.value.join(',')
-  })
+    keyword: "",
+    tagIds: checkedTagIds.value.join(","),
+  });
   if (data.resp_code === 0) {
-    freeReportList.value = data.datas.records
+    freeReportList.value = data.datas.records;
   }
-}
+};
 const getPageData = () => {
-  getFreeOnlineReportSelectedFn()
-  getTopOnlineReportSelectedFn()
-  getOnlineReportSelectedFn()
-}
-getReportTagListFn()
-getPageData()
+  getFreeOnlineReportSelectedFn();
+  getTopOnlineReportSelectedFn();
+  getOnlineReportSelectedFn();
+};
+getReportTagListFn();
+getPageData();
 </script>
 <style lang="scss">
 .es-report-onLine {
-
   .el-checkbox__input.is-checked .el-checkbox__inner,
   .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-    background-color: #244BF1;
+    background-color: #244bf1;
   }
 
   .custom-tree-node {
@@ -152,7 +172,7 @@ getPageData()
   .el-tree {
     max-width: 250px;
 
-    @media screen and (max-width:1200px) {
+    @media screen and (max-width: 1200px) {
       max-width: 180px;
     }
   }

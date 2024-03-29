@@ -18,15 +18,18 @@
 </template>
 
 <script setup lang="ts">
-import redNew from '@/assets/img/red_new.png'
-import useNamespace from '@/utils/nameSpace'
-const ns = useNamespace('biddingDynamicsList')
+import redNew from "@/assets/img/red_new.png";
+import useNamespace from "@/utils/nameSpace";
+const ns = useNamespace("biddingDynamicsList");
 const props = defineProps({
   pageData: {
     type: Object,
-    default: () => { { } }
-  }
-})
+    default: () => {
+      {
+      }
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -34,14 +37,14 @@ const props = defineProps({
 
 .es-biddingDynamicsList {
   width: 100%;
-  border-bottom: 1px solid #DBDCE2;
+  border-bottom: 1px solid #dbdce2;
   padding-bottom: 16px;
   margin-bottom: 16px;
   cursor: pointer;
 
   &:hover {
     .name {
-      color: #244BF1;
+      color: #244bf1;
     }
   }
 
@@ -66,15 +69,15 @@ const props = defineProps({
 
       .tag {
         padding: 2px 8px;
-        background: #FFF3EA;
+        background: #fff3ea;
         border-radius: 4px;
-        border: 1px solid #FF8D32;
-        @include font(12px, 400, #FF8D32, 20px)
+        border: 1px solid #ff8d32;
+        @include font(12px, 400, #ff8d32, 20px);
       }
     }
 
     .right {
-      @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px)
+      @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     }
   }
 }

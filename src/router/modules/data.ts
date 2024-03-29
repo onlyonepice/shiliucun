@@ -5,6 +5,6 @@ export default {
     default: () => import("@/views/data/index.vue"),
   },
   meta: {
-    title: "数据"
+    title: "数据",
   },
 };

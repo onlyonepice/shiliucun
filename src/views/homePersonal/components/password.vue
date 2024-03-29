@@ -5,17 +5,16 @@
   </div>
 </template>
 
-
 <script lang="ts" setup>
-import { onMounted, ref, Ref, watch } from 'vue'
-import useNamespace from '@/utils/nameSpace'
-const ns = useNamespace('homePersonalInfo')
+import { onMounted, ref, Ref, watch } from "vue";
+import useNamespace from "@/utils/nameSpace";
+const ns = useNamespace("homePersonalInfo");
 </script>
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-.es-homePersonalInfo{
-  h1{
+.es-homePersonalInfo {
+  h1 {
     padding: 100px;
     text-align: center;
   }

@@ -19,7 +19,7 @@
         </div>
         <div v-else :class="ns.bm('input','password')">
           <el-input v-model="loginForm.password" :class="ns.bm('input','common')" :type="!passwordShow ? 'password' : 'text'" maxlength="16" placeholder="密码" />
-          <img :src="!passwordShow ? PasswordHidden : PasswordShow" @click="passwordShow = !passwordShow" alt="">
+          <img :src="!passwordShow ? PasswordHidden : PasswordShow" @click="passwordShow = !passwordShow" alt=""/>
         </div>
         <el-button :class="ns.b('loginBtn')" type="primary" @click="onLogin">登录/注册</el-button>
         <p :class="ns.b('switchBtn')" @click="codeLogin = !codeLogin">{{ codeLogin ? '验证码登录' : '账号密码登录'}}</p>
@@ -52,7 +52,7 @@
         frameborder="0"
         width="100%"
         height="100%"
-      ></iframe>
+      />
       <div class="content-footer">
         <div
           class="protocol__foot-continue"

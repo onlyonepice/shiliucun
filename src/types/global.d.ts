@@ -1,9 +1,6 @@
-
-
-
 /**
-   * @description 整体路由配置表（包括完整子路由）
-   */
+ * @description 整体路由配置表（包括完整子路由）
+ */
 interface RouteConfigsTable {
   /** 路由地址 `必填` */
   path: string;

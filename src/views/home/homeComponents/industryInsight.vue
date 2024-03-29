@@ -11,28 +11,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import useNamespace from '@/utils/nameSpace'
-import rightArrow from '@/assets/img/common/right-arrow.png'
-import { getReNewsInFormations } from "@/api/home"
+import { ref } from "vue";
+import useNamespace from "@/utils/nameSpace";
+import rightArrow from "@/assets/img/common/right-arrow.png";
+import { getReNewsInFormations } from "@/api/home";
 import { useRouter } from "vue-router";
-import IndustryInsightList from '@/components/Common/IndustryInsightList.vue'
-const ns = useNamespace('home-industryInsight')
+import IndustryInsightList from "@/components/Common/IndustryInsightList.vue";
+const ns = useNamespace("home-industryInsight");
 const router = useRouter();
-const pageData = ref([])
+const pageData = ref([]);
 const onEnterList = () => {
-  router.push('/industryInsight')
-}
+  router.push("/industryInsight");
+};
 const getReNewsInFormationsFn = async () => {
   const data = await getReNewsInFormations({
-    page: 1, limit: 5, keyword: ''
-  })
+    page: 1,
+    limit: 5,
+    keyword: "",
+  });
   if (data.resp_code === 0) {
     pageData.value = data.datas.records;
   }
-
-}
-getReNewsInFormationsFn()
+};
+getReNewsInFormationsFn();
 </script>
 
 <style lang="scss" scoped>
@@ -48,7 +49,7 @@ getReNewsInFormationsFn()
     margin-bottom: 32px;
 
     .title_text {
-      @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px)
+      @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px);
     }
 
     img {

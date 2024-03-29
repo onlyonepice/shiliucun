@@ -15,14 +15,14 @@
         v-motion
         :initial="{
           opacity: 0,
-          y: 100
+          y: 100,
         }"
         :enter="{
           opacity: 1,
           y: 0,
           transition: {
-            delay: 100
-          }
+            delay: 100,
+          },
         }"
       >
         500
@@ -32,14 +32,14 @@
         v-motion
         :initial="{
           opacity: 0,
-          y: 100
+          y: 100,
         }"
         :enter="{
           opacity: 1,
           y: 0,
           transition: {
-            delay: 300
-          }
+            delay: 300,
+          },
         }"
       >
         抱歉，服务器出错了
@@ -50,14 +50,14 @@
         v-motion
         :initial="{
           opacity: 0,
-          y: 100
+          y: 100,
         }"
         :enter="{
           opacity: 1,
           y: 0,
           transition: {
-            delay: 500
-          }
+            delay: 500,
+          },
         }"
       >
         返回首页
