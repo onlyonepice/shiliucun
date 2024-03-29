@@ -2,8 +2,7 @@ import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import removeConsole from "vite-plugin-remove-console";
 
-export function getPluginsList(
-) {
+export function getPluginsList() {
   return [
     vue(),
     // jsx、tsx语法支持
