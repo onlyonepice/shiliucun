@@ -3,7 +3,6 @@ import ElementPlus from "element-plus";
 import App from "./App.vue";
 import "element-plus/dist/index.css";
 import "animate.css";
-import "./registerServiceWorker";
 import "./style/index.scss";
 import "./style/element-plus.scss";
 import router from "./router";
