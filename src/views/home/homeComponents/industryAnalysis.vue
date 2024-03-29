@@ -8,6 +8,7 @@
           class="tab-item"
           @click="handleTabClick(index)"
           v-for="(item, index) in tabData"
+          :key="`tab${index}`"
         >
           <p class="tab-name" :class="currentTab === index ? 'active' : ''">
             {{ item.name }}
@@ -20,7 +21,6 @@
         :modules="modules"
         :control="controlledSwiper"
         :width="bannerWidth"
-        :loop="true"
         :space-between="50"
         class="swiperBox"
         @slideChange="onSlideChange"

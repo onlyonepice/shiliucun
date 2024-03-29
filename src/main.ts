@@ -9,4 +9,5 @@ import router from "./router";
 import { store } from "./store";
 const app = createApp(App);
 app.config.warnHandler = () => null;
+
 createApp(App).use(store).use(router).use(ElementPlus).mount("#app");
