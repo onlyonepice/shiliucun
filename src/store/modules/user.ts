@@ -19,6 +19,7 @@ export const useUserStore = defineStore({
     token: '', // 用户token 用于判断用户登录还是退出 通过watch监听
     fileUrl: "", // 文件路径
     userInfo: {}, // 用户信息
+    publicKey: '', // 加密密钥 用于监听
   }),
   getters: {
     getFileUrl(): string {
@@ -41,6 +42,7 @@ export const useUserStore = defineStore({
         getPublicKeyApi().then(data => {
           if (data["resp_code"] === 0) {
             window.localStorage.setItem("publicKey", data["datas"]);
+            this.publicKey = data["datas"]
             resolve(data);
           } else {
             reject(data);s

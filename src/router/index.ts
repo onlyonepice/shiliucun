@@ -33,7 +33,11 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  window.localStorage.getItem("publicKey") === "null" || !window.localStorage.getItem("publicKey") && useUserStoreHook().getPublicKey()
+  if( window.localStorage.getItem("publicKey") === "null" || !window.localStorage.getItem("publicKey") ){
+    useUserStoreHook().getPublicKey()
+  }else{
+    useUserStoreHook().setPublicKey()
+  }
   if (typeof (to.meta?.title) === 'string') {
     document.title = to.meta?.title;
   }

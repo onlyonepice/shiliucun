@@ -39,6 +39,9 @@ const scrollbarRef = ref(null)
 watch(windowScroll, (e) => {
   scrollbarRef.value!.setScrollTop(e.scrollTop)
 })
+watch(useUserStore().$state,(val:any)=>{
+  val.publicKey !== '' && useUserStore().$state.fileUrl === '' && useUserStore().getConfigListBefore()
+})
 const getBg = computed(() => {
   return route.meta.backgroundColor ? route.meta.backgroundColor : '#ffffff'
 })
@@ -56,8 +59,6 @@ const onCancel = () => {
     openLoginAnimate.value = false
   }, 500)
 }
-// 获取文件前缀
-useUserStore().getConfigListBefore()
 </script>
 
 <style lang="scss">

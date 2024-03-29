@@ -95,7 +95,6 @@ onMounted(async() => {
     datas.forEach((item:any) => {
       seriesList.value[item.project === 'industrial-map' ? 0 : 1].time = item.time
     });
-    console.log('ppppppp',seriesList.value)
   }
 })
 // 点击左侧边栏
