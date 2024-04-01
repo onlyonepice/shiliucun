@@ -1,10 +1,4 @@
-<script setup lang="ts">
-// import noServer from "@/assets/status/500.svg?component";
-
-// defineOptions({
-//   name: "500"
-// });
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="flex justify-center items-center h-[640px]">

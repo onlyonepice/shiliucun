@@ -1,10 +1,4 @@
-<script setup lang="ts">
-// import noExist from "@/assets/status/404.svg?component";
-
-// defineOptions({
-//   name: "404"
-// });
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="flex justify-center items-center h-[640px]">

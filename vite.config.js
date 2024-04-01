@@ -27,7 +27,7 @@ const __APP_INFO__ = {
 };
 
 export default ({ command, mode }) => {
-  const { VITE_CDN, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } =
+  const { VITE_ENV, VITE_CDN, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } =
     warpperEnv(loadEnv(mode, root));
   return {
     base: VITE_PUBLIC_PATH,
@@ -70,7 +70,7 @@ export default ({ command, mode }) => {
       exclude,
     },
     build: {
-      sourcemap: false,
+      sourcemap: VITE_ENV !== "prod",
       // 消除打包大小超过500kb警告
       chunkSizeWarningLimit: 4000,
       rollupOptions: {

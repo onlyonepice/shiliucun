@@ -17,13 +17,13 @@
     }
 
     &:hover {
-      background-color: #E5E6EB;
+      background-color: #e5e6eb;
     }
   }
 }
 
 .el-select .el-input__wrapper {
-  background: #F4F5F7;
+  background: #f4f5f7;
   box-shadow: none;
   border: 1px solid rgba(255, 255, 255, 0) !important;
 }
@@ -49,12 +49,12 @@
 }
 
 .el-input__wrapper {
-  background-color: #F4F5F7;
+  background-color: #f4f5f7;
   box-shadow: none;
 }
 
 .el-table thead {
-  @include font(14px, 400, #1C232F, 22px);
+  @include font(14px, 400, #1c232f, 22px);
 }
 
 .el-table th.el-table__cell {
@@ -62,7 +62,7 @@
 }
 
 .el-table__header-wrapper {
-  background-color: #F2F3F5;
+  background-color: #f2f3f5;
 }
 
 .el-dialog__body {
@@ -71,25 +71,25 @@
 }
 
 .el-button--primary {
-  background: #2D5CF6 !important;
+  background: #2d5cf6 !important;
   color: #ffffff !important;
 
   &:hover {
-    background-color: #507EF7 !important;
+    background-color: #507ef7 !important;
   }
 }
 
 .el-button {
-  background-color: #F3F4F7;
-  color: #5B6985;
+  background-color: #f3f4f7;
+  color: #5b6985;
   border: none;
   min-width: 80px;
 }
 
 .el-button:focus,
 .el-button:hover {
-  background-color: #E7E8EF;
-  color: #5B6985;
+  background-color: #e7e8ef;
+  color: #5b6985;
 }
 
 .el-input.is-disabled .el-input__wrapper {
@@ -109,19 +109,18 @@
 }
 
 .el-popper {
-
   .el-select-dropdown {
     .el-scrollbar {
       .el-select-dropdown__wrap {
         .el-select-dropdown__list {
           .el-select-dropdown__item {
-            color: #1C232F;
+            color: #1c232f;
           }
 
           .selected {
             font-weight: 600;
-            color: #1C232F;
-            background-color: #F4F5F7;
+            color: #1c232f;
+            background-color: #f4f5f7;
           }
         }
       }
@@ -129,13 +128,15 @@
   }
 }
 
-.el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path{
+.el-cascader-node.in-active-path,
+.el-cascader-node.is-active,
+.el-cascader-node.is-selectable.in-checked-path {
   font-weight: 600;
-  color: #1C232F;
-  background-color: #F4F5F7;
+  color: #1c232f;
+  background-color: #f4f5f7;
 }
 .el-select {
-  --el-select-input-focus-border-color: #507EF7 !important;
+  --el-select-input-focus-border-color: #507ef7 !important;
 }
 
 .el-input__wrapper .el-input__inner {
@@ -143,32 +144,33 @@
 }
 
 .el-select-dropdown__item {
-  @include font(14px, 400, #1C232F, 34px)
+  @include font(14px, 400, #1c232f, 34px);
 }
 
-.el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
-  background: #F4F5F7;
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background: #f4f5f7;
 }
 
 .el-select-dropdown__item.selected {
-  @include font(14px, 600, #1C232F, 34px)
+  @include font(14px, 600, #1c232f, 34px);
 }
 
-.el-input__wrapper:hover{
+.el-input__wrapper:hover {
   box-shadow: 0 0 0 1px #e5e6ea inset;
   background-color: #e5e6ea;
 }
-.el-input__wrapper.is-focus{
+.el-input__wrapper.is-focus {
   box-shadow: 0 0 0 1px #165dff inset;
   background-color: #ffffff;
 }
 
-#app{
-  .el-switch.is-checked .el-switch__core{
-    background-color: #244BF1;
-    border-color: #244BF1;
+#app {
+  .el-switch.is-checked .el-switch__core {
+    background-color: #244bf1;
+    border-color: #244bf1;
   }
-  .el-switch__core{
+  .el-switch__core {
     background-color: #dcdfe6;
   }
 }

@@ -16,7 +16,11 @@
         </div>
       </div>
       <div class="tab-box">
-        <div class="tab_item" v-for="(value, key) in pageOptions">
+        <div
+          class="tab_item"
+          v-for="(value, key) in pageOptions"
+          :key="`page${key}`"
+        >
           <span :class="`'tab_name' ${key === currentTab ? 'active' : ''} `">{{
             value.name
           }}</span>
@@ -27,6 +31,7 @@
         <div
           class="search-content_item"
           v-for="(value, key) in pageOptions.All.data"
+          :key="`pageOptions${key}`"
         >
           <p class="search-content_item_title">{{ pageOptions[key].name }}</p>
           <div class="search-content_item_value">
@@ -34,8 +39,12 @@
             <template v-if="key === 'Energy_Storage_Frontier'" />
             <!-- 行业洞察 -->
             <template v-if="key === 'REAL_TIME_INFORMATION'">
-              <div class="text-item" v-for="row in value">
-                <p class="report-name" />
+              <div
+                class="text-item"
+                v-for="(row, rowIndex) in value"
+                :key="`rowIndex${rowIndex}`"
+              >
+                <p class="report-name">{{ row }}</p>
                 <p class="report-introduction">
                   前言：山东省风光资源丰富，2022 年其风光发电合计占比达
                   33.6%，领跑全国，风光消纳问题使得配建储能成为新能源并网必选项。但源侧配储盈利渠道较窄，经济性难以实现。近日山东省发布《关于开展我省配建储能转为独立储能试点工作的通知》，旨在拓宽配建储能盈利渠道，鼓励其作为市场主体参与电力市场交易，更好地发挥电力系统调节作用。山东配建储能转独立储能后盈利模式有哪些？

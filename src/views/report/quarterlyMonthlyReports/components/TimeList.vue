@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import loadingPic from "@/assets/img/common/list-loading.gif";
 const ns = useNamespace("timeList");

@@ -2,9 +2,7 @@
   <p class="home">报告</p>
 </template>
 
-<script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
