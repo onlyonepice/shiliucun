@@ -39,7 +39,7 @@ import { windowScrollStore } from "@/store/modules/windowScroll";
 const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
 import { getReNewsInformations } from "@/api/report";
-import { onMounted, reactive, ref, Ref, watch } from "vue";
+import { onMounted, ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import IndustryInsightList from "@/components/Common/IndustryInsightList.vue";
 const ns = useNamespace("industryInsight");
