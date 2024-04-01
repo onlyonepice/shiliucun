@@ -1,22 +1,126 @@
 <template>
   <div :class="[ns.b()]">
     <h3>我的收藏</h3>
-    <h1>正在开发中...</h1>
+    <div :class="[ns.b('list'),'animate__animated animate__fadeIn']" v-for="item in collectionList" :key="item.id">
+      <div>
+        <div :class="[ns.b('type'), item.state === '已失效' ? ns.bm('type','3') : item.state === '长期有效' ? ns.bm('type','2') : ns.bm('type','1')]">{{ item.state }}</div>
+        <div :class="[ns.b('title'),item.state === '已失效' ? ns.b('invalid') :'']">{{ item.moduleName }} | {{ item.reportName }}</div>
+        <div :class="[ns.b('date'),item.state === '已失效' ? ns.b('invalid') :'']">收藏日期：{{ item.collectionDate }}</div>
+      </div>
+      <div >
+        <el-button v-if="item.state !== '已失效'">预览</el-button>
+        <el-button v-if="item.state !== '已失效'" type="primary">下载</el-button>
+        <el-button v-if="item.state === '已失效'" type="primary" @click="onDelete(item.id)">删除</el-button>
+      </div>
+    </div>
+    <Pagination :total='total' @onchangeCurrent="onchangeCurrent" />
+    <SkipMask v-bind="titleSkip" @onClose="onClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
+interface PAGEINFO {
+  page: Number;
+  limit: Number;
+}
 import { onMounted, ref, Ref, watch } from "vue";
+import { myCollectListApi, deleteCollectApi } from '@/api/user'
 import useNamespace from "@/utils/nameSpace";
-const ns = useNamespace("homePersonalInfo");
+const ns = useNamespace("homePersonalCollection");
+const pageInfo: Ref<PAGEINFO> = ref({
+  page: 1,
+  limit: 10
+})
+const titleSkip = ref({
+  title: '删除后文件不可恢复，确定删除吗？',
+  cancel: '取消',
+  confirm: '确定',
+  show: false
+})
+const collectionList: Ref<Array<any>> = ref([]) // 收藏列表
+const total: Ref<number> = ref(0)
+const choseId: Ref<number> = ref(0) // 选中操作的id
+const getCollectionList = async() => {
+  const { resp_code, datas }:any = await myCollectListApi(pageInfo.value)
+  if (resp_code === 0) {
+    total.value = datas.total
+    collectionList.value = datas.records
+  }
+}
+getCollectionList()
+// 修改页码
+const onchangeCurrent = (page: number) => {
+  pageInfo.value.page = page
+  getCollectionList()
+}
+// 删除
+const onDelete = (id:number) => {
+  choseId.value = id
+  titleSkip.value.show = true
+  titleSkip.value.confirm = '确定'
+  titleSkip.value.cancel = '取消'
+}
+// 关闭二次确认框
+const onClose = async() => {
+  const { resp_code }:any = await deleteCollectApi(choseId.value)
+  if( resp_code === 0 ){
+    titleSkip.value.show = false
+    getCollectionList()
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-.es-homePersonalInfo {
-  h1 {
-    padding: 100px;
-    text-align: center;
+.es-homePersonalCollection {
+  h3{
+    margin-bottom: 24px;
+    line-height: 56px;
   }
+}
+.es-homePersonalCollection-list{
+  @include widthAndHeight(810px,122px);
+  margin-bottom: 16px;
+  border-radius: 4px;
+  border: 1px solid #DBDCE2;
+  @include flex(center,space-between,nowrap);
+  padding: 16px 24px 16px 16px;
+}
+.es-homePersonalCollection-type{
+  margin-bottom: 16px;
+  @include font(12px,400,#F75964,24px);
+  @include flex();
+}
+.es-homePersonalCollection-type--1{
+  @include widthAndHeight(77px,24px);
+  background: #FEEFF0;
+  border-radius: 4px;
+  border: 1px solid #F75964;
+}
+.es-homePersonalCollection-type--2{
+  @include widthAndHeight(64px,24px);
+  background: #EFF4FF;
+  border-radius: 4px;
+  border: 1px solid #244BF1;
+  @include font(12px,400,#244BF1,20px);
+}
+.es-homePersonalCollection-type--3{
+  @include widthAndHeight(52px,24px);
+  background: #F2F3F5;
+  border-radius: 4px;
+  border: 1px solid #DBDCE2;
+  @include font(12px,400,rgba(0,0,0,0.9),20px);
+}
+.es-homePersonalCollection-title{
+  width: 568px;
+  @include textOverflow();
+  margin-bottom: 4px;
+  @include font(16px,600,rgba(0,0,0,0.9),24px);
+}
+.es-homePersonalCollection-date{
+  @include font(14px,400,rgba(0,0,0,0.6),22px);
+}
+.es-homePersonalCollection-invalid{
+  color: rgba(0,0,0,0.26);
 }
 </style>

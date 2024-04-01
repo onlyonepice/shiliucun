@@ -18,9 +18,11 @@ declare module 'vue' {
     OnLineReportList: typeof import('./src/components/Common/OnLineReportList.vue')['default']
     PageBottom: typeof import('./src/components/Business/PageBottom.vue')['default']
     PageNav: typeof import('./src/components/Business/PageNav.vue')['default']
+    Pagination: typeof import('./src/components/Common/Pagination.vue')['default']
     PolicyList: typeof import('./src/components/Common/PolicyList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/Common/Select.vue')['default']
+    SkipMask: typeof import('./src/components/Common/SkipMask.vue')['default']
   }
 }
