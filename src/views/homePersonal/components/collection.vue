@@ -37,8 +37,13 @@
         </div>
       </div>
       <div>
-        <el-button v-if="item.state !== '已失效'">预览</el-button>
-        <el-button v-if="item.state !== '已失效'" type="primary"
+        <el-button v-if="item.state !== '已失效'" @click="onToDetail(item)"
+          >预览</el-button
+        >
+        <el-button
+          v-if="item.state !== '已失效'"
+          type="primary"
+          @click="onToDetail(item)"
           >下载</el-button
         >
         <el-button
@@ -61,6 +66,7 @@ interface PAGEINFO {
 }
 import { ref, Ref } from "vue";
 import { myCollectListApi, deleteCollectApi } from "@/api/user";
+const { VITE_I_REPORT_URL } = import.meta.env;
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("homePersonalCollection");
 const pageInfo: Ref<PAGEINFO> = ref({
@@ -103,6 +109,14 @@ const onClose = async () => {
     titleSkip.value.show = false;
     getCollectionList();
   }
+};
+// 跳转i-report2预览
+const onToDetail = (item: any) => {
+  const { moduleName, id } = item;
+  window.open(
+    `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${id}&parent=${moduleName}&moduleName=${moduleName}&from=/alliance-insight/white-paper`,
+    "_blank",
+  );
 };
 </script>
 
