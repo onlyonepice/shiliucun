@@ -28,10 +28,7 @@ const ns = useNamespace("industryInsightList");
 defineProps({
   pageData: {
     type: Object,
-    default: () => {
-      {
-      }
-    },
+    default: () => ({}),
   },
 });
 </script>

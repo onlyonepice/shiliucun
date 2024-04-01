@@ -13,11 +13,9 @@
 
 <script setup lang="ts">
 import { Ref, ref, watch } from "vue";
-import { useUserStoreHook } from "@/store/modules/user";
 import useNamespace from "@/utils/nameSpace";
 import MiniAppNeed from "@/assets/img/common/miniApp-need.png";
 const ns = useNamespace("miniAppDialog");
-const useUserStore = useUserStoreHook();
 const dialogVisible: Ref<boolean> = ref(false);
 const emits = defineEmits(["onHandleClose"]);
 const props = defineProps({

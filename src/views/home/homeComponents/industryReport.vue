@@ -6,7 +6,11 @@
         <img @click="handleListClick" :src="rightArrow" alt="" />
       </div>
       <div class="list-box">
-        <onLineReportList :pageData="item" v-for="item in pageData" />
+        <onLineReportList
+          :pageData="item"
+          v-for="(item, index) in pageData"
+          :key="`page${index}`"
+        />
       </div>
     </div>
   </div>

@@ -32,14 +32,11 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, Ref, ref } from "vue";
-import { useRouter } from "vue-router";
 import useNamespace from "@/utils/nameSpace";
 import LogoIconBlueBig from "@/assets/img/common/logo-icon-blue-big.png";
 import IReportMini from "@/assets/img/common/iReport-miniApp.png";
 import IReportWeChat from "@/assets/img/common/iReport-weChat.png";
 const ns = useNamespace("pageBottom");
-onMounted(() => {});
 </script>
 
 <style scoped lang="scss">

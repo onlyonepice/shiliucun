@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import vue from "@vitejs/plugin-vue";
+import eslintPlugin from "vite-plugin-eslint";
 import { resolve } from "path";
 import pkg from "./package.json";
 import { warpperEnv } from "./build";
@@ -59,6 +59,9 @@ export default ({ command, mode }) => {
       getPluginsList(command, VITE_CDN, VITE_COMPRESSION),
       Components({
         resolvers: [],
+      }),
+      eslintPlugin({
+        include: ["src/**/*.ts", "src/**/*.vue", "src/*.ts", "src/*.vue"],
       }),
     ],
     // https://cn.vitejs.dev/config/dep-optimization-options.html#dep-optimization-options
