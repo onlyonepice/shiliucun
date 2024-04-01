@@ -531,6 +531,9 @@ const onSendCode = async () => {
   @include padding(0, 0, 19px, 0);
   border-bottom: 1px solid #dbdce2;
   @include margin(0, 0, 24px, 0);
+  h3 {
+    line-height: 56px;
+  }
 }
 .es-homePersonalInfo-top__button {
   @include widthAndHeight(88px, 32px);

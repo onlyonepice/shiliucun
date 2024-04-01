@@ -99,6 +99,9 @@ const onPay = () => {
 .es-homePersonalOrder-top {
   @include flex(center, space-between, nowrap);
   @include padding(0, 0, 24px, 0);
+  h3 {
+    line-height: 56px;
+  }
 }
 .es-homePersonalOrder-buy {
   @include font(14px, 400, #244bf1, 22px);
