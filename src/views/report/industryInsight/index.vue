@@ -4,7 +4,8 @@
       <div :class="ns.bm('main', 'title')">行业洞察。</div>
       <div :class="ns.b('list')">
         <IndustryInsightList
-          v-for="item in industryInsightList"
+          v-for="(item, index) in industryInsightList"
+          :key="`industry${index}`"
           :pageData="item"
         />
       </div>

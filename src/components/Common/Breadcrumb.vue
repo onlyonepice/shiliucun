@@ -29,7 +29,7 @@ interface BreadcrumbList {
 }
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("breadcrumb");
-const props = defineProps({
+defineProps({
   breadcrumbList: {
     type: Array as () => BreadcrumbList[],
     default: () => [],

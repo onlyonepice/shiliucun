@@ -21,13 +21,10 @@
 import redNew from "@/assets/img/red_new.png";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("biddingDynamicsList");
-const props = defineProps({
+defineProps({
   pageData: {
     type: Object,
-    default: () => {
-      {
-      }
-    },
+    default: () => ({}),
   },
 });
 </script>

@@ -32,8 +32,6 @@ const defaultConfig: AxiosRequestConfig = {
     serialize: stringify as unknown as CustomParamsSerializer,
   },
 };
-const { clientId } = defaultProjectConfig;
-
 // 请求不带token白名单
 const whiteUrlList = [
   "/api-uaa/oauth/token",
@@ -131,11 +129,11 @@ class PureHttp {
           switch (code) {
             // 无登录
             case 1001:
-              onErrorHandling(1001, "重新登录");
+              onErrorHandling();
               break;
             // token过期
             case 1002:
-              onErrorHandling(1002, "重新登录");
+              onErrorHandling();
               break;
             // 请求接口频繁调用
             case 1003:
@@ -207,15 +205,7 @@ class PureHttp {
   }
 }
 
-const onErrorHandling = (
-  code,
-  confirmBtn,
-  cancelBtn = "取消",
-  callBack = null,
-) => {
-  // store.dispatch('user/resetToken').then(() => {
-  //   location.reload()
-  // })
+const onErrorHandling = () => {
   useUserStoreHook().logOut();
 };
 

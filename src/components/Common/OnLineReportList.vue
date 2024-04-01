@@ -26,10 +26,7 @@ const { VITE_I_REPORT_URL } = import.meta.env;
 const props = defineProps({
   pageData: {
     type: Object,
-    default: () => {
-      {
-      }
-    },
+    default: () => ({}),
   },
   width: {
     type: String,

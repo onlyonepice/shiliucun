@@ -75,7 +75,7 @@ interface NavList {
   text: string;
   path: Array<string> | string;
 }
-import { onMounted, Ref, ref, computed, watch } from "vue";
+import { Ref, ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import LogoIcon from "@/assets/img/common/logo-icon.png";
 import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
@@ -194,7 +194,7 @@ const navList: Ref<Array<NavList>> = ref([
 ]);
 const visible: Ref<boolean> = ref(false);
 // 选择导航栏
-const onChoseNav = (id: number, path: Array<string> | string) => {
+const onChoseNav = (id: number) => {
   choseNavId.value = id;
   choseExtra.value = true;
   choseExtraContent.value = true;
@@ -277,7 +277,7 @@ watch(
   { immediate: true },
 );
 // 判断是否要选中某个导航
-const isChoseNav = computed(() => {
+computed(() => {
   return (list: any) => {
     return list.some((item: string) => item.includes(choseNav.value));
   };
