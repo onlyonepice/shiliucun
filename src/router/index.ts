@@ -49,10 +49,11 @@ router.beforeEach(async (to, from, next) => {
     next();
   }
   if (getToken()) {
-    useUserStoreHook().handleGetUserInfo();
-    next();
+    await useUserStoreHook().handleGetUserInfo();
   } else {
-    to.path === "/homePersonal" && next("/home");
+    if (to.path === "/homePersonal") {
+      next("/home");
+    }
   }
   next();
 });
