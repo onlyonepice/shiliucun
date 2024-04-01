@@ -2,9 +2,7 @@
   <p class="home">资源</p>
 </template>
 
-<script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss">
 @import "@/style/mixin.scss";

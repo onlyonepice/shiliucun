@@ -8,7 +8,9 @@
     "build:test": "vite build --mode test",
     "build:prod": "vite build --mode prod",
     "build": "vite build",
-    "lint": "vite lint"
+    "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock,build}/**/*.{vue,js,ts,tsx}\" --fix",
+    "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
+    "lint": "pnpm lint:eslint && pnpm lint:prettier"
   },
   "dependencies": {
     "@types/echarts": "^4.9.22",
