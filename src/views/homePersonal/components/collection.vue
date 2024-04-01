@@ -6,7 +6,6 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, Ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("homePersonalInfo");
 </script>

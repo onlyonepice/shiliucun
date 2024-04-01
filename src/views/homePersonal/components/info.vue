@@ -291,7 +291,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, Ref, watch, computed } from "vue";
+import { onMounted, ref, Ref, computed } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
@@ -468,7 +468,7 @@ const onHandleClose = async (type: boolean) => {
       onGetUserInfo();
     }
   }
-}
+};
 // 修改对外展示
 const onChangeSwitch = async (val: boolean, type: string) => {
   if (type === "mobile") {
