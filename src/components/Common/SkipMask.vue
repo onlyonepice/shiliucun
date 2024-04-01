@@ -1,92 +1,88 @@
 <template>
-  <div
-    v-show="show"
-    class="mask_box"
-  >
+  <div v-show="show" class="mask_box">
     <div class="mask_operation">
       <div class="header">
         <div class="header_left">
-          <img
-            class="icon_title"
-            :src="WarningIcon"
-          />
+          <img class="icon_title" :src="WarningIcon" />
           <div class="title">{{ title }}</div>
         </div>
-        <div v-if="iconClosure" class="header_right" >
+        <div v-if="iconClosure" class="header_right">
           <img class="icon_clear" :src="CancelIcon" @click="onClose(false)" />
         </div>
       </div>
       <div class="option">
-        <el-button @click="onClose(false)" >{{ cancel }}</el-button>
-        <el-button @click="onClose(true)" type="primary" >{{ confirm }}</el-button>
+        <el-button @click="onClose(false)">{{ cancel }}</el-button>
+        <el-button @click="onClose(true)" type="primary">{{
+          confirm
+        }}</el-button>
       </div>
     </div>
   </div>
 </template>
 <script>
-import WarningIcon from '@/assets/img/common/icon_success_nor.png'
-import CancelIcon from '@/assets/img/common/cancel.png'
+import WarningIcon from "@/assets/img/common/icon_success_nor.png";
+import CancelIcon from "@/assets/img/common/cancel.png";
 export default {
-  name: 'ExitPrompt',
+  name: "ExitPrompt",
   props: {
     icon: {
       type: String,
-      default: null
+      default: null,
     },
     // 标题
     title: {
       type: String,
-      default: '标题title'
+      default: "标题title",
     },
     // 提示内容
     text: {
       type: String,
-      default: '提示内容text'
+      default: "提示内容text",
     },
     // 取消字体
     cancel: {
       type: String,
-      default: '取消'
+      default: "取消",
     },
     // 确定字体
     confirm: {
       type: String,
-      default: '确认'
+      default: "确认",
     },
     // 显示
     show: {
       type: Boolean,
-      default: false
+      default: false,
     },
     effect: {
       type: Number,
-      default: () => 2
+      default: () => 2,
     },
     iconClosure: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data() {
     return {
       WarningIcon: WarningIcon,
-      CancelIcon: CancelIcon
-    }
+      CancelIcon: CancelIcon,
+    };
   },
   mounted() {
     this.$nextTick(() => {
-      document.body.appendChild(this.$el)
-    })
+      document.body.appendChild(this.$el);
+    });
   },
-  beforeDestroy() {
-    document.body.removeChild(this.$el)
+  beforeUnmount() {
+    document.body.removeChild(this.$el);
   },
   methods: {
-    onClose(type){
-      this.$emit('onClose',type)
-    }
-  }
-}
+    onClose(type) {
+      this.$emit("onClose", type);
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .mask_box {
@@ -99,7 +95,7 @@ export default {
   bottom: 0;
   right: 0;
   z-index: 1;
-  .title{
+  .title {
     color: #000;
   }
   .mask_operation {

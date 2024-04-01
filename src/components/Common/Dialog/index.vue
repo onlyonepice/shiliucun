@@ -40,7 +40,7 @@ const props = defineProps({
   confirmText: { type: String, default: "确定" },
   width: { type: String, default: "" },
   height: { type: String, default: "" },
-  showFoot: { type: Boolean, default: true }
+  showFoot: { type: Boolean, default: true },
 });
 watch(
   () => props.visible,

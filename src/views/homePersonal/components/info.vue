@@ -9,7 +9,7 @@
         >编辑信息</el-button
       >
     </div>
-    <div :class="[ns.b('content'),'animate__animated animate__fadeIn']">
+    <div :class="[ns.b('content'), 'animate__animated animate__fadeIn']">
       <div :class="[ns.be('content', 'left')]">
         <div :class="ns.be('content', 'item')">
           <h5>真实姓名</h5>
