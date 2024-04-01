@@ -4,7 +4,8 @@
       <div :class="ns.bm('main', 'title')">行业洞察。</div>
       <div :class="ns.b('list')">
         <IndustryInsightList
-          v-for="item in industryInsightList"
+          v-for="(item, index) in industryInsightList"
+          :key="`industry${index}`"
           :pageData="item"
         />
       </div>
@@ -38,7 +39,7 @@ import { windowScrollStore } from "@/store/modules/windowScroll";
 const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
 import { getReNewsInformations } from "@/api/report";
-import { onMounted, reactive, ref, Ref, watch } from "vue";
+import { onMounted, ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import IndustryInsightList from "@/components/Common/IndustryInsightList.vue";
 const ns = useNamespace("industryInsight");

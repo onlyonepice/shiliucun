@@ -30,12 +30,11 @@
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, Ref, computed, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 import { useUserStore } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
 const opacityBg: Ref<boolean> = ref(true); // 是否展示透明背景
-const router = useRouter();
 const route = useRoute();
 const showNavBar: Ref<boolean> = ref(true);
 const lastScrollY: Ref<number> = ref(0);
@@ -57,11 +56,13 @@ watch(
 );
 const scrollbarRef = ref(null);
 watch(windowScroll, (e) => {
-  scrollbarRef.value!.setScrollTop(e.scrollTop)
-})
-watch(useUserStore().$state,(val:any)=>{
-  val.publicKey !== '' && useUserStore().$state.fileUrl === '' && useUserStore().getConfigListBefore()
-})
+  scrollbarRef.value!.setScrollTop(e.scrollTop);
+});
+watch(useUserStore().$state, (val: any) => {
+  val.publicKey !== "" &&
+    useUserStore().$state.fileUrl === "" &&
+    useUserStore().getConfigListBefore();
+});
 const getBg = computed(() => {
   return route.meta.backgroundColor ? route.meta.backgroundColor : "#ffffff";
 });

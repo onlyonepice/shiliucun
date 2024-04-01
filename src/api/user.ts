@@ -86,18 +86,21 @@ export function modifyMbCode1(params) {
   );
 }
 // 发送修改密码手机验证码
-export function modifyPasswordCode(params) {
-  return http.request<void>("get", `/api-user/account/sendPasswordSMS`)
+export function modifyPasswordCode() {
+  return http.request<void>("get", `/api-user/account/sendPasswordSMS`);
 }
 // 校验修改密码手机验证码
 export function checkPasswordCode(params) {
-  return http.request<void>("get", `/api-user/account/front/v1.0/verifyPasswordSMS?smsCode=${params}`)
+  return http.request<void>(
+    "get",
+    `/api-user/account/front/v1.0/verifyPasswordSMS?smsCode=${params}`,
+  );
 }
 // 修改登录密码
-export function modifyPasswordApi(data:any) {
-  return http.request<void>("post", `/api-user/account/modifyPassword`,{
-    data
-  })
+export function modifyPasswordApi(data: any) {
+  return http.request<void>("post", `/api-user/account/modifyPassword`, {
+    data,
+  });
 }
 // 校验修改登录密码
 // 验证原手机验证码
@@ -121,9 +124,9 @@ export function getAreaApi() {
   );
 }
 // 编辑用户信息
-export function editUserInfoApi(data:any) {
-  return http.request<void>("post", `/api-user/account/updateAccountInfo`,{
-    data
+export function editUserInfoApi(data: any) {
+  return http.request<void>("post", `/api-user/account/updateAccountInfo`, {
+    data,
   });
 }
 

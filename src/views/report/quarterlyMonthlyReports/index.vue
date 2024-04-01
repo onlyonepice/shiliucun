@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import TimeList from "./components/TimeList.vue";
 import weeklyPic from "@/assets/img/report/weekly-bg-pic.png";
@@ -24,7 +24,7 @@ import monthlyPic from "@/assets/img/report/month-bg-pic.png";
 import quarterlyPic from "@/assets/img/report/quarterly-bg-pic.png";
 import { reportList } from "@/api/report";
 import { ElMessage } from "element-plus";
-const { VITE_IREPOET_URL } = import.meta.env;
+const { VITE_I_REPORT_URL } = import.meta.env;
 const ns = useNamespace("quarterlyMonthly");
 const templateList = ref([
   {
@@ -108,7 +108,7 @@ const dropdownLoading = async (type) => {
 // 跳转报告详情
 const onDetailReport = async (item) => {
   window.open(
-    `${VITE_IREPOET_URL}#/report-detail-pdf_V2?id=${item.id}&type=${item.type}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/quarterly-monthly`,
+    `${VITE_I_REPORT_URL}#/report-detail-pdf_V2?id=${item.id}&type=${item.type}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/quarterly-monthly`,
     "_blank",
   );
 };

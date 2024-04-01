@@ -6,7 +6,11 @@
     </div>
     <div class="content">
       <div class="tab-box">
-        <p @click="handleTabClick(key)" v-for="(value, key) in tabList">
+        <p
+          @click="handleTabClick(key)"
+          v-for="(value, key) in tabList"
+          :key="`tab${key}`"
+        >
           <span :class="currentTab === key ? 'active' : ''">{{
             value.name
           }}</span>
@@ -94,7 +98,6 @@ function preventDefault(event) {
   event = event || window.event;
   window.scrollBy(0, 200); // 滚动页面
   var delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
-  const dom = document.querySelector(".es-home-industryData");
   if (scrollTop.value >= 1320 && scrollTop.value < 1500) {
     const index = Object.keys(tabList.value).findIndex((item) => {
       return item === currentTab.value;

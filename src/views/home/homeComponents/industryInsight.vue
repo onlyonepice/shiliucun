@@ -5,7 +5,11 @@
       <img :src="rightArrow" alt="" @click="onEnterList" />
     </div>
     <div class="content">
-      <IndustryInsightList v-for="item in pageData" :pageData="item" />
+      <IndustryInsightList
+        v-for="(item, index) in pageData"
+        :pageData="item"
+        :key="`IndustryInsightList${index}`"
+      />
     </div>
   </div>
 </template>

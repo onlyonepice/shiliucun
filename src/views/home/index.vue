@@ -6,7 +6,7 @@
       alt=""
     />
     <img :class="ns.b('homeTopIcon')" :src="homeTopIcon" alt="" />
-    <div :class="ns.b('homeTopSearch')" v-if="else">
+    <div :class="ns.b('homeTopSearch')" v-show="false">
       <el-input
         v-model="searchContent"
         placeholder="请输入关键字…"

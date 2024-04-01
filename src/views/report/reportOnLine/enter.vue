@@ -26,8 +26,9 @@
         <div class="report-box">
           <onLineReportList
             width="198px"
-            v-for="item in topReportList"
+            v-for="(item, index) in topReportList"
             :page-data="item"
+            :key="`topReport${index}`"
           />
         </div>
         <div class="report-box">
@@ -35,6 +36,7 @@
             width="198px"
             v-for="item in freeReportList"
             :page-data="item"
+            :key="`freeReport${item.id}`"
           />
         </div>
         <div class="report-box">
@@ -42,6 +44,7 @@
             width="198px"
             v-for="item in reportList"
             :page-data="item"
+            :key="`report${item.id}`"
           />
         </div>
       </div>
@@ -95,8 +98,7 @@ const getReportTagListFn = async () => {
         label: item.tagName,
       };
     });
-    console.log(checkedTagIds.value);
-    nextTick(() => {
+    await nextTick(() => {
       treeRef.value.setCheckedKeys(checkedTagIds.value, true);
     });
   }

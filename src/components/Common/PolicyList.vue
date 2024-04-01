@@ -10,13 +10,10 @@
 <script setup lang="ts">
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("policyList");
-const props = defineProps({
+defineProps({
   pageData: {
     type: Object,
-    default: () => {
-      {
-      }
-    },
+    default: () => ({}),
   },
 });
 </script>

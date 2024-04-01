@@ -75,14 +75,14 @@ interface NavList {
   text: string;
   path: Array<string> | string;
 }
-import { onMounted, Ref, ref, computed, watch } from "vue";
+import { Ref, ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import LogoIcon from "@/assets/img/common/logo-icon.png";
 import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
 import PersonalAvatar from "@/assets/img/common/personal-avatar.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
-const { VITE_IREPOET_URL, VITE_INDUSTRIALMAP_URL } = import.meta.env;
+const { VITE_I_REPORT_URL, VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
 const router = useRouter();
 const route = useRoute();
@@ -134,23 +134,23 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 1,
         text: "招标",
-        path: VITE_IREPOET_URL + "#/stored-leading/tenderDynamics",
+        path: VITE_I_REPORT_URL + "#/stored-leading/tenderDynamics",
       },
-      { id: 2, text: "中标", path: VITE_IREPOET_URL + "#/bid-price-tracking" },
+      { id: 2, text: "中标", path: VITE_I_REPORT_URL + "#/bid-price-tracking" },
       {
         id: 3,
         text: "电价",
-        path: VITE_IREPOET_URL + "#/stored-leading/electricity-price",
+        path: VITE_I_REPORT_URL + "#/stored-leading/electricity-price",
       },
       {
         id: 4,
         text: "政策",
-        path: VITE_IREPOET_URL + "#/stored-leading/policy-trace",
+        path: VITE_I_REPORT_URL + "#/stored-leading/policy-trace",
       },
       {
         id: 5,
         text: "行业数据库",
-        path: VITE_IREPOET_URL + "#/relation-servicer?name=企业数据服务",
+        path: VITE_I_REPORT_URL + "#/relation-servicer?name=企业数据服务",
       },
     ],
   },
@@ -162,7 +162,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 1,
         text: "工商业测算",
-        path: VITE_IREPOET_URL + "#/stored-leading/invest-ROE/business",
+        path: VITE_I_REPORT_URL + "#/stored-leading/invest-ROE/business",
       },
     ],
   },
@@ -180,7 +180,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 1,
         text: "融资方案",
-        path: VITE_IREPOET_URL + "#/stored-leading/financing-plan",
+        path: VITE_I_REPORT_URL + "#/stored-leading/financing-plan",
       },
       { id: 2, text: "供需对接", path: "" },
     ],
@@ -188,13 +188,13 @@ const navList: Ref<Array<NavList>> = ref([
   {
     id: 7,
     text: "开通VIP",
-    path: [VITE_IREPOET_URL + "#/relation-servicer?name=订阅会员"],
+    path: [VITE_I_REPORT_URL + "#/relation-servicer?name=订阅会员"],
     children: [],
   },
 ]);
 const visible: Ref<boolean> = ref(false);
 // 选择导航栏
-const onChoseNav = (id: number, path: Array<string> | string) => {
+const onChoseNav = (id: number) => {
   choseNavId.value = id;
   choseExtra.value = true;
   choseExtraContent.value = true;
@@ -277,7 +277,7 @@ watch(
   { immediate: true },
 );
 // 判断是否要选中某个导航
-const isChoseNav = computed(() => {
+computed(() => {
   return (list: any) => {
     return list.some((item: string) => item.includes(choseNav.value));
   };

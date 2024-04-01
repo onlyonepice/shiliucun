@@ -35,16 +35,17 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if( window.localStorage.getItem("publicKey") === "null" || !window.localStorage.getItem("publicKey") ){
-    await useUserStoreHook().getPublicKey()
-  }else{
-    await useUserStoreHook().setPublicKey()
+  const publicKey = window.localStorage.getItem("publicKey");
+  if (publicKey === "null" || !publicKey) {
+    await useUserStoreHook().getPublicKey();
+  } else {
+    await useUserStoreHook().setPublicKey();
   }
-  if (typeof (to.meta?.title) === 'string') {
+  if (typeof to.meta?.title === "string") {
     document.title = to.meta?.title;
   }
   // 如果跳转的是 home或者重定向到首页直接放行，不然会路由跳转死循环
-  if (to.path === "/home" || to.path === "/") {
+  if (to.path === "/") {
     next();
   }
   if (getToken()) {

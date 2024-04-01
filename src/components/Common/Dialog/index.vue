@@ -28,16 +28,14 @@
 
 <script setup lang="ts">
 import { Ref, ref, watch } from "vue";
-import { useUserStoreHook } from "@/store/modules/user";
 import useNamespace from "@/utils/nameSpace";
 import CancelIcon from "@/assets/img/common/cancel.png";
 const ns = useNamespace("dialog");
-const useUserStore = useUserStoreHook();
 const dialogVisible: Ref<boolean> = ref(false);
 const emits = defineEmits(["onHandleClose"]);
 const props = defineProps({
   visible: { type: Boolean, default: false },
-  title: { type: String, default: false },
+  title: { type: String, default: "" },
   cancelText: { type: String, default: "取消" },
   confirmText: { type: String, default: "确定" },
   width: { type: String, default: "" },

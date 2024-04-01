@@ -18,6 +18,7 @@ export function getInnermostObject(obj) {
     return obj;
   }
 
+  // eslint-disable-next-line no-prototype-builtins
   if (obj.hasOwnProperty("subRegion") && obj.subRegion !== null) {
     return getInnermostObject(obj.subRegion);
   }

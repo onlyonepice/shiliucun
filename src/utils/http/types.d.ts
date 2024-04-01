@@ -1,9 +1,4 @@
-import Axios, {
-  Method,
-  AxiosError,
-  AxiosResponse,
-  AxiosRequestConfig,
-} from "axios";
+import { Method, AxiosError, AxiosResponse, AxiosRequestConfig } from "axios";
 
 export const defaultProjectConfig = {
   clientId: "iReport-front", // 应用id

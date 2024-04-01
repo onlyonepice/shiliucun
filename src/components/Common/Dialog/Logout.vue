@@ -25,11 +25,9 @@
 
 <script setup lang="ts">
 import { Ref, ref, watch } from "vue";
-import { useUserStoreHook } from "@/store/modules/user";
 import useNamespace from "@/utils/nameSpace";
 import CancelIcon from "@/assets/img/common/cancel.png";
 const ns = useNamespace("logoutDialog");
-const useUserStore = useUserStoreHook();
 const dialogVisible: Ref<boolean> = ref(false);
 const emits = defineEmits(["onHandleClose"]);
 const props = defineProps({

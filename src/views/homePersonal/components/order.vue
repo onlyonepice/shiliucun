@@ -34,7 +34,7 @@ import { myOrderListApi } from '@/api/user'
 import useNamespace from "@/utils/nameSpace";
 import InvoicingDesc from '@/assets/img/homePersonal/invoicing-desc.png'
 const ns = useNamespace("homePersonalOrder");
-const { VITE_IREPOET_URL } = import.meta.env;
+const { VITE_I_REPORT_URL } = import.meta.env;
 const tableData: Ref<any> = ref([]);
 const loading: Ref<boolean> = ref(false); // 加载数据
 const total: Ref<number> = ref(0) // 数据总数
@@ -69,15 +69,15 @@ const getOrderList = async() => {
 getOrderList()
 // 支付
 const onPay = () => {
-  window.open(VITE_IREPOET_URL + "#/relation-servicer?name=订阅会员","externalWindow")
+  window.open(VITE_I_REPORT_URL + "#/relation-servicer?name=订阅会员","externalWindow")
 }
 </script>
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-.es-homePersonalOrder-top{
-  @include flex(center,space-between,nowrap);
-  @include padding(0,0,24px,0);
+.es-homePersonalOrder-top {
+  @include flex(center, space-between, nowrap);
+  @include padding(0, 0, 24px, 0);
 }
 .es-homePersonalOrder-buy{
   @include font(14px,400,#244BF1,22px);
