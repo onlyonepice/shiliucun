@@ -1,12 +1,10 @@
 import dayjs from "dayjs";
-import eslintPlugin from "vite-plugin-eslint";
 import { resolve } from "path";
 import pkg from "./package.json";
 import { warpperEnv } from "./build";
 import { getPluginsList } from "./build/plugins";
 import { include, exclude } from "./build/optimize";
 import { loadEnv } from "vite";
-import Components from "unplugin-vue-components/vite";
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root = process.cwd();
 
@@ -55,15 +53,7 @@ export default ({ command, mode }) => {
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: {},
     },
-    plugins: [
-      getPluginsList(command, VITE_CDN, VITE_COMPRESSION),
-      Components({
-        resolvers: [],
-      }),
-      eslintPlugin({
-        include: ["src/**/*.ts", "src/**/*.vue", "src/*.ts", "src/*.vue"],
-      }),
-    ],
+    plugins: getPluginsList(VITE_CDN, VITE_COMPRESSION),
     // https://cn.vitejs.dev/config/dep-optimization-options.html#dep-optimization-options
     optimizeDeps: {
       include,
