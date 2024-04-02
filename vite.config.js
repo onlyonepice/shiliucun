@@ -24,7 +24,7 @@ const __APP_INFO__ = {
   lastBuildTime: dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"),
 };
 
-export default ({ command, mode }) => {
+export default ({ mode }) => {
   const { VITE_ENV, VITE_CDN, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } =
     warpperEnv(loadEnv(mode, root));
   return {
