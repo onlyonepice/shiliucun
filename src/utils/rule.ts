@@ -1,4 +1,3 @@
-
 // 校验ip地址
 export const regIP = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/;
 
@@ -22,4 +21,3 @@ export const regExcelType = /(\.csv|\.xlsx|\.xls)$/i;
 
 // 人物姓名校验只包含中文、英文、空格
 export const regName = /^[a-zA-Z\u4e00-\u9fa5\s]*$/;
-

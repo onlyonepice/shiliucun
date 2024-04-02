@@ -5,6 +5,6 @@ export default {
     default: () => import("@/views/resource/index.vue"),
   },
   meta: {
-    title: "资源"
+    title: "资源",
   },
 };

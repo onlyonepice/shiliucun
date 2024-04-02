@@ -4,97 +4,101 @@
     <div class="content">
       <p :class="ns.b('title')">行业分析。</p>
       <div :class="ns.b('tab-list')">
-        <div class="tab-item" @click="handleTabClick(index)" v-for="( item, index ) in  tabData ">
+        <div
+          class="tab-item"
+          @click="handleTabClick(index)"
+          v-for="(item, index) in tabData"
+          :key="`tab${index}`"
+        >
           <p class="tab-name" :class="currentTab === index ? 'active' : ''">
             {{ item.name }}
           </p>
-          <p v-if="currentTab === index" class="line"></p>
+          <p v-if="currentTab === index" class="line" />
         </div>
       </div>
-      <swiper @swiper="setControlledSwiper" :modules="modules" :control="controlledSwiper" :width="bannerWidth"
-        :loop="true" :space-between="50" class="swiperBox" @slideChange="onSlideChange">
-        <swiper-slide v-for=" item  in  tabData " :key="item.name">
+      <swiper
+        @swiper="setControlledSwiper"
+        :modules="modules"
+        :control="controlledSwiper"
+        :width="bannerWidth"
+        :space-between="50"
+        class="swiperBox"
+        @slideChange="onSlideChange"
+      >
+        <swiper-slide v-for="item in tabData" :key="item.name">
           <div :class="ns.b('carousel-item')">
-            <img class="banner-img" :src="item.img" alt="">
+            <img class="banner-img" :src="item.img" alt="" />
           </div>
         </swiper-slide>
       </swiper>
     </div>
-
   </div>
-
 </template>
 
 <script setup lang="ts">
 //页面引入vue-awesome-swiper 及其样式
-import { Swiper, SwiperSlide, } from 'swiper/vue';
-import 'swiper/css';
-import { ref, onMounted } from 'vue'
-import useNamespace from '@/utils/nameSpace'
-import { Controller } from 'swiper/modules';
-import selected_articles_bg from '@/assets/img/selected_articles_bg.png'
-import diagram_business_and_industry from '@/assets/img/diagram/diagram_business_and_industry.png'
-import diagram_electricity_price from '@/assets/img/diagram/diagram_electricity_price.png'
-import diagram_invite_tenders_area from '@/assets/img/diagram/diagram_invite_tenders_area.png'
-import diagram_invite_tenders_month from '@/assets/img/diagram/diagram_invite_tenders_month.png'
-import diagram_invite_tenders_enterprise from '@/assets/img/diagram/diagram_invite_tenders_enterprise.png'
-import diagram_bidder_price from '@/assets/img/diagram/diagram_bidder_price.png'
-import diagram_bidder_enterprise from '@/assets/img/diagram/diagram_bidder_enterprise.png'
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/css";
+import { ref, onMounted } from "vue";
+import useNamespace from "@/utils/nameSpace";
+import { Controller } from "swiper/modules";
+import selected_articles_bg from "@/assets/img/selected_articles_bg.png";
+import diagram_business_and_industry from "@/assets/img/diagram/diagram_business_and_industry.png";
+import diagram_electricity_price from "@/assets/img/diagram/diagram_electricity_price.png";
+import diagram_invite_tenders_area from "@/assets/img/diagram/diagram_invite_tenders_area.png";
+import diagram_invite_tenders_month from "@/assets/img/diagram/diagram_invite_tenders_month.png";
+import diagram_invite_tenders_enterprise from "@/assets/img/diagram/diagram_invite_tenders_enterprise.png";
+import diagram_bidder_price from "@/assets/img/diagram/diagram_bidder_price.png";
+import diagram_bidder_enterprise from "@/assets/img/diagram/diagram_bidder_enterprise.png";
 
-const ns = useNamespace('home-industryAnalysis')
+const ns = useNamespace("home-industryAnalysis");
 const modules = [Controller];
 const tabData = ref([
   {
-    name: '工商业投资回报性分析',
-    img: diagram_business_and_industry
+    name: "工商业投资回报性分析",
+    img: diagram_business_and_industry,
   },
   {
-    name: '电价分析',
-    img: diagram_electricity_price
-
+    name: "电价分析",
+    img: diagram_electricity_price,
   },
   {
-    name: '招标地区分析',
-    img: diagram_invite_tenders_area
-
+    name: "招标地区分析",
+    img: diagram_invite_tenders_area,
   },
   {
-    name: '招标月度分析',
-    img: diagram_invite_tenders_month
-
+    name: "招标月度分析",
+    img: diagram_invite_tenders_month,
   },
   {
-    name: '招标企业分析',
-    img: diagram_invite_tenders_enterprise
-
+    name: "招标企业分析",
+    img: diagram_invite_tenders_enterprise,
   },
   {
-    name: '中标价格分析',
-    img: diagram_bidder_price
-
+    name: "中标价格分析",
+    img: diagram_bidder_price,
   },
   {
-    name: '中标企业分析',
-    img: diagram_bidder_enterprise
-
+    name: "中标企业分析",
+    img: diagram_bidder_enterprise,
   },
-])
+]);
 const controlledSwiper = ref(null);
-const currentTab = ref(0)
+const currentTab = ref(0);
 const setControlledSwiper = (swiper: any) => {
   controlledSwiper.value = swiper;
 };
 const onSlideChange = (e) => {
-  currentTab.value = e.activeIndex
-}
+  currentTab.value = e.activeIndex;
+};
 const handleTabClick = (index) => {
-  currentTab.value = index
-  controlledSwiper.value?.slideTo(index, 500)
-}
-const bannerWidth = ref<number>(0)
+  currentTab.value = index;
+  controlledSwiper.value?.slideTo(index, 500);
+};
+const bannerWidth = ref<number>(0);
 onMounted(() => {
-  bannerWidth.value = document.querySelector('.banner-img').clientWidth
-})
+  bannerWidth.value = document.querySelector(".banner-img").clientWidth;
+});
 </script>
 <style lang="scss">
 .swiperBox {
@@ -125,25 +129,23 @@ onMounted(() => {
     @media screen and (max-width: 1536px) {
       width: 1152px;
       margin: 0 auto;
-
     }
 
     @media screen and (max-width: 1250px) {
       width: 1080px;
       margin: 0 auto;
-
     }
   }
 
   .es-home-industryAnalysis-header-bg {
     width: 100vw;
     height: 480px;
-    @include absolute(-1, 0, none, none, 0)
+    @include absolute(-1, 0, none, none, 0);
   }
 
   .es-home-industryAnalysis-title {
     margin-bottom: 33px;
-    @include font(36px, 600, rgba(255, 255, 255, 0.9), 44px)
+    @include font(36px, 600, rgba(255, 255, 255, 0.9), 44px);
   }
 
   .es-home-industryAnalysis-tab-list {
@@ -164,7 +166,7 @@ onMounted(() => {
 
       .tab-name {
         @include font(14px, 400, rgba(255, 255, 255, 0.55), 22px);
-        margin-top: 17px
+        margin-top: 17px;
       }
 
       .active {
@@ -178,7 +180,6 @@ onMounted(() => {
         border-radius: 2px 2px 0px 0px;
       }
     }
-
   }
 
   .es-home-industryAnalysis-carousel-item {

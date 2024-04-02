@@ -11,7 +11,9 @@ export interface DataInfo {
   domain?: string;
 }
 
-const domain = regIP.test(window.location.hostname) ? window.location.hostname : VITE_APP_DOMAIN
+const domain = regIP.test(window.location.hostname)
+  ? window.location.hostname
+  : VITE_APP_DOMAIN;
 
 /** 获取`token` */
 export function getToken() {

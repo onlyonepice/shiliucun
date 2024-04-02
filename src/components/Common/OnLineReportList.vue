@@ -1,35 +1,46 @@
 <template>
-  <div class="white-report-list" @click="onDetailReport(pageData)" :style="{ width: props.width }">
-    <img class="poster" :src="useUserStore.fileUrl + pageData.reportCover" alt="" />
+  <div
+    class="white-report-list"
+    @click="onDetailReport(pageData)"
+    :style="{ width: props.width }"
+  >
+    <img
+      class="poster"
+      :src="useUserStore.fileUrl + pageData.reportCover"
+      alt=""
+    />
     <div class="top-tag tag" v-if="pageData.isTopping === 1">置顶</div>
     <div class="free-tag tag" v-if="pageData.isFree === 1">免费</div>
-    <p class="title" v-html="pageData.reportName"></p>
+    <p class="title" v-html="pageData.reportName" />
     <p class="author" v-if="pageData.author">
       <span>分析师：</span>
-      <span v-html="pageData.author.join('，')"></span>
+      <span v-html="pageData.author.join('，')" />
     </p>
     <p class="date">编撰日期：{{ pageData.writingTime }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useUserStoreHook } from '@/store/modules/user'
-const { VITE_IREPOET_URL } = import.meta.env
+import { useUserStoreHook } from "@/store/modules/user";
+const { VITE_I_REPORT_URL } = import.meta.env;
 const props = defineProps({
   pageData: {
     type: Object,
-    default: () => { { } }
+    default: () => ({}),
   },
   width: {
     type: String,
-    default: '211px'
-  }
-})
+    default: "211px",
+  },
+});
 // 跳转报告详情
 const onDetailReport = (item) => {
-  window.open(`${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${item.id}&parent=在线报告&moduleName=${item.moduleName}&from=/online-report`, '_blank')
-}
-const useUserStore = useUserStoreHook()
+  window.open(
+    `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${item.id}&parent=在线报告&moduleName=${item.moduleName}&from=/online-report`,
+    "_blank",
+  );
+};
+const useUserStore = useUserStoreHook();
 </script>
 
 <style lang="scss" scoped>
@@ -44,9 +55,9 @@ const useUserStore = useUserStoreHook()
     @include widthAndHeight(100%, 298px);
     margin-bottom: 16px;
     border-radius: 8px;
-    border: 1px solid #DBDCE2;
+    border: 1px solid #dbdce2;
     object-fit: scale-down;
-    border: 1px solid #DBDCE2;
+    border: 1px solid #dbdce2;
   }
 
   .tag {
@@ -64,15 +75,15 @@ const useUserStore = useUserStoreHook()
   }
 
   .top-tag {
-    background: #F75964;
+    background: #f75964;
     color: white;
   }
 
   .free-tag {
-    background: #EFF4FF;
-    border: 1px solid #244BF1;
-    background-color: #EFF4FF;
-    color: #244BF1;
+    background: #eff4ff;
+    border: 1px solid #244bf1;
+    background-color: #eff4ff;
+    color: #244bf1;
   }
 
   .title {

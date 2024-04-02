@@ -1,5 +1,3 @@
-
-
 export default {
   path: "/home",
   name: "Home",
@@ -7,9 +5,9 @@ export default {
     default: () => import("@/views/home/index.vue"),
   },
   meta: {
-    title: "首页"
+    title: "首页",
   },
-  children:[
+  children: [
     {
       path: "/homeSearchDetail/:searchContent",
       name: "HomeSearchDetail",
@@ -17,7 +15,7 @@ export default {
         default: () => import("@/views/home/searchDetail.vue"),
       },
       meta: {
-        title: "首页"
+        title: "首页",
       },
     },
     {
@@ -28,8 +26,8 @@ export default {
       },
       meta: {
         title: "个人中心",
-        backgroundColor: "#F2F3F5"
-      }
+        backgroundColor: "#F2F3F5",
+      },
     },
-  ]
+  ],
 };

@@ -6,17 +6,31 @@
     </div>
     <div class="content">
       <div class="tab-box">
-        <p @click="handleTabClick(key)" v-for="(value, key) in tabList">
-          <span :class="currentTab === key ? 'active' : ''">{{ value.name }}</span>
+        <p
+          @click="handleTabClick(key)"
+          v-for="(value, key) in tabList"
+          :key="`tab${key}`"
+        >
+          <span :class="currentTab === key ? 'active' : ''">{{
+            value.name
+          }}</span>
           <img v-if="currentTab === key" :src="tagActiveBg" alt="" />
         </p>
       </div>
       <div class="content_wrapper">
         <div v-show="currentTab === 'biddingDynamics'">
-          <biddingDynamicsList v-for="(item, index) in biddingDynamicsData" :key="index" :pageData="item" />
+          <biddingDynamicsList
+            v-for="(item, index) in biddingDynamicsData"
+            :key="index"
+            :pageData="item"
+          />
         </div>
         <div v-show="currentTab === 'newPolicy'">
-          <policyList v-for="(item, index) in policyData" :key="index" :pageData="item" />
+          <policyList
+            v-for="(item, index) in policyData"
+            :key="index"
+            :pageData="item"
+          />
         </div>
       </div>
     </div>
@@ -24,95 +38,92 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import useNamespace from '@/utils/nameSpace'
-import rightArrow from '@/assets/img/common/right-arrow.png'
-import tagActiveBg from '@/assets/img/tag-active-bg.png'
-import { getLatestTender, getLatestPolicy } from '@/api/home'
+import { ref, onMounted, watch } from "vue";
+import useNamespace from "@/utils/nameSpace";
+import rightArrow from "@/assets/img/common/right-arrow.png";
+import tagActiveBg from "@/assets/img/tag-active-bg.png";
+import { getLatestTender, getLatestPolicy } from "@/api/home";
 import { windowScrollStore } from "@/store/modules/windowScroll";
-const ns = useNamespace('home-industryData')
+const ns = useNamespace("home-industryData");
 const tabList = ref({
   biddingDynamics: {
-    name: '招标动态',
+    name: "招标动态",
   },
   newPolicy: {
-    name: '最新政策',
-  }
-})
-const policyData = ref([])
-const biddingDynamicsData = ref([])
-const currentTab = ref(Object.keys(tabList.value)[0])
+    name: "最新政策",
+  },
+});
+const policyData = ref([]);
+const biddingDynamicsData = ref([]);
+const currentTab = ref(Object.keys(tabList.value)[0]);
 const getLatestTenderFn = async () => {
   const data = await getLatestTender({
-    keyword: '',
+    keyword: "",
     limit: 5,
     page: 1,
-    hideError: true
-  })
+    hideError: true,
+  });
   if (data.resp_code === 0) {
-    biddingDynamicsData.value = data.datas.records
+    biddingDynamicsData.value = data.datas.records;
   }
-}
+};
 const getLatestPolicyFn = async () => {
   const data = await getLatestPolicy({
-    keyword: '',
+    keyword: "",
     limit: 5,
     page: 1,
-    hideError: true
-  })
+    hideError: true,
+  });
   if (data.resp_code === 0) {
-    policyData.value = data.datas.records
+    policyData.value = data.datas.records;
   }
-}
+};
 const handleTabClick = (key) => {
-  currentTab.value = key
-}
+  currentTab.value = key;
+};
 
-const windowScroll = windowScrollStore()
-const scrollTop = ref<number>(0)
+const windowScroll = windowScrollStore();
+const scrollTop = ref<number>(0);
 watch(windowScroll, (e) => {
-  scrollTop.value = e.scrollTop
-})
+  scrollTop.value = e.scrollTop;
+});
 
 function disableScroll() {
-  window.addEventListener('mousewheel', preventDefault, { passive: false }); // Chrome/Safari/Opera
-  window.addEventListener('DOMMouseScroll', preventDefault, { passive: false }); // Firefox
+  window.addEventListener("mousewheel", preventDefault, { passive: false }); // Chrome/Safari/Opera
+  window.addEventListener("DOMMouseScroll", preventDefault, { passive: false }); // Firefox
 }
-
 
 // 阻止默认行为的函数
 function preventDefault(event) {
   event = event || window.event;
   window.scrollBy(0, 200); // 滚动页面
-  var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
-  const dom = document.querySelector('.es-home-industryData')
-  if ((scrollTop.value >= 1320) && scrollTop.value < 1500) {
-    const index = Object.keys(tabList.value).findIndex(item => {
-      return item === currentTab.value
-    })
+  var delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
+  if (scrollTop.value >= 1320 && scrollTop.value < 1500) {
+    const index = Object.keys(tabList.value).findIndex((item) => {
+      return item === currentTab.value;
+    });
     // 在此处理滚轮事件
     if (delta > 0) {
       if (index !== 0) {
-        currentTab.value = Object.keys(tabList.value)[index - 1]
+        currentTab.value = Object.keys(tabList.value)[index - 1];
         if (event.preventDefault) event.preventDefault();
         event.returnValue = false;
       }
     } else if (delta < 0) {
-      const lastIndex = Object.keys(tabList.value).length - 1
+      const lastIndex = Object.keys(tabList.value).length - 1;
       if (index !== lastIndex) {
-        currentTab.value = Object.keys(tabList.value)[index + 1]
+        currentTab.value = Object.keys(tabList.value)[index + 1];
         if (event.preventDefault) event.preventDefault();
         event.returnValue = false;
       }
     }
-
   }
 }
 onMounted(() => {
-  disableScroll()
-})
-getLatestPolicyFn()
-getLatestTenderFn()
+  disableScroll();
+});
+getLatestPolicyFn();
+getLatestTenderFn();
 </script>
 
 <style lang="scss" scoped>
@@ -129,7 +140,7 @@ getLatestTenderFn()
     margin-bottom: 32px;
 
     .title_text {
-      @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px)
+      @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px);
     }
 
     img {
@@ -162,7 +173,7 @@ getLatestTenderFn()
 
         img {
           @include widthAndHeight(100%, 100%);
-          @include absolute(-1, 0, none, none, 0)
+          @include absolute(-1, 0, none, none, 0);
         }
 
         .active {
@@ -174,7 +185,6 @@ getLatestTenderFn()
     .content_wrapper {
       flex: 1;
     }
-
   }
 }
 </style>

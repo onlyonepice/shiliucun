@@ -1,10 +1,4 @@
-<script setup lang="ts">
-// import noExist from "@/assets/status/404.svg?component";
-
-// defineOptions({
-//   name: "404"
-// });
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="flex justify-center items-center h-[640px]">
@@ -15,14 +9,14 @@
         v-motion
         :initial="{
           opacity: 0,
-          y: 100
+          y: 100,
         }"
         :enter="{
           opacity: 1,
           y: 0,
           transition: {
-            delay: 100
-          }
+            delay: 100,
+          },
         }"
       >
         404
@@ -32,14 +26,14 @@
         v-motion
         :initial="{
           opacity: 0,
-          y: 100
+          y: 100,
         }"
         :enter="{
           opacity: 1,
           y: 0,
           transition: {
-            delay: 300
-          }
+            delay: 300,
+          },
         }"
       >
         抱歉，你访问的页面不存在
@@ -50,14 +44,14 @@
         v-motion
         :initial="{
           opacity: 0,
-          y: 100
+          y: 100,
         }"
         :enter="{
           opacity: 1,
           y: 0,
           transition: {
-            delay: 500
-          }
+            delay: 500,
+          },
         }"
       >
         返回首页

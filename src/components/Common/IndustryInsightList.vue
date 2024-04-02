@@ -3,30 +3,34 @@
     <div class="left">
       <img :src="quotationMark" alt="" />
       <p class="day">{{ new Date(pageData.createTime).getDay() }}</p>
-      <p class="date">{{ new Date(pageData.createTime).getFullYear() }}-{{ String(new
-    Date(pageData.createTime).getMonth()).padStart(2, '0') }}
+      <p class="date">
+        {{ new Date(pageData.createTime).getFullYear() }}-{{
+          String(new Date(pageData.createTime).getMonth()).padStart(2, "0")
+        }}
       </p>
     </div>
     <div class="right">
       <div class="name-box">
         <p v-if="pageData.isTopping === 1" class="toping">置顶</p>
-        <a class="name" :href="pageData.link || '/'" target="_blank">{{ pageData.reportName }}</a>
+        <a class="name" :href="pageData.link || '/'" target="_blank">{{
+          pageData.reportName
+        }}</a>
       </div>
-      <p class="info">{{ pageData.contentOverview ?? '-' }}</p>
+      <p class="info">{{ pageData.contentOverview ?? "-" }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import useNamespace from '@/utils/nameSpace'
+import useNamespace from "@/utils/nameSpace";
 import quotationMark from "@/assets/img/quotation-mark.png";
-const ns = useNamespace('industryInsightList')
+const ns = useNamespace("industryInsightList");
 defineProps({
   pageData: {
     type: Object,
-    default: () => { { } }
-  }
-})
+    default: () => ({}),
+  },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -42,7 +46,7 @@ defineProps({
     .right {
       .name-box {
         .name {
-          color: #244BF1;
+          color: #244bf1;
         }
       }
     }
@@ -76,7 +80,7 @@ defineProps({
   .right {
     flex: 1;
     height: 100%;
-    border-bottom: 1px solid #DBDCE2;
+    border-bottom: 1px solid #dbdce2;
 
     .name-box {
       display: flex;
@@ -85,7 +89,7 @@ defineProps({
 
       .toping {
         @include widthAndHeight(40px, 24px);
-        background: #F75964;
+        background: #f75964;
         border-radius: 4px;
         @include flex(center, center);
         @include font(14px, 400, rgba(255, 255, 255, 0.9), 20px);
@@ -97,7 +101,7 @@ defineProps({
         text-decoration: none;
 
         &:hover {
-          color: #244BF1;
+          color: #244bf1;
           // text-decoration: underline;
         }
       }
@@ -110,9 +114,8 @@ defineProps({
     .info {
       width: 100%;
       @include font(14px, 400, rgba(0, 0, 0, 0.4), 22px);
-      @include textOverflow(2)
+      @include textOverflow(2);
     }
   }
-
 }
 </style>

@@ -4,21 +4,20 @@
   </div>
 </template>
 
-
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue'
-import { getPaperList } from '@/api/report'
-import useNamespace from '@/utils/nameSpace'
-const ns = useNamespace('whitePaper')
-const paperList = ref([]) // 白皮书列表
+import { onMounted, ref } from "vue";
+import { getPaperList } from "@/api/report";
+import useNamespace from "@/utils/nameSpace";
+const ns = useNamespace("whitePaper");
+const paperList = ref([]); // 白皮书列表
 // 获取白皮书列表
 const getWhitePaperList = async () => {
-  const { datas } = await getPaperList()
-  paperList.value = datas.records
-}
+  const { datas } = await getPaperList();
+  paperList.value = datas.records;
+};
 onMounted(() => {
-  getWhitePaperList()
-})
+  getWhitePaperList();
+});
 </script>
 
 <style lang="scss" scoped>

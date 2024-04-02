@@ -1,14 +1,9 @@
-import Axios, {
-  Method,
-  AxiosError,
-  AxiosResponse,
-  AxiosRequestConfig
-} from "axios";
+import { Method, AxiosError, AxiosResponse, AxiosRequestConfig } from "axios";
 
 export const defaultProjectConfig = {
-  clientId: 'iReport-front', // 应用id
-  clientSecret: 'iReport-front' // 应用秘钥
-}
+  clientId: "iReport-front", // 应用id
+  clientSecret: "iReport-front", // 应用秘钥
+};
 
 export type resultType = {
   accessToken?: string;
@@ -37,16 +32,16 @@ export default class PureHttp {
     method: RequestMethods,
     url: string,
     param?: AxiosRequestConfig,
-    axiosConfig?: PureHttpRequestConfig
+    axiosConfig?: PureHttpRequestConfig,
   ): Promise<T>;
   post<T, P>(
     url: string,
     params?: T,
-    config?: PureHttpRequestConfig
+    config?: PureHttpRequestConfig,
   ): Promise<P>;
   get<T, P>(
     url: string,
     params?: T,
-    config?: PureHttpRequestConfig
+    config?: PureHttpRequestConfig,
   ): Promise<P>;
 }

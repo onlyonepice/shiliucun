@@ -1,37 +1,56 @@
 <template>
   <div v-for="item in pageData" :key="item.id" :class="ns.b('list')">
     <div :class="ns.bm('list', 'content')">
-      <div :class="[ns.bm('content', 'year'), ns.bm('content', 'title')]">{{ item.writingTime.split('-')[0] }}年</div>
-      <div :class="[ns.bm('content', 'title')]" v-html="item.reportName"></div>
+      <div :class="[ns.bm('content', 'year'), ns.bm('content', 'title')]">
+        {{ item.writingTime.split("-")[0] }}年
+      </div>
+      <div :class="[ns.bm('content', 'title')]" v-html="item.reportName" />
       <div :class="[ns.bm('content', 'line')]" />
-      <div :class="[ns.bm('content', 'desc')]" v-html="item.contentOverview"></div>
+      <div :class="[ns.bm('content', 'desc')]" v-html="item.contentOverview" />
       <div :class="[ns.bm('content', 'more')]">
         <div :class="[ns.bm('more', 'left')]">
-          <img v-for="_item in item.compilationPartner" :key="_item" :src="useUserStore().fileUrl + _item" alt="">
+          <img
+            v-for="_item in item.compilationPartner"
+            :key="_item"
+            :src="useUserStore().fileUrl + _item"
+            alt=""
+          />
         </div>
-        <img :class="[ns.bm('more', 'right')]" :src="RightArrow" alt="" @click="onDetail(item)">
+        <img
+          :class="[ns.bm('more', 'right')]"
+          :src="RightArrow"
+          alt=""
+          @click="onDetail(item)"
+        />
       </div>
     </div>
-    <img :class="ns.bm('list', 'cover')" :src="useUserStore().fileUrl + item.reportCover" alt="">
+    <img
+      :class="ns.bm('list', 'cover')"
+      :src="useUserStore().fileUrl + item.reportCover"
+      alt=""
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import useNamespace from '@/utils/nameSpace'
-const ns = useNamespace('whitePaper')
-import { useUserStore } from '@/store/modules/user'
-import RightArrow from '@/assets/img/common/right-arrow.png'
-const { VITE_IREPOET_URL } = import.meta.env
+import useNamespace from "@/utils/nameSpace";
+const ns = useNamespace("whitePaper");
+import { useUserStore } from "@/store/modules/user";
+import RightArrow from "@/assets/img/common/right-arrow.png";
+const { VITE_IREPOET_URL } = import.meta.env;
 defineProps({
   pageData: {
     type: Object,
-    default: () => { { } }
-  }
-})
+    default: () => {},
+  },
+});
 // 跳转白皮书详情
 const onDetail = (data: any) => {
-  window.open(`${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${data.id}&parent=白皮书&moduleName=${data.moduleName}&from=/alliance-insight/white-paper`, '_blank')
-}
+  window.open(
+    `${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${data.id}&parent=白皮书&moduleName=${data.moduleName}&from=/alliance-insight/white-paper`,
+    "_blank",
+  );
+};
 </script>
 
 <style lang="scss" scoped>
@@ -54,7 +73,7 @@ const onDetail = (data: any) => {
 
 .es-whitePaper-content--line {
   @include widthAndHeight(32px, 4px);
-  background: linear-gradient(90deg, #FF8D32 0%, rgba(255, 141, 50, 0) 100%);
+  background: linear-gradient(90deg, #ff8d32 0%, rgba(255, 141, 50, 0) 100%);
   @include margin(24px, 0, 56px, 0);
 }
 
@@ -82,6 +101,5 @@ const onDetail = (data: any) => {
 .es-whitePaper-list--cover {
   @include widthAndHeight(368px, 426px);
   object-fit: cover;
-
 }
 </style>
