@@ -26,5 +26,6 @@ declare module 'vue' {
     Select: typeof import('./src/components/Common/Select.vue')['default']
     SkipMask: typeof import('./src/components/Common/SkipMask.vue')['default']
     Tabs: typeof import('./src/components/Common/Tabs.vue')['default']
+    WhiteReport: typeof import('./src/components/Common/WhiteReport.vue')['default']
   }
 }

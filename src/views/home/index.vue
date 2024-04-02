@@ -6,7 +6,7 @@
       alt=""
     />
     <img :class="ns.b('homeTopIcon')" :src="homeTopIcon" alt="" />
-    <div :class="ns.b('homeTopSearch')" v-show="false">
+    <div :class="ns.b('homeTopSearch')">
       <el-input
         v-model="searchContent"
         placeholder="请输入关键字…"
@@ -38,6 +38,8 @@ import industryInsight from "./homeComponents/industryInsight.vue";
 import industryData from "./homeComponents/industryData.vue";
 import industryAnalysis from "./homeComponents/industryAnalysis.vue";
 import industryReport from "./homeComponents/industryReport.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const ns = useNamespace("home");
 const searchContent: Ref<string> = ref("");
 
@@ -46,6 +48,10 @@ const onSearch = () => {
   if (searchContent.value === "") {
     return;
   }
+  router.push({
+    name: "HomeSearchDetail",
+    params: { searchContent: searchContent.value },
+  });
 };
 </script>
 
@@ -83,6 +89,7 @@ const onSearch = () => {
   @include absolute(1, 0, 0, 0, none);
   background: #244bf1;
   @include flex(center, center);
+  cursor: pointer;
 
   img {
     @include widthAndHeight(20px, 20px);
