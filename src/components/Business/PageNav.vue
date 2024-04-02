@@ -134,7 +134,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 1,
         text: "招标",
-        path: VITE_I_REPORT_URL + "#/stored-leading/tenderDynamics",
+        path: "/dataTender",
       },
       { id: 2, text: "中标", path: VITE_I_REPORT_URL + "#/bid-price-tracking" },
       {
@@ -150,7 +150,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 5,
         text: "行业数据库",
-        path: VITE_I_REPORT_URL + "#/relation-servicer?name=企业数据服务",
+        path: "/dataBase",
       },
     ],
   },
