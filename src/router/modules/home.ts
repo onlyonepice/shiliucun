@@ -11,7 +11,7 @@ export default {
   },
   children:[
     {
-      path: "/homeSearchDetail",
+      path: "/homeSearchDetail/:searchContent",
       name: "HomeSearchDetail",
       components: {
         default: () => import("@/views/home/searchDetail.vue"),

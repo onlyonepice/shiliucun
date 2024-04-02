@@ -2,7 +2,7 @@
   <div :class="[ns.b()]">
     <img :class="ns.b('homeBg')" src="https://share.eesaexpo.com/report/3.0/home-head-bg.png" alt="">
     <img :class="ns.b('homeTopIcon')" :src="homeTopIcon" alt="" />
-    <div :class="ns.b('homeTopSearch')" v-if="else">
+    <div :class="ns.b('homeTopSearch')">
       <el-input v-model="searchContent" placeholder="请输入关键字…" @keyup.enter="onSearch"></el-input>
       <div :class="ns.b('homeTopSearchIcon')" @click.stop="onSearch">
         <img :src="searchIcon" alt="">
@@ -32,6 +32,8 @@ import industryInsight from './homeComponents/industryInsight.vue'
 import industryData from './homeComponents/industryData.vue'
 import industryAnalysis from './homeComponents/industryAnalysis.vue'
 import industryReport from './homeComponents/industryReport.vue'
+import { useRouter } from "vue-router";
+const router = useRouter()
 const ns = useNamespace('home')
 const searchContent: Ref<string> = ref('')
 
@@ -40,6 +42,7 @@ const onSearch = () => {
   if (searchContent.value === '') {
     return
   }
+  router.push({ name: 'HomeSearchDetail', params: { searchContent: searchContent.value } });
 }
 </script>
 
@@ -77,6 +80,7 @@ const onSearch = () => {
   @include absolute(1, 0, 0, 0, none);
   background: #244BF1;
   @include flex(center, center);
+  cursor: pointer;
 
   img {
     @include widthAndHeight(20px, 20px);

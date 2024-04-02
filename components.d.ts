@@ -22,5 +22,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/Common/Select.vue')['default']
+    WhiteReport: typeof import('./src/components/Common/WhiteReport.vue')['default']
   }
 }
