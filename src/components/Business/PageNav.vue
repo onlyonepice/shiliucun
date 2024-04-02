@@ -206,14 +206,13 @@ const onChoseChildTab = (item: any) => {
     onChoseLeave();
     setTimeout(() => {
       optionChildren.value = false;
-    });
+    }, 100);
     return window.open(item.path, "externalWindow");
   } else if (item.path !== "") {
-    router.push(item.path);
+    onChildrenPath(item.path);
   } else {
     miniAppVisible.value = true;
   }
-  onChildrenPath(item.path);
 };
 // 跳转个人中心
 const onPersonal = (path: string) => {
@@ -257,7 +256,7 @@ const onChildrenPath = (path: string | Array<string>) => {
     onChoseLeave();
     setTimeout(() => {
       optionChildren.value = false;
-    });
+    }, 100);
   }
 };
 // 监听路由改变
