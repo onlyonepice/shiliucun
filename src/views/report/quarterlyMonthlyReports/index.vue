@@ -1,6 +1,6 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
-    <div :class="ns.b('main')">
+    <div :class="ns.b('main')" v-if="!isSkeleton">
       <div :class="ns.bm('main', 'title')">月报季报。</div>
       <div :class="ns.b('list')">
         <TimeList
@@ -12,6 +12,35 @@
         />
       </div>
     </div>
+    <el-skeleton style="width: 1152px; margin: 80px auto" animated v-else>
+      <template #template>
+        <el-skeleton-item
+          variant="text"
+          style="width: 160px; height: 44px; margin-bottom: 32px"
+        />
+        <div
+          style="
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 80px;
+          "
+        >
+          <el-skeleton-item
+            v-for="i in 3"
+            :key="i"
+            variant="text"
+            style="
+              width: 32%;
+              height: 676px;
+              max-width: 368px;
+              border-radius: 8px;
+            "
+          />
+        </div>
+      </template>
+    </el-skeleton>
   </div>
 </template>
 
@@ -26,6 +55,7 @@ import { reportList } from "@/api/report";
 import { ElMessage } from "element-plus";
 const { VITE_I_REPORT_URL } = import.meta.env;
 const ns = useNamespace("quarterlyMonthly");
+const isSkeleton = ref(true);
 const templateList = ref([
   {
     pic: weeklyPic,
@@ -85,9 +115,11 @@ const getReportList = async (index, type) => {
     templateList.value[index].isEnd =
       templateList.value[index].list.length === res.datas.total;
     templateList.value[index].isLoading = true;
+    isSkeleton.value = false;
   } else {
     ElMessage.error(res.resp_msg);
     templateList.value[index].isLoading = false;
+    isSkeleton.value = false;
   }
 };
 const reportTypesMap = {
