@@ -11,10 +11,10 @@
     />
     <div class="top-tag tag" v-if="pageData.isTopping === 1">置顶</div>
     <div class="free-tag tag" v-if="pageData.isFree === 1">免费</div>
-    <p class="title">{{ pageData.reportName }}</p>
+    <p class="title" v-html="pageData.reportName" />
     <p class="author" v-if="pageData.author">
       <span>分析师：</span>
-      <span>{{ pageData.author.join("") }}</span>
+      <span v-html="pageData.author.join('，')" />
     </p>
     <p class="date">编撰日期：{{ pageData.writingTime }}</p>
   </div>
