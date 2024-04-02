@@ -174,3 +174,10 @@
     background-color: #dcdfe6;
   }
 }
+.el-table__row {
+  height: 48px;
+}
+.el-table__header {
+  height: 48px;
+  border-bottom: 1px solid #f2f3f5;
+}

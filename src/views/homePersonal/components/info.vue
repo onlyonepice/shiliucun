@@ -1,5 +1,5 @@
 <template>
-  <div :class="[ns.b(), 'animate__animated animate__fadeIn']">
+  <div :class="[ns.b()]">
     <div :class="[ns.b('top')]">
       <h3>基本信息</h3>
       <el-button
@@ -9,7 +9,7 @@
         >编辑信息</el-button
       >
     </div>
-    <div :class="[ns.b('content')]">
+    <div :class="[ns.b('content'), 'animate__animated animate__fadeIn']">
       <div :class="[ns.be('content', 'left')]">
         <div :class="ns.be('content', 'item')">
           <h5>真实姓名</h5>
@@ -531,6 +531,9 @@ const onSendCode = async () => {
   @include padding(0, 0, 19px, 0);
   border-bottom: 1px solid #dbdce2;
   @include margin(0, 0, 24px, 0);
+  h3 {
+    line-height: 56px;
+  }
 }
 .es-homePersonalInfo-top__button {
   @include widthAndHeight(88px, 32px);

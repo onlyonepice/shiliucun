@@ -10,7 +10,7 @@ declare module 'vue' {
     BiddingDynamicsList: typeof import('./src/components/Common/BiddingDynamicsList.vue')['default']
     Breadcrumb: typeof import('./src/components/Common/Breadcrumb.vue')['default']
     Dialog: typeof import('./src/components/Common/Dialog/index.vue')['default']
-    ExportCanvasDialog: typeof import('./src/components/Business/exportCanvasDialog.vue')['default']
+    ExportCanvasDialog: typeof import('./src/components/Business/ExportCanvasDialog.vue')['default']
     IndustryInsightList: typeof import('./src/components/Common/IndustryInsightList.vue')['default']
     Loading: typeof import('./src/components/Common/Loading.vue')['default']
     Login: typeof import('./src/components/Business/Login.vue')['default']
@@ -19,9 +19,12 @@ declare module 'vue' {
     OnLineReportList: typeof import('./src/components/Common/OnLineReportList.vue')['default']
     PageBottom: typeof import('./src/components/Business/PageBottom.vue')['default']
     PageNav: typeof import('./src/components/Business/PageNav.vue')['default']
+    Pagination: typeof import('./src/components/Common/Pagination.vue')['default']
     PolicyList: typeof import('./src/components/Common/PolicyList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/Common/Select.vue')['default']
+    SkipMask: typeof import('./src/components/Common/SkipMask.vue')['default']
+    Tabs: typeof import('./src/components/Common/Tabs.vue')['default']
   }
 }

@@ -1,4 +1,4 @@
-// import downloadBg from '@/assets/img/eesa-waterMark.png'
+import downloadBg from "@/assets/img/common/eesa-waterMark.png";
 
 // 自定义判断元素类型JS
 export function toType(obj) {
@@ -63,7 +63,7 @@ export const exportImg = (
   watermarkHeight = 319,
 ) => {
   const contentImagePromise = loadImage(picInfo);
-  const watermarkImagePromise = loadImage(incomingBg);
+  const watermarkImagePromise = loadImage(incomingBg || downloadBg);
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   return new Promise((resolve, reject) => {
@@ -90,73 +90,6 @@ export const exportImg = (
           contentImage,
           0,
           0,
-          contentImage.width,
-          contentImage.height,
-        );
-        const watermarkedDataURL = canvas.toDataURL("image/png");
-        downloadBase64(watermarkedDataURL, downLoadName);
-        resolve("success");
-      })
-      .catch((error) => {
-        console.error("Error loading images:", error);
-        reject(error);
-      });
-  });
-};
-
-// H5导出canvas
-export const exportCanvas = (
-  title: string,
-  desc: string,
-  downLoadName: string,
-  picInfo,
-  incomingBg = null,
-  watermarkWidth = 489,
-  watermarkHeight = 319,
-) => {
-  const contentImagePromise = loadImage(picInfo);
-  const watermarkImagePromise = loadImage(incomingBg);
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-  return new Promise((resolve, reject) => {
-    Promise.all([contentImagePromise, watermarkImagePromise])
-      .then(([contentImage, watermarkImage]) => {
-        canvas.width = contentImage.width; // canvas宽度取决于传入的picInfo的宽度
-        canvas.height = contentImage.height + 200; // canvas宽度取决于传入的picInfo的高度
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height + 200);
-        // 设置文字的属性
-        ctx.font = "40px Arial";
-        ctx.fillStyle = "rgba(0,0,0,0.9)";
-        if (title.length > 24) {
-          const strArr = [];
-          for (let i = 0; i < title.length; i += 24) {
-            strArr.push(title.slice(i, i + 24));
-          }
-          ctx.fillText(strArr[0], 10, 60);
-          ctx.fillText(strArr[1], 10, 120);
-        } else {
-          ctx.fillText(title, 10, 60);
-        }
-        ctx.font = "40px Arial";
-        ctx.fillStyle = "rgba(153,153,153,0.9)";
-        ctx.fillText(desc, 10, title.length > 24 ? 180 : 120);
-
-        const watermarkImageWidth = watermarkWidth; // 水印宽度
-        const watermarkImageHeight = watermarkHeight; // 水印高度
-        // 绘制内容图片，先绘制的图片在下方,将水印绘制在 canvas 中央
-        ctx.drawImage(
-          watermarkImage,
-          contentImage.width / 2 - watermarkImageWidth / 2,
-          contentImage.height / 2 - watermarkImageHeight / 2,
-          watermarkImageWidth,
-          watermarkImageHeight,
-        );
-        // 绘制图表 eCharts 图表
-        ctx.drawImage(
-          contentImage,
-          0,
-          200,
           contentImage.width,
           contentImage.height,
         );

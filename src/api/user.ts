@@ -134,3 +134,32 @@ export function editUserInfoApi(data: any) {
 export function getSeriesApi() {
   return http.request<void>("get", `/api-user/users/getRecordingTime`);
 }
+
+// 我的订单列表
+export function myOrderListApi(data: any) {
+  return http.request<void>(
+    "post",
+    `/eesa-report/user/order/front/v1.0/getUserOrderPageList`,
+    {
+      data,
+    },
+  );
+}
+
+// 我的收藏列表
+export function myCollectListApi(params: any) {
+  return http.request<void>(
+    "get",
+    `/eesa-report/collection/front/v1.1/allReportCollection`,
+    {
+      params,
+    },
+  );
+}
+// 删除收藏
+export function deleteCollectApi(id: number) {
+  return http.request<void>(
+    "delete",
+    `/eesa-report/collection/front/v1.1/deleteByIds?ids=${id}`,
+  );
+}

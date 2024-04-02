@@ -1,7 +1,7 @@
 <template>
   <div :class="[ns.b()]">
     <h3>修改密码</h3>
-    <div :class="ns.b('content')">
+    <div :class="[ns.b('content'), 'animate__animated animate__fadeIn']">
       <div :class="ns.b('head')">
         <div
           :class="[
@@ -198,6 +198,9 @@ const countDown = () => {
 @import "@/style/mixin.scss";
 .es-homePersonalPassword {
   height: 466px;
+  h3 {
+    line-height: 56px;
+  }
 }
 .es-homePersonalPassword-content {
   width: 400px;

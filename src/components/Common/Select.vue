@@ -161,7 +161,7 @@ function handleChange(data) {
   @include font(14px, 400, #1c232f, 22px);
   border-left: 1px solid #e5e6ea;
 }
-:deep .select__input .el-input__wrapper {
+:deep(.select__input .el-input__wrapper) {
   @include widthAndHeight(100%, 32px);
   background: rgba(255, 255, 255, 0);
   border: 1px solid rgba(0, 0, 0, 0);
@@ -169,7 +169,7 @@ function handleChange(data) {
     box-shadow: none;
   }
 }
-:deep .select__input .el-input__wrapper.is-focus {
+:deep(.select__input .el-input__wrapper.is-focus) {
   background: #ffffff !important;
   box-sizing: border-box;
   box-shadow: none;

@@ -15,7 +15,7 @@
       alt=""
     />
     <slot name="content" />
-    <template #footer>
+    <template #footer v-if="showFoot">
       <div class="dialog-footer">
         <el-button @click="handleClose(false)">{{ cancelText }}</el-button>
         <el-button type="primary" @click="handleClose(true)">{{
@@ -40,6 +40,7 @@ const props = defineProps({
   confirmText: { type: String, default: "确定" },
   width: { type: String, default: "" },
   height: { type: String, default: "" },
+  showFoot: { type: Boolean, default: true },
 });
 watch(
   () => props.visible,
