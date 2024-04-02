@@ -1,37 +1,59 @@
 <template>
   <div :class="[ns.b()]">
-    <img :class="ns.b('header-bg')" :src="selected_articles_bg" alt="" />
-    <div class="content">
-      <p :class="ns.b('title')">行业分析。</p>
-      <div :class="ns.b('tab-list')">
-        <div
-          class="tab-item"
-          @click="handleTabClick(index)"
-          v-for="(item, index) in tabData"
-          :key="`tab${index}`"
-        >
-          <p class="tab-name" :class="currentTab === index ? 'active' : ''">
-            {{ item.name }}
-          </p>
-          <p v-if="currentTab === index" class="line" />
-        </div>
-      </div>
-      <swiper
-        @swiper="setControlledSwiper"
-        :modules="modules"
-        :control="controlledSwiper"
-        :width="bannerWidth"
-        :space-between="50"
-        class="swiperBox"
-        @slideChange="onSlideChange"
-      >
-        <swiper-slide v-for="item in tabData" :key="item.name">
-          <div :class="ns.b('carousel-item')">
-            <img class="banner-img" :src="item.img" alt="" />
+    <template v-if="isLoading">
+      <img :class="ns.b('header-bg')" :src="selected_articles_bg" alt="" />
+      <div class="content">
+        <p :class="ns.b('title')">行业分析。</p>
+        <div :class="ns.b('tab-list')">
+          <div
+            class="tab-item"
+            @click="handleTabClick(index)"
+            v-for="(item, index) in tabData"
+            :key="`tab${index}`"
+          >
+            <p class="tab-name" :class="currentTab === index ? 'active' : ''">
+              {{ item.name }}
+            </p>
+            <p v-if="currentTab === index" class="line" />
           </div>
-        </swiper-slide>
-      </swiper>
-    </div>
+        </div>
+        <swiper
+          @swiper="setControlledSwiper"
+          :modules="modules"
+          :control="controlledSwiper"
+          :width="bannerWidth"
+          :space-between="50"
+          class="swiperBox"
+          @slideChange="onSlideChange"
+        >
+          <swiper-slide v-for="item in tabData" :key="item.name">
+            <div :class="ns.b('carousel-item')">
+              <img class="banner-img" :src="item.img" alt="" />
+            </div>
+          </swiper-slide>
+        </swiper>
+      </div>
+    </template>
+    <el-skeleton v-else style="width: 1152px; margin: 0 auto" animated>
+      <template #template>
+        <el-skeleton-item
+          variant="text"
+          style="width: 160px; height: 44px; margin-bottom: 32px"
+        />
+        <div style="width: 100%; display: flex; align-items: center">
+          <el-skeleton-item
+            v-for="i in 7"
+            :key="i"
+            variant="text"
+            style="width: 144px; height: 56px; margin-right: 8px"
+          />
+        </div>
+        <el-skeleton-item
+          variant="text"
+          style="width: 1152px; height: 698px; margin-top: 16px"
+        />
+      </template>
+    </el-skeleton>
   </div>
 </template>
 
@@ -50,6 +72,7 @@ import diagram_invite_tenders_month from "@/assets/img/diagram/diagram_invite_te
 import diagram_invite_tenders_enterprise from "@/assets/img/diagram/diagram_invite_tenders_enterprise.png";
 import diagram_bidder_price from "@/assets/img/diagram/diagram_bidder_price.png";
 import diagram_bidder_enterprise from "@/assets/img/diagram/diagram_bidder_enterprise.png";
+const isLoading = ref<boolean>(true);
 
 const ns = useNamespace("home-industryAnalysis");
 const modules = [Controller];
