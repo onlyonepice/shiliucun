@@ -10,6 +10,7 @@ declare module 'vue' {
     BiddingDynamicsList: typeof import('./src/components/Common/BiddingDynamicsList.vue')['default']
     Breadcrumb: typeof import('./src/components/Common/Breadcrumb.vue')['default']
     Dialog: typeof import('./src/components/Common/Dialog/index.vue')['default']
+    ExportCanvasDialog: typeof import('./src/components/Business/exportCanvasDialog.vue')['default']
     IndustryInsightList: typeof import('./src/components/Common/IndustryInsightList.vue')['default']
     Loading: typeof import('./src/components/Common/Loading.vue')['default']
     Login: typeof import('./src/components/Business/Login.vue')['default']
