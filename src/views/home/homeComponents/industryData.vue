@@ -1,39 +1,67 @@
 <template>
-  <div :class="[ns.b(), 'es-commonPage']">
-    <div class="title">
-      <p class="title_text">行业数据。</p>
-      <img :src="rightArrow" alt="" />
-    </div>
-    <div class="content">
-      <div class="tab-box">
-        <p
-          @click="handleTabClick(key)"
-          v-for="(value, key) in tabList"
-          :key="`tab${key}`"
-        >
-          <span :class="currentTab === key ? 'active' : ''">{{
-            value.name
-          }}</span>
-          <img v-if="currentTab === key" :src="tagActiveBg" alt="" />
-        </p>
+  <div :class="[ns.b()]">
+    <template v-if="isLoading">
+      <div class="title">
+        <p class="title_text">行业数据。</p>
+        <img :src="rightArrow" alt="" />
       </div>
-      <div class="content_wrapper">
-        <div v-show="currentTab === 'biddingDynamics'">
-          <biddingDynamicsList
-            v-for="(item, index) in biddingDynamicsData"
-            :key="index"
-            :pageData="item"
-          />
+      <div class="content">
+        <div class="tab-box">
+          <p
+            @click="handleTabClick(key)"
+            v-for="(value, key) in tabList"
+            :key="`tab${key}`"
+          >
+            <span :class="currentTab === key ? 'active' : ''">{{
+              value.name
+            }}</span>
+            <img v-if="currentTab === key" :src="tagActiveBg" alt="" />
+          </p>
         </div>
-        <div v-show="currentTab === 'newPolicy'">
-          <policyList
-            v-for="(item, index) in policyData"
-            :key="index"
-            :pageData="item"
-          />
+        <div class="content_wrapper">
+          <div v-show="currentTab === 'biddingDynamics'">
+            <biddingDynamicsList
+              v-for="(item, index) in biddingDynamicsData"
+              :key="index"
+              :pageData="item"
+            />
+          </div>
+          <div v-show="currentTab === 'newPolicy'">
+            <policyList
+              v-for="(item, index) in policyData"
+              :key="index"
+              :pageData="item"
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </template>
+    <el-skeleton v-else style="width: 100%" animated>
+      <template #template>
+        <el-skeleton-item
+          variant="text"
+          style="width: 160px; height: 44px; margin-bottom: 32px"
+        />
+        <div style="width: 100%; display: flex">
+          <div style="margin-right: 24px">
+            <el-skeleton-item
+              v-for="i in 2"
+              :key="i"
+              variant="text"
+              style="width: 172px; height: 48px; margin-bottom: 16px"
+            />
+          </div>
+          <div>
+            <el-skeleton-item
+              v-for="i in 5"
+              :key="i"
+              variant="text"
+              style="width: 956px; height: 76px; margin-bottom: 16px"
+            />
+          </div>
+        </div>
+      </template>
+    </el-skeleton>
   </div>
 </template>
 
@@ -45,6 +73,8 @@ import tagActiveBg from "@/assets/img/tag-active-bg.png";
 import { getLatestTender, getLatestPolicy } from "@/api/home";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 const ns = useNamespace("home-industryData");
+const isLoading = ref<boolean>(false);
+
 const tabList = ref({
   biddingDynamics: {
     name: "招标动态",
@@ -74,6 +104,7 @@ const getLatestPolicyFn = async () => {
     page: 1,
     hideError: true,
   });
+  isLoading.value = true;
   if (data.resp_code === 0) {
     policyData.value = data.datas.records;
   }
@@ -131,8 +162,7 @@ getLatestTenderFn();
 
 .es-home-industryData {
   padding-bottom: 64px;
-  min-width: 1080px;
-
+  width: 100%;
   .title {
     width: 100%;
     display: flex;
