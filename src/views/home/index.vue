@@ -4,7 +4,9 @@
       :class="ns.b('homeBg')"
       src="https://share.eesaexpo.com/report/3.0/home-head-bg.png"
       alt=""
+      @load="headerBgLoad"
     />
+    <p v-if="!showHeaderBg" :class="ns.b('skeleton-headerBg')" />
     <img :class="ns.b('homeTopIcon')" :src="homeTopIcon" alt="" />
     <div :class="ns.b('homeTopSearch')">
       <el-input
@@ -16,7 +18,7 @@
         <img :src="searchIcon" alt="" />
       </div>
     </div>
-    <div :class="ns.b('homeCenter')">
+    <div :class="[ns.b('homeCenter'), 'es-commonPage']">
       <!-- 行业洞察 -->
       <industryInsight />
       <!-- 行业数据 -->
@@ -42,7 +44,10 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const ns = useNamespace("home");
 const searchContent: Ref<string> = ref("");
-
+const showHeaderBg = ref<boolean>(false);
+const headerBgLoad = () => {
+  showHeaderBg.value = true;
+};
 // 搜索事件
 const onSearch = () => {
   if (searchContent.value === "") {
@@ -67,6 +72,11 @@ const onSearch = () => {
 .es-home-homeBg {
   @include widthAndHeight(100vw, 640px);
   @include absolute(0, 0, 0, none, 0);
+}
+.es-home-skeleton-headerBg {
+  @include widthAndHeight(100vw, 640px);
+  @include absolute(2, 0, 0, none, 0);
+  background-color: #f2f3f5;
 }
 
 .es-home-homeTopIcon {
@@ -97,8 +107,7 @@ const onSearch = () => {
 }
 
 .es-home-homeCenter {
-  @include widthAndHeight(100vw, 1396px);
-  margin-top: 256px;
+  margin-top: 256px !important;
   padding-top: 80px;
   display: flex;
   flex-direction: column;

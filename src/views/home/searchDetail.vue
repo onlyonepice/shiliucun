@@ -82,6 +82,7 @@
               <!-- 行业洞察 -->
               <template v-if="key === 'REAL_TIME_INFORMATION'">
                 <div
+                  @click="handleLinkClick(row.link)"
                   class="text-item"
                   v-for="(row, rowKey) in pageOptions.All.data[key]"
                   :key="rowKey"
@@ -97,6 +98,7 @@
               <template v-if="key === 'QUARTERLY_AND_MONTHLY_REPORTS'">
                 <div
                   class="text-item"
+                  @click="onDetailReport(row)"
                   v-for="(row, rowKey) in pageOptions.All.data[key]"
                   :key="rowKey"
                 >
@@ -137,6 +139,7 @@
 </template>
 
 <script lang="ts" setup>
+const { VITE_I_REPORT_URL } = import.meta.env;
 import { ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import icon_clear from "@/assets/img/common/icon_clear.png";
@@ -253,6 +256,17 @@ const handleClearTap = () => {
   searchContent.value = "";
   searchFn();
 };
+// 跳转报告详情
+const onDetailReport = async (item) => {
+  window.open(
+    `${VITE_I_REPORT_URL}#/report-detail-pdf_V2?id=${item.id}&type=${item.type}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/quarterly-monthly`,
+    "_blank",
+  );
+};
+const handleLinkClick = (link) => {
+  console.log(link);
+  window.open(link);
+};
 onMounted(() => {
   searchContent.value = router.currentRoute.value.params.searchContent;
   searchFn();
@@ -357,6 +371,7 @@ onMounted(() => {
           .text-item {
             width: 100%;
             margin-bottom: 16px;
+            cursor: pointer;
 
             .report-name {
               width: 100%;
