@@ -1,16 +1,36 @@
 import { http } from "@/utils/http";
 
 // 获取招标内容筛选项
-export const getTenderApi = () => {
-  
-}
+export const getTenderFilterApi = () => {
+  return http.request<void>(
+    "get",
+    "/eesa-report/Policy/front/openApi/V1.0/getBiddingContent",
+  );
+};
 
-export const getFile = (url, token) => {
-  return http.request<void>("get", url, {
-    params: { hideError: true },
-    headers: {
-      "x-oss-meta-token": token,
+// 获取招标内容时间筛选项
+export const getTenderTimeFilterApi = () => {
+  return http.request<void>(
+    "get",
+    "/eesa-report/Policy/front/openApi/V1.0/getReleaseTime",
+  );
+};
+
+// 招标月度分析查找结果
+export const getBiddingDynamicsListApi = (id: number) => {
+  return http.request<void>(
+    "get",
+    `/eesa-report/Policy/front/openApi/V1.0/getMonthlyBiddingAnalysis?contentDict=${id}`,
+  );
+};
+
+// 招标企业分析查找结果
+export const getBusinessDynamicsListApi = (params: any) => {
+  return http.request<void>(
+    "get",
+    `/eesa-report/Policy/front/openApi/V1.0/getEnterpriseBiddingAnalysis`,
+    {
+      params,
     },
-    responseType: "blob",
-  });
+  );
 };

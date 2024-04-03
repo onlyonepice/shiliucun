@@ -2,22 +2,43 @@
   <div :class="ns.b()">
     <div :class="ns.b('top')">
       <div :class="ns.be('top', 'left')">
-        <span :class="ns.be('top', 'title')">招标内容</span>
-        <Select
-          width="256px"
-          :options="contentFilter"
-          labelKey="paramDesc"
-          valueKey="id"
-          @onChange="onChangeFilter"
-          :defaultValue="contentDict"
-        />
+        <div>
+          <span :class="ns.be('top', 'title')">招标内容</span>
+          <Select
+            width="256px"
+            :options="contentFilter"
+            labelKey="paramDesc"
+            valueKey="id"
+            @onChange="
+              (val) => {
+                return onChangeFilter(val, 'contentDict');
+              }
+            "
+            :defaultValue="contentDict"
+          />
+        </div>
+        <div>
+          <span :class="ns.be('top', 'title')">发布日期</span>
+          <Select
+            width="256px"
+            :options="timeFilter"
+            labelKey="paramDesc"
+            valueKey="paramValue"
+            @onChange="
+              (val) => {
+                return onChangeFilter(val, 'releaseTime');
+              }
+            "
+            :defaultValue="releaseTime"
+          />
+        </div>
       </div>
       <div :class="ns.be('top', 'right')">
         <span :class="ns.be('top', 'line')" />
         <el-button type="primary" @click="exportResult">下载图片</el-button>
       </div>
     </div>
-    <div v-loading="loading" id="eChart_dataMonthlyAnalysis" ref="eChartsDom" />
+    <div v-loading="loading" id="eChart_businessAnalysis" ref="eChartsDom" />
     <ExportCanvasDialog
       :visible="exportVisible"
       :img-url="exportImgUrl"
@@ -31,7 +52,7 @@
 import { onMounted, ref, Ref } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
-import { getBiddingDynamicsListApi } from "@/api/data";
+import { getBusinessDynamicsListApi } from "@/api/data";
 import { eChartsOptionCommon, textStyleObject } from "@/utils/eCharts";
 import { cloneDeep } from "lodash";
 const eChartsOption: Ref<any> = ref(cloneDeep(eChartsOptionCommon));
@@ -41,34 +62,49 @@ const eChartsDom = ref(null);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
-const ns = useNamespace("dataMonthlyAnalysis");
+const ns = useNamespace("businessAnalysis");
 const loading: Ref<boolean> = ref(false);
 const props = defineProps({
   contentFilter: {
     type: Array as () => any[],
     default: () => [],
   },
+  timeFilter: {
+    type: Array as () => any[],
+    default: () => [],
+  },
 });
-const contentDict: Ref<number> = ref(props.contentFilter[0].id); // 筛选项结果
+const contentDict: Ref<string | number> = ref(props.contentFilter[0].id); // 筛选项结果
+const releaseTime: Ref<string | number> = ref(props.timeFilter[0].paramValue);
 onMounted(() => {
   getElectricityTypeOneName();
 });
 // 招标内容筛选项改变
-const onChangeFilter = (id: number) => {
-  contentDict.value = id;
+const onChangeFilter = (id: string | number, type: string) => {
+  type === "contentDict" ? (contentDict.value = id) : (releaseTime.value = id);
   getElectricityTypeOneName();
 };
 
 // 获取eCharts数据
 async function getElectricityTypeOneName() {
   loading.value = true;
-  const { datas }: any = await getBiddingDynamicsListApi(contentDict.value);
-  eChartsOption.value.title.text = "储能月度招标分析";
+  const { datas }: any = await getBusinessDynamicsListApi({
+    contentDict: contentDict.value,
+    releaseTime: releaseTime.value,
+  });
+  const _data = datas.slice(0, 20);
+  eChartsOption.value.title.text = releaseTime.value + "储能招标企业分析";
   eChartsOption.value.title.subtext = `储能系统`;
   eChartsOption.value.color = ["#165DFF", "#FF7D00"];
+  eChartsOption.value.grid = {
+    top: "15%",
+    left: "50",
+    right: "3%",
+    bottom: "20%",
+  };
   const _y1 = [];
   const _y2 = [];
-  datas.map((item) => {
+  _data.map((item) => {
     _y1.push(item.data.powerScale);
     _y2.push(item.data.energyScale);
   });
@@ -78,7 +114,13 @@ async function getElectricityTypeOneName() {
     Object.assign(cloneDeep(_series), { name: "能量", data: _y2 }),
   ];
   eChartsOption.value.yAxis.name = "MWh";
-  eChartsOption.value.xAxis.data = datas.map((item) => item.month);
+  eChartsOption.value.xAxis.axisLabel.rotate = -90;
+  eChartsOption.value.xAxis.axisLabel.formatter = (params) => {
+    return params.length > 6 ? params.substr(0, 6) + "..." : params;
+  };
+  eChartsOption.value.xAxis.data = _data.map((item) =>
+    item.abbreviation !== null ? item.abbreviation : item.company,
+  );
   const flexStyle = `display: flex; justify-content: space-between; align-items: center;`;
   (eChartsOption.value.tooltip = {
     trigger: "axis",
@@ -122,7 +164,7 @@ async function getElectricityTypeOneName() {
 // 创建图表
 function createECharts() {
   const myChart = echarts.init(
-    document.getElementById("eChart_dataMonthlyAnalysis"),
+    document.getElementById("eChart_businessAnalysis"),
   );
   myChart.setOption(eChartsOption.value);
 }
@@ -142,25 +184,28 @@ function exportResult() {
 
 <style lang="scss">
 @import "@/style/mixin.scss";
-#eChart_dataMonthlyAnalysis {
-  @include widthAndHeight(1152px, 505px);
+#eChart_businessAnalysis {
+  @include widthAndHeight(1152px, 581px);
   margin-top: 32px;
 }
-.es-dataMonthlyAnalysis-top {
+.es-businessAnalysis-top {
   @include flex(center, space-between, nowrap);
 }
-.es-dataMonthlyAnalysis-top__left {
-  width: 328px;
+.es-businessAnalysis-top__left {
   @include flex(center, flex-start, nowrap);
-  .es-dataMonthlyAnalysis-top__title {
+  & > div {
+    @include flex(center, flex-start, nowrap);
+    margin-right: 24px;
+  }
+  .es-businessAnalysis-top__title {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     margin-right: 16px;
     flex: 1;
   }
 }
-.es-dataMonthlyAnalysis-top__right {
+.es-businessAnalysis-top__right {
   @include flex(center, flex-start, nowrap);
-  .es-dataMonthlyAnalysis-top__line {
+  .es-businessAnalysis-top__line {
     @include widthAndHeight(1px, 24px);
     display: inline-block;
     background: #dbdce2;

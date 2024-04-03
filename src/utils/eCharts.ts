@@ -12,6 +12,12 @@ export const eChartsOptionCommon = {
       fontWeight: "bolder",
     },
   },
+  grid: {
+    top: "20%",
+    left: "50",
+    right: "3%",
+    bottom: "10%",
+  },
   // 设置图标结构：默认为折线图
   axisPointer: { type: "line" },
   // 设置x轴信息
@@ -48,6 +54,8 @@ export const eChartsOptionCommon = {
   },
   // 图例设置
   legend: {
+    x: "center",
+    y: "95%",
     show: true,
     bottom: "0",
     data: [],
@@ -153,3 +161,11 @@ export const textStyle = `font-weight: 600; font-size: 16px; color:#000;`;
 export const textStyleMini = `font-weight: 400; color:#000;`;
 // tooltip的flex布局
 export const flexStyle = `display: flex; align-items: center; justify-content: space-between;`;
+
+// 样式配置
+export const textStyleObject = {
+  fontSize: 14,
+  lineHeight: 22,
+  fontWeight: 400,
+  color: "#5B6985",
+};

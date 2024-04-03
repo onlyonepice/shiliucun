@@ -91,7 +91,7 @@ export default {
       this.showDialog = true;
       const { imgTitle, exportTypeValue, imgUrl } = this;
       const _title = imgTitle + "." + exportTypeValue;
-      exportImg(exportTypeValue, _title, imgUrl["png"]).then((res) => {
+      exportImg(exportTypeValue, _title, imgUrl["png"]).then(() => {
         this.onCancel();
       });
     },
