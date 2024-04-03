@@ -1,18 +1,19 @@
 <template>
   <div :class="['es-commonPage', ns.b()]">
     <Tabs :tabsList="tabsList" @onHandleClick="onHandleClick" />
-
-    <MonthlyAnalysis
-      v-if="choseTabs === 2 && contentFilter.length !== 0"
-      :contentFilter="contentFilter"
-    />
-    <BusinessAnalysis
-      v-if="
-        choseTabs === 3 && contentFilter.length !== 0 && timeFilter.length !== 0
-      "
-      :contentFilter="contentFilter"
-      :timeFilter="timeFilter"
-    />
+    <template v-if="contentFilter.length !== 0 && timeFilter.length !== 0">
+      <MonthlyAnalysis v-if="choseTabs === 2" :contentFilter="contentFilter" />
+      <BusinessAnalysis
+        v-if="choseTabs === 3"
+        :contentFilter="contentFilter"
+        :timeFilter="timeFilter"
+      />
+      <AreaAnalysis
+        v-if="choseTabs === 4"
+        :contentFilter="contentFilter"
+        :timeFilter="timeFilter"
+      />
+    </template>
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import { ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import MonthlyAnalysis from "./components/monthlyAnalysis.vue";
 import BusinessAnalysis from "./components/businessAnalysis.vue";
+import AreaAnalysis from "./components/areaAnalysis.vue";
 import { getTenderFilterApi, getTenderTimeFilterApi } from "@/api/data";
 import { NOOP } from "@vue/shared";
 const ns = useNamespace("dataTender");

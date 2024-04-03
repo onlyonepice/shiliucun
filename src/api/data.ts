@@ -34,3 +34,24 @@ export const getBusinessDynamicsListApi = (params: any) => {
     },
   );
 };
+// 招标地区分析查找结果
+export const getRegionDynamicsListApi = (params: any) => {
+  return http.request<void>(
+    "get",
+    `/eesa-report/Policy/front/openApi/V1.0/getRegionBiddingAnalysis`,
+    {
+      params,
+    },
+  );
+};
+
+// 获取招标区域分析颜色
+export const getRegionColorApi = (params) => {
+  return http.request<void>(
+    "get",
+    `/eesa-report/Policy/front/openApi/V1.0/getRegionBiddingAnalysisColour`,
+    {
+      params,
+    },
+  );
+};
