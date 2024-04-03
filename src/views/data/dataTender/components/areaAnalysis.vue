@@ -107,6 +107,7 @@ async function getElectricityTypeOneName() {
     },
   };
   // 设置省份数据，chinaMap 省份名字需要与后端反的省份一致才展示
+  eChartsOption.value.series[0].zoom = 1.2;
   eChartsOption.value.series[0].data = datas
     .map((item) => {
       return {

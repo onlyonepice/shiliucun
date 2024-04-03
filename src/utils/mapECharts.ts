@@ -14,8 +14,8 @@ export const EChartOptions = {
     },
   },
   grid: {
-    left: "5%",
-    right: "5%",
+    bottom: "5%",
+    containLabel: true,
   },
   dataRange: {
     show: false,
