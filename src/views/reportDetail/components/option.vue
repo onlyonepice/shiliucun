@@ -20,7 +20,7 @@
       <h5>报告评分</h5>
       <span v-if="score !== -1">{{ scoreTextList[score] }}</span>
     </div>
-    <div :class="ns.be('score', 'content')" @mouseleave="score = -1">
+    <div :class="ns.be('score', 'content')" @mouseleave="onMouseleave()">
       <div
         v-for="item in 5"
         :key="item"
@@ -45,6 +45,8 @@ import { ref, defineProps, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import StarEmpty from "@/assets/img/reportDetail/i-Report-star.png";
 import StarFull from "@/assets/img/reportDetail/i-Report-star-fill.png";
+import { setReportScoreApi } from "@/api/reportDetail.ts";
+import { ElMessage } from "element-plus";
 const ns = useNamespace("reportDetailOption");
 const scoreTextList = ref(["比较差", "较差", "一般", "较好", "比较好"]);
 const props = defineProps({
@@ -54,20 +56,32 @@ const props = defineProps({
   },
 });
 const score: Ref<number> = ref(
-  props.detail.reportScoring === 0 ? -1 : props.detail.reportScoring,
+  props.detail.reportScoring === 0 ? -1 : props.detail.reportScoring - 1,
 );
 // 确定分数
-const scoreSure: Ref<number> = ref(props.detail.reportScoring);
+const scoreSure: Ref<number> = ref(props.detail.reportScoring - 1);
 
 // 鼠标移入选择
 const onMouseScore = (item: number) => {
-  if (scoreSure.value === 0) {
-    score.value = item - 1;
-  }
+  score.value = item - 1;
+};
+// 鼠标移出
+const onMouseleave = () => {
+  score.value = scoreSure.value;
 };
 // 打分
-const onScore = (item: number) => {
-  score.value = item;
+const onScore = async (item: number) => {
+  score.value = item - 1;
+  const { resp_code }: any = await setReportScoreApi({
+    level: scoreTextList.value[score.value - 1],
+    moduleName: props.detail.moduleName,
+    reportId: props.detail.id,
+    score: item,
+  });
+  if (resp_code === 0) {
+    ElMessage.success("评分成功");
+    scoreSure.value = item - 1;
+  }
 };
 </script>
 
@@ -134,7 +148,7 @@ const onScore = (item: number) => {
 }
 .es-reportDetailOption-score__content {
   @include flex(center, flex-start, nowrap);
-  margin: 8px 0 24px;
+  margin: 8px 0 8px;
   div {
     @include widthAndHeight(32px, 32px);
     cursor: pointer;
@@ -142,6 +156,7 @@ const onScore = (item: number) => {
     margin-right: 12px;
   }
   img {
+    @include widthAndHeight(100%, 100%);
     @include absolute();
   }
   .es-reportDetailOption-score__chose {
