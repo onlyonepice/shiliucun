@@ -4,6 +4,7 @@
       :tabsList="tabsList"
       @onHandleClick="onHandleClick"
       :defaultId="choseTabs"
+      :disableId="1"
     />
     <template v-if="contentFilter.length !== 0 && timeFilter.length !== 0">
       <Search

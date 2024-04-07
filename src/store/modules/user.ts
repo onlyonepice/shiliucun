@@ -14,6 +14,7 @@ export const useUserStore = defineStore({
     fileUrl: "", // 文件路径
     userInfo: {}, // 用户信息
     publicKey: "", // 加密密钥 用于监听
+    openLoginVisible: false, // 打开登录弹窗
   }),
   getters: {
     getFileUrl(): string {
@@ -47,6 +48,10 @@ export const useUserStore = defineStore({
             reject(error);
           });
       });
+    },
+    // 打开登录弹窗
+    openLogin(type: Boolean) {
+      this.openLoginVisible = type;
     },
     // 设置加密密钥
     setPublicKey() {

@@ -40,4 +40,5 @@ export type userType = {
   userAccountPsd?: string;
   publicKey?: any;
   token: string;
+  openLoginVisible: boolean;
 };
