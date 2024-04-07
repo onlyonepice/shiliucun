@@ -103,7 +103,10 @@ const onDelete = (id: number) => {
   titleSkip.value.cancel = "取消";
 };
 // 关闭二次确认框
-const onClose = async () => {
+const onClose = async (type: boolean) => {
+  if (!type) {
+    return (titleSkip.value.show = false);
+  }
   const { resp_code }: any = await deleteCollectApi(choseId.value);
   if (resp_code === 0) {
     titleSkip.value.show = false;
