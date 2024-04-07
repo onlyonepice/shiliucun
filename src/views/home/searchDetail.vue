@@ -55,6 +55,7 @@
               >
                 <div class="Energy_Storage_Frontier-box">
                   <div
+                    @click="handleEnergy_Storage_FrontierClick(row.url)"
                     class="Energy_Storage_Frontier-box_item"
                     :style="{ marginRight: rowIndex === 3 ? '0' : '24px' }"
                     v-for="(row, rowIndex) in pageOptions.All.data[key]"
@@ -178,6 +179,9 @@ const pageOptions = ref<any>({
   WHITE_PAPER: { name: "白皮书", show: false },
   ONLINE_REPORT: { name: "在线报告", show: false },
 }) as any;
+const handleEnergy_Storage_FrontierClick = (url) => {
+  window.open(VITE_I_REPORT_URL + url);
+};
 // 搜索事件
 const onSearch = () => {
   if (searchContent.value === "") {
@@ -207,22 +211,27 @@ const searchFn = async () => {
             case "工商业投资回报性":
               item.img = return_on_investment;
               item.code = "Return on investment";
+              item.url = "#/stored-leading/invest-ROE/business";
               break;
             case "代理购电价格追踪":
               item.img = price_tracking;
               item.code = "Price tracking";
+              item.url = "#/stored-leading/electricity-price";
               break;
             case "中标项目追踪":
               item.img = winning_bid_tracking;
               item.code = "Winning bid tracking";
+              item.url = "#/bid-price-tracking";
               break;
             case "政策追踪":
               item.img = policy_tracking;
               item.code = "Policy tracking";
+              item.url = "#/stored-leading/policy-trace";
               break;
             case "融资方案":
               item.img = financing_plan;
               item.code = "Financing plan";
+              item.url = "#/stored-leading/financing-plan";
               break;
             default:
               break;
