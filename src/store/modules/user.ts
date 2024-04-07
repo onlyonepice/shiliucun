@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { store } from "@/store";
 import { userType } from "./types";
-import { getUserInfo, configListBefore } from "@/api/user";
+import { getUserInfo, configListBefore, getPermissionApi } from "@/api/user";
 import { getPublicKeyApi } from "@/api/user";
 import { removeToken } from "@/utils/auth";
 import router from "@/router";
@@ -15,6 +15,8 @@ export const useUserStore = defineStore({
     userInfo: {}, // 用户信息
     publicKey: "", // 加密密钥 用于监听
     openLoginVisible: false, // 打开登录弹窗
+    openVipVisible: false, // 打开vip弹窗
+    permissionList: [], // 用户权限
   }),
   getters: {
     getFileUrl(): string {
@@ -52,6 +54,26 @@ export const useUserStore = defineStore({
     // 打开登录弹窗
     openLogin(type: Boolean) {
       this.openLoginVisible = type;
+    },
+    // 打开开通vip弹窗
+    openVip(type: Boolean) {
+      this.openVipVisible = type;
+    },
+    // 获取用户权限
+    async getPermissionList() {
+      const { datas, resp_code }: any = await getPermissionApi();
+      if (resp_code === 0) {
+        this.permissionList = datas;
+      }
+    },
+    // 校验权限功能
+    checkPermission(key: String) {
+      const data = this.permissionList.find((item: any) => item.code === key);
+      if (this.permissionList.length === 0 || !data.permission) {
+        this.openVip(true);
+        return false;
+      }
+      return true;
     },
     // 设置加密密钥
     setPublicKey() {

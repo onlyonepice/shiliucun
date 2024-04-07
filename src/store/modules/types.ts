@@ -41,4 +41,6 @@ export type userType = {
   publicKey?: any;
   token: string;
   openLoginVisible: boolean;
+  openVipVisible: boolean;
+  permissionList: Array<any>;
 };
