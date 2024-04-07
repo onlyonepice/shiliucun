@@ -1,6 +1,10 @@
 <template>
   <div :class="[ns.b()]">
-    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+    <el-tabs
+      :model-value="activeName"
+      class="demo-tabs"
+      @tab-click="handleClick"
+    >
       <el-tab-pane
         :label="item.name"
         :name="item.id"
@@ -32,6 +36,13 @@ const props = defineProps({
     default: -1,
   },
 });
+watch(
+  () => activeName.value,
+  (newVal, oldVal) => {
+    console.log("======", newVal, oldVal);
+    newVal === 1 && (activeName.value = 2);
+  },
+);
 watch(
   () => props.tabsList,
   (val: Array<TabsList>) => {

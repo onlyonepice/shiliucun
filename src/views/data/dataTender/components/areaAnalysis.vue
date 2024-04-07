@@ -62,7 +62,7 @@ const eChartsDom = ref(null);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
-const ns = useNamespace("areaAnalysis");
+const ns = useNamespace("dataAreaAnalysis");
 const loading: Ref<boolean> = ref(false);
 const props = defineProps({
   contentFilter: {
@@ -220,24 +220,24 @@ function exportResult() {
   @include widthAndHeight(1152px, 850px);
   margin-top: 32px;
 }
-.es-areaAnalysis-top {
+.es-dataAreaAnalysis-top {
   @include flex(center, space-between, nowrap);
 }
-.es-areaAnalysis-top__left {
+.es-dataAreaAnalysis-top__left {
   @include flex(center, flex-start, nowrap);
   & > div {
     @include flex(center, flex-start, nowrap);
     margin-right: 24px;
   }
-  .es-areaAnalysis-top__title {
+  .es-dataAreaAnalysis-top__title {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     margin-right: 16px;
     flex: 1;
   }
 }
-.es-areaAnalysis-top__right {
+.es-dataAreaAnalysis-top__right {
   @include flex(center, flex-start, nowrap);
-  .es-areaAnalysis-top__line {
+  .es-dataAreaAnalysis-top__line {
     @include widthAndHeight(1px, 24px);
     display: inline-block;
     background: #dbdce2;

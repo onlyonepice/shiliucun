@@ -62,7 +62,7 @@ const eChartsDom = ref(null);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
-const ns = useNamespace("businessAnalysis");
+const ns = useNamespace("dataBusinessAnalysis");
 const loading: Ref<boolean> = ref(false);
 const props = defineProps({
   contentFilter: {
@@ -188,24 +188,24 @@ function exportResult() {
   @include widthAndHeight(1152px, 581px);
   margin-top: 32px;
 }
-.es-businessAnalysis-top {
+.es-dataBusinessAnalysis-top {
   @include flex(center, space-between, nowrap);
 }
-.es-businessAnalysis-top__left {
+.es-dataBusinessAnalysis-top__left {
   @include flex(center, flex-start, nowrap);
   & > div {
     @include flex(center, flex-start, nowrap);
     margin-right: 24px;
   }
-  .es-businessAnalysis-top__title {
+  .es-dataBusinessAnalysis-top__title {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     margin-right: 16px;
     flex: 1;
   }
 }
-.es-businessAnalysis-top__right {
+.es-dataBusinessAnalysis-top__right {
   @include flex(center, flex-start, nowrap);
-  .es-businessAnalysis-top__line {
+  .es-dataBusinessAnalysis-top__line {
     @include widthAndHeight(1px, 24px);
     display: inline-block;
     background: #dbdce2;

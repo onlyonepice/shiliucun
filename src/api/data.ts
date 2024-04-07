@@ -55,3 +55,11 @@ export const getRegionColorApi = (params) => {
     },
   );
 };
+
+// 招标查找-招标内容
+export const getBiddingContentApi = () => {
+  return http.request<void>(
+    "get",
+    `/eesa-report/Policy/front/openApi/V1.0/getBiddingContentBox`,
+  );
+};
