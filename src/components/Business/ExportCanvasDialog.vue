@@ -91,7 +91,7 @@ export default {
       this.showDialog = true;
       const { imgTitle, exportTypeValue, imgUrl } = this;
       const _title = imgTitle + "." + exportTypeValue;
-      exportImg(exportTypeValue, _title, imgUrl["png"]).then((res) => {
+      exportImg(exportTypeValue, _title, imgUrl["png"]).then(() => {
         this.onCancel();
       });
     },
@@ -125,7 +125,7 @@ export default {
   border: 1px solid #f1f2f6;
   img {
     @include widthAndHeight(496px);
-    background-image: url("@/assets/img/canvas-img-bg.png");
+    background-image: url("@/assets/img/common/canvas-img-bg.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
   }

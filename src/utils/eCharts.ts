@@ -1,4 +1,4 @@
-import { graphic } from "echarts/core";
+import { graphic, registerMap, getMap } from "echarts/core";
 
 export const eChartsOptionCommon = {
   // 设置标题
@@ -11,6 +11,12 @@ export const eChartsOptionCommon = {
       color: "#1C232F",
       fontWeight: "bolder",
     },
+  },
+  grid: {
+    top: "20%",
+    left: "50",
+    right: "3%",
+    bottom: "10%",
   },
   // 设置图标结构：默认为折线图
   axisPointer: { type: "line" },
@@ -48,6 +54,8 @@ export const eChartsOptionCommon = {
   },
   // 图例设置
   legend: {
+    x: "center",
+    y: "95%",
     show: true,
     bottom: "0",
     data: [],
@@ -153,3 +161,56 @@ export const textStyle = `font-weight: 600; font-size: 16px; color:#000;`;
 export const textStyleMini = `font-weight: 400; color:#000;`;
 // tooltip的flex布局
 export const flexStyle = `display: flex; align-items: center; justify-content: space-between;`;
+
+// 样式配置
+export const textStyleObject = {
+  fontSize: 14,
+  lineHeight: 22,
+  fontWeight: 400,
+  color: "#5B6985",
+};
+
+// 结构地图JSON数据
+export function handleEChartsRegisterMap(getName, geoJson) {
+  const maps = getMap(getName);
+  if (maps) {
+    return;
+  }
+  registerMap(getName, geoJson);
+}
+
+export const RegionEnum = {
+  北京市: "beijing",
+  天津市: "tianjin",
+  河北省: "hebei",
+  山西省: "shanxi",
+  内蒙古自治区: "neimenggu",
+  辽宁省: "liaoning",
+  吉林省: "jilin",
+  黑龙江省: "heilongjiang",
+  上海市: "shanghai",
+  江苏省: "jiangsu",
+  浙江省: "zhejiang",
+  安徽省: "anhui",
+  福建省: "fujian",
+  江西省: "jiangxi",
+  山东省: "shandong",
+  河南省: "henan",
+  湖北省: "hubei",
+  湖南省: "hunan",
+  广东省: "guangdong",
+  广西壮族自治区: "guangxi",
+  海南省: "hainan",
+  重庆市: "chongqing",
+  四川省: "sichuan",
+  贵州省: "guizhou",
+  云南省: "yunnan",
+  西藏自治区: "xizang",
+  陕西省: "shanxi1",
+  甘肃省: "gansu",
+  青海省: "qinghai",
+  宁夏回族自治区: "ningxia",
+  新疆维吾尔自治区: "xinjiang",
+  香港特别行政区: "xianggang",
+  澳门特别行政区: "aomen",
+};

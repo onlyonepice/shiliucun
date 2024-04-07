@@ -53,3 +53,5 @@ declare global {
     | "brotli-clear"
     | "both-clear";
 }
+
+export {};
