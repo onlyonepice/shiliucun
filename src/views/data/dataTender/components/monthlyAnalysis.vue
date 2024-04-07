@@ -4,11 +4,11 @@
       <div :class="ns.be('top', 'left')">
         <span :class="ns.be('top', 'title')">招标内容</span>
         <Select
+          v-model="contentDict"
           width="256px"
           :options="contentFilter"
           labelKey="paramDesc"
           valueKey="id"
-          @onChange="onChangeFilter"
           :defaultValue="contentDict"
         />
       </div>
@@ -28,12 +28,14 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, Ref } from "vue";
+import { onMounted, ref, Ref, watch } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getBiddingDynamicsListApi } from "@/api/data";
 import { eChartsOptionCommon, textStyleObject } from "@/utils/eCharts";
 import { cloneDeep } from "lodash";
+import { useUserStore } from "@/store/modules/user";
+import { nextTick } from "process";
 const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 获取eCharts节点
 const eChartsDom = ref(null);
@@ -50,14 +52,21 @@ const props = defineProps({
   },
 });
 const contentDict: Ref<number> = ref(props.contentFilter[0].id); // 筛选项结果
+watch(
+  () => contentDict.value,
+  () => {
+    if (useUserStore().checkPermission("MONTHLY_ANALYSIS_BIDDING")) {
+      getElectricityTypeOneName();
+    } else {
+      nextTick(() => {
+        contentDict.value = props.contentFilter[0].id;
+      });
+    }
+  },
+);
 onMounted(() => {
   getElectricityTypeOneName();
 });
-// 招标内容筛选项改变
-const onChangeFilter = (id: number) => {
-  contentDict.value = id;
-  getElectricityTypeOneName();
-};
 
 // 获取eCharts数据
 async function getElectricityTypeOneName() {

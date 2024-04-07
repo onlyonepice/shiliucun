@@ -20,11 +20,12 @@
     </div>
     <PageBottom />
   </el-scrollbar>
+  <OpenVip :visible="useUserStore().$state.openVipVisible" />
   <Login
+    class="animate__animated"
     v-if="openLoginAnimate"
     :openLogin="useUserStore().$state.openLoginVisible"
     @onCancel="useUserStore().openLogin(false)"
-    class="animate__animated"
     :class="
       useUserStore().$state.openLoginVisible
         ? 'animate__fadeIn'

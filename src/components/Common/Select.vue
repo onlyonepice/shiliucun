@@ -114,7 +114,7 @@ const props = defineProps({
   },
 });
 const value: any = ref(""); // 选中值
-
+const model = defineModel();
 watch(
   () => props.defaultValue,
   (val) => {
@@ -125,6 +125,7 @@ watch(
 // 通过onChange事件传递值给父组件
 function handleChange(data) {
   emit("onChange", data);
+  model.value = data;
 }
 </script>
 

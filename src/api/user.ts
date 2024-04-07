@@ -163,3 +163,11 @@ export function deleteCollectApi(id: number) {
     `/eesa-report/collection/front/v1.1/deleteByIds?ids=${id}`,
   );
 }
+
+// 获取用户权限
+export function getPermissionApi() {
+  return http.request<void>(
+    "get",
+    `/api-user/system/rolePermission/front/v1.0/getPermission`,
+  );
+}
