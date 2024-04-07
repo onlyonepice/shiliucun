@@ -18,7 +18,12 @@
         <p v-if="item.value === currentTab" class="active_line" />
       </div>
     </div>
-    <WinningBidPrice :formOptions="formOptions" />
+    <WinningBidPrice v-if="currentTab === 'price'" :formOptions="formOptions" />
+    <WinningBidEnterprise
+      v-if="currentTab === 'enterprise'"
+      :formOptions="formOptions"
+    />
+    <WinningBidReport v-if="currentTab === 'report'" />
   </div>
 </template>
 
@@ -26,6 +31,8 @@
 import { ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import WinningBidPrice from "./winningBidPrice/enter.vue";
+import WinningBidEnterprise from "./winningBidEnterprise/enter.vue";
+import WinningBidReport from "./winningBidReport/enter.vue";
 import {
   bidWinningContentData_V2,
   technologyType_V2,

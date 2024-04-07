@@ -98,3 +98,27 @@ export const applicationScenariosBox = (params) => {
     `/eesa-report/priceTracking/front/openApi/V1.0/applicationScenariosBox?type=${params}`,
   );
 };
+// 中标容量分析
+export const capacityAnalysis_V2 = (data) => {
+  return http.request(
+    "post",
+    "/eesa-report/priceTracking/front/openApi/v1.0/analyzeBarGraph",
+    { data },
+  );
+};
+// 中标企业分析
+export const enterpriseAnalysis = (data) => {
+  return http.request(
+    "post",
+    "/eesa-report/priceTracking/front/openApi/v1.0/enterpriseAnalysis",
+    { data },
+  );
+};
+// 中标分析报告
+export const winningReport = (data) => {
+  return http.request(
+    "post",
+    "/eesa-report/priceTracking/front/openApi/v1.0/winningReport",
+    { data },
+  );
+};
