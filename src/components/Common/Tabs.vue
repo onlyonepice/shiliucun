@@ -4,6 +4,7 @@
       :model-value="activeName"
       class="demo-tabs"
       @tab-click="handleClick"
+      :disabled="activeName === 1"
     >
       <el-tab-pane
         :label="item.name"
@@ -20,7 +21,7 @@ interface TabsList {
   id: number;
   name: string;
 }
-import { watch, ref, Ref } from "vue";
+import { watch, ref, Ref, nextTick } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import type { TabsPaneContext } from "element-plus";
 const ns = useNamespace("tabs");
@@ -35,12 +36,19 @@ const props = defineProps({
     type: Number || String,
     default: -1,
   },
+  disableId: {
+    type: Number || String,
+    default: -1,
+  },
 });
+// 功能未开发，暂时不让点击跳转到1
 watch(
   () => activeName.value,
   (newVal, oldVal) => {
-    console.log("======", newVal, oldVal);
-    newVal === 1 && (activeName.value = 2);
+    props.disableId !== -1 &&
+      nextTick(() => {
+        newVal === props.disableId && (activeName.value = oldVal);
+      });
   },
 );
 watch(
