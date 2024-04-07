@@ -49,12 +49,13 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, Ref } from "vue";
+import { onMounted, ref, Ref, nextTick } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getBusinessDynamicsListApi } from "@/api/data";
 import { eChartsOptionCommon, textStyleObject } from "@/utils/eCharts";
 import { cloneDeep } from "lodash";
+import { useUserStore } from "@/store/modules/user";
 const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 获取eCharts节点
 const eChartsDom = ref(null);
@@ -82,7 +83,14 @@ onMounted(() => {
 // 招标内容筛选项改变
 const onChangeFilter = (id: string | number, type: string) => {
   type === "contentDict" ? (contentDict.value = id) : (releaseTime.value = id);
-  getElectricityTypeOneName();
+  if (useUserStore().checkPermission("ANALYSIS_BIDDING_ENTERPRISES")) {
+    getElectricityTypeOneName();
+  } else {
+    nextTick(() => {
+      contentDict.value = props.contentFilter[0].id;
+      releaseTime.value = props.timeFilter[0].paramValue;
+    });
+  }
 };
 
 // 获取eCharts数据
