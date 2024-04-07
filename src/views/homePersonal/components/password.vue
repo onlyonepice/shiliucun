@@ -177,6 +177,8 @@ const onNext = async () => {
   const { resp_code, datas }: any = await checkPasswordCode(mbInfo.value.code);
   if (resp_code === 0 && datas) {
     step.value = 2;
+  } else {
+    ElMessage.error("验证码错误");
   }
 };
 // 倒计时
