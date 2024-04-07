@@ -56,7 +56,7 @@
                 <div class="Energy_Storage_Frontier-box">
                   <div
                     class="Energy_Storage_Frontier-box_item"
-                    :style="{ marginRight: rowIndex === 3 ? '0' : '1.25vw' }"
+                    :style="{ marginRight: rowIndex === 3 ? '0' : '24px' }"
                     v-for="(row, rowIndex) in pageOptions.All.data[key]"
                     :key="rowIndex"
                   >
