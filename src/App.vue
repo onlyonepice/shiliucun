@@ -4,7 +4,7 @@
     :opacityBg="opacityBg"
     :class="{ 'pageNav-show': showNavBar, 'es-pageNav--opacity': opacityBg }"
     @onLogin="
-      openLogin = true;
+      onLogin();
       openLoginAnimate = true;
     "
   />
@@ -22,10 +22,14 @@
   </el-scrollbar>
   <Login
     v-if="openLoginAnimate"
-    :openLogin="openLogin"
-    @onCancel="onCancel"
+    :openLogin="useUserStore().$state.openLoginVisible"
+    @onCancel="useUserStore().openLogin(false)"
     class="animate__animated"
-    :class="openLogin ? 'animate__fadeIn' : 'animate__fadeOut'"
+    :class="
+      useUserStore().$state.openLoginVisible
+        ? 'animate__fadeIn'
+        : 'animate__fadeOut'
+    "
   />
 </template>
 <script lang="ts" setup>
@@ -39,7 +43,6 @@ const opacityBg: Ref<boolean> = ref(true); // 是否展示透明背景
 const route = useRoute();
 const showNavBar: Ref<boolean> = ref(true);
 const lastScrollY: Ref<number> = ref(0);
-const openLogin: Ref<boolean> = ref(false); // 登录弹窗
 const openLoginAnimate: Ref<boolean> = ref(false); // 登录动画执行完毕弹窗
 onMounted(() => {
   useUserStore().token === "" &&
@@ -60,10 +63,22 @@ watch(windowScroll, (e) => {
   scrollbarRef.value!.setScrollTop(e.scrollTop);
 });
 watch(useUserStore().$state, (val: any) => {
+  // 打开登录弹窗
+  if (val.openLoginVisible) {
+    openLoginAnimate.value = true;
+  } else {
+    setTimeout(() => {
+      openLoginAnimate.value = false;
+    }, 500);
+  }
   val.publicKey !== "" &&
     useUserStore().$state.fileUrl === "" &&
     useUserStore().getConfigListBefore();
 });
+// 点击登录按钮
+const onLogin = () => {
+  useUserStore().openLogin(true);
+};
 const getBg = computed(() => {
   return route.meta.backgroundColor ? route.meta.backgroundColor : "#ffffff";
 });
@@ -74,12 +89,6 @@ const onScroll = ({ scrollTop }: any) => {
   if (route.path === "/home") {
     opacityBg.value = scrollTop < 200;
   }
-};
-const onCancel = () => {
-  openLogin.value = false;
-  setTimeout(() => {
-    openLoginAnimate.value = false;
-  }, 500);
 };
 </script>
 
