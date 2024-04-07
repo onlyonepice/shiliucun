@@ -4,8 +4,8 @@
     <div :class="[ns.b('content'), 'es-commonPage']">
       <div :class="ns.be('content', 'left')" />
       <div :class="ns.be('content', 'right')">
-        <reportOption />
-        <recommendReport />
+        <reportOption v-if="reportDetail.id" :detail="reportDetail" />
+        <reportRecommend />
       </div>
     </div>
   </div>
@@ -16,6 +16,8 @@ import { ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useRoute } from "vue-router";
 import { getReportDetailApi } from "@/api/reportDetail";
+import reportOption from "./components/option.vue";
+import reportRecommend from "./components/recommend.vue";
 const route = useRoute();
 const ns = useNamespace("reportDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
@@ -23,12 +25,17 @@ const breadcrumbList: Ref<Array<any>> = ref([
   { text: "季报月报", path: "/quarterlyMonthlyReports" },
   { text: "", path: "" },
 ]);
+const reportDetail: Ref<any> = ref({}); // 报告详情
 // 获取报告详情
 const getReportDetail = async () => {
-  const { datas }: any = await getReportDetailApi({
+  const { datas, resp_code }: any = await getReportDetailApi({
     id: route.query.id,
   });
-  breadcrumbList.value[breadcrumbList.value.length - 1].text = datas.reportName;
+  if (resp_code === 0) {
+    breadcrumbList.value[breadcrumbList.value.length - 1].text =
+      datas.reportName;
+    reportDetail.value = datas;
+  }
 };
 getReportDetail();
 </script>
@@ -36,10 +43,14 @@ getReportDetail();
 <style lang="scss">
 @import "@/style/mixin.scss";
 .es-reportDetail {
-  height: calc(100vh - 56px);
-  background: red;
+  height: calc(100vh - 56px -80px);
+  background: #f2f3f5;
 }
 .es-reportDetail-content {
-  @include flex();
+  @include flex(center, space-between, nowrap);
+  padding-bottom: 80px !important;
+}
+.es-reportDetail-content__right {
+  width: 270px;
 }
 </style>

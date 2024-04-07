@@ -10,15 +10,6 @@ export const getFile = (url, token) => {
   });
 };
 
-export const getReportDetailRecommend_V2 = (url, { id, limit }) => {
-  return http.request<void>("get", url, {
-    params: {
-      id,
-      limit,
-    },
-  });
-};
-
 export const getFilePath = (params) => {
   return http.request<void>("get", "/eesa-report/PdfFile/v1.0/getURL", {
     params,
@@ -120,11 +111,31 @@ export function getPayInfoList() {
   );
 }
 
+// V3
 // 获取报告详情
 export function getReportDetailApi(data: any) {
   return http.request<void>(
     "post",
-    "/eesa-report/alliance/quarterlyMonthlyReport/front/v1.1/getQuarterlyWeeklyDetails",
+    "/eesa-report/onlineReportNew/front/v1.1/getOnlineReportDetails",
+    {
+      data,
+    },
+  );
+}
+
+// 获取推荐报告
+export function getReportDetailRecommendApi(id: number) {
+  return http.request<void>(
+    "get",
+    `/eesa-report/onlineReportNew/front/v1.1/reportTagRecommendation?id=${id}&limit=10`,
+  );
+}
+
+// 报告打分
+export function setReportScoreApi(data: any) {
+  return http.request<void>(
+    "post",
+    "/eesa-report/onlineReportNewScore/front/v1.0/reportScoring",
     {
       data,
     },

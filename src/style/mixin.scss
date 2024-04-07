@@ -134,3 +134,8 @@
   -webkit-line-clamp: $number;
   -webkit-box-orient: vertical;
 }
+@mixin textOverflowOne() {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
