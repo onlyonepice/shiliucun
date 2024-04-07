@@ -191,8 +191,13 @@ const searchFn = async () => {
   showNull.value = false;
   //搜储能前沿
   try {
+    pageOptions.value.All.data.Energy_Storage_Frontier = [];
     const _data = await getByKeyword({ keyword: searchContent.value });
-    if (_data.resp_code === 0 && _data.datas.length > 0) {
+
+    //搜全部
+    let isNull = true;
+    const data = await globalSearch({ keyword: searchContent.value });
+    if (_data.resp_code === 0) {
       pageOptions.value.All.data.Energy_Storage_Frontier = _data.datas.map(
         (item) => {
           if (item.moduleDesc === "工商业投资回报性分析") {
@@ -226,9 +231,6 @@ const searchFn = async () => {
         },
       );
     }
-    //搜全部
-    let isNull = true;
-    const data = await globalSearch({ keyword: searchContent.value });
     if (data.resp_code === 0) {
       for (const key in data.datas) {
         if (data.datas[key].length > 0) {
@@ -266,7 +268,6 @@ const searchFn = async () => {
         data.datas,
       );
     }
-    console.log(_data.datas, isNull);
     if (_data.datas.length === 0 && isNull) {
       showNull.value = true;
     } else {
