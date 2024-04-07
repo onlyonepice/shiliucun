@@ -121,7 +121,7 @@ const onToPage = (path: string) => {
   window.open(path, "externalWindow");
   setTimeout(() => {
     getSeries();
-  }, 1000);
+  }, 3000);
 };
 // 获取系列产品
 const getSeries = async () => {
