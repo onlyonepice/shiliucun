@@ -264,7 +264,6 @@ const onDetailReport = async (item) => {
   );
 };
 const handleLinkClick = (link) => {
-  console.log(link);
   window.open(link);
 };
 onMounted(() => {
