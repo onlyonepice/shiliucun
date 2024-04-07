@@ -84,7 +84,7 @@ onMounted(() => {
 const onChangeFilter = (id: string | number, type: string) => {
   type === "contentDict" ? (contentDict.value = id) : (releaseTime.value = id);
   if (useUserStore().checkPermission("ANALYSIS_BIDDING_AREAS")) {
-    getElectricityTypeOneName();
+    getRegionColor();
   } else {
     nextTick(() => {
       contentDict.value = props.contentFilter[0].id;
