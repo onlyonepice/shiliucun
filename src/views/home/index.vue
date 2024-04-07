@@ -13,6 +13,7 @@
         v-model="searchContent"
         placeholder="请输入关键字…"
         @keyup.enter="onSearch"
+        autocomplete="off"
       />
       <div :class="ns.b('homeTopSearchIcon')" @click.stop="onSearch">
         <img :src="searchIcon" alt="" />

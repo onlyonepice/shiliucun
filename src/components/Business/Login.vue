@@ -25,6 +25,7 @@
           placeholder="手机号码"
           maxlength="11"
           :class="[ns.bm('input', 'phone'), ns.bm('input', 'common')]"
+          autocomplete="off"
         />
         <div v-if="!codeLogin" :class="ns.bm('input', 'code')">
           <el-input
@@ -32,6 +33,7 @@
             :class="[ns.bm('input', 'common'), ns.bm('input', 'commonCode')]"
             maxlength="6"
             placeholder="验证码"
+            autocomplete="off"
           />
           <span
             @click="onSendCode"
@@ -46,6 +48,7 @@
             :type="!passwordShow ? 'password' : 'text'"
             maxlength="16"
             placeholder="密码"
+            autocomplete="off"
           />
           <img
             :src="!passwordShow ? PasswordHidden : PasswordShow"
