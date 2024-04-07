@@ -47,7 +47,7 @@ defineProps({
 // 跳转白皮书详情
 const onDetail = (data: any) => {
   window.open(
-    `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${data.id}&parent=白皮书&moduleName=${data.moduleName}&from=/alliance-insight/white-paper`,
+    `${VITE_I_REPORT_URL}#/report-detail-pdf_V2?id=${data.id}&parent=白皮书&moduleName=${data.moduleName}&from=/alliance-insight/white-paper`,
     "_blank",
   );
 };
