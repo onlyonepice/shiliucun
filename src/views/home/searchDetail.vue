@@ -33,10 +33,7 @@
           </div>
         </template>
       </div>
-      <div
-        class="search-content"
-        v-if="Object.keys(pageOptions.All.data).length > 0"
-      >
+      <div v-loading="loading" class="search-content">
         <template v-for="key in Object.keys(pageOptions.All.data)" :key="key">
           <div
             class="search-content_item"
@@ -113,7 +110,11 @@
               <template v-if="key === 'ONLINE_REPORT'">
                 <div class="online-report-box">
                   <onLineReportList
-                    style="width: 191px; margin-bottom: 24px"
+                    :style="{
+                      width: '191px',
+                      marginBottom: '24px',
+                      marginRight: (index + 1) % 5 === 0 ? '0' : '24px',
+                    }"
                     class="online-report_item"
                     v-for="(row, index) in pageOptions.All.data[key]"
                     :pageData="row"
@@ -133,12 +134,18 @@
             <WhiteReport :page-data="pageOptions.All.data[key]" />
           </div>
         </template>
+        <div class="search_null" v-if="showNull">
+          <img :src="search_null" alt="" />
+          <p>暂无搜索结果</p>
+          <p>可以试试搜索其他关键词哦～</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import search_null from "@/assets/img/common/search_null.png";
 const { VITE_I_REPORT_URL } = import.meta.env;
 import { ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
@@ -151,7 +158,11 @@ import winning_bid_tracking from "@/assets/img/common/winning_bid_tracking.png";
 import policy_tracking from "@/assets/img/common/policy_tracking.png";
 import financing_plan from "@/assets/img/common/financing_plan.png";
 import { useRouter } from "vue-router";
+import { windowScrollStore } from "@/store/modules/windowScroll";
+windowScrollStore().SET_SCROLL_TOP(0);
 const router = useRouter();
+const loading = ref(false);
+const showNull = ref(false);
 const ns = useNamespace("searchDetail");
 const breadcrumbList = [
   { text: "首页", path: "/home" },
@@ -176,77 +187,94 @@ const onSearch = () => {
   searchFn();
 };
 const searchFn = async () => {
+  loading.value = true;
+  showNull.value = false;
   //搜储能前沿
-  const _data = await getByKeyword({ keyword: searchContent.value });
-  if (_data.resp_code === 0 && _data.datas.length > 0) {
-    pageOptions.value.All.data.Energy_Storage_Frontier = _data.datas.map(
-      (item) => {
-        if (item.moduleDesc === "工商业投资回报性分析") {
-          item.moduleDesc = "工商业投资回报性";
+  try {
+    const _data = await getByKeyword({ keyword: searchContent.value });
+    if (_data.resp_code === 0 && _data.datas.length > 0) {
+      pageOptions.value.All.data.Energy_Storage_Frontier = _data.datas.map(
+        (item) => {
+          if (item.moduleDesc === "工商业投资回报性分析") {
+            item.moduleDesc = "工商业投资回报性";
+          }
+          switch (item.moduleDesc) {
+            case "工商业投资回报性":
+              item.img = return_on_investment;
+              item.code = "Return on investment";
+              break;
+            case "代理购电价格追踪":
+              item.img = price_tracking;
+              item.code = "Price tracking";
+              break;
+            case "中标项目追踪":
+              item.img = winning_bid_tracking;
+              item.code = "Winning bid tracking";
+              break;
+            case "政策追踪":
+              item.img = policy_tracking;
+              item.code = "Policy tracking";
+              break;
+            case "融资方案":
+              item.img = financing_plan;
+              item.code = "Financing plan";
+              break;
+            default:
+              break;
+          }
+          return item;
+        },
+      );
+    }
+    //搜全部
+    let isNull = true;
+    const data = await globalSearch({ keyword: searchContent.value });
+    if (data.resp_code === 0) {
+      for (const key in data.datas) {
+        if (data.datas[key].length > 0) {
+          isNull = false;
         }
-        switch (item.moduleDesc) {
-          case "工商业投资回报性":
-            item.img = return_on_investment;
-            item.code = "Return on investment";
-            break;
-          case "代理购电价格追踪":
-            item.img = price_tracking;
-            item.code = "Price tracking";
-            break;
-          case "中标项目追踪":
-            item.img = winning_bid_tracking;
-            item.code = "Winning bid tracking";
-            break;
-          case "政策追踪":
-            item.img = policy_tracking;
-            item.code = "Policy tracking";
-            break;
-          case "融资方案":
-            item.img = financing_plan;
-            item.code = "Financing plan";
-            break;
-          default:
-            break;
+        if (data.datas[key].length > 0 || key === "All") {
+          pageOptions.value[key].show = true;
+        } else {
+          pageOptions.value[key].show = false;
         }
-        return item;
-      },
-    );
-  }
-  //搜全部
-  const data = await globalSearch({ keyword: searchContent.value });
-  if (data.resp_code === 0) {
-    for (const key in data.datas) {
-      if (data.datas[key].length > 0 || key === "All") {
-        pageOptions.value[key].show = true;
-      } else {
-        pageOptions.value[key].show = false;
-      }
-      if (searchContent.value !== "") {
-        data.datas[key].forEach((item) => {
-          Object.keys(item).forEach((children) => {
-            if (children !== "reportCover") {
-              if (typeof item[children] === "string") {
-                item[children] = item[children].replace(
-                  searchContent.value,
-                  `<span style='color: #FF8D32;' class='search-match'>${searchContent.value}</span>`,
-                );
-              } else if (Array.isArray(item[children])) {
-                item[children] = item[children].map((arrItem) => {
-                  return arrItem.replace(
+        if (searchContent.value !== "") {
+          data.datas[key].forEach((item) => {
+            Object.keys(item).forEach((children) => {
+              if (children !== "reportCover") {
+                if (typeof item[children] === "string") {
+                  item[children] = item[children].replace(
                     searchContent.value,
                     `<span style='color: #FF8D32;' class='search-match'>${searchContent.value}</span>`,
                   );
-                });
+                } else if (Array.isArray(item[children])) {
+                  item[children] = item[children].map((arrItem) => {
+                    return arrItem.replace(
+                      searchContent.value,
+                      `<span style='color: #FF8D32;' class='search-match'>${searchContent.value}</span>`,
+                    );
+                  });
+                }
               }
-            }
+            });
           });
-        });
+        }
       }
+      pageOptions.value.All.data = Object.assign(
+        pageOptions.value.All.data,
+        data.datas,
+      );
     }
-    pageOptions.value.All.data = Object.assign(
-      pageOptions.value.All.data,
-      data.datas,
-    );
+    console.log(_data.datas, isNull);
+    if (_data.datas.length === 0 && isNull) {
+      showNull.value = true;
+    } else {
+      showNull.value = false;
+    }
+    loading.value = false;
+  } catch (e) {
+    loading.value = false;
   }
 };
 const handleTabChange = (key: string | number) => {
@@ -353,7 +381,31 @@ onMounted(() => {
     .search-content {
       width: 100%;
       padding-bottom: 80px;
-
+      min-height: 316px;
+      .search_null {
+        width: 100%;
+        height: 316px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        img {
+          width: 120px;
+          height: 120px;
+        }
+        :nth-child(2) {
+          font-weight: 600;
+          font-size: 20px;
+          color: rgba(0, 0, 0, 0.9);
+          line-height: 28px;
+        }
+        :nth-child(3) {
+          font-weight: 400;
+          font-size: 14px;
+          color: rgba(0, 0, 0, 0.6);
+          line-height: 22px;
+        }
+      }
       .search-content_item {
         width: 100%;
         display: flex;
@@ -390,7 +442,6 @@ onMounted(() => {
           width: 100%;
           display: flex;
           flex-wrap: wrap;
-          justify-content: space-between;
         }
       }
 
