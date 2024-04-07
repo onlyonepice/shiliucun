@@ -34,7 +34,7 @@ import useNamespace from "@/utils/nameSpace";
 import { getBiddingDynamicsListApi } from "@/api/data";
 import { eChartsOptionCommon, textStyleObject } from "@/utils/eCharts";
 import { cloneDeep } from "lodash";
-const eChartsOption: Ref<any> = ref(cloneDeep(eChartsOptionCommon));
+const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 获取eCharts节点
 const eChartsDom = ref(null);
 // 导出图片相关

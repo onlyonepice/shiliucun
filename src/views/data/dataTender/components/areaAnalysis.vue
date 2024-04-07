@@ -55,7 +55,7 @@ import { getRegionDynamicsListApi, getRegionColorApi } from "@/api/data";
 import { EChartOptions, charsToRemove } from "@/utils/mapECharts";
 import { cloneDeep } from "lodash";
 import chinaMap from "@/assets/map/china.json";
-const eChartsOption: Ref<any> = ref(cloneDeep(EChartOptions));
+const eChartsOption: Ref<any> = ref(EChartOptions());
 // 获取eCharts节点
 const eChartsDom = ref(null);
 // 导出图片相关
