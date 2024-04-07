@@ -1,108 +1,109 @@
 /*
  * 地图Canvas
  */
-
-export const EChartOptions = {
-  title: {
-    text: "",
-    x: "center",
-    textStyle: {
-      fontSize: 18,
-      lineHeight: 26,
-      color: "#1C232F",
-      fontWeight: "bolder",
-    },
-  },
-  grid: {
-    bottom: "40%",
-    containLabel: true,
-  },
-  dataRange: {
-    show: false,
-    selectedMode: false,
-    x: "left",
-    y: "bottom",
-    splitList: [],
-  },
-  // 平移和缩放
-  roam: false,
-  tooltip: {
-    show: false,
-    borderColor: "#fff",
-  },
-
-  series: [
-    {
-      name: "china",
-      type: "map",
-      map: "china",
-      itemStyle: {
-        borderColor: "#fff",
-        borderBox: true,
-        borderWidth: 2,
-        borderType: "solid",
-        areaColor: "#F1F2F6",
-        left: "center",
-        label: {
-          show: true,
-          formatter: "{b}\n{c}",
-        },
-      },
-
-      zoom: 1.2,
-      label: {
-        show: false,
-        fontSize: 14,
+export function EChartOptions() {
+  return {
+    title: {
+      text: "",
+      x: "center",
+      textStyle: {
+        fontSize: 18,
+        lineHeight: 26,
         color: "#1C232F",
-        left: "center",
-        fontWeight: 400,
-        lineHeight: 14,
-        areaStyle: {
-          color: "#F1F2F6", // 默认的地图板块颜色
-        },
-        formatter: (param) => {
-          if (param.name && param.value)
-            return `${param.name}\n${param.value}GW`;
-          else return "";
-        },
+        fontWeight: "bolder",
       },
-      select: {
-        disabled: false, //可以被选中
-        // itemStyle: {
-        //   areaColor: "#FFF2E5",
-        //   borderColor: "#FF7D00",
-        //   borderWidth: 1,
-        // },
-      },
-      emphasis: {
+    },
+    grid: {
+      bottom: "40%",
+      containLabel: true,
+    },
+    dataRange: {
+      show: false,
+      selectedMode: false,
+      x: "left",
+      y: "bottom",
+      splitList: [],
+    },
+    // 平移和缩放
+    roam: false,
+    tooltip: {
+      show: false,
+      borderColor: "#fff",
+    },
+
+    series: [
+      {
+        name: "china",
+        type: "map",
+        map: "china",
         itemStyle: {
-          areaColor: "#FFF2E5",
-          shadowColor: "rgba(0, 0, 0, 0.4)",
-          shadowBlur: 4,
-          borderColor: "#FF7D00",
-          borderWidth: 1,
+          borderColor: "#fff",
+          borderBox: true,
+          borderWidth: 2,
+          borderType: "solid",
+          areaColor: "#F1F2F6",
+          left: "center",
+          label: {
+            show: true,
+            formatter: "{b}\n{c}",
+          },
         },
+
+        zoom: 1.2,
         label: {
+          show: false,
           fontSize: 14,
-          lineHeight: 16,
-          fontWeight: "bold",
           color: "#1C232F",
+          left: "center",
+          fontWeight: 400,
+          lineHeight: 14,
+          areaStyle: {
+            color: "#F1F2F6", // 默认的地图板块颜色
+          },
           formatter: (param) => {
             if (param.name && param.value)
               return `${param.name}\n${param.value}GW`;
             else return "";
           },
         },
+        select: {
+          disabled: false, //可以被选中
+          // itemStyle: {
+          //   areaColor: "#FFF2E5",
+          //   borderColor: "#FF7D00",
+          //   borderWidth: 1,
+          // },
+        },
+        emphasis: {
+          itemStyle: {
+            areaColor: "#FFF2E5",
+            shadowColor: "rgba(0, 0, 0, 0.4)",
+            shadowBlur: 4,
+            borderColor: "#FF7D00",
+            borderWidth: 1,
+          },
+          label: {
+            fontSize: 14,
+            lineHeight: 16,
+            fontWeight: "bold",
+            color: "#1C232F",
+            formatter: (param) => {
+              if (param.name && param.value)
+                return `${param.name}\n${param.value}GW`;
+              else return "";
+            },
+          },
+        },
+        scaleLimit: {
+          min: 1,
+          max: 6,
+        },
+        selectedMode: false,
+        data: [],
       },
-      scaleLimit: {
-        min: 1,
-        max: 6,
-      },
-      selectedMode: false,
-      data: [],
-    },
-  ],
-};
+    ],
+  };
+}
 // 需要过滤的文字
 export const charsToRemove = "市省自治区特别行政区回族壮族维吾尔";
 export const RegionEnum = {

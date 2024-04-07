@@ -1,6 +1,7 @@
 <template>
   <el-dialog
     v-model="showDialog"
+    :append-to-body="true"
     width="560px"
     confirm-text="导出"
     title="图片格式选择"
