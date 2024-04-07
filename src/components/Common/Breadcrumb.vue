@@ -47,6 +47,7 @@ defineProps({
 }
 </style>
 <style lang="scss">
+@import "@/style/mixin.scss";
 .es-breadcrumb {
   min-width: 1080px;
   .el-breadcrumb {
@@ -61,6 +62,10 @@ defineProps({
   .el-breadcrumb__inner.is-link {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.6);
+  }
+  .el-breadcrumb__inner {
+    max-width: 104px;
+    @include textOverflow();
   }
 }
 </style>

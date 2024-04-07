@@ -10,16 +10,6 @@ export const getFile = (url, token) => {
   });
 };
 
-export const getReportDetail_V2 = (url, { id = 0 } = {}, params, headers) => {
-  return http.request<void>("post", url, {
-    params,
-    data: {
-      id,
-    },
-    headers,
-  });
-};
-
 export const getReportDetailRecommend_V2 = (url, { id, limit }) => {
   return http.request<void>("get", url, {
     params: {
@@ -127,5 +117,16 @@ export function getPayInfoList() {
     "post",
     "/eesa-report/product/product/front/v1.0/clientList",
     {},
+  );
+}
+
+// 获取报告详情
+export function getReportDetailApi(data: any) {
+  return http.request<void>(
+    "post",
+    "/eesa-report/alliance/quarterlyMonthlyReport/front/v1.1/getQuarterlyWeeklyDetails",
+    {
+      data,
+    },
   );
 }
