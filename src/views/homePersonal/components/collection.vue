@@ -131,7 +131,7 @@ const onToDetail = (item: any) => {
       break;
   }
   window.open(
-    `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${reportId}&parent=${moduleName}&moduleName=${_moduleName}&from=/alliance-insight/white-paper`,
+    `${VITE_I_REPORT_URL}#/report-detail-pdf_V2?id=${reportId}&parent=${moduleName}&moduleName=${_moduleName}&from=/alliance-insight/white-paper`,
     "_blank",
   );
 };
