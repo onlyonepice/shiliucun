@@ -119,9 +119,12 @@ watch(
 // 点击系列产品跳转页面
 const onToPage = (path: string) => {
   window.open(path, "externalWindow");
+  setTimeout(() => {
+    getSeries();
+  }, 3000);
 };
 // 获取系列产品
-onMounted(async () => {
+const getSeries = async () => {
   const { resp_code, datas }: any = await getSeriesApi();
   if (resp_code === 0) {
     datas.forEach((item: any) => {
@@ -129,6 +132,9 @@ onMounted(async () => {
         item.time;
     });
   }
+};
+onMounted(async () => {
+  getSeries();
 });
 // 点击左侧边栏
 const onClickTab = (id: number) => {
