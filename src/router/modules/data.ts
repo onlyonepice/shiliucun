@@ -28,5 +28,15 @@ export default {
         title: "招标",
       },
     },
+    {
+      path: "/dataWinningBid",
+      name: "DataWinningBid",
+      components: {
+        default: () => import("@/views/data/dataWinningBid/enter.vue"),
+      },
+      meta: {
+        title: "中标",
+      },
+    },
   ],
 };

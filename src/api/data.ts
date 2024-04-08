@@ -63,3 +63,62 @@ export const getBiddingContentApi = () => {
     `/eesa-report/Policy/front/openApi/V1.0/getBiddingContentBox`,
   );
 };
+// 中标内容列表
+export const bidWinningContentData_V2 = () => {
+  return http.request(
+    "post",
+    "/eesa-report/priceTracking/front/openApi/V1.0/biddingContentBox",
+  );
+};
+// 中标时间
+export const winingBidTime = () => {
+  return http.request(
+    "post",
+    "/eesa-report/priceTracking/front/openApi/v1.0/winningBidTime",
+  );
+};
+// 时长列表
+export const durationData_V2 = () => {
+  return http.request(
+    "post",
+    "/eesa-report/priceTracking/front/openApi/V1.0/energyStorageDurationBox",
+  );
+};
+// 技术类型列表
+export const technologyType_V2 = () => {
+  return http.request(
+    "post",
+    "/eesa-report/priceTracking/front/openApi/V1.0/technologyTypeBox",
+  );
+};
+// 应用场景下拉框
+export const applicationScenariosBox = (params) => {
+  return http.request(
+    "post",
+    `/eesa-report/priceTracking/front/openApi/V1.0/applicationScenariosBox?type=${params}`,
+  );
+};
+// 中标容量分析
+export const capacityAnalysis_V2 = (data) => {
+  return http.request(
+    "post",
+    "/eesa-report/priceTracking/front/openApi/v1.0/analyzeBarGraph",
+    { data },
+  );
+};
+// 中标企业分析
+export const enterpriseAnalysis = (data) => {
+  return http.request(
+    "post",
+    "/eesa-report/priceTracking/front/openApi/v1.0/enterpriseAnalysis",
+    { data },
+  );
+};
+// 中标分析报告
+export const winningReport = (data) => {
+  return http.request(
+    "post",
+    "/eesa-report/priceTracking/front/openApi/v1.0/winningReport",
+    { data },
+  );
+};

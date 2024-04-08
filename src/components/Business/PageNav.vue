@@ -136,7 +136,7 @@ const navList: Ref<Array<NavList>> = ref([
         text: "招标",
         path: "/dataTender",
       },
-      { id: 2, text: "中标", path: VITE_I_REPORT_URL + "#/bid-price-tracking" },
+      { id: 2, text: "中标", path: "/dataWinningBid" },
       {
         id: 3,
         text: "电价",
