@@ -11,13 +11,14 @@
           {{ item.label }}
         </span>
         <Select
+          v-model="requestData[item.model]"
           :options="item.bind.options"
           :type="item.type"
           :labelKey="item.bind.cascaderOption.label"
           :valueKey="item.bind.cascaderOption.value"
           :defaultValue="requestData[item.model]"
           width="256px"
-          @onChange="(val) => selectChange(val, item)"
+          @onChange="(val) => selectChange(val, item, index)"
         />
       </div>
     </div>
@@ -563,11 +564,14 @@ const initData = () => {
     ],
   };
 };
-const selectChange = (val, row) => {
+const selectChange = (val, row, index) => {
   console.log(val, row, getToken());
-  if (!getToken()) {
-    useUserStore().openLogin(true);
-    return;
+
+  if (useUserStore().checkPermission("ANALYSIS_OF_WINNING_ENTERPRISES")) {
+    getData();
+  } else {
+    requestData.value[row.model] =
+      options[index].bind.options[0][options[index].bind.cascaderOption.value];
   }
 };
 </script>
