@@ -18,7 +18,7 @@
           :valueKey="item.bind.cascaderOption.value"
           :defaultValue="requestData[item.model]"
           width="256px"
-          @onChange="(val) => selectChange(val, item, index)"
+          @onChange="() => selectChange(item, index)"
         />
       </div>
     </div>
@@ -45,7 +45,6 @@
 </template>
 
 <script setup lang="ts">
-import { getToken } from "@/utils/auth";
 import { ref, watch, Ref, nextTick } from "vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("winningBidEnterprise");
@@ -564,14 +563,16 @@ const initData = () => {
     ],
   };
 };
-const selectChange = (val, row, index) => {
-  console.log(val, row, getToken());
-
+const selectChange = (row, index) => {
   if (useUserStore().checkPermission("ANALYSIS_OF_WINNING_ENTERPRISES")) {
     getData();
   } else {
-    requestData.value[row.model] =
-      options[index].bind.options[0][options[index].bind.cascaderOption.value];
+    nextTick(() => {
+      requestData.value[row.model] =
+        options[index].bind.options[0][
+          options[index].bind.cascaderOption.value
+        ];
+    });
   }
 };
 </script>

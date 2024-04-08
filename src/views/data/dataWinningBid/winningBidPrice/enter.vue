@@ -11,10 +11,14 @@
           {{ item.label }}
         </span>
         <Select
-          v-bind="item.bind"
+          v-model="requestData[item.model]"
+          :options="item.bind.options"
+          :type="item.type"
+          :labelKey="item.bind.cascaderOption.label"
+          :valueKey="item.bind.cascaderOption.value"
           :defaultValue="requestData[item.model]"
-          type="cascader"
           width="256px"
+          @onChange="() => selectChange(item, index)"
         />
       </div>
       <p class="line" />
@@ -39,6 +43,7 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from "@/store/modules/user";
 import { ref, watch, Ref, nextTick } from "vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("winningBidPrice");
@@ -446,6 +451,18 @@ function exportResult() {
   });
   exportVisible.value = true;
 }
+const selectChange = (row, index) => {
+  if (useUserStore().checkPermission("BID_PRICE_ANALYSIS")) {
+    getData();
+  } else {
+    nextTick(() => {
+      requestData.value[row.model] =
+        options[index].bind.options[0][
+          options[index].bind.cascaderOption.value
+        ];
+    });
+  }
+};
 </script>
 
 <style lang="scss">
