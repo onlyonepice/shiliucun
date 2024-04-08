@@ -1,10 +1,12 @@
 <template>
   <div :class="ns.b()">
     <breadcrumb :breadcrumbList="breadcrumbList" />
-    <div :class="[ns.b('content'), 'es-commonPage']">
-      <div :class="ns.be('content', 'left')" />
+    <div :class="[ns.b('content'), 'es-commonPage']" v-if="reportDetail.id">
+      <div :class="ns.be('content', 'left')">
+        <reportInfo :detail="reportDetail" />
+      </div>
       <div :class="ns.be('content', 'right')">
-        <reportOption v-if="reportDetail.id" :detail="reportDetail" />
+        <reportOption :detail="reportDetail" />
         <reportRecommend />
       </div>
     </div>
@@ -18,6 +20,7 @@ import { useRoute } from "vue-router";
 import { getReportDetailApi } from "@/api/reportDetail";
 import reportOption from "./components/option.vue";
 import reportRecommend from "./components/recommend.vue";
+import reportInfo from "./components/info.vue";
 const route = useRoute();
 const ns = useNamespace("reportDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
@@ -49,6 +52,12 @@ getReportDetail();
 .es-reportDetail-content {
   @include flex(center, space-between, nowrap);
   padding-bottom: 80px !important;
+}
+.es-reportDetail-content__left {
+  @include widthAndHeight(858px, calc(100vh - 56px - 50px));
+  background: #ffffff;
+  border-radius: 8px;
+  margin-right: 24px;
 }
 .es-reportDetail-content__right {
   width: 270px;

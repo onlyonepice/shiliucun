@@ -19,7 +19,6 @@ const recommendList = ref([]); // 推荐报告列表
 onMounted(() => {
   getReportDetailRecommendApi(Number(route.query.id)).then((res: any) => {
     recommendList.value = res.datas;
-    console.log(res);
   });
 });
 </script>

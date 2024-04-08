@@ -1,21 +1,5 @@
 import { http } from "@/utils/http";
 
-export const getFile = (url, token) => {
-  return http.request<void>("get", url, {
-    params: { hideError: true },
-    headers: {
-      "x-oss-meta-token": token,
-    },
-    responseType: "blob",
-  });
-};
-
-export const getFilePath = (params) => {
-  return http.request<void>("get", "/eesa-report/PdfFile/v1.0/getURL", {
-    params,
-  });
-};
-
 export const setReportCollect_V2 = (
   url,
   { collectionType, reportId, uncollect },
@@ -141,3 +125,21 @@ export function setReportScoreApi(data: any) {
     },
   );
 }
+
+// 获取pdf链接
+export const getFilePathApi = (params: any) => {
+  return http.request<void>("get", "/eesa-report/PdfFile/v1.0/getURL", {
+    params,
+  });
+};
+
+// 下载报告
+export const getFileApi = (url, token) => {
+  return http.request<void>("get", url, {
+    params: { hideError: true },
+    headers: {
+      "x-oss-meta-token": token,
+    },
+    responseType: "blob",
+  });
+};
