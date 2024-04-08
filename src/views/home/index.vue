@@ -14,6 +14,7 @@
         placeholder="请输入关键字…"
         @keyup.enter="onSearch"
         autocomplete="off"
+        :disabled="useUserStore().$state.openLoginVisible"
       />
       <div :class="ns.b('homeTopSearchIcon')" @click.stop="onSearch">
         <img :src="searchIcon" alt="" />
@@ -42,6 +43,7 @@ import industryData from "./homeComponents/industryData.vue";
 import industryAnalysis from "./homeComponents/industryAnalysis.vue";
 import industryReport from "./homeComponents/industryReport.vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/store/modules/user";
 const router = useRouter();
 const ns = useNamespace("home");
 const searchContent: Ref<string> = ref("");

@@ -37,7 +37,7 @@ import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("whitePaper");
 import { useUserStore } from "@/store/modules/user";
 import RightArrow from "@/assets/img/common/right-arrow.png";
-const { VITE_IREPOET_URL } = import.meta.env;
+const { VITE_I_REPORT_URL } = import.meta.env;
 defineProps({
   pageData: {
     type: Object,
@@ -47,7 +47,7 @@ defineProps({
 // 跳转白皮书详情
 const onDetail = (data: any) => {
   window.open(
-    `${VITE_IREPOET_URL}/#/report-detail-pdf_V2?id=${data.id}&parent=白皮书&moduleName=${data.moduleName}&from=/alliance-insight/white-paper`,
+    `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${data.id}&parent=白皮书&moduleName=${data.moduleName}&from=/alliance-insight/white-paper`,
     "_blank",
   );
 };

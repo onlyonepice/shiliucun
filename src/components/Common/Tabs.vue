@@ -71,6 +71,9 @@ const handleClick = (tab: TabsPaneContext) => {
 <style lang="scss">
 @import "@/style/mixin.scss";
 .es-tabs {
+  .el-tabs__active-bar {
+    background-color: #244bf1;
+  }
   .el-tabs__item {
     @include widthAndHeight(116px, 56px);
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 24px);

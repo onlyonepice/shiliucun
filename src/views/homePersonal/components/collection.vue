@@ -103,7 +103,10 @@ const onDelete = (id: number) => {
   titleSkip.value.cancel = "取消";
 };
 // 关闭二次确认框
-const onClose = async () => {
+const onClose = async (type: boolean) => {
+  if (!type) {
+    return (titleSkip.value.show = false);
+  }
   const { resp_code }: any = await deleteCollectApi(choseId.value);
   if (resp_code === 0) {
     titleSkip.value.show = false;
@@ -112,9 +115,23 @@ const onClose = async () => {
 };
 // 跳转i-report2预览
 const onToDetail = (item: any) => {
-  const { moduleName, id } = item;
+  const { moduleName, reportId } = item;
+  let _moduleName = "";
+  switch (moduleName) {
+    case "白皮书":
+      _moduleName = "WHITE_PAPER";
+      break;
+    case "在线报告":
+      _moduleName = "ONLINE_REPORT";
+      break;
+    case "季报月报":
+      _moduleName = "QUARTERLY_AND_MONTHLY_REPORTS";
+      break;
+    default:
+      break;
+  }
   window.open(
-    `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${id}&parent=${moduleName}&moduleName=${moduleName}&from=/alliance-insight/white-paper`,
+    `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${reportId}&parent=${moduleName}&moduleName=${_moduleName}&from=/alliance-insight/white-paper`,
     "_blank",
   );
 };

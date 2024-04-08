@@ -68,6 +68,9 @@ export const useUserStore = defineStore({
     },
     // 校验权限功能
     checkPermission(key: String) {
+      if (this.token === "") {
+        return this.openLogin(true);
+      }
       const data = this.permissionList.find((item: any) => item.code === key);
       if (this.permissionList.length === 0 || !data.permission) {
         this.openVip(true);
