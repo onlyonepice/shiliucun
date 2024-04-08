@@ -1,23 +1,28 @@
 <template>
-  <div :class="ns.b('top')">
+  <div :class="ns.b('top')" v-if="PDFViewerApplication !== null">
     <div :class="ns.be('top', 'empty')" />
-    <div :class="ns.be('top', 'pageTo')">
-      <el-input-number
-        v-model="pdfPage"
-        size="small"
-        :min="1"
-        :controls="false"
-        style="width: 32px; height: 24px"
-      />
-      <span>/{{ totalPage }} 页</span>
-    </div>
-    <div :class="ns.be('top', 'zoom')">
-      <img :src="NumberDown" alt="" />
-      <span>{{ getPDFInfo.zoom }}</span>
-      <img :src="NumberUp" alt="" />
-    </div>
+    <template v-if="PDFViewerApplication.toolbar !== null">
+      <div :class="ns.be('top', 'pageTo')">
+        <el-input-number
+          v-model="pdfPage"
+          size="small"
+          :min="1"
+          :controls="false"
+          style="width: 32px; height: 24px"
+          @focus="focus($event)"
+          @blur="handleUpdatePage"
+          @keyup.enter="handleUpdatePage"
+        />
+        <span>/{{ pdfInfo.pagesCount }} 页</span>
+      </div>
+      <div :class="ns.be('top', 'zoom')">
+        <img :src="NumberDown" alt="" @click="handlePDF('zoomIn')" />
+        <span>{{ pdfInfo.pageScale }}</span>
+        <img :src="NumberUp" alt="" @click="handlePDF('zoomOut')" />
+      </div>
+    </template>
   </div>
-  <iframe id="iframe" :src="previewPdfSrc" />
+  <iframe id="iframe" :src="previewPdfSrc" width="100%" height="100%" />
   <div :class="ns.b('bottom')" />
 </template>
 
@@ -31,19 +36,23 @@ import { toType } from "@/utils";
 import { ElMessage } from "element-plus";
 const ns = useNamespace("reportDetailInfo");
 const previewPdfSrc: Ref<string> = ref(""); // 预览pdf地址
-const pdfPage: Ref<number> = ref(1); // pdf页码
+// const pdfPage: Ref<number> = ref(1); // pdf页码
 const totalPage: Ref<number> = ref(1); // pdf总页数
 const pdfData: Ref<any> = ref(null); // 暂存pdf数据对象，需要删除
+const pdfPage: Ref<number> = ref(1); // pdf页码
+const pdfInfo: Ref<any> = ref({
+  pageNumber: 1,
+  pagesCount: 1,
+  pageScale: 1,
+}); // pdf信息
+const PDFViewerApplication: Ref<any> = ref({
+  toolbar: null,
+}); // pdf预览对象
 const props = defineProps({
   detail: {
     type: Object,
     default: () => {},
   },
-});
-const getPDFInfo: Ref<{
-  zoom: string;
-}> = ref({
-  zoom: "100%",
 });
 // 获取pdf地址
 const getFile = async () => {
@@ -55,23 +64,65 @@ const getFile = async () => {
   const { datas, resp_code }: any = await getFilePathApi(_data);
   if (resp_code === 0) {
     totalPage.value = datas.pages;
-    const _blob = await getFileDownloadPdf(datas.url, datas.token);
-    window.URL.revokeObjectURL(pdfData.value);
-    pdfData.value = window.URL.createObjectURL(_blob);
-    previewPdfSrc.value = `static/html/viewer.html?file=${pdfData.value}`;
-    console.log("==========", previewPdfSrc.value);
+    getFileDownloadPdf(datas.url, datas["x-oss-meta-token"]);
   }
 };
-// 下载pdf文件
+// 下载pdf文件,转为blob对象
 const getFileDownloadPdf = async (url: string, token: string) => {
-  const res: any = await getFileApi(url, token);
-  if (res.status === 200) {
-    const blob = new Blob([res], { type: "application/pdf" });
-    if (toType(blob) === "object") {
-      ElMessage.error("文件已被删除或不存在");
-    }
-    return blob;
+  const { data }: any = await getFileApi(url, token);
+  const blobType = toType(data);
+  if (blobType === "object") {
+    return ElMessage.error("文件已被删除或不存在");
   }
+  if (blobType === "blob") {
+    window.URL.revokeObjectURL(pdfData.value);
+    pdfData.value = window.URL.createObjectURL(data);
+    previewPdfSrc.value = `static/html/viewer.html?file=${pdfData.value}`;
+    getPDFInfoFn();
+  }
+};
+// 获取pdf信息
+const getPDFInfoFn = () => {
+  const t = window.setInterval(async () => {
+    const pdfIframe: any = await document.querySelector("#iframe");
+    // pdfIframe.promise?.then(function (pdf) {
+    //   console.log("000000000", pdf);
+    //   // you can now use *pdf* here
+    // });
+    if (pdfIframe) {
+      const contentWindow = pdfIframe.contentWindow;
+      if (
+        contentWindow &&
+        contentWindow.PDFViewerApplication &&
+        contentWindow.PDFViewerApplication.pdfViewer
+      ) {
+        window.clearInterval(t);
+        PDFViewerApplication.value = contentWindow.PDFViewerApplication;
+        setTimeout(() => {
+          const _toolbar = PDFViewerApplication.value.toolbar;
+          pdfInfo.value.pageNumber = PDFViewerApplication.value.page;
+          pdfInfo.value.pagesCount = PDFViewerApplication.value.pagesCount;
+          pdfInfo.value.pageScale = (_toolbar.pageScale * 100).toFixed(0);
+          console.log(
+            "---0000----",
+            PDFViewerApplication.value,
+            ".........",
+            pdfInfo.value,
+          );
+        });
+      }
+    }
+  }, 300);
+};
+// 跳转pdf页码
+const handleUpdatePage = () => {
+  PDFViewerApplication.value.page = pdfPage.value;
+};
+// pdf放大缩小事件
+const handlePDF = (type: string) => {
+  type === "zoomIn"
+    ? PDFViewerApplication.value.zoomIn()
+    : PDFViewerApplication.value.zoomOut();
 };
 getFile();
 </script>
