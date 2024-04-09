@@ -44,7 +44,9 @@ const getReportDetail = async () => {
 };
 getReportDetail();
 onMounted(() => {
-  const _data = reportStore().getReportMapList(route.query.moduleName);
+  const _data = reportStore().getReportMapList(
+    route.query.moduleName as string,
+  );
   breadcrumbList.value[1].text = _data.ch;
   breadcrumbList.value[1].path = _data.path;
 });
