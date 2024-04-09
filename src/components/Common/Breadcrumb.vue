@@ -5,7 +5,7 @@
         <template v-for="item in breadcrumbList" :key="item.text">
           <el-breadcrumb-item
             v-if="item.path !== '' && item.path.indexOf('http') === -1"
-            :to="{ path: '/' }"
+            :to="{ path: item.path }"
             >{{ item.text }}</el-breadcrumb-item
           >
           <el-breadcrumb-item
@@ -47,6 +47,7 @@ defineProps({
 }
 </style>
 <style lang="scss">
+@import "@/style/mixin.scss";
 .es-breadcrumb {
   min-width: 1080px;
   .el-breadcrumb {
@@ -61,6 +62,10 @@ defineProps({
   .el-breadcrumb__inner.is-link {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.6);
+  }
+  .el-breadcrumb__inner {
+    max-width: 104px;
+    @include textOverflow();
   }
 }
 </style>

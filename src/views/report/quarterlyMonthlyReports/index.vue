@@ -53,7 +53,9 @@ import monthlyPic from "@/assets/img/report/month-bg-pic.png";
 import quarterlyPic from "@/assets/img/report/quarterly-bg-pic.png";
 import { reportList } from "@/api/report";
 import { ElMessage } from "element-plus";
-const { VITE_I_REPORT_URL } = import.meta.env;
+import { useRouter } from "vue-router";
+const router = useRouter();
+// const { VITE_I_REPORT_URL } = import.meta.env;
 const ns = useNamespace("quarterlyMonthly");
 const isSkeleton = ref(true);
 const templateList = ref([
@@ -138,11 +140,8 @@ const dropdownLoading = async (type) => {
   }
 };
 // 跳转报告详情
-const onDetailReport = async (item) => {
-  window.open(
-    `${VITE_I_REPORT_URL}#/report-detail-pdf_V2?id=${item.id}&type=${item.type}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/quarterly-monthly`,
-    "_blank",
-  );
+const onDetailReport = async (item: any) => {
+  router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 };
 onMounted(() => {
   Promise.all([
