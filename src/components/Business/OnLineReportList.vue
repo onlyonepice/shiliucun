@@ -37,11 +37,7 @@ const props = defineProps({
 });
 // 跳转报告详情
 const onDetailReport = (item) => {
-  // window.open(
-  //   `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${item.id}&parent=在线报告&moduleName=${item.moduleName}&from=/online-report`,
-  //   "_blank",
-  // );
-  router.push(`/reportDetail?id=${item.id}&from=/reportOnLine`);
+  router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 };
 const useUserStore = useUserStoreHook();
 </script>

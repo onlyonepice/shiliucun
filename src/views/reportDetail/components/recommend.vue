@@ -1,7 +1,12 @@
 <template>
   <el-scrollbar :class="ns.b()">
     <h4>推荐报告</h4>
-    <div :class="ns.b('list')" v-for="item in recommendList" :key="item.id">
+    <div
+      :class="ns.b('list')"
+      v-for="item in recommendList"
+      :key="item.id"
+      @click="onDetail(item)"
+    >
       <p>{{ item.reportName }}</p>
       <span>{{ item.reportTag.join(" | ") }}</span>
     </div>
@@ -12,8 +17,10 @@
 import { onMounted, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { getReportDetailRecommendApi } from "@/api/reportDetail";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+const emit = defineEmits(["getInfo"]);
 const route = useRoute();
+const router = useRouter();
 const ns = useNamespace("reportDetailRecommend");
 const recommendList = ref([]); // 推荐报告列表
 onMounted(() => {
@@ -21,6 +28,11 @@ onMounted(() => {
     recommendList.value = res.datas;
   });
 });
+// 跳转详情
+const onDetail = (item: any) => {
+  router.replace(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
+  emit("getInfo");
+};
 </script>
 
 <style lang="scss">
@@ -41,10 +53,13 @@ onMounted(() => {
   max-width: 222px;
   cursor: pointer;
   p {
+    width: 100%;
     @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
     @include textOverflowOne();
   }
   span {
+    width: 100%;
+    display: block;
     @include font(12px, 400, rgba(0, 0, 0, 0.4), 20px);
     margin-top: 4px;
     @include textOverflowOne();
