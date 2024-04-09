@@ -3,7 +3,7 @@ import { responseType } from "@/utils/type";
 
 // 获取招标内容筛选项
 export const getTenderFilterApi = () => {
-  return http.request<void>(
+  return http.request<responseType>(
     "get",
     "/eesa-report/Policy/front/openApi/V1.0/getBiddingContent",
   );
@@ -11,7 +11,7 @@ export const getTenderFilterApi = () => {
 
 // 获取招标内容时间筛选项
 export const getTenderTimeFilterApi = () => {
-  return http.request<void>(
+  return http.request<responseType>(
     "get",
     "/eesa-report/Policy/front/openApi/V1.0/getReleaseTime",
   );
@@ -19,7 +19,7 @@ export const getTenderTimeFilterApi = () => {
 
 // 招标月度分析查找结果
 export const getBiddingDynamicsListApi = (id: number) => {
-  return http.request<void>(
+  return http.request<responseType>(
     "get",
     `/eesa-report/Policy/front/openApi/V1.0/getMonthlyBiddingAnalysis?contentDict=${id}`,
   );
@@ -27,7 +27,7 @@ export const getBiddingDynamicsListApi = (id: number) => {
 
 // 招标企业分析查找结果
 export const getBusinessDynamicsListApi = (params: any) => {
-  return http.request<void>(
+  return http.request<responseType>(
     "get",
     `/eesa-report/Policy/front/openApi/V1.0/getEnterpriseBiddingAnalysis`,
     {
@@ -37,7 +37,7 @@ export const getBusinessDynamicsListApi = (params: any) => {
 };
 // 招标地区分析查找结果
 export const getRegionDynamicsListApi = (params: any) => {
-  return http.request<void>(
+  return http.request<responseType>(
     "get",
     `/eesa-report/Policy/front/openApi/V1.0/getRegionBiddingAnalysis`,
     {
@@ -48,7 +48,7 @@ export const getRegionDynamicsListApi = (params: any) => {
 
 // 获取招标区域分析颜色
 export const getRegionColorApi = (params) => {
-  return http.request<void>(
+  return http.request<responseType>(
     "get",
     `/eesa-report/Policy/front/openApi/V1.0/getRegionBiddingAnalysisColour`,
     {
@@ -59,9 +59,17 @@ export const getRegionColorApi = (params) => {
 
 // 招标查找-招标内容
 export const getBiddingContentApi = () => {
-  return http.request<void>(
+  return http.request<responseType>(
     "get",
     `/eesa-report/Policy/front/openApi/V1.0/getBiddingContentBox`,
+  );
+};
+// 中标报告列表
+export const getWinningReportPageApi = (data) => {
+  return http.request<responseType>(
+    "post",
+    `/eesa-report/priceTracking/front/openApi/v1.0/winningReportPage`,
+    { data },
   );
 };
 // 中标内容列表

@@ -2,27 +2,8 @@
   <div :class="[ns.b(''), 'es-commonPage']">
     <p class="page-title">在线报告。</p>
     <div class="content">
-      <el-tree
-        @check="changeTag"
-        ref="treeRef"
-        :data="treeData"
-        show-checkbox
-        default-expand-all
-        node-key="id"
-        highlight-current
-        :props="defaultProps"
-      >
-        <template #default="{ node, data }">
-          <span class="custom-tree-node">
-            <span>{{ node.label }}</span>
-            <span v-if="data.id !== -1">
-              {{ data.id }}
-            </span>
-          </span>
-        </template>
-      </el-tree>
       <div class="report-wrapper">
-        <p class="title">精选置顶</p>
+        <p class="title">付费专区</p>
         <div class="report-box">
           <onLineReportList
             width="198px"
@@ -31,20 +12,13 @@
             :key="`topReport${index}`"
           />
         </div>
+        <p class="title">会员专区</p>
         <div class="report-box">
           <onLineReportList
             width="198px"
             v-for="item in freeReportList"
             :page-data="item"
             :key="`freeReport${item.id}`"
-          />
-        </div>
-        <div class="report-box">
-          <onLineReportList
-            width="198px"
-            v-for="item in reportList"
-            :page-data="item"
-            :key="`report${item.id}`"
           />
         </div>
       </div>
@@ -55,8 +29,7 @@
 <script setup lang="ts">
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("report-onLine");
-import { ElTree } from "element-plus";
-import { ref, nextTick } from "vue";
+import { ref } from "vue";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
@@ -64,52 +37,19 @@ import {
   getOnlineReportSelected,
   getTopOnlineReportSelected,
   getFreeOnlineReportSelected,
-  getReportTagList,
+  getOnlineReportFilters,
 } from "@/api/report";
-const treeRef = ref<InstanceType<typeof ElTree>>();
-const defaultProps = {
-  children: "children",
-  label: "label",
-};
 
-interface Tree {
-  id: number | string;
-  label: string;
-  children?: Tree[];
-}
-const treeData = ref<Tree[]>([
-  {
-    id: -1,
-    label: "报告分类",
-    children: [],
-  },
-]);
-const reportList = ref([]);
 const topReportList = ref([]);
 const freeReportList = ref([]);
 const checkedTagIds = ref([]);
 const getReportTagListFn = async () => {
-  const data = await getReportTagList();
+  const data = await getOnlineReportFilters();
   if (data.resp_code === 0) {
-    treeData.value[0].children = data.datas.map((item) => {
-      checkedTagIds.value.push(item.id);
-      return {
-        id: item.id,
-        label: item.tagName,
-      };
-    });
-    await nextTick(() => {
-      treeRef.value.setCheckedKeys(checkedTagIds.value, true);
-    });
+    console.log(data);
   }
 };
-const changeTag = () => {
-  const ids = treeRef.value.getCheckedKeys();
-  checkedTagIds.value = ids.filter((item) => {
-    return item !== -1;
-  });
-  getPageData();
-};
+
 const getOnlineReportSelectedFn = async () => {
   const data = await getOnlineReportSelected({
     limit: 1000,
@@ -149,37 +89,7 @@ const getPageData = () => {
 getReportTagListFn();
 getPageData();
 </script>
-<style lang="scss">
-.es-report-onLine {
-  .el-checkbox__input.is-checked .el-checkbox__inner,
-  .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-    background-color: #244bf1;
-  }
 
-  .custom-tree-node {
-    width: 226px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-weight: 400;
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.9);
-    line-height: 22px;
-
-    @media screen and (max-width: 1126px) {
-      width: 180px;
-    }
-  }
-
-  .el-tree {
-    max-width: 250px;
-
-    @media screen and (max-width: 1200px) {
-      max-width: 180px;
-    }
-  }
-}
-</style>
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 
