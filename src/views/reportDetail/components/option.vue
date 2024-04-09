@@ -13,8 +13,14 @@
       >立即购买</el-button
     >
     <div :class="ns.be('button', 'list')">
-      <el-button :class="ns.be('button', 'collection')">收藏</el-button>
-      <el-button :class="ns.be('button', 'share')">分享</el-button>
+      <el-button
+        :class="ns.be('button', 'collection')"
+        @click="onCollection()"
+        >{{ props.detail.isCollected ? "取消收藏" : "收藏" }}</el-button
+      >
+      <el-button :class="ns.be('button', 'share')" @click="onShare()"
+        >分享</el-button
+      >
     </div>
     <div :class="ns.be('score', 'head')">
       <h5>报告评分</h5>
@@ -41,13 +47,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, Ref } from "vue";
+import { ref, defineProps, Ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import StarEmpty from "@/assets/img/reportDetail/i-Report-star.png";
 import StarFull from "@/assets/img/reportDetail/i-Report-star-fill.png";
 import { setReportScoreApi } from "@/api/reportDetail.ts";
 import { ElMessage } from "element-plus";
+import useClipboard from "vue-clipboard3";
+import { setReportCollectApi } from "@/api/reportDetail";
 const ns = useNamespace("reportDetailOption");
+const { toClipboard } = useClipboard();
 const scoreTextList = ref(["比较差", "较差", "一般", "较好", "比较好"]);
 const props = defineProps({
   detail: {
@@ -55,12 +64,41 @@ const props = defineProps({
     default: () => {},
   },
 });
+const storageDetail: Ref<any> = ref(null); // 缓存详情接口，用于修改收藏状态，无需重复调用详情接口
+watch(
+  () => props.detail,
+  (val) => {
+    storageDetail.value = val;
+  },
+  {
+    immediate: true,
+    deep: true,
+  },
+);
 const score: Ref<number> = ref(
   props.detail.reportScoring === 0 ? -1 : props.detail.reportScoring - 1,
 );
 // 确定分数
 const scoreSure: Ref<number> = ref(props.detail.reportScoring - 1);
-
+// 收藏按钮
+const onCollection = async () => {
+  const { resp_code }: any = await setReportCollectApi({
+    collectionType: 1,
+    reportId: props.detail.id,
+    uncollect: props.detail.isCollected,
+  });
+  if (resp_code === 0) {
+    ElMessage.success(
+      storageDetail.value.isCollected ? "取消收藏" : "收藏成功",
+    );
+    storageDetail.value.isCollected = !storageDetail.value.isCollected;
+  }
+};
+// 分享按钮
+const onShare = async () => {
+  await toClipboard(window.location.href);
+  ElMessage.success("分享成功");
+};
 // 鼠标移入选择
 const onMouseScore = (item: number) => {
   score.value = item - 1;

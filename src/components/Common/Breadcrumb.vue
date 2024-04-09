@@ -5,7 +5,7 @@
         <template v-for="item in breadcrumbList" :key="item.text">
           <el-breadcrumb-item
             v-if="item.path !== '' && item.path.indexOf('http') === -1"
-            :to="{ path: '/' }"
+            :to="{ path: item.path }"
             >{{ item.text }}</el-breadcrumb-item
           >
           <el-breadcrumb-item

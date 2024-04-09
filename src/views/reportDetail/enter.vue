@@ -14,9 +14,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref } from "vue";
+import { ref, Ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useRoute } from "vue-router";
+import { reportStore } from "@/store/modules/report";
 import { getReportDetailApi } from "@/api/reportDetail";
 import reportOption from "./components/option.vue";
 import reportRecommend from "./components/recommend.vue";
@@ -32,7 +33,8 @@ const reportDetail: Ref<any> = ref({}); // 报告详情
 // 获取报告详情
 const getReportDetail = async () => {
   const { datas, resp_code }: any = await getReportDetailApi({
-    id: route.query.id,
+    id: Number(route.query.id),
+    moduleName: route.query.moduleName,
   });
   if (resp_code === 0) {
     breadcrumbList.value[breadcrumbList.value.length - 1].text =
@@ -41,6 +43,11 @@ const getReportDetail = async () => {
   }
 };
 getReportDetail();
+onMounted(() => {
+  const _data = reportStore().getReportMapList(route.query.moduleName);
+  breadcrumbList.value[1].text = _data.ch;
+  breadcrumbList.value[1].path = _data.path;
+});
 </script>
 
 <style lang="scss">

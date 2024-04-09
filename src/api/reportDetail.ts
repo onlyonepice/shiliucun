@@ -100,7 +100,7 @@ export function getPayInfoList() {
 export function getReportDetailApi(data: any) {
   return http.request<void>(
     "post",
-    "/eesa-report/onlineReportNew/front/v1.1/getOnlineReportDetails",
+    "/eesa-report/onlineReportNew/front/v1.1/getAllReportDetails",
     {
       data,
     },
@@ -142,4 +142,15 @@ export const getFileApi = (url, token) => {
     },
     responseType: "blob",
   });
+};
+
+// 收藏报告
+export const setReportCollectApi = (data: any) => {
+  return http.request<void>(
+    "post",
+    "/eesa-report/onlineReportNew/front/v1.0/getReportCollection",
+    {
+      data,
+    },
+  );
 };

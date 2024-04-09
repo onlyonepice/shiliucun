@@ -1,7 +1,8 @@
 <template>
-  <div :class="ns.b('top')" v-if="PDFViewerApplication !== null">
+  <!-- <div :class="ns.b('top')" v-if="PDFViewerApplication !== null"> -->
+  <div :class="ns.b('top')" v-if="false">
     <div :class="ns.be('top', 'empty')" />
-    <template v-if="PDFViewerApplication.toolbar !== null">
+    <template v-if="false">
       <div :class="ns.be('top', 'pageTo')">
         <el-input-number
           v-model="pdfPage"
@@ -9,9 +10,6 @@
           :min="1"
           :controls="false"
           style="width: 32px; height: 24px"
-          @focus="focus($event)"
-          @blur="handleUpdatePage"
-          @keyup.enter="handleUpdatePage"
         />
         <span>/{{ pdfInfo.pagesCount }} 页</span>
       </div>
@@ -23,7 +21,11 @@
     </template>
   </div>
   <iframe id="iframe" :src="previewPdfSrc" width="100%" height="100%" />
-  <div :class="ns.b('bottom')" />
+  <div :class="ns.b('bottom')">
+    <p>3000</p>
+    <span>付费解锁</span>
+    <el-button type="primary">立即购买</el-button>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -85,10 +87,6 @@ const getFileDownloadPdf = async (url: string, token: string) => {
 const getPDFInfoFn = () => {
   const t = window.setInterval(async () => {
     const pdfIframe: any = await document.querySelector("#iframe");
-    // pdfIframe.promise?.then(function (pdf) {
-    //   console.log("000000000", pdf);
-    //   // you can now use *pdf* here
-    // });
     if (pdfIframe) {
       const contentWindow = pdfIframe.contentWindow;
       if (
@@ -103,27 +101,21 @@ const getPDFInfoFn = () => {
           pdfInfo.value.pageNumber = PDFViewerApplication.value.page;
           pdfInfo.value.pagesCount = PDFViewerApplication.value.pagesCount;
           pdfInfo.value.pageScale = (_toolbar.pageScale * 100).toFixed(0);
-          console.log(
-            "---0000----",
-            PDFViewerApplication.value,
-            ".........",
-            pdfInfo.value,
-          );
         });
       }
     }
   }, 300);
 };
 // 跳转pdf页码
-const handleUpdatePage = () => {
-  PDFViewerApplication.value.page = pdfPage.value;
-};
-// pdf放大缩小事件
-const handlePDF = (type: string) => {
-  type === "zoomIn"
-    ? PDFViewerApplication.value.zoomIn()
-    : PDFViewerApplication.value.zoomOut();
-};
+// const handleUpdatePage = () => {
+//   PDFViewerApplication.value.page = pdfPage.value;
+// };
+// // pdf放大缩小事件
+// const handlePDF = (type: string) => {
+//   type === "zoomIn"
+//     ? PDFViewerApplication.value.zoomIn()
+//     : PDFViewerApplication.value.zoomOut();
+// };
 getFile();
 </script>
 
@@ -153,11 +145,29 @@ getFile();
   }
 }
 #iframe {
-  @include widthAndHeight(100%, calc(100% - 64px - 48px));
+  @include widthAndHeight(100%, calc(100% - 64px));
   background: #dbdce2;
 }
 .es-reportDetailInfo-bottom {
   @include widthAndHeight(100%, 64px);
+  @include flex(center, center, nowrap);
+  p {
+    @include font(24px, 600, rgba(0, 0, 0, 0.9), 32px);
+    margin-right: 8px;
+    &::before {
+      content: "¥";
+      @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+    }
+  }
+  span {
+    display: inline-block;
+    background: #fff3eb;
+    border-radius: 4px;
+    border: 1px solid #ff892e;
+    @include font(12px, 400, #ff892e, 20px);
+    padding: 2px 8px;
+    margin-right: 24px;
+  }
 }
 </style>
 <style lang="scss">
