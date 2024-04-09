@@ -25,7 +25,7 @@
             item.state === '已失效' ? ns.b('invalid') : '',
           ]"
         >
-          {{ item.moduleName }} | {{ item.reportName }}
+          {{ item.affiliationModule }} | {{ item.reportName }}
         </div>
         <div
           :class="[
@@ -43,7 +43,7 @@
         <el-button
           v-if="item.state !== '已失效'"
           type="primary"
-          @click="onToDetail(item)"
+          @click="onDownload(item)"
           >下载</el-button
         >
         <el-button
@@ -66,9 +66,12 @@ interface PAGEINFO {
 }
 import { ref, Ref } from "vue";
 import { myCollectListApi, deleteCollectApi } from "@/api/user";
-const { VITE_I_REPORT_URL } = import.meta.env;
+import { getFilePathApi, getFileApi } from "@/api/reportDetail";
+import { useRouter } from "vue-router";
 import useNamespace from "@/utils/nameSpace";
+import { useUserStore } from "@/store/modules/user";
 const ns = useNamespace("homePersonalCollection");
+const router = useRouter();
 const pageInfo: Ref<PAGEINFO> = ref({
   page: 1,
   limit: 10,
@@ -113,27 +116,40 @@ const onClose = async (type: boolean) => {
     getCollectionList();
   }
 };
+// 下载功能
+const onDownload = (item: any) => {
+  if (useUserStore().checkPermission("REPORT_DOWNLOAD")) {
+    getReportLink(item);
+  }
+};
+// 获取报告链接
+const getReportLink = async (data: any) => {
+  const { fileId, affiliationModule } = data;
+  const { resp_code, datas }: any = await getFilePathApi({
+    fileId,
+    fileType: "pdf",
+    moduleName: affiliationModule,
+  });
+  if (resp_code === 0) {
+    getFileDownloadPdf(datas.url, datas["x-oss-meta-token"], data.reportName);
+  }
+};
+// 下载报告
+const getFileDownloadPdf = async (url: string, token: string, name: string) => {
+  const { status, data }: any = await getFileApi(url, token);
+  if (status === 200) {
+    const a = document.createElement("a");
+    const _url = URL || window.URL || window.webkitURL;
+    a.href = _url.createObjectURL(data);
+    a.download = name.indexOf(".pdf") !== -1 ? name : name + ".pdf";
+    a.click();
+    _url.revokeObjectURL(a.href);
+  }
+};
 // 跳转i-report2预览
 const onToDetail = (item: any) => {
   const { moduleName, reportId } = item;
-  let _moduleName = "";
-  switch (moduleName) {
-    case "白皮书":
-      _moduleName = "WHITE_PAPER";
-      break;
-    case "在线报告":
-      _moduleName = "ONLINE_REPORT";
-      break;
-    case "季报月报":
-      _moduleName = "QUARTERLY_AND_MONTHLY_REPORTS";
-      break;
-    default:
-      break;
-  }
-  window.open(
-    `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${reportId}&parent=${moduleName}&moduleName=${_moduleName}&from=/alliance-insight/white-paper`,
-    "_blank",
-  );
+  router.push(`/reportDetail?id=${reportId}&moduleName=${moduleName}`);
 };
 </script>
 

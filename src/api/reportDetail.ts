@@ -1,40 +1,5 @@
 import { http } from "@/utils/http";
 
-export const getFile = (url, token) => {
-  return http.request<void>("get", url, {
-    params: { hideError: true },
-    headers: {
-      "x-oss-meta-token": token,
-    },
-    responseType: "blob",
-  });
-};
-
-export const getReportDetail_V2 = (url, { id = 0 } = {}, params, headers) => {
-  return http.request<void>("post", url, {
-    params,
-    data: {
-      id,
-    },
-    headers,
-  });
-};
-
-export const getReportDetailRecommend_V2 = (url, { id, limit }) => {
-  return http.request<void>("get", url, {
-    params: {
-      id,
-      limit,
-    },
-  });
-};
-
-export const getFilePath = (params) => {
-  return http.request<void>("get", "/eesa-report/PdfFile/v1.0/getURL", {
-    params,
-  });
-};
-
 export const setReportCollect_V2 = (
   url,
   { collectionType, reportId, uncollect },
@@ -129,3 +94,63 @@ export function getPayInfoList() {
     {},
   );
 }
+
+// V3
+// 获取报告详情
+export function getReportDetailApi(data: any) {
+  return http.request<void>(
+    "post",
+    "/eesa-report/onlineReportNew/front/v1.1/getAllReportDetails",
+    {
+      data,
+    },
+  );
+}
+
+// 获取推荐报告
+export function getReportDetailRecommendApi(id: number) {
+  return http.request<void>(
+    "get",
+    `/eesa-report/onlineReportNew/front/v1.1/reportTagRecommendation?id=${id}&limit=10`,
+  );
+}
+
+// 报告打分
+export function setReportScoreApi(data: any) {
+  return http.request<void>(
+    "post",
+    "/eesa-report/onlineReportNewScore/front/v1.0/reportScoring",
+    {
+      data,
+    },
+  );
+}
+
+// 获取pdf链接
+export const getFilePathApi = (params: any) => {
+  return http.request<void>("get", "/eesa-report/PdfFile/v1.0/getURL", {
+    params,
+  });
+};
+
+// 下载报告
+export const getFileApi = (url, token) => {
+  return http.request<void>("get", url, {
+    params: { hideError: true },
+    headers: {
+      "x-oss-meta-token": token,
+    },
+    responseType: "blob",
+  });
+};
+
+// 收藏报告
+export const setReportCollectApi = (data: any) => {
+  return http.request<void>(
+    "post",
+    "/eesa-report/onlineReportNew/front/v1.0/getReportCollection",
+    {
+      data,
+    },
+  );
+};

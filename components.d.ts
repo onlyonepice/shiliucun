@@ -16,7 +16,7 @@ declare module 'vue' {
     Login: typeof import('./src/components/Business/Login.vue')['default']
     Logout: typeof import('./src/components/Common/Dialog/Logout.vue')['default']
     MiniAppNeed: typeof import('./src/components/Common/Dialog/miniAppNeed.vue')['default']
-    OnLineReportList: typeof import('./src/components/Common/OnLineReportList.vue')['default']
+    OnLineReportList: typeof import('./src/components/Business/OnLineReportList.vue')['default']
     OpenVip: typeof import('./src/components/Common/Dialog/OpenVip.vue')['default']
     PageBottom: typeof import('./src/components/Business/PageBottom.vue')['default']
     PageNav: typeof import('./src/components/Business/PageNav.vue')['default']
