@@ -145,7 +145,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 4,
         text: "政策",
-        path: VITE_I_REPORT_URL + "#/stored-leading/policy-trace",
+        path: ["/policy"],
       },
       {
         id: 5,
@@ -188,7 +188,7 @@ const navList: Ref<Array<NavList>> = ref([
   {
     id: 7,
     text: "开通VIP",
-    path: [VITE_I_REPORT_URL + "#/relation-servicer?name=订阅会员"],
+    path: ["/vip"],
     children: [],
   },
 ]);

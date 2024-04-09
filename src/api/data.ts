@@ -1,4 +1,5 @@
 import { http } from "@/utils/http";
+import { responseType } from "@/utils/type";
 
 // 获取招标内容筛选项
 export const getTenderFilterApi = () => {
@@ -65,42 +66,42 @@ export const getBiddingContentApi = () => {
 };
 // 中标内容列表
 export const bidWinningContentData_V2 = () => {
-  return http.request(
+  return http.request<responseType>(
     "post",
     "/eesa-report/priceTracking/front/openApi/V1.0/biddingContentBox",
   );
 };
 // 中标时间
 export const winingBidTime = () => {
-  return http.request(
+  return http.request<responseType>(
     "post",
     "/eesa-report/priceTracking/front/openApi/v1.0/winningBidTime",
   );
 };
 // 时长列表
 export const durationData_V2 = () => {
-  return http.request(
+  return http.request<responseType>(
     "post",
     "/eesa-report/priceTracking/front/openApi/V1.0/energyStorageDurationBox",
   );
 };
 // 技术类型列表
 export const technologyType_V2 = () => {
-  return http.request(
+  return http.request<responseType>(
     "post",
     "/eesa-report/priceTracking/front/openApi/V1.0/technologyTypeBox",
   );
 };
 // 应用场景下拉框
 export const applicationScenariosBox = (params) => {
-  return http.request(
+  return http.request<responseType>(
     "post",
     `/eesa-report/priceTracking/front/openApi/V1.0/applicationScenariosBox?type=${params}`,
   );
 };
 // 中标容量分析
 export const capacityAnalysis_V2 = (data) => {
-  return http.request(
+  return http.request<responseType>(
     "post",
     "/eesa-report/priceTracking/front/openApi/v1.0/analyzeBarGraph",
     { data },
@@ -108,7 +109,7 @@ export const capacityAnalysis_V2 = (data) => {
 };
 // 中标企业分析
 export const enterpriseAnalysis = (data) => {
-  return http.request(
+  return http.request<responseType>(
     "post",
     "/eesa-report/priceTracking/front/openApi/v1.0/enterpriseAnalysis",
     { data },
@@ -116,9 +117,18 @@ export const enterpriseAnalysis = (data) => {
 };
 // 中标分析报告
 export const winningReport = (data) => {
-  return http.request(
+  return http.request<responseType>(
     "post",
     "/eesa-report/priceTracking/front/openApi/v1.0/winningReport",
+    { data },
+  );
+};
+
+// 政策查找筛选类
+export const policyFilterSearch = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/Policy/front/openApi/V1.0/policySearch",
     { data },
   );
 };

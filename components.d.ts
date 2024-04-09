@@ -24,6 +24,7 @@ declare module 'vue' {
     PolicyList: typeof import('./src/components/Common/PolicyList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Search: typeof import('./src/components/Common/Search.vue')['default']
     Select: typeof import('./src/components/Common/Select.vue')['default']
     SkipMask: typeof import('./src/components/Common/SkipMask.vue')['default']
     Tabs: typeof import('./src/components/Common/Tabs.vue')['default']
