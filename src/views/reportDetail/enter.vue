@@ -1,16 +1,52 @@
 <template>
   <div :class="ns.b()">
     <breadcrumb :breadcrumbList="breadcrumbList" />
-    <div :class="[ns.b('content'), 'es-commonPage']" v-if="reportDetail.id">
-      <div :class="ns.be('content', 'left')">
-        <reportInfo :detail="reportDetail" />
+    <Loading v-if="loading" />
+    <template v-else>
+      <div :class="[ns.b('content'), 'es-commonPage']" v-if="reportDetail.id">
+        <div :class="ns.be('content', 'left')">
+          <reportInfo :detail="reportDetail" @onBuy="onBuy(true)" />
+        </div>
+        <div :class="ns.be('content', 'right')">
+          <reportOption :detail="reportDetail" @onBuy="onBuy(true)" />
+          <reportRecommend @getInfo="getReportDetail()" />
+        </div>
       </div>
-      <div :class="ns.be('content', 'right')">
-        <reportOption :detail="reportDetail" />
-        <reportRecommend />
-      </div>
-    </div>
+    </template>
   </div>
+  <Dialog
+    title=""
+    :visible="buyDialogVisible"
+    width="400px"
+    height="402px"
+    :showFoot="false"
+    :class="ns.b('buyDialog')"
+    @onHandleClose="onBuy(false)"
+  >
+    <template #content>
+      <img :class="ns.be('buyDialog', 'bg')" :src="BuyDialogBg" alt="" />
+      <p :class="ns.be('buyDialog', 'desc')">
+        请在<span>15分钟</span>内支付，过时将自动关闭
+      </p>
+      <p :class="ns.be('buyDialog', 'price')">999</p>
+      <p :class="ns.be('buyDialog', 'title')">
+        您正在购买报告 <br />《2023英国储能市场概况-机遇与挑战》
+      </p>
+      <div :class="ns.be('buyDialog', 'pay')">
+        <div
+          :class="ns.be('pay', 'item')"
+          v-for="item in payInfo"
+          :key="item.id"
+        >
+          <img :class="ns.be('pay', 'img')" :src="item.payImg" alt="" />
+          <div :class="ns.be('pay', 'title')">
+            <img :src="item.icon" alt="" />
+            <p :name="item.title">{{ item.title }}</p>
+          </div>
+        </div>
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script lang="ts" setup>
@@ -22,6 +58,10 @@ import { getReportDetailApi } from "@/api/reportDetail";
 import reportOption from "./components/option.vue";
 import reportRecommend from "./components/recommend.vue";
 import reportInfo from "./components/info.vue";
+import BuyDialogBg from "@/assets/img/common/buy-dialog-bg.png";
+import WeChatPay from "@/assets/img/common/weChat-pay.png";
+import AliPay from "@/assets/img/common/ali-pay.png";
+const buyDialogVisible: Ref<boolean> = ref(false); // 购买报告弹窗
 const route = useRoute();
 const ns = useNamespace("reportDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
@@ -29,9 +69,15 @@ const breadcrumbList: Ref<Array<any>> = ref([
   { text: "季报月报", path: "/quarterlyMonthlyReports" },
   { text: "", path: "" },
 ]);
+const payInfo: Ref<any> = ref([
+  { id: 1, title: "微信支付", icon: WeChatPay, payImg: "" },
+  { id: 1, title: "支付宝支付", icon: AliPay, payImg: "" },
+]); // 支付信息
 const reportDetail: Ref<any> = ref({}); // 报告详情
+const loading: Ref<boolean> = ref(false); // 加载状态
 // 获取报告详情
 const getReportDetail = async () => {
+  loading.value = true;
   const { datas, resp_code }: any = await getReportDetailApi({
     id: Number(route.query.id),
     moduleName: route.query.moduleName,
@@ -39,8 +85,15 @@ const getReportDetail = async () => {
   if (resp_code === 0) {
     breadcrumbList.value[breadcrumbList.value.length - 1].text =
       datas.reportName;
+    // 取前三个标签
+    datas.reportTag = datas.reportTag.slice(0, 3);
     reportDetail.value = datas;
+    loading.value = false;
   }
+};
+// 购买报告
+const onBuy = (type: boolean) => {
+  buyDialogVisible.value = type;
 };
 getReportDetail();
 onMounted(() => {
@@ -70,5 +123,56 @@ onMounted(() => {
 }
 .es-reportDetail-content__right {
   width: 270px;
+}
+.es-reportDetail-buyDialog {
+  text-align: center;
+}
+.es-reportDetail-buyDialog__bg {
+  @include widthAndHeight(400px, 120px);
+  @include absolute(-1, 0, 0, none, none);
+}
+.es-reportDetail-buyDialog__desc {
+  @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+  span {
+    @include font(14px, 500, #f75964, 22px);
+  }
+}
+.es-reportDetail-buyDialog__price {
+  @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px);
+  margin: 7px 0 9px 0;
+  &::before {
+    content: "￥";
+    margin-right: 8px;
+    @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
+  }
+}
+.es-reportDetail-buyDialog__title {
+  @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+  margin-bottom: 24px;
+}
+.es-reportDetail-buyDialog__pay {
+  @include flex(center, center, nowrap);
+}
+.es-reportDetail-pay__img {
+  @include widthAndHeight(120px, 120px);
+}
+.es-reportDetail-pay__item {
+  margin-right: 16px;
+  &:last-child {
+    margin-right: 0;
+  }
+}
+.es-reportDetail-pay__title {
+  @include flex(center, center, nowrap);
+  img {
+    @include widthAndHeight(20px, 20px);
+    margin-right: 4px;
+  }
+  p[name="微信支付"] {
+    @include font(12px, 600, #00c250, 20px);
+  }
+  p[name="支付宝支付"] {
+    @include font(12px, 600, #1777ff, 20px);
+  }
 }
 </style>

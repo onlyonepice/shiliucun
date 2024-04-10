@@ -38,6 +38,8 @@ const ns = useNamespace("whitePaper");
 import { useUserStore } from "@/store/modules/user";
 import RightArrow from "@/assets/img/common/right-arrow.png";
 import { useRouter } from "vue-router";
+import { useUserStoreHook } from "@/store/modules/user";
+import { getToken } from "@/utils/auth";
 const router = useRouter();
 defineProps({
   pageData: {
@@ -47,6 +49,9 @@ defineProps({
 });
 // 跳转白皮书详情
 const onDetail = (data: any) => {
+  if (!getToken()) {
+    return useUserStoreHook().openLogin(true);
+  }
   router.push(`/reportDetail?id=${data.id}&moduleName=${data.moduleName}`);
 };
 </script>

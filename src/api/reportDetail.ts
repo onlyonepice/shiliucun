@@ -154,3 +154,18 @@ export const setReportCollectApi = (data: any) => {
     },
   );
 };
+
+// 上传图片
+export const fileUploadApi = (data: any) => {
+  return http.request<void>("post", "api-file/fileUpload", {
+    data,
+  });
+};
+// 上传内容纠错
+export const setReportFeedbackApi = (data: any) => {
+  return http.request<void>(
+    "post",
+    "/eesa-report/onlineReportNewError/front/v1.0/addContentCorrection",
+    { data },
+  );
+};

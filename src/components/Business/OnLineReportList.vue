@@ -23,8 +23,8 @@
 <script setup lang="ts">
 import { useUserStoreHook } from "@/store/modules/user";
 import { useRouter } from "vue-router";
+import { getToken } from "@/utils/auth";
 const router = useRouter();
-// const { VITE_I_REPORT_URL } = import.meta.env;
 const props = defineProps({
   pageData: {
     type: Object,
@@ -37,11 +37,10 @@ const props = defineProps({
 });
 // 跳转报告详情
 const onDetailReport = (item) => {
-  // window.open(
-  //   `${VITE_I_REPORT_URL}/#/report-detail-pdf_V2?id=${item.id}&parent=在线报告&moduleName=${item.moduleName}&from=/online-report`,
-  //   "_blank",
-  // );
-  router.push(`/reportDetail?id=${item.id}&from=/reportOnLine`);
+  if (!getToken()) {
+    return useUserStoreHook().openLogin(true);
+  }
+  router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 };
 const useUserStore = useUserStoreHook();
 </script>

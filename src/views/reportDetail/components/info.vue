@@ -24,7 +24,7 @@
   <div :class="ns.b('bottom')">
     <p>3000</p>
     <span>付费解锁</span>
-    <el-button type="primary">立即购买</el-button>
+    <el-button type="primary" @click="onBuyReport()">立即购买</el-button>
   </div>
 </template>
 
@@ -36,6 +36,7 @@ import NumberUp from "@/assets/img/common/number-up.png";
 import { getFilePathApi, getFileApi } from "@/api/reportDetail";
 import { toType } from "@/utils";
 import { ElMessage } from "element-plus";
+const emit = defineEmits(["onBuy"]);
 const ns = useNamespace("reportDetailInfo");
 const previewPdfSrc: Ref<string> = ref(""); // 预览pdf地址
 // const pdfPage: Ref<number> = ref(1); // pdf页码
@@ -56,6 +57,10 @@ const props = defineProps({
     default: () => {},
   },
 });
+// 购买报告
+const onBuyReport = () => {
+  emit("onBuy");
+};
 // 获取pdf地址
 const getFile = async () => {
   const _data = {
