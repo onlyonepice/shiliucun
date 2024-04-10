@@ -1,7 +1,12 @@
 <template>
   <div :class="ns.b()">
     <div class="report-list" v-loading="loading">
-      <div class="item" v-for="item in pageData" :key="item.reportName">
+      <div
+        class="item"
+        @click="onDetail(item)"
+        v-for="item in pageData"
+        :key="item.reportName"
+      >
         <p class="title">{{ item.reportName }}</p>
         <p class="nameAndDate">
           {{ item.authors ? item.authors.join(",") + "|" : ""
@@ -20,6 +25,10 @@
 import { ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { getWinningReportPageApi } from "@/api/data";
+import { getToken } from "@/utils/auth";
+import { useUserStoreHook } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const ns = useNamespace("winningBidReport");
 const requestData = ref({
   page: 1,
@@ -36,6 +45,12 @@ const getData = async () => {
     total.value = data.datas.total;
   }
   loading.value = false;
+};
+const onDetail = (data: any) => {
+  if (!getToken()) {
+    return useUserStoreHook().openLogin(true);
+  }
+  router.push(`/reportDetail?id=${data.id}&moduleName=${data.moduleName}`);
 };
 const onchangeCurrent = (val) => {
   requestData.value.page = val;
@@ -55,6 +70,12 @@ getData();
     .item {
       @include widthAndHeight(100%, 110px);
       border-bottom: 1px solid #dbdce2;
+      cursor: pointer;
+      &:hover {
+        .title {
+          color: rgb(36, 75, 241);
+        }
+      }
       .nameAndDate {
         @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
         margin-bottom: 16px;

@@ -420,6 +420,11 @@ policyFilterSearchFn();
           justify-content: space-between;
           align-items: center;
           cursor: pointer;
+          &:hover {
+            .policy-name {
+              color: rgb(36, 75, 241);
+            }
+          }
           .policy-name {
             width: 682px;
             height: 28px;
