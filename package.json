@@ -13,6 +13,7 @@
     "lint": "pnpm lint:eslint && pnpm lint:prettier"
   },
   "dependencies": {
+    "qrcode": "^1.5.3",
     "@types/echarts": "^4.9.22",
     "animate.css": "4.1.1",
     "axios": "1.2.0",

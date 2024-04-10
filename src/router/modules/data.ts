@@ -38,5 +38,15 @@ export default {
         title: "中标",
       },
     },
+    {
+      path: "/policy",
+      name: "Policy",
+      components: {
+        default: () => import("@/views/data/dataPolicy/enter.vue"),
+      },
+      meta: {
+        title: "政策",
+      },
+    },
   ],
 };

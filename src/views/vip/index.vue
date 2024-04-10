@@ -1,12 +1,179 @@
 <template>
-  <p class="home">开通vip</p>
+  <div :class="[ns.b(), 'es-commonPage']">
+    <p class="title">会员中心</p>
+    <div class="wrapper">
+      <div class="item" v-for="item in accountList" :key="item.name">
+        <img :src="item.bgImg" alt="" />
+        <p @click="handleClick(item)" class="item_btn" />
+      </div>
+    </div>
+    <!-- 会员支付弹窗 -->
+    <MembersBuy
+      v-if="showMembersBuy && productList !== null"
+      :show-members-buy="showMembersBuy"
+      :product-list="productList"
+      @onCancel="onOptionDialog"
+    />
+    <div
+      class="dialog-wrapper"
+      :class="[
+        {
+          'dialog-wrapper-active': QRvisible,
+        },
+      ]"
+    >
+      <div class="dialog">
+        <img class="QR" :src="PayQR" />
+
+        <img class="cancel" :src="cancel_icon" @click="handleSkip()" alt="" />
+      </div>
+    </div>
+  </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { ref } from "vue";
+import useNamespace from "@/utils/nameSpace";
+import cancel_icon from "@/assets/img/common/icon_clear.png";
+import account_business_bg from "@/assets/img/vip/account-business-bg.png";
+import account_ordinary_bg from "@/assets/img/vip/account-ordinary-bg.png";
+import account_standard_bg from "@/assets/img/vip/account-standard-bg.png";
+import PayQR from "@/assets/img/vip/pay-member-qr.png";
+import { getToken } from "@/utils/auth";
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/store/modules/user";
+import { getPayInfoList } from "@/api/vip";
+import MembersBuy from "./membersBuy.vue";
+const router = useRouter();
+const ns = useNamespace("vip");
+const showMembersBuy = ref(false);
+const QRvisible = ref(false);
+const productList = ref(null);
+const accountList = ref([
+  { id: 0, name: "普通账户", bgImg: account_ordinary_bg },
+  { id: 1, name: "标准账户", bgImg: account_standard_bg },
+  { id: 2, name: "企业账户", bgImg: account_business_bg },
+]);
+// 账户信息
+const handleSkip = () => {
+  QRvisible.value = false;
+};
+const handleClick = (item) => {
+  const _id = item.id;
+  if (_id !== 0 && !getToken()) {
+    return useUserStore().openLogin(true);
+  }
+  _id === 0 && router.push("/home");
+  _id === 1 && (showMembersBuy.value = true);
+  _id === 2 && (QRvisible.value = true);
+};
+const onOptionDialog = (value) => {
+  value && (showMembersBuy.value = value);
+  !value &&
+    setTimeout(() => {
+      showMembersBuy.value = value;
+      getMemberInfo();
+    }, 400);
+};
+// 获取用户信息
+const getMemberInfo = async () => {
+  try {
+    if (getToken()) {
+      const _res = (await getPayInfoList()) as any;
+      _res.datas.productSkuFrontList.forEach((item) => {
+        item.originalPrice =
+          item.originalPrice < 100
+            ? (item.originalPrice / 100).toFixed(2)
+            : Math.floor(item.originalPrice / 100);
+        item.preferentialPrice =
+          item.preferentialPrice < 100
+            ? (item.preferentialPrice / 100).toFixed(2)
+            : Math.floor(item.preferentialPrice / 100);
+        item.preferentialPriceCount =
+          item.preferentialPriceCount < 100
+            ? (item.preferentialPriceCount / 100).toFixed(2)
+            : Math.floor(item.preferentialPriceCount / 100);
+      });
+      productList.value = _res.datas;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+getMemberInfo();
+</script>
 
 <style lang="scss">
 @import "@/style/mixin.scss";
-.home {
-  height: calc(50vh - 56px);
+.es-vip {
+  padding: 80px 0;
+  .title {
+    @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px);
+    margin-bottom: 32px;
+  }
+  .wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .item {
+      @include widthAndHeight(368px, 1528px);
+      position: relative;
+      img {
+        @include widthAndHeight(100%, 100%);
+      }
+      .item_btn {
+        @include widthAndHeight(304px, 40px);
+        @include absolute(2, 200px, 0, 0, 20px);
+        cursor: pointer;
+      }
+    }
+  }
+  .dialog-wrapper {
+    position: fixed;
+    left: 0%;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: -10;
+    opacity: 0;
+    transition: all 0.25s;
+
+    .dialog {
+      width: min-content;
+      height: min-content;
+      text-align: center;
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      transition: all 0.25s;
+      transform: translateY(50px);
+      z-index: 9;
+
+      .QR {
+        width: 320px;
+      }
+
+      .cancel {
+        width: 32px;
+        height: 32px;
+        margin-top: 16px;
+        cursor: pointer;
+        background-color: transparent;
+      }
+    }
+
+    &.dialog-wrapper-active {
+      z-index: 999;
+      opacity: 1;
+
+      .dialog {
+        transform: translateY(0px);
+      }
+    }
+  }
 }
 </style>

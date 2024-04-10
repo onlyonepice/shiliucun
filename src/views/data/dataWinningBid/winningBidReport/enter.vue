@@ -1,24 +1,47 @@
 <template>
   <div :class="ns.b()">
-    <div class="report-list">
-      <div class="item">
-        <p class="title">储能项目招标&中标信息（2040221～ 20240228）</p>
-        <p class="nameAndDate">仇舜尧｜2024-02-28</p>
+    <div class="report-list" v-loading="loading">
+      <div class="item" v-for="item in pageData" :key="item.reportName">
+        <p class="title">{{ item.reportName }}</p>
+        <p class="nameAndDate">
+          {{ item.authors ? item.authors.join(",") + "|" : ""
+          }}{{ item.writingTime }}
+        </p>
         <p class="tag">中标</p>
       </div>
     </div>
     <div class="pagination-box">
-      <Pagination :total="100" @current-change="onchangeCurrent" />
+      <Pagination :total="total" @onchangeCurrent="onchangeCurrent" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
+import { getWinningReportPageApi } from "@/api/data";
 const ns = useNamespace("winningBidReport");
-const onchangeCurrent = (val) => {
-  console.log(val);
+const requestData = ref({
+  page: 1,
+  limit: 10,
+});
+const pageData = ref([]);
+const loading = ref(false);
+const total = ref(0);
+const getData = async () => {
+  loading.value = true;
+  const data = await getWinningReportPageApi(requestData.value);
+  if (data.resp_code === 0) {
+    pageData.value = data.datas.records;
+    total.value = data.datas.total;
+  }
+  loading.value = false;
 };
+const onchangeCurrent = (val) => {
+  requestData.value.page = val;
+  getData();
+};
+getData();
 </script>
 
 <style lang="scss">
@@ -28,6 +51,7 @@ const onchangeCurrent = (val) => {
 
   .report-list {
     width: 100%;
+    min-height: 300px;
     .item {
       @include widthAndHeight(100%, 110px);
       border-bottom: 1px solid #dbdce2;

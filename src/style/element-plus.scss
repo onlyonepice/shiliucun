@@ -4,6 +4,11 @@
   @include widthAndHeight(100%, 32px);
 }
 
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  background-color: #244bf1;
+}
+
 // 多选框tag样式
 .el-select__tags {
   .el-tag--info {
@@ -135,6 +140,7 @@
   color: #1c232f;
   background-color: #f4f5f7;
 }
+
 .el-select {
   --el-select-input-focus-border-color: #507ef7 !important;
 }
@@ -160,6 +166,7 @@
   box-shadow: 0 0 0 1px #e5e6ea inset;
   background-color: #e5e6ea;
 }
+
 .el-input__wrapper.is-focus {
   box-shadow: 0 0 0 1px #165dff inset;
   background-color: #ffffff;
@@ -170,13 +177,16 @@
     background-color: #244bf1;
     border-color: #244bf1;
   }
+
   .el-switch__core {
     background-color: #dcdfe6;
   }
 }
+
 .el-table__row {
   height: 48px;
 }
+
 .el-table__header {
   height: 48px;
   border-bottom: 1px solid #f2f3f5;

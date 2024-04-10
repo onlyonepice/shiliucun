@@ -48,6 +48,13 @@ export const getFreeOnlineReportSelected = (params) => {
     },
   );
 };
+//在线报告筛选项
+export const getOnlineReportFilters = () => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    `/eesa-report/onlineReportNew/front/openApi/v1.1/getOnlineReportFilters`,
+  );
+};
 //报告标签列表
 export const getReportTagList = () => {
   return http.request<{ resp_code: number; datas: any }>(
