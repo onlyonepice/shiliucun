@@ -51,8 +51,8 @@ import { ref, Ref } from "vue";
 import { myOrderListApi } from "@/api/user";
 import useNamespace from "@/utils/nameSpace";
 import InvoicingDesc from "@/assets/img/homePersonal/invoicing-desc.png";
+import { useUserStore } from "@/store/modules/user";
 const ns = useNamespace("homePersonalOrder");
-const { VITE_I_REPORT_URL } = import.meta.env;
 const tableData: Ref<any> = ref([]);
 const loading: Ref<boolean> = ref(false); // 加载数据
 const total: Ref<number> = ref(0); // 数据总数
@@ -87,10 +87,7 @@ const getOrderList = async () => {
 getOrderList();
 // 支付
 const onPay = () => {
-  window.open(
-    VITE_I_REPORT_URL + "#/relation-servicer?name=订阅会员",
-    "externalWindow",
-  );
+  useUserStore().$state.showMembersBuy = true;
 };
 </script>
 

@@ -43,4 +43,5 @@ export type userType = {
   openLoginVisible: boolean;
   openVipVisible: boolean;
   permissionList: Array<any>;
+  showMembersBuy: boolean;
 };
