@@ -80,13 +80,74 @@
                 class="policy_item_box"
               >
                 <div
-                  class="policy_item_value"
-                  v-for="row in item.data"
+                  class="policy_item_box_content"
                   :key="row.policyName"
+                  v-for="(row, rowIndex) in item.data"
                 >
-                  <p class="policy-name">{{ row.policyName }}</p>
-                  <div class="tag-box">
-                    <p class="tag">{{ row.typeName }}</p>
+                  <div
+                    class="policy_item_value"
+                    @click="handleItemClick(row, index, rowIndex)"
+                  >
+                    <p class="policy-name">{{ row.policyName }}</p>
+                    <div class="tag-box">
+                      <p class="tag">{{ row.typeName }}</p>
+                    </div>
+                  </div>
+                  <div class="detail-data" v-if="row.showDetail">
+                    <div class="detail_content">
+                      <div class="detail_content_item">
+                        <p class="detail_content_item_label">基本信息</p>
+                        <div class="detail_content_item_value">
+                          <div class="detail_content_item_value_item">
+                            <p class="detail_content_item_value_item_label">
+                              发布时间
+                            </p>
+                            <p class="detail_content_item_value_item_value">
+                              {{ row.releaseTime }}
+                            </p>
+                          </div>
+                          <div class="detail_content_item_value_item">
+                            <p class="detail_content_item_value_item_label">
+                              发布地区
+                            </p>
+                            <p class="detail_content_item_value_item_value">
+                              {{ getRegion(row.regionName) }}
+                            </p>
+                          </div>
+                          <div class="detail_content_item_value_item">
+                            <p class="detail_content_item_value_item_label">
+                              原文链接
+                            </p>
+                            <p
+                              @click="handleLinkClick(row.originalLink)"
+                              style="color: #244bf1; cursor: pointer"
+                              class="detail_content_item_value_item_value"
+                            >
+                              查看原文链接
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="detail_content_item">
+                        <p class="detail_content_item_label">摘要</p>
+                        <div class="detail_content_item_value">
+                          <div class="detail_content_item_value_item">
+                            <p class="detail_content_item_value_item_label">
+                              摘要内容
+                            </p>
+                            <p class="detail_content_item_value_item_value">
+                              {{ row.summary }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <p
+                      @click="handleHiddenDetailClick(index, rowIndex)"
+                      class="hidden-detail"
+                    >
+                      收起详情&nbsp;&nbsp;^
+                    </p>
                   </div>
                 </div>
               </el-scrollbar>
@@ -147,6 +208,19 @@ const monthList = ref<ListType>({});
 const handleMonthClick = (row) => {
   policyReleased.value = row.paramValue;
   getData();
+};
+const getRegion = (regionName) => {
+  return regionName.join("-");
+};
+const handleHiddenDetailClick = (index, rowIndex) => {
+  pageData.value[index].data[rowIndex].showDetail = false;
+};
+const handleItemClick = async (item, index, rowIndex) => {
+  pageData.value[index].data[rowIndex].showDetail =
+    !pageData.value[index].data[rowIndex].showDetail;
+};
+const handleLinkClick = (link) => {
+  window.open(link);
 };
 const policyFilterSearchFn = async () => {
   const data = await policyFilterSearch(filterParams.value);
@@ -276,20 +350,76 @@ policyFilterSearchFn();
       margin-right: 12px;
       .policy_item {
         width: 100%;
-        margin-bottom: 40px;
         .policy_item_box {
           width: 100%;
           box-sizing: border-box;
           padding-right: 20px;
+        }
+        .policy_item_box_content {
+          width: 100%;
+          padding-bottom: 16px;
+          border-bottom: 1px solid #dbdce2;
+          margin-bottom: 16px;
+          .detail-data {
+            margin-top: 16px;
+            .hidden-detail {
+              width: 100%;
+              height: 32px;
+              align-items: center;
+              display: flex;
+              justify-content: flex-end;
+              margin-top: 13px;
+              @include font(14px, 400, #244bf1, 22px);
+              cursor: pointer;
+            }
+            .detail_content {
+              width: 100%;
+              padding: 16px;
+              background-color: #f2f3f5;
+              > .detail_content_item:nth-child(1) {
+                margin-bottom: 16px;
+              }
+              .detail_content_item {
+                width: 100%;
+                display: flex;
+
+                .detail_content_item_label {
+                  margin-right: 16px;
+                  width: 80px;
+                  @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
+                }
+                .detail_content_item_value {
+                  flex: 1;
+                  border: 1px solid #dbdce2;
+                  border-bottom: 0;
+                  .detail_content_item_value_item {
+                    width: 100%;
+                    border-bottom: 1px solid #dbdce2;
+                    display: flex;
+                    .detail_content_item_value_item_label {
+                      @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+                      width: 96px;
+                      border-right: 1px solid #dbdce2;
+                      background-color: #e8eaef;
+                      padding: 9px 16px;
+                    }
+                    .detail_content_item_value_item_value {
+                      @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+                      padding: 9px 16px;
+                      flex: 1;
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
         .policy_item_value {
           width: 100%;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 16px;
-          padding-bottom: 16px;
-          border-bottom: 1px solid #dbdce2;
+          cursor: pointer;
           .policy-name {
             width: 682px;
             height: 28px;

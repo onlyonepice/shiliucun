@@ -18,7 +18,7 @@
           :valueKey="item.bind.cascaderOption.value"
           :defaultValue="requestData[item.model]"
           width="256px"
-          @onChange="() => selectChange(item, index)"
+          @onChange="(val) => selectChange(item, index, val)"
         />
       </div>
     </div>
@@ -563,8 +563,9 @@ const initData = () => {
     ],
   };
 };
-const selectChange = (row, index) => {
+const selectChange = (row, index, val) => {
   if (useUserStore().checkPermission("ANALYSIS_OF_WINNING_ENTERPRISES")) {
+    requestData.value[row.model] = val;
     getData();
   } else {
     nextTick(() => {

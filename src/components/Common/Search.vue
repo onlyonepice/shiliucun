@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import searchIcon from "@/assets/img/common/search-icon.png";
 import icon_clear from "@/assets/img/common/icon_clear.png";
 const value: any = ref(""); // 选中值
@@ -44,6 +44,12 @@ defineProps({
   },
 });
 // 通过onChange事件传递值给父组件
+watch(
+  () => value.value,
+  (val) => {
+    model.value = val;
+  },
+);
 function onSearch() {
   model.value = value.value;
   emit("onSearch", value.value);
