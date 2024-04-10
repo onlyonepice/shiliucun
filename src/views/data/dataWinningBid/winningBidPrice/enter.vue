@@ -18,7 +18,7 @@
           :valueKey="item.bind.cascaderOption.value"
           :defaultValue="requestData[item.model]"
           width="256px"
-          @onChange="() => selectChange(item, index)"
+          @onChange="(val) => selectChange(item, index, val)"
         />
       </div>
       <p class="line" />
@@ -79,6 +79,7 @@ watch(
   (res: response[]) => {
     if (res.length > 0) {
       nextTick(() => {
+        console.log(res);
         options.value.forEach((item) => {
           switch (item.model) {
             case "biddingContent":
@@ -108,7 +109,7 @@ watch(
                 "1",
               );
               break;
-            case 2:
+            case 3:
               requestData.value.applicationScenarios = get(
                 item.datas.find((item) => item.defaultValue),
                 "paramName",
@@ -451,8 +452,10 @@ function exportResult() {
   });
   exportVisible.value = true;
 }
-const selectChange = (row, index) => {
+
+const selectChange = (row, index, val) => {
   if (useUserStore().checkPermission("BID_PRICE_ANALYSIS")) {
+    requestData.value[row.model] = val;
     getData();
   } else {
     nextTick(() => {
