@@ -32,6 +32,8 @@
         : 'animate__fadeOut'
     "
   />
+  <!-- 会员支付弹窗 -->
+  <MembersBuy v-if="showMembersBuy" />
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, Ref, computed, watch } from "vue";
@@ -45,6 +47,7 @@ const route = useRoute();
 const showNavBar: Ref<boolean> = ref(true);
 const lastScrollY: Ref<number> = ref(0);
 const openLoginAnimate: Ref<boolean> = ref(false); // 登录动画执行完毕弹窗
+const showMembersBuy: Ref<boolean> = ref(false); //订阅会员弹框状态
 onMounted(() => {
   useUserStore().token === "" &&
     getToken() &&
@@ -72,6 +75,14 @@ watch(useUserStore().$state, (val: any) => {
       openLoginAnimate.value = false;
     }, 500);
   }
+  if (val.showMembersBuy) {
+    showMembersBuy.value = true;
+  } else {
+    setTimeout(() => {
+      showMembersBuy.value = false;
+    }, 500);
+  }
+
   val.publicKey !== "" &&
     useUserStore().$state.fileUrl === "" &&
     useUserStore().getConfigListBefore();
