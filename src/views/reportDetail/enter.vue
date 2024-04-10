@@ -5,10 +5,19 @@
     <template v-else>
       <div :class="[ns.b('content'), 'es-commonPage']" v-if="reportDetail.id">
         <div :class="ns.be('content', 'left')">
-          <reportInfo :detail="reportDetail" @onBuy="onBuy(true)" />
+          <reportInfo
+            :detail="reportDetail"
+            @onBuy="onBuy(true)"
+            :is-show-footer="true"
+            :is-need-buy="true"
+          />
         </div>
         <div :class="ns.be('content', 'right')">
-          <reportOption :detail="reportDetail" @onBuy="onBuy(true)" />
+          <reportOption
+            :detail="reportDetail"
+            @onBuy="onBuy(true)"
+            :is-need-buy="false"
+          />
           <reportRecommend @getInfo="getReportDetail()" />
         </div>
       </div>

@@ -12,7 +12,7 @@
       :class="ns.be('button', 'big')"
       type="primary"
       @click="onBuyReport()"
-      >立即购买</el-button
+      >{{ isNeedBuy ? "立即购买" : "下载报告" }}</el-button
     >
     <div :class="ns.be('button', 'list')">
       <el-button
@@ -132,6 +132,9 @@ import { setReportCollectApi, setReportFeedbackApi } from "@/api/reportDetail";
 import UploadImg from "@/assets/img/common/upload-image.png";
 import { getToken } from "@/utils/auth";
 import type { UploadProps } from "element-plus";
+import { useUserStore } from "@/store/modules/user";
+import { getFilePathApi, getFileApi } from "@/api/reportDetail";
+import { reportStore } from "@/store/modules/report";
 const ns = useNamespace("reportDetailOption");
 const { toClipboard } = useClipboard();
 const emit = defineEmits(["onBuy"]);
@@ -153,6 +156,10 @@ const props = defineProps({
   detail: {
     type: Object,
     default: () => {},
+  },
+  isNeedBuy: {
+    type: Boolean,
+    default: false,
   },
 });
 const storageDetail: Ref<any> = ref(null); // 缓存详情接口，用于修改收藏状态，无需重复调用详情接口
@@ -208,7 +215,37 @@ const score: Ref<number> = ref(
 );
 // 购买报告
 const onBuyReport = () => {
-  emit("onBuy");
+  if (props.isNeedBuy) {
+    emit("onBuy");
+  } else {
+    if (useUserStore().checkPermission("REPORT_DOWNLOAD")) {
+      getReportLink();
+    }
+  }
+};
+// 获取报告链接
+const getReportLink = async () => {
+  const { fileId, reportName, moduleName } = props.detail;
+  const { resp_code, datas }: any = await getFilePathApi({
+    fileId,
+    fileType: "pdf",
+    moduleName: reportStore().getReportMapList(moduleName).ch,
+  });
+  if (resp_code === 0) {
+    getFileDownloadPdf(datas.url, datas["x-oss-meta-token"], reportName);
+  }
+};
+// 下载报告
+const getFileDownloadPdf = async (url: string, token: string, name: string) => {
+  const { status, data }: any = await getFileApi(url, token);
+  if (status === 200) {
+    const a = document.createElement("a");
+    const _url = URL || window.URL || window.webkitURL;
+    a.href = _url.createObjectURL(data);
+    a.download = name.indexOf(".pdf") !== -1 ? name : name + ".pdf";
+    a.click();
+    _url.revokeObjectURL(a.href);
+  }
 };
 // 确定分数
 const scoreSure: Ref<number> = ref(props.detail.reportScoring - 1);
