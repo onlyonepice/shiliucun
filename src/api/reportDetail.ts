@@ -111,7 +111,7 @@ export function getReportDetailApi(data: any) {
 export function getReportDetailRecommendApi(id: number) {
   return http.request<void>(
     "get",
-    `/eesa-report/onlineReportNew/front/v1.1/reportTagRecommendation?id=${id}&limit=10`,
+    `/eesa-report/onlineReportNew/front/v1.1/allTagRecommendation?id=${id}&limit=10`,
   );
 }
 
