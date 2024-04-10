@@ -1,6 +1,7 @@
 <template>
   <!-- 会员支付弹窗 -->
   <div
+    v-if="productList"
     class="membersBuy animate__animated"
     :class="showDialog ? 'animate__fadeIn' : 'animate__fadeOut'"
   >
@@ -90,7 +91,7 @@
               :src="membersBuy_dialog_code_mask"
               @click="onResetQRCode"
             />
-            <div class="membersBuy-dialog__body-pay__box">
+            <div v-loading="loading" class="membersBuy-dialog__body-pay__box">
               <canvas :id="item.QRCode" />
             </div>
             <div class="membersBuy-dialog__body-right-weChat">
@@ -106,9 +107,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onDeactivated } from "vue";
+import { ref, onDeactivated, onMounted } from "vue";
 import QRCode from "qrcode";
-const emit = defineEmits(["onCancel"]);
 import { useUserStoreHook } from "@/store/modules/user";
 import { getMemberPayInfo, getPayResult, getMemberPayInfoALi } from "@/api/vip";
 import members_buy_header_bg from "@/assets/img/vip/members_buy_header_bg.png";
@@ -118,22 +118,10 @@ import members_buy_price_bg from "@/assets/img/vip/members_buy_price_bg.png";
 import membersBuy_dialog_code_mask from "@/assets/img/vip/membersBuy-dialog-code-mask.png";
 import weChat_icon from "@/assets/img/vip/membersBuy-dialog-weChat-icon.png";
 import ali_icon from "@/assets/img/vip/membersBuy-dialog-ali-icon.png";
-
 import { ElMessage } from "element-plus";
-const props = defineProps({
-  showMembersBuy: {
-    type: Boolean,
-    default: false,
-  },
-  productList: {
-    type: Object,
-    default: () => {},
-  },
-  openIndex: {
-    type: Number,
-    default: 0,
-  },
-});
+import { getPayInfoList } from "@/api/vip";
+const loading = ref(false);
+const productList: any = ref(null);
 const showDialog = ref(false); // 弹窗动画控制器
 const payContent = ref([
   {
@@ -166,7 +154,32 @@ const onCancel = () => {
   payExpired.value = false;
   clearInterval(timer.value);
   clearTimeout(countDown.value);
-  emit("onCancel", false);
+  userStore.openMembersBuy(false);
+};
+// 获取用户信息
+const getMemberInfo = async () => {
+  try {
+    const _res = (await getPayInfoList()) as any;
+    _res.datas.productSkuFrontList.forEach((item) => {
+      item.originalPrice =
+        item.originalPrice < 100
+          ? (item.originalPrice / 100).toFixed(2)
+          : Math.floor(item.originalPrice / 100);
+      item.preferentialPrice =
+        item.preferentialPrice < 100
+          ? (item.preferentialPrice / 100).toFixed(2)
+          : Math.floor(item.preferentialPrice / 100);
+      item.preferentialPriceCount =
+        item.preferentialPriceCount < 100
+          ? (item.preferentialPriceCount / 100).toFixed(2)
+          : Math.floor(item.preferentialPriceCount / 100);
+    });
+    productList.value = _res.datas;
+    onChoseMember(0);
+    showDialog.value = true;
+  } catch (error) {
+    console.error(error);
+  }
 };
 // 选择支付金额
 const onChoseMember = async (index) => {
@@ -207,11 +220,12 @@ const onResetQRCode = () => {
 };
 // 获取后端支付内容，绘制二维码
 const getPayChatMsg = async (type) => {
+  loading.value = true;
   try {
     const _data = {
       tradeType: "NATIVE",
       productSkuNo:
-        props.productList.productSkuFrontList[choseType.value].productSkuNo,
+        productList.value.productSkuFrontList[choseType.value].productSkuNo,
     };
     const res: any =
       type === "weChat"
@@ -240,10 +254,10 @@ const getPayChatMsg = async (type) => {
       1000 * 60 * 10,
     );
   }
+  loading.value = false;
 };
 // 绘制二维码
 const getQRCode = (type) => {
-  console.log(weChatQRCodeHistory[choseType.value]);
   const opts = {
     errorCorrectionLevel: "H", // 容错级别
     type: "image/png", // 生成的二维码类型
@@ -265,6 +279,7 @@ const getQRCode = (type) => {
       : aliQRCodeHistory.value[choseType.value],
     opts,
   );
+  loading.value = false;
 };
 // 获取支付结果
 const getPayResultFn = async () => {
@@ -274,27 +289,18 @@ const getPayResultFn = async () => {
     )) as any;
     if (res.datas) {
       userStore.handleGetUserInfo();
-      ElMessage.success("付款成功");
+      ElMessage.success("会员开通成功");
       onCancel();
     }
   } catch (error) {
+    ElMessage.error("会员开通失败，请再此尝试或联系客服");
     console.error(error);
   }
 };
-watch(
-  () => props.showMembersBuy,
-  (newVal) => {
-    newVal && (showDialog.value = newVal);
-  },
-  { immediate: true },
-);
-watch(
-  () => props.openIndex,
-  (newVal) => {
-    onChoseMember(newVal);
-  },
-  { immediate: true },
-);
+
+onMounted(() => {
+  getMemberInfo();
+});
 onDeactivated(() => {
   clearInterval(timer.value);
   clearTimeout(countDown.value);
@@ -320,9 +326,6 @@ onDeactivated(() => {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  background-image: url("../../../../../assets/image/member-buy/membersBuy-dialog-bg.png");
-  background-size: 690px 240px;
-  background-repeat: no-repeat;
   border-radius: 8px;
 }
 .membersBuy-dialog__small {
@@ -374,9 +377,6 @@ onDeactivated(() => {
 }
 .membersBuy-dialog__body-left {
   width: 100%;
-  background-image: url("../../../../../assets/image/member-buy/membersBuy-dialog-content-bg.png");
-  background-size: 480px 303px;
-  background-repeat: no-repeat;
 }
 .membersBuy-dialog__body-left__box {
   display: flex;
@@ -451,8 +451,6 @@ onDeactivated(() => {
   position: relative;
 }
 .membersBuy-dialog__body-left__item-chose {
-  background-image: url("../../../../../assets/image/member-buy/membersBuy-dialog-chose-bg.png");
-  background-size: 100% 100%;
   transition: all 0.3s;
 }
 .membersBuy-dialog__body-pay {

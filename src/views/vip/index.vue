@@ -7,13 +7,6 @@
         <p @click="handleClick(item)" class="item_btn" />
       </div>
     </div>
-    <!-- 会员支付弹窗 -->
-    <MembersBuy
-      v-if="showMembersBuy && productList !== null"
-      :show-members-buy="showMembersBuy"
-      :product-list="productList"
-      @onCancel="onOptionDialog"
-    />
     <div
       class="dialog-wrapper"
       :class="[
@@ -42,13 +35,9 @@ import PayQR from "@/assets/img/vip/pay-member-qr.png";
 import { getToken } from "@/utils/auth";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/modules/user";
-import { getPayInfoList } from "@/api/vip";
-import MembersBuy from "./membersBuy.vue";
 const router = useRouter();
 const ns = useNamespace("vip");
-const showMembersBuy = ref(false);
 const QRvisible = ref(false);
-const productList = ref(null);
 const accountList = ref([
   { id: 0, name: "普通账户", bgImg: account_ordinary_bg },
   { id: 1, name: "标准账户", bgImg: account_standard_bg },
@@ -64,42 +53,10 @@ const handleClick = (item) => {
     return useUserStore().openLogin(true);
   }
   if (_id === 1) {
-    getMemberInfo();
-    showMembersBuy.value = true;
+    useUserStore().openMembersBuy(true);
   } else {
     _id === 0 && router.push("/home");
     _id === 2 && (QRvisible.value = true);
-  }
-};
-const onOptionDialog = (value) => {
-  value && (showMembersBuy.value = value);
-  !value &&
-    setTimeout(() => {
-      showMembersBuy.value = value;
-      getMemberInfo();
-    }, 400);
-};
-// 获取用户信息
-const getMemberInfo = async () => {
-  try {
-    const _res = (await getPayInfoList()) as any;
-    _res.datas.productSkuFrontList.forEach((item) => {
-      item.originalPrice =
-        item.originalPrice < 100
-          ? (item.originalPrice / 100).toFixed(2)
-          : Math.floor(item.originalPrice / 100);
-      item.preferentialPrice =
-        item.preferentialPrice < 100
-          ? (item.preferentialPrice / 100).toFixed(2)
-          : Math.floor(item.preferentialPrice / 100);
-      item.preferentialPriceCount =
-        item.preferentialPriceCount < 100
-          ? (item.preferentialPriceCount / 100).toFixed(2)
-          : Math.floor(item.preferentialPriceCount / 100);
-    });
-    productList.value = _res.datas;
-  } catch (error) {
-    console.error(error);
   }
 };
 </script>
