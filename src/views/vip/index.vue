@@ -63,9 +63,13 @@ const handleClick = (item) => {
   if (_id !== 0 && !getToken()) {
     return useUserStore().openLogin(true);
   }
-  _id === 0 && router.push("/home");
-  _id === 1 && (showMembersBuy.value = true);
-  _id === 2 && (QRvisible.value = true);
+  if (_id === 1) {
+    getMemberInfo();
+    showMembersBuy.value = true;
+  } else {
+    _id === 0 && router.push("/home");
+    _id === 2 && (QRvisible.value = true);
+  }
 };
 const onOptionDialog = (value) => {
   value && (showMembersBuy.value = value);
@@ -78,29 +82,26 @@ const onOptionDialog = (value) => {
 // 获取用户信息
 const getMemberInfo = async () => {
   try {
-    if (getToken()) {
-      const _res = (await getPayInfoList()) as any;
-      _res.datas.productSkuFrontList.forEach((item) => {
-        item.originalPrice =
-          item.originalPrice < 100
-            ? (item.originalPrice / 100).toFixed(2)
-            : Math.floor(item.originalPrice / 100);
-        item.preferentialPrice =
-          item.preferentialPrice < 100
-            ? (item.preferentialPrice / 100).toFixed(2)
-            : Math.floor(item.preferentialPrice / 100);
-        item.preferentialPriceCount =
-          item.preferentialPriceCount < 100
-            ? (item.preferentialPriceCount / 100).toFixed(2)
-            : Math.floor(item.preferentialPriceCount / 100);
-      });
-      productList.value = _res.datas;
-    }
+    const _res = (await getPayInfoList()) as any;
+    _res.datas.productSkuFrontList.forEach((item) => {
+      item.originalPrice =
+        item.originalPrice < 100
+          ? (item.originalPrice / 100).toFixed(2)
+          : Math.floor(item.originalPrice / 100);
+      item.preferentialPrice =
+        item.preferentialPrice < 100
+          ? (item.preferentialPrice / 100).toFixed(2)
+          : Math.floor(item.preferentialPrice / 100);
+      item.preferentialPriceCount =
+        item.preferentialPriceCount < 100
+          ? (item.preferentialPriceCount / 100).toFixed(2)
+          : Math.floor(item.preferentialPriceCount / 100);
+    });
+    productList.value = _res.datas;
   } catch (error) {
     console.error(error);
   }
 };
-getMemberInfo();
 </script>
 
 <style lang="scss">
