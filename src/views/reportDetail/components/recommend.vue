@@ -31,7 +31,9 @@ onMounted(() => {
 // 跳转详情
 const onDetail = (item: any) => {
   router.replace(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
-  emit("getInfo");
+  setTimeout(() => {
+    emit("getInfo");
+  }, 200);
 };
 </script>
 

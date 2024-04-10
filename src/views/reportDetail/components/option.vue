@@ -139,7 +139,11 @@ const scoreTextList = ref(["比较差", "较差", "一般", "较好", "比较好
 const showDialog: Ref<boolean> = ref(false); // 报告纠错弹窗
 const dialogVisible = ref(false);
 const dialogImageUrl = ref("");
-const errorContent: Ref<any> = ref({}); // 纠错内容
+const errorContent: Ref<any> = ref({
+  name: "",
+  contactInformation: "",
+  describe: "",
+}); // 纠错内容
 const fileList = ref([]); // 纠错内容照片墙中的图片
 const uploadToken: Ref<any> = ref({
   Authorization: "Bearer " + getToken(),
@@ -176,6 +180,13 @@ const onHandleClose = async (type: boolean) => {
   if (!type) {
     showDialog.value = false;
   } else {
+    if (
+      errorContent.value.name === "" ||
+      errorContent.value.contactInformation === "" ||
+      errorContent.value.describe === ""
+    ) {
+      return ElMessage.warning("请将内容填写完整");
+    }
     const _data = errorContent.value;
     _data.url = fileList.value
       .map((item: any) => item.response.datas)
