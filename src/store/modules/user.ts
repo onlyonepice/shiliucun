@@ -17,6 +17,7 @@ export const useUserStore = defineStore({
     openLoginVisible: false, // 打开登录弹窗
     openVipVisible: false, // 打开vip弹窗
     permissionList: [], // 用户权限
+    showMembersBuy: false, //订阅会员弹框
   }),
   getters: {
     getFileUrl(): string {
@@ -54,6 +55,10 @@ export const useUserStore = defineStore({
     // 打开登录弹窗
     openLogin(type: Boolean) {
       this.openLoginVisible = type;
+    },
+    // 打开订阅会员弹窗
+    openMembersBuy(type: Boolean) {
+      this.showMembersBuy = type;
     },
     // 打开开通vip弹窗
     openVip(type: Boolean) {
