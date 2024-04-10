@@ -39,7 +39,7 @@
     </div>
     <div class="content" v-loading="loading">
       <div class="report-wrapper">
-        <p class="title">付费专区</p>
+        <p class="title" v-if="topReportList.length > 0">付费专区</p>
         <div class="report-box">
           <onLineReportList
             width="198px"
@@ -124,7 +124,6 @@ const getTopOnlineReportSelectedFn = async () => {
 };
 const getFreeOnlineReportSelectedFn = async () => {
   try {
-    loading.value = false;
     const data = await getFreeOnlineReportSelected({
       keyword: "",
       tagIds: checkedTagIds.value.join(","),
@@ -143,6 +142,7 @@ const getFreeOnlineReportSelectedFn = async () => {
     if (_data.resp_code === 0) {
       freeReportList.value.push(..._data.datas.records);
     }
+    loading.value = false;
   } catch (e) {
     loading.value = false;
   }
