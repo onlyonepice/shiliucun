@@ -24,7 +24,10 @@ const router = useRouter();
 const ns = useNamespace("reportDetailRecommend");
 const recommendList = ref([]); // 推荐报告列表
 onMounted(() => {
-  getReportDetailRecommendApi(Number(route.query.id)).then((res: any) => {
+  getReportDetailRecommendApi(
+    Number(route.query.id),
+    route.query.moduleName as string,
+  ).then((res: any) => {
     recommendList.value = res.datas;
   });
 });

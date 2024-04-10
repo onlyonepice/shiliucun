@@ -108,10 +108,10 @@ export function getReportDetailApi(data: any) {
 }
 
 // 获取推荐报告
-export function getReportDetailRecommendApi(id: number) {
+export function getReportDetailRecommendApi(id: number, moduleName: string) {
   return http.request<void>(
     "get",
-    `/eesa-report/onlineReportNew/front/v1.1/allTagRecommendation?id=${id}&limit=10`,
+    `/eesa-report/onlineReportNew/front/v1.1/allTagRecommendation?id=${id}&limit=10&moduleName=${moduleName}`,
   );
 }
 
