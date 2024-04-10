@@ -109,7 +109,11 @@ const getReportDetail = async () => {
 // 购买报告
 const onBuy = (type: boolean) => {
   buyDialogVisible.value = type;
-  buyInfo();
+  if (!type) {
+    clearInterval(payTimer.value);
+  } else {
+    buyInfo();
+  }
 };
 // 调用支付接口获取信息
 const buyInfo = async () => {
@@ -139,8 +143,8 @@ const buyInfo = async () => {
       opts,
     );
     payTimer.value = setInterval(() => {
-      getPayResultFn(datas.orderNo);
-    }, 1000);
+      buyDialogVisible.value && getPayResultFn(datas.orderNo);
+    }, 2000);
   }
 };
 // 获取支付结果

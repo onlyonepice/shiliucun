@@ -57,7 +57,7 @@ const previewPdfSrc: Ref<string> = ref(""); // 预览pdf地址
 const totalPage: Ref<number> = ref(1); // pdf总页数
 const pdfData: Ref<any> = ref(null); // 暂存pdf数据对象，需要删除
 const pdfPage: Ref<number> = ref(1); // pdf页码
-const allReport: Ref<boolean> = ref(false); // 是否为全部报告
+const allReport: Ref<boolean> = ref(true); // 是否为全部报告
 const pdfInfo: Ref<any> = ref({
   pageNumber: 1,
   pagesCount: 1,
