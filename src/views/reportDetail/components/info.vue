@@ -21,11 +21,19 @@
     </template>
   </div>
   <iframe id="iframe" :src="previewPdfSrc" width="100%" height="100%" />
-  <div :class="ns.b('bottom')">
-    <p>3000</p>
-    <span>付费解锁</span>
-    <el-button type="primary" @click="onBuyReport()">立即购买</el-button>
-  </div>
+  <template v-if="isShowFooter">
+    <div :class="ns.b('bottom')" v-if="isNeedBuy" @click="onBuyReport()">
+      <p>3000</p>
+      <img :src="BuyReport" />
+    </div>
+    <div :class="[ns.bm('bottom', 'needVip')]" v-else>
+      <p>完整内容需订阅会员查看</p>
+      <div @click="onOpenVip()">
+        <span>立即订阅</span>
+        <img :src="RightMore" alt="" />
+      </div>
+    </div>
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -33,6 +41,8 @@ import { ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import NumberDown from "@/assets/img/common/number-down.png";
 import NumberUp from "@/assets/img/common/number-up.png";
+import RightMore from "@/assets/img/common/right-more.png";
+import BuyReport from "@/assets/img/common/buy-report.png";
 import { getFilePathApi, getFileApi } from "@/api/reportDetail";
 import { toType } from "@/utils";
 import { ElMessage } from "element-plus";
@@ -56,10 +66,22 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  isNeedBuy: {
+    type: Boolean,
+    default: false,
+  },
+  isShowFooter: {
+    type: Boolean,
+    default: false,
+  },
 });
 // 购买报告
 const onBuyReport = () => {
   emit("onBuy");
+};
+// 订阅会员
+const onOpenVip = () => {
+  // window.open("https://www.baidu.com");
 };
 // 获取pdf地址
 const getFile = async () => {
@@ -156,22 +178,40 @@ getFile();
 .es-reportDetailInfo-bottom {
   @include widthAndHeight(100%, 64px);
   @include flex(center, center, nowrap);
+  @include relative(1);
   p {
-    @include font(24px, 600, rgba(0, 0, 0, 0.9), 32px);
+    @include font(24px, 600, rgba(255, 255, 255, 0.9), 32px);
     margin-right: 8px;
+    @include absolute(1, 50%, none, none, 50%);
+    margin-top: -14px;
+    margin-left: -130px;
     &::before {
       content: "¥";
-      @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+      @include font(14px, 400, rgba(255, 255, 255, 0.9), 22px);
     }
   }
+  img {
+    @include widthAndHeight(286px, 48px);
+    cursor: pointer;
+  }
+}
+.es-reportDetailInfo-bottom--needVip {
+  @include widthAndHeight(100%, 64px);
+  @include flex(center, center, nowrap);
+  p {
+    @include font(16px, 400, rgba(0, 0, 0, 0.9), 24px);
+    margin-right: 16px;
+  }
+  div {
+    @include flex(center, center, nowrap);
+  }
   span {
-    display: inline-block;
-    background: #fff3eb;
-    border-radius: 4px;
-    border: 1px solid #ff892e;
-    @include font(12px, 400, #ff892e, 20px);
-    padding: 2px 8px;
-    margin-right: 24px;
+    @include font(14px, 400, #244bf1, 22px);
+    cursor: pointer;
+  }
+  img {
+    @include widthAndHeight(16px, 16px);
+    cursor: pointer;
   }
 }
 </style>

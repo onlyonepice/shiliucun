@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStoreHook } from "@/store/modules/user";
 import { useRouter } from "vue-router";
+import { useUserStoreHook } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
 const router = useRouter();
 const props = defineProps({
