@@ -9,8 +9,11 @@
       :src="useUserStore.fileUrl + pageData.reportCover"
       alt=""
     />
-    <div class="top-tag tag" v-if="pageData.isTopping === 1">置顶</div>
-    <div class="free-tag tag" v-if="pageData.isFree === 1">免费</div>
+    <div class="online_report_paid_bg_box" v-if="pageData.needToBuy">
+      <img :src="online_report_paid_bg" class="online_report_paid_bg" alt="" />
+      <p class="price">{{ pageData.price ? pageData.price : "-" }}</p>
+    </div>
+
     <p class="title" v-html="pageData.reportName" />
     <p class="author" v-if="pageData.author">
       <span>分析师：</span>
@@ -24,6 +27,7 @@
 import { useRouter } from "vue-router";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
+import online_report_paid_bg from "@/assets/img/online_report_paid_bg.png";
 const router = useRouter();
 const props = defineProps({
   pageData: {
@@ -60,6 +64,34 @@ const useUserStore = useUserStoreHook();
     border: 1px solid #dbdce2;
     object-fit: scale-down;
     border: 1px solid #dbdce2;
+  }
+  .online_report_paid_bg_box {
+    width: 100%;
+    height: 48px;
+    top: 250px;
+    left: 0;
+    position: absolute;
+    .online_report_paid_bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .price {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 8px;
+      @include font(24px, 600, rgba(255, 255, 255, 0.9), 32px);
+      &::before {
+        content: "¥";
+        @include font(14px, 400, rgba(255, 255, 255, 0.9), 22px);
+        margin-right: 2px;
+      }
+    }
   }
 
   .tag {
