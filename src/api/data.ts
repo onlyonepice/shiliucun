@@ -148,3 +148,11 @@ export const getPolicyByFiltrateNoPagination = (data) => {
     { data },
   );
 };
+//政策查找详情
+export const getPolicyDetails = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/Policy/front/openApi/all/V1.0/getPolicyDetails",
+    { data },
+  );
+};
