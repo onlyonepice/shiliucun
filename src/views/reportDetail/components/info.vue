@@ -14,26 +14,30 @@
         <span>/{{ pdfInfo.pagesCount }} 页</span>
       </div>
       <div :class="ns.be('top', 'zoom')">
-        <img :src="NumberDown" alt="" @click="handlePDF('zoomIn')" />
+        <img :src="NumberDown" alt="" />
         <span>{{ pdfInfo.pageScale }}</span>
-        <img :src="NumberUp" alt="" @click="handlePDF('zoomOut')" />
+        <img :src="NumberUp" alt="" />
       </div>
     </template>
   </div>
-  <iframe id="iframe" :src="previewPdfSrc" width="100%" height="100%" />
-  <template v-if="isShowFooter">
-    <div :class="ns.b('bottom')" v-if="isNeedBuy" @click="onBuyReport()">
-      <p>3000</p>
-      <img :src="BuyReport" />
+  <iframe
+    id="iframe"
+    :class="isNeedBuy || !allReport ? ns.b('iframe') : ns.bm('iframe', 'fall')"
+    :src="previewPdfSrc"
+    width="100%"
+    height="100%"
+  />
+  <div :class="ns.b('bottom')" v-if="isNeedBuy" @click="onBuyReport()">
+    <p>{{ detail.price }}</p>
+    <img :src="BuyReport" />
+  </div>
+  <div :class="[ns.bm('bottom', 'needVip')]" v-if="!allReport">
+    <p>完整内容需订阅会员查看</p>
+    <div @click="onOpenVip()">
+      <span>立即订阅</span>
+      <img :src="RightMore" alt="" />
     </div>
-    <div :class="[ns.bm('bottom', 'needVip')]" v-else>
-      <p>完整内容需订阅会员查看</p>
-      <div @click="onOpenVip()">
-        <span>立即订阅</span>
-        <img :src="RightMore" alt="" />
-      </div>
-    </div>
-  </template>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -53,6 +57,7 @@ const previewPdfSrc: Ref<string> = ref(""); // 预览pdf地址
 const totalPage: Ref<number> = ref(1); // pdf总页数
 const pdfData: Ref<any> = ref(null); // 暂存pdf数据对象，需要删除
 const pdfPage: Ref<number> = ref(1); // pdf页码
+const allReport: Ref<boolean> = ref(false); // 是否为全部报告
 const pdfInfo: Ref<any> = ref({
   pageNumber: 1,
   pagesCount: 1,
@@ -92,6 +97,7 @@ const getFile = async () => {
   };
   const { datas, resp_code }: any = await getFilePathApi(_data);
   if (resp_code === 0) {
+    allReport.value = datas.allData;
     totalPage.value = datas.pages;
     getFileDownloadPdf(datas.url, datas["x-oss-meta-token"]);
   }
@@ -172,8 +178,14 @@ getFile();
   }
 }
 #iframe {
-  @include widthAndHeight(100%, calc(100% - 64px));
+  width: 100%;
   background: #dbdce2;
+}
+.es-reportDetailInfo-iframe {
+  height: calc(100% - 64px);
+}
+.es-reportDetailInfo-iframe__fall {
+  height: 100%;
 }
 .es-reportDetailInfo-bottom {
   @include widthAndHeight(100%, 64px);
@@ -188,6 +200,7 @@ getFile();
     &::before {
       content: "¥";
       @include font(14px, 400, rgba(255, 255, 255, 0.9), 22px);
+      margin-right: 3px;
     }
   }
   img {

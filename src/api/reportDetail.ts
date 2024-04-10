@@ -169,3 +169,22 @@ export const setReportFeedbackApi = (data: any) => {
     { data },
   );
 };
+// 获取支付信息
+export const getReportPayInfoListApi = (params: any) => {
+  return http.request<void>(
+    "get",
+    "/eesa-report/onlineReportNew/front/v1.0/buyNow",
+    { params },
+  );
+};
+
+// 获取支付结果
+export function getPayResultApi(params: any) {
+  return http.request(
+    "get",
+    "/eesa-report/user/order/front/v1.0/checkOrderStatus",
+    {
+      params,
+    },
+  );
+}
