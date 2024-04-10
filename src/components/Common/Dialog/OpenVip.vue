@@ -24,7 +24,6 @@ import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 const ns = useNamespace("openVipDialog");
 const dialogVisible: Ref<boolean> = ref(false);
-const { VITE_I_REPORT_URL } = import.meta.env;
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -39,12 +38,10 @@ watch(
   { immediate: true },
 );
 const handleClose = (type: boolean) => {
-  !type && useUserStore().openVip(false);
-  type &&
-    window.open(
-      VITE_I_REPORT_URL + "#/relation-servicer?name=订阅会员",
-      "externalWindow",
-    );
+  useUserStore().openVip(false);
+  if (type) {
+    useUserStore().$state.showMembersBuy = true;
+  }
 };
 </script>
 

@@ -48,6 +48,7 @@ import NumberUp from "@/assets/img/common/number-up.png";
 import RightMore from "@/assets/img/common/right-more.png";
 import BuyReport from "@/assets/img/common/buy-report.png";
 import { getFilePathApi, getFileApi } from "@/api/reportDetail";
+import { useUserStore } from "@/store/modules/user";
 import { toType } from "@/utils";
 import { ElMessage } from "element-plus";
 const emit = defineEmits(["onBuy"]);
@@ -86,7 +87,7 @@ const onBuyReport = () => {
 };
 // 订阅会员
 const onOpenVip = () => {
-  // window.open("https://www.baidu.com");
+  useUserStore().$state.showMembersBuy = true;
 };
 // 获取pdf地址
 const getFile = async () => {
