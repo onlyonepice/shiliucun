@@ -140,3 +140,11 @@ export const policyFilterSearch = (data) => {
     { data },
   );
 };
+//政策_根据筛选获取有政策的省份政策查找不分页
+export const getPolicyByFiltrateNoPagination = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/Policy/front/openApi/V1.0/getPolicyByFiltrateNoPagination",
+    { data },
+  );
+};

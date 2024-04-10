@@ -44,12 +44,14 @@ defineProps({
   },
 });
 // 通过onChange事件传递值给父组件
-function onSearch(data) {
-  emit("onSearch", data);
-  model.value = data;
+function onSearch() {
+  model.value = value.value;
+  emit("onSearch", value.value);
 }
 const handleClearTap = () => {
   value.value = "";
+  model.value = value.value;
+  emit("onSearch", value.value);
 };
 </script>
 
@@ -64,7 +66,7 @@ const handleClearTap = () => {
 
     .icon_clear {
       @include widthAndHeight(20px, 20px);
-      @include absolute(1, 14px, 112px, none, none);
+      @include absolute(1, 10px, 105px, none, none);
       cursor: pointer;
 
       &:hover {
