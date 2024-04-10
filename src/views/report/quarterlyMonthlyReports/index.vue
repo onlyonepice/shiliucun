@@ -54,6 +54,8 @@ import quarterlyPic from "@/assets/img/report/quarterly-bg-pic.png";
 import { reportList } from "@/api/report";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
+import { useUserStoreHook } from "@/store/modules/user";
+import { getToken } from "@/utils/auth";
 const router = useRouter();
 // const { VITE_I_REPORT_URL } = import.meta.env;
 const ns = useNamespace("quarterlyMonthly");
@@ -141,6 +143,9 @@ const dropdownLoading = async (type) => {
 };
 // 跳转报告详情
 const onDetailReport = async (item: any) => {
+  if (!getToken()) {
+    return useUserStoreHook().openLogin(true);
+  }
   router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 };
 onMounted(() => {
