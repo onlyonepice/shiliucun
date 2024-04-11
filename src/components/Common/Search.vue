@@ -111,6 +111,7 @@ const handleClearTap = () => {
         background-color: white;
         .el-input__inner {
           text-indent: 13px;
+          padding-right: 120px;
         }
       }
     }

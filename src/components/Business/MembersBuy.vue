@@ -147,7 +147,7 @@ const weChatQRCodeHistory = ref(["", "", ""]); // 微信支付信息缓存
 const aliQRCodeHistory = ref(["", "", ""]); // 支付宝支付信息缓存
 const payInfoHistory = ref([{}, {}, {}]); // 支付信息
 const noPay = ref(false); // 无支付信息
-const choseType = ref(0); // 选中的哪一种会员
+const choseType = ref(-1); // 选中的哪一种会员
 
 // 取消支付
 const onCancel = () => {
@@ -184,6 +184,7 @@ const getMemberInfo = async () => {
 };
 // 选择支付金额
 const onChoseMember = throttle(async (index) => {
+  if (index === choseType.value) return;
   choseType.value = index;
   clearInterval(timer.value);
   clearTimeout(countDown.value);

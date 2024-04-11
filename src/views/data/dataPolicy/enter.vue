@@ -72,10 +72,7 @@
             <el-collapse-item :title="item.policyReleased" :name="index">
               <el-scrollbar
                 :style="{
-                  height:
-                    item.data.length > 10
-                      ? '500px'
-                      : item.data.length * 61 + 'px',
+                  height: item.data.length > 10 ? '500px' : 'auto',
                 }"
                 class="policy_item_box"
               >

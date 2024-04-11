@@ -1,6 +1,6 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
-    <p class="title">会员中心</p>
+    <p class="title">会员中心。</p>
     <div class="wrapper">
       <div class="item" v-for="item in accountList" :key="item.name">
         <img :src="item.bgImg" alt="" />
