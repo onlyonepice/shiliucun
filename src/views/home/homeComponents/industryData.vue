@@ -119,39 +119,39 @@ watch(windowScroll, (e) => {
   scrollTop.value = e.scrollTop;
 });
 
-function disableScroll() {
-  window.addEventListener("mousewheel", preventDefault, { passive: false }); // Chrome/Safari/Opera
-  window.addEventListener("DOMMouseScroll", preventDefault, { passive: false }); // Firefox
-}
+// function disableScroll() {
+//   window.addEventListener("mousewheel", preventDefault, { passive: false }); // Chrome/Safari/Opera
+//   window.addEventListener("DOMMouseScroll", preventDefault, { passive: false }); // Firefox
+// }
 
 // 阻止默认行为的函数
-function preventDefault(event) {
-  event = event || window.event;
-  window.scrollBy(0, 200); // 滚动页面
-  var delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
-  if (scrollTop.value >= 1320 && scrollTop.value < 1500) {
-    const index = Object.keys(tabList.value).findIndex((item) => {
-      return item === currentTab.value;
-    });
-    // 在此处理滚轮事件
-    if (delta > 0) {
-      if (index !== 0) {
-        currentTab.value = Object.keys(tabList.value)[index - 1];
-        if (event.preventDefault) event.preventDefault();
-        event.returnValue = false;
-      }
-    } else if (delta < 0) {
-      const lastIndex = Object.keys(tabList.value).length - 1;
-      if (index !== lastIndex) {
-        currentTab.value = Object.keys(tabList.value)[index + 1];
-        if (event.preventDefault) event.preventDefault();
-        event.returnValue = false;
-      }
-    }
-  }
-}
+// function preventDefault(event) {
+//   event = event || window.event;
+//   window.scrollBy(0, 200); // 滚动页面
+//   var delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
+//   if (scrollTop.value >= 1320 && scrollTop.value < 1500) {
+//     const index = Object.keys(tabList.value).findIndex((item) => {
+//       return item === currentTab.value;
+//     });
+//     // 在此处理滚轮事件
+//     if (delta > 0) {
+//       if (index !== 0) {
+//         currentTab.value = Object.keys(tabList.value)[index - 1];
+//         if (event.preventDefault) event.preventDefault();
+//         event.returnValue = false;
+//       }
+//     } else if (delta < 0) {
+//       const lastIndex = Object.keys(tabList.value).length - 1;
+//       if (index !== lastIndex) {
+//         currentTab.value = Object.keys(tabList.value)[index + 1];
+//         if (event.preventDefault) event.preventDefault();
+//         event.returnValue = false;
+//       }
+//     }
+//   }
+// }
 onMounted(() => {
-  disableScroll();
+  // disableScroll();
 });
 getLatestPolicyFn();
 getLatestTenderFn();
