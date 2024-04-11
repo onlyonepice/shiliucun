@@ -80,7 +80,6 @@ const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("reportDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
-  { text: "报告", path: "/industryInsight" },
   { text: "季报月报", path: "/quarterlyMonthlyReports" },
   { text: "", path: "" },
 ]);
@@ -180,8 +179,8 @@ onMounted(() => {
     const _data = reportStore().getReportMapList(
       route.query.moduleName as string,
     );
-    breadcrumbList.value[1].text = _data.ch;
-    breadcrumbList.value[1].path = _data.path;
+    breadcrumbList.value[0].text = _data.ch;
+    breadcrumbList.value[0].path = _data.path;
   }
 });
 </script>
