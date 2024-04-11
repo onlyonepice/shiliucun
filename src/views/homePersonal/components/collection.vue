@@ -149,9 +149,7 @@ const getFileDownloadPdf = async (url: string, token: string, name: string) => {
 // 跳转i-report2预览
 const onToDetail = (item: any) => {
   const { moduleName, reportId } = item;
-  router.push(
-    `/reportDetail?id=${reportId}&moduleName=${moduleName}&source=collection`,
-  );
+  router.push(`/reportDetail?id=${reportId}&moduleName=${moduleName}`);
 };
 </script>
 

@@ -136,7 +136,8 @@ const getSeries = async () => {
 // 点击左侧边栏
 const onClickTab = (id: number) => {
   if (id !== 5) {
-    choseTab.value = id;
+    // choseTab.value = id;
+    router.replace(`/homePersonal?id=${id}`);
   } else {
     visible.value = true;
   }

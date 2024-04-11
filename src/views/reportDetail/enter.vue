@@ -61,7 +61,7 @@
 import QRCode from "qrcode";
 import { ref, Ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { reportStore } from "@/store/modules/report";
 import {
   getReportDetailApi,
@@ -77,6 +77,7 @@ import AliPay from "@/assets/img/common/ali-pay.png";
 import { ElMessage } from "element-plus";
 const buyDialogVisible: Ref<boolean> = ref(false); // 购买报告弹窗
 const route = useRoute();
+const router = useRouter();
 const ns = useNamespace("reportDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
   { text: "报告", path: "/industryInsight" },
@@ -163,10 +164,16 @@ const getPayResultFn = async (orderNo: string) => {
 };
 getReportDetail();
 onMounted(() => {
-  if (route.query.source !== undefined) {
-    const _data = reportStore().getReportMapList(route.query.source as string);
+  const _router = router.options.history.state.back as string;
+  if (
+    _router.split("?").indexOf("/homePersonal") !== -1 ||
+    _router.split("?").indexOf("/dataWinningBid") !== -1
+  ) {
+    const _data = reportStore().getReportMapList(
+      _router.split("?")[0] as string,
+    );
     breadcrumbList.value = [
-      { text: _data.ch, path: _data.path },
+      { text: _data.ch, path: router.options.history.state.back },
       { text: "", path: "" },
     ];
   } else {

@@ -27,6 +27,7 @@ export default {
       meta: {
         title: "个人中心",
         backgroundColor: "#F2F3F5",
+        keepAlive: true,
       },
     },
   ],
