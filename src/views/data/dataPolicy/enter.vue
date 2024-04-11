@@ -111,6 +111,17 @@
                               {{ getRegion(row.regionName) }}
                             </p>
                           </div>
+                          <div
+                            class="detail_content_item_value_item"
+                            v-if="row.allocationStorageRatio"
+                          >
+                            <p class="detail_content_item_value_item_label">
+                              配储比例
+                            </p>
+                            <p class="detail_content_item_value_item_value">
+                              {{ row.allocationStorageRatio }}
+                            </p>
+                          </div>
                           <div class="detail_content_item_value_item">
                             <p class="detail_content_item_value_item_label">
                               原文链接
