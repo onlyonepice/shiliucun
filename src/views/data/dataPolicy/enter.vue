@@ -287,6 +287,7 @@ const getData = async () => {
   filterLoading.value = false;
 };
 const onSearch = () => {
+  policyReleased.value = "";
   getData();
   policyFilterSearchFn();
 };
