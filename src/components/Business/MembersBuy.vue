@@ -211,6 +211,7 @@ const onChoseMember = throttle(async (index) => {
     );
   }
   !noPay.value &&
+    showDialog.value &&
     (timer.value = setInterval(() => {
       getPayResultFn();
     }, 2000));
