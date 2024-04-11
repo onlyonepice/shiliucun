@@ -148,7 +148,7 @@ export const getFileApi = (url, token) => {
 export const setReportCollectApi = (data: any) => {
   return http.request<void>(
     "post",
-    "/eesa-report/onlineReportNew/front/v1.0/getReportCollection",
+    "/eesa-report/onlineReportNew/front/v1.0/getAllReportCollection",
     {
       data,
     },

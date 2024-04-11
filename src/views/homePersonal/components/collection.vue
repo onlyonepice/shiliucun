@@ -41,7 +41,7 @@
           >预览</el-button
         >
         <el-button
-          v-if="item.state !== '已失效'"
+          v-if="item.state !== '已失效' && item.downloadPermission"
           type="primary"
           @click="onDownload(item)"
           >下载</el-button
