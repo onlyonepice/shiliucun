@@ -50,7 +50,9 @@ const onDetail = (data: any) => {
   if (!getToken()) {
     return useUserStoreHook().openLogin(true);
   }
-  router.push(`/reportDetail?id=${data.id}&moduleName=${data.moduleName}`);
+  router.push(
+    `/reportDetail?id=${data.id}&moduleName=${data.moduleName}&source=winningTheBid`,
+  );
 };
 const onchangeCurrent = (val) => {
   requestData.value.page = val;

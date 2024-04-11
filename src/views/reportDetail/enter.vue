@@ -38,7 +38,7 @@
       </p>
       <p :class="ns.be('buyDialog', 'price')">{{ reportDetail.price }}</p>
       <p :class="ns.be('buyDialog', 'title')">
-        您正在购买报告 <br />《2023英国储能市场概况-机遇与挑战》
+        您正在购买报告 <br />{{ reportDetail.reportName }}
       </p>
       <div :class="ns.be('buyDialog', 'pay')">
         <div
@@ -163,11 +163,12 @@ const getPayResultFn = async (orderNo: string) => {
 };
 getReportDetail();
 onMounted(() => {
-  if (route.query.source === "collection") {
-    breadcrumbList.value[0].text = "个人中心";
-    breadcrumbList.value[0].path = "/homePersonal";
-    breadcrumbList.value[1].text = "我的收藏";
-    breadcrumbList.value[1].path = "/homePersonal?id=2";
+  if (route.query.source !== undefined) {
+    const _data = reportStore().getReportMapList(route.query.source as string);
+    breadcrumbList.value = [
+      { text: _data.ch, path: _data.path },
+      { text: "", path: "" },
+    ];
   } else {
     const _data = reportStore().getReportMapList(
       route.query.moduleName as string,

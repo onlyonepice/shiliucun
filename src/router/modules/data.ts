@@ -36,6 +36,7 @@ export default {
       },
       meta: {
         title: "中标",
+        keepAlive: true,
       },
     },
     {

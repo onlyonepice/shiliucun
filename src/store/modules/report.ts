@@ -16,6 +16,21 @@ export const reportStore = defineStore({
         path: "/quarterlyMonthlyReports",
       },
       { en: "WHITE_PAPER", ch: "白皮书", path: "/reportWhitePaper" },
+      {
+        en: "collection",
+        ch: "我的收藏",
+        path: "/homePersonal?id=2",
+      },
+      {
+        en: "winningTheBid",
+        ch: "中标",
+        path: "/dataWinningBid",
+      },
+    ],
+    reportMapList2: [
+      {
+        en: "ONLINE_REPORT",
+      },
     ],
   }),
   actions: {
