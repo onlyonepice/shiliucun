@@ -118,6 +118,9 @@ const onClose = async (type: boolean) => {
 };
 // 下载功能
 const onDownload = async (item: any) => {
+  if (item.isTopping === 1) {
+    return getReportLink(item);
+  }
   if (useUserStore().checkPermission("REPORT_DOWNLOAD")) {
     getReportLink(item);
   }
