@@ -5,7 +5,7 @@
         <template v-for="item in breadcrumbList" :key="item.text">
           <el-breadcrumb-item
             v-if="item.path !== '' && item.path.indexOf('http') === -1"
-            :to="{ path: item.path }"
+            @click="onTo(item.path)"
             >{{ item.text }}</el-breadcrumb-item
           >
           <el-breadcrumb-item
@@ -27,14 +27,19 @@ interface BreadcrumbList {
   text: string;
   path: string;
 }
+import { useRouter } from "vue-router";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("breadcrumb");
+const router = useRouter();
 defineProps({
   breadcrumbList: {
     type: Array as () => BreadcrumbList[],
     default: () => [],
   },
 });
+const onTo = (path: string) => {
+  router.push(path);
+};
 </script>
 
 <style scoped lang="scss">

@@ -163,11 +163,18 @@ const getPayResultFn = async (orderNo: string) => {
 };
 getReportDetail();
 onMounted(() => {
-  const _data = reportStore().getReportMapList(
-    route.query.moduleName as string,
-  );
-  breadcrumbList.value[1].text = _data.ch;
-  breadcrumbList.value[1].path = _data.path;
+  if (route.query.source === "collection") {
+    breadcrumbList.value[0].text = "个人中心";
+    breadcrumbList.value[0].path = "/homePersonal";
+    breadcrumbList.value[1].text = "我的收藏";
+    breadcrumbList.value[1].path = "/homePersonal?id=2";
+  } else {
+    const _data = reportStore().getReportMapList(
+      route.query.moduleName as string,
+    );
+    breadcrumbList.value[1].text = _data.ch;
+    breadcrumbList.value[1].path = _data.path;
+  }
 });
 </script>
 
