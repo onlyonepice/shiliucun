@@ -76,10 +76,17 @@ const props = defineProps({
   },
 });
 const contentDict: Ref<string | number> = ref(props.contentFilter[0].id); // 筛选项结果
-const releaseTime: Ref<string | number> = ref(props.timeFilter[0].paramValue);
+const releaseTime: Ref<string | number> = ref("");
 onMounted(() => {
   getElectricityTypeOneName();
 });
+const getReleaseTime = () => {
+  const _data = props.timeFilter.filter((item) => {
+    return item.defaultValue;
+  });
+  releaseTime.value = _data[0].paramDesc;
+};
+getReleaseTime();
 // 招标内容筛选项改变
 const onChangeFilter = (id: string | number, type: string) => {
   type === "contentDict" ? (contentDict.value = id) : (releaseTime.value = id);

@@ -24,7 +24,10 @@
         placeholder="请输入"
         :type="props.specialType"
         :disabled="props.disabled"
+        :maxlength="maxlength"
         @input="handleChange"
+        :show-word-limit="specialType === 'textarea'"
+        :rows="3"
       />
       <span v-if="inputDesc" class="select__input-desc">{{ inputText }}</span>
     </div>
@@ -33,8 +36,6 @@
         v-model="value"
         placeholder="请输入"
         controls-position="right"
-        :min="0"
-        :max="100"
         :disabled="props.disabled"
         @input="handleChange"
       />
@@ -111,6 +112,10 @@ const props = defineProps({
   cascaderOption: {
     type: Object,
     default: () => {},
+  },
+  maxlength: {
+    type: Number,
+    default: 999999,
   },
 });
 const value: any = ref(""); // 选中值

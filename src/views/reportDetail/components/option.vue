@@ -55,6 +55,7 @@
     width="560px"
     height="432px"
     @onHandleClose="onHandleClose"
+    :class="ns.be('dialog--content', 'error')"
   >
     <template #content>
       <div :class="ns.be('content', 'dialog')">
@@ -76,6 +77,7 @@
           type="input"
           :defaultValue="errorContent.contactInformation"
           width="434px"
+          :maxlength="11"
           @onChange="
             (val) => {
               return onChangeInfo(val, 'contactInformation');
@@ -91,6 +93,7 @@
           specialType="textarea"
           width="434px"
           height="64px"
+          :maxlength="200"
           @onChange="
             (val) => {
               return onChangeInfo(val, 'describe');
@@ -115,7 +118,11 @@
       </div>
     </template>
   </Dialog>
-  <el-dialog v-model="dialogVisible" :append-to-body="true">
+  <el-dialog
+    v-model="dialogVisible"
+    :append-to-body="true"
+    :class="ns.be('dialog--content', 'preview')"
+  >
     <img w-full :src="dialogImageUrl" alt="Preview Image" />
   </el-dialog>
 </template>
@@ -125,16 +132,21 @@ import { ref, defineProps, Ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import StarEmpty from "@/assets/img/reportDetail/i-Report-star.png";
 import StarFull from "@/assets/img/reportDetail/i-Report-star-fill.png";
-import { setReportScoreApi } from "@/api/reportDetail.ts";
+import UploadImg from "@/assets/img/common/upload-image.png";
 import { ElMessage } from "element-plus";
 import useClipboard from "vue-clipboard3";
-import { setReportCollectApi, setReportFeedbackApi } from "@/api/reportDetail";
-import UploadImg from "@/assets/img/common/upload-image.png";
 import { getToken } from "@/utils/auth";
 import type { UploadProps } from "element-plus";
 import { useUserStore } from "@/store/modules/user";
-import { getFilePathApi, getFileApi } from "@/api/reportDetail";
+import {
+  getFilePathApi,
+  getFileApi,
+  setReportCollectApi,
+  setReportFeedbackApi,
+  setReportScoreApi,
+} from "@/api/reportDetail";
 import { reportStore } from "@/store/modules/report";
+import { regMobile } from "@/utils/rule";
 const ns = useNamespace("reportDetailOption");
 const { toClipboard } = useClipboard();
 const emit = defineEmits(["onBuy"]);
@@ -194,6 +206,9 @@ const onHandleClose = async (type: boolean) => {
     ) {
       return ElMessage.warning("请将内容填写完整");
     }
+    if (!regMobile.test(errorContent.value.contactInformation)) {
+      return ElMessage.error("请输入正确手机号");
+    }
     const _data = errorContent.value;
     _data.url = fileList.value
       .map((item: any) => item.response.datas)
@@ -214,7 +229,7 @@ const score: Ref<number> = ref(
   props.detail.reportScoring === 0 ? -1 : props.detail.reportScoring - 1,
 );
 // 购买报告
-const onBuyReport = () => {
+const onBuyReport = async () => {
   if (props.isNeedBuy) {
     emit("onBuy");
   } else {
@@ -252,9 +267,10 @@ const scoreSure: Ref<number> = ref(props.detail.reportScoring - 1);
 // 收藏按钮
 const onCollection = async () => {
   const { resp_code }: any = await setReportCollectApi({
-    collectionType: 1,
+    collectionType: "REPORT",
     reportId: props.detail.id,
     uncollect: props.detail.isCollected,
+    moduleName: props.detail.moduleName,
   });
   if (resp_code === 0) {
     ElMessage.success(
@@ -373,7 +389,7 @@ const onScore = async (item: number) => {
   @include flex(flex-start, flex-start, nowrap);
   margin-bottom: 16px;
   &:nth-last-child(1) {
-    margin-top: 38px;
+    margin-top: 54px;
     margin-bottom: 0;
   }
   & > span {
@@ -407,9 +423,20 @@ const onScore = async (item: number) => {
     }
   }
 }
+.es-reportDetailOption-dialog--content__error {
+  .el-dialog__footer {
+    padding-top: 4px;
+  }
+}
 .es-reportDetailOption-content--hidden {
   .el-upload {
     display: none;
+  }
+}
+.es-reportDetailOption-dialog--content__preview {
+  .el-dialog__body {
+    @include flex();
+    height: 600px;
   }
 }
 </style>

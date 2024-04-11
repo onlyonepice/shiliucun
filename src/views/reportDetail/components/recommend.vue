@@ -24,7 +24,10 @@ const router = useRouter();
 const ns = useNamespace("reportDetailRecommend");
 const recommendList = ref([]); // 推荐报告列表
 onMounted(() => {
-  getReportDetailRecommendApi(Number(route.query.id)).then((res: any) => {
+  getReportDetailRecommendApi(
+    Number(route.query.id),
+    route.query.moduleName as string,
+  ).then((res: any) => {
     recommendList.value = res.datas;
   });
 });
@@ -46,8 +49,14 @@ const onDetail = (item: any) => {
   background: #ffffff;
   border-radius: 8px;
   @include padding(24px, 24px, 18px, 24px);
+  @include relative();
+  padding-top: 48px;
   h4 {
-    margin-bottom: 16px;
+    width: 100%;
+    @include absolute(1, 24px, 0, none, none);
+    background-color: #ffffff;
+    line-height: 24px;
+    padding-left: 24px;
   }
 }
 .es-reportDetailRecommend-list {

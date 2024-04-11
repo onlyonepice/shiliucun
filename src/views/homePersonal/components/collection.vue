@@ -41,7 +41,7 @@
           >预览</el-button
         >
         <el-button
-          v-if="item.state !== '已失效'"
+          v-if="item.state !== '已失效' && item.downloadPermission"
           type="primary"
           @click="onDownload(item)"
           >下载</el-button
@@ -117,7 +117,10 @@ const onClose = async (type: boolean) => {
   }
 };
 // 下载功能
-const onDownload = (item: any) => {
+const onDownload = async (item: any) => {
+  if (item.isTopping === 1) {
+    return getReportLink(item);
+  }
   if (useUserStore().checkPermission("REPORT_DOWNLOAD")) {
     getReportLink(item);
   }

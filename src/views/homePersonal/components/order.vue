@@ -21,9 +21,15 @@
       <el-table-column prop="createTime" label="购买时间" width="200" />
       <el-table-column prop="totalAmount" label="订单金额" />
       <el-table-column label="操作">
-        <slot>
-          <p :class="[ns.b('buy')]" @click="onPay">再次购买</p>
-        </slot>
+        <template #default="scope">
+          <p
+            :class="[ns.b('buy')]"
+            @click="onPay"
+            v-if="scope.row.module === null"
+          >
+            再次购买
+          </p>
+        </template>
       </el-table-column>
     </el-table>
     <Pagination :total="total" @onchangeCurrent="onchangeCurrent" />
@@ -51,8 +57,8 @@ import { ref, Ref } from "vue";
 import { myOrderListApi } from "@/api/user";
 import useNamespace from "@/utils/nameSpace";
 import InvoicingDesc from "@/assets/img/homePersonal/invoicing-desc.png";
+import { useUserStore } from "@/store/modules/user";
 const ns = useNamespace("homePersonalOrder");
-const { VITE_I_REPORT_URL } = import.meta.env;
 const tableData: Ref<any> = ref([]);
 const loading: Ref<boolean> = ref(false); // 加载数据
 const total: Ref<number> = ref(0); // 数据总数
@@ -87,10 +93,7 @@ const getOrderList = async () => {
 getOrderList();
 // 支付
 const onPay = () => {
-  window.open(
-    VITE_I_REPORT_URL + "#/relation-servicer?name=订阅会员",
-    "externalWindow",
-  );
+  useUserStore().$state.showMembersBuy = true;
 };
 </script>
 

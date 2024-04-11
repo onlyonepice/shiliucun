@@ -181,6 +181,7 @@
   .el-switch__core {
     background-color: #dcdfe6;
   }
+
 }
 
 .el-table__row {
@@ -200,4 +201,10 @@
 }
 .el-textarea__inner:focus {
   box-shadow: none;
+}
+.el-breadcrumb__inner{
+  cursor: pointer;
+}
+.el-textarea .el-input__count{
+  background-color: transparent ;
 }

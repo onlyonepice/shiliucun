@@ -108,10 +108,10 @@ export function getReportDetailApi(data: any) {
 }
 
 // 获取推荐报告
-export function getReportDetailRecommendApi(id: number) {
+export function getReportDetailRecommendApi(id: number, moduleName: string) {
   return http.request<void>(
     "get",
-    `/eesa-report/onlineReportNew/front/v1.1/reportTagRecommendation?id=${id}&limit=10`,
+    `/eesa-report/onlineReportNew/front/v1.1/allTagRecommendation?id=${id}&limit=10&moduleName=${moduleName}`,
   );
 }
 
@@ -148,7 +148,7 @@ export const getFileApi = (url, token) => {
 export const setReportCollectApi = (data: any) => {
   return http.request<void>(
     "post",
-    "/eesa-report/onlineReportNew/front/v1.0/getReportCollection",
+    "/eesa-report/onlineReportNew/front/v1.0/getAllReportCollection",
     {
       data,
     },
@@ -169,3 +169,22 @@ export const setReportFeedbackApi = (data: any) => {
     { data },
   );
 };
+// 获取支付信息
+export const getReportPayInfoListApi = (params: any) => {
+  return http.request<void>(
+    "get",
+    "/eesa-report/onlineReportNew/front/v1.0/buyNow",
+    { params },
+  );
+};
+
+// 获取支付结果
+export function getPayResultApi(params: any) {
+  return http.request(
+    "get",
+    "/eesa-report/user/order/front/v1.0/checkOrderStatus",
+    {
+      params,
+    },
+  );
+}

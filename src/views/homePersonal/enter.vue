@@ -133,13 +133,11 @@ const getSeries = async () => {
     });
   }
 };
-onMounted(async () => {
-  getSeries();
-});
 // 点击左侧边栏
 const onClickTab = (id: number) => {
   if (id !== 5) {
-    choseTab.value = id;
+    // choseTab.value = id;
+    router.replace(`/homePersonal?id=${id}`);
   } else {
     visible.value = true;
   }
@@ -154,7 +152,8 @@ const onHandleClose = (type: boolean) => {
 };
 // 监听路由变化
 onMounted(() => {
-  choseTab.value = Number(route.query.id);
+  choseTab.value = Number(route.query.id || 1);
+  getSeries();
 });
 </script>
 

@@ -16,7 +16,20 @@
         'padding-top': route.path === '/home' ? '0' : '56px',
       }"
     >
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component
+            :is="Component"
+            :key="$route.name"
+            v-if="$route.meta.keepAlive"
+          />
+        </keep-alive>
+        <component
+          :is="Component"
+          :key="$route.name"
+          v-if="!$route.meta.keepAlive"
+        />
+      </router-view>
     </div>
     <PageBottom />
   </el-scrollbar>
@@ -41,7 +54,6 @@ import { useRoute } from "vue-router";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 import { useUserStore } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
-import PageNav from "@/components/Business/PageNav.vue";
 const opacityBg: Ref<boolean> = ref(true); // 是否展示透明背景
 const route = useRoute();
 const showNavBar: Ref<boolean> = ref(true);
@@ -59,6 +71,7 @@ watch(
   () => route.path,
   (path) => {
     opacityBg.value = path === "/home";
+    windowScroll.SET_SCROLL_TOP(0);
   },
   { immediate: true },
 );

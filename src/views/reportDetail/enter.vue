@@ -8,15 +8,14 @@
           <reportInfo
             :detail="reportDetail"
             @onBuy="onBuy(true)"
-            :is-show-footer="true"
-            :is-need-buy="true"
+            :is-need-buy="reportDetail.needToBuy"
           />
         </div>
         <div :class="ns.be('content', 'right')">
           <reportOption
             :detail="reportDetail"
             @onBuy="onBuy(true)"
-            :is-need-buy="false"
+            :is-need-buy="reportDetail.needToBuy"
           />
           <reportRecommend @getInfo="getReportDetail()" />
         </div>
@@ -37,9 +36,9 @@
       <p :class="ns.be('buyDialog', 'desc')">
         请在<span>15分钟</span>内支付，过时将自动关闭
       </p>
-      <p :class="ns.be('buyDialog', 'price')">999</p>
+      <p :class="ns.be('buyDialog', 'price')">{{ reportDetail.price }}</p>
       <p :class="ns.be('buyDialog', 'title')">
-        您正在购买报告 <br />《2023英国储能市场概况-机遇与挑战》
+        您正在购买报告 <br />{{ reportDetail.reportName }}
       </p>
       <div :class="ns.be('buyDialog', 'pay')">
         <div
@@ -47,7 +46,7 @@
           v-for="item in payInfo"
           :key="item.id"
         >
-          <img :class="ns.be('pay', 'img')" :src="item.payImg" alt="" />
+          <canvas :class="ns.be('pay', 'img')" :id="item.desc" />
           <div :class="ns.be('pay', 'title')">
             <img :src="item.icon" alt="" />
             <p :name="item.title">{{ item.title }}</p>
@@ -59,28 +58,35 @@
 </template>
 
 <script lang="ts" setup>
+import QRCode from "qrcode";
 import { ref, Ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { reportStore } from "@/store/modules/report";
-import { getReportDetailApi } from "@/api/reportDetail";
+import {
+  getReportDetailApi,
+  getReportPayInfoListApi,
+  getPayResultApi,
+} from "@/api/reportDetail";
 import reportOption from "./components/option.vue";
 import reportRecommend from "./components/recommend.vue";
 import reportInfo from "./components/info.vue";
 import BuyDialogBg from "@/assets/img/common/buy-dialog-bg.png";
 import WeChatPay from "@/assets/img/common/weChat-pay.png";
 import AliPay from "@/assets/img/common/ali-pay.png";
+import { ElMessage } from "element-plus";
 const buyDialogVisible: Ref<boolean> = ref(false); // 购买报告弹窗
 const route = useRoute();
+const router = useRouter();
 const ns = useNamespace("reportDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
-  { text: "报告", path: "/industryInsight" },
   { text: "季报月报", path: "/quarterlyMonthlyReports" },
   { text: "", path: "" },
 ]);
+const payTimer = ref(null); // 支付定时器
 const payInfo: Ref<any> = ref([
-  { id: 1, title: "微信支付", icon: WeChatPay, payImg: "" },
-  { id: 1, title: "支付宝支付", icon: AliPay, payImg: "" },
+  { id: 1, title: "微信支付", desc: "weChat", icon: WeChatPay, payImg: "" },
+  { id: 2, title: "支付宝支付", desc: "ali", icon: AliPay, payImg: "" },
 ]); // 支付信息
 const reportDetail: Ref<any> = ref({}); // 报告详情
 const loading: Ref<boolean> = ref(false); // 加载状态
@@ -103,14 +109,79 @@ const getReportDetail = async () => {
 // 购买报告
 const onBuy = (type: boolean) => {
   buyDialogVisible.value = type;
+  if (!type) {
+    clearInterval(payTimer.value);
+  } else {
+    buyInfo();
+  }
+};
+// 调用支付接口获取信息
+const buyInfo = async () => {
+  const { resp_code, datas }: any = await getReportPayInfoListApi({
+    reportId: Number(route.query.id),
+    tradeType: "NATIVE",
+  });
+  if (resp_code === 0) {
+    const opts = {
+      errorCorrectionLevel: "H", // 容错级别
+      quality: 0.3, // 二维码质量
+      width: 120, // 宽
+      height: 120, // 高
+      color: {
+        dark: "#333333", // 前景色
+        light: "#fff", // 背景色
+      },
+    };
+    QRCode.toCanvas(
+      document.getElementById("weChat"),
+      datas.wechatPayData.codeUrl,
+      opts,
+    );
+    QRCode.toCanvas(
+      document.getElementById("ali"),
+      datas.alipayPayData.codeUrl,
+      opts,
+    );
+    payTimer.value = setInterval(() => {
+      buyDialogVisible.value && getPayResultFn(datas.orderNo);
+    }, 2000);
+  }
+};
+// 获取支付结果
+const getPayResultFn = async (orderNo: string) => {
+  try {
+    const res = (await getPayResultApi({ orderNo })) as any;
+    if (res.datas) {
+      ElMessage.success("付款成功");
+      buyDialogVisible.value = false;
+      clearInterval(payTimer.value);
+      getReportDetail();
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
 getReportDetail();
 onMounted(() => {
-  const _data = reportStore().getReportMapList(
-    route.query.moduleName as string,
-  );
-  breadcrumbList.value[1].text = _data.ch;
-  breadcrumbList.value[1].path = _data.path;
+  const _router = router.options.history.state.back as string;
+  if (
+    _router.split("?").indexOf("/homePersonal") !== -1 ||
+    _router.split("?").indexOf("/dataWinningBid") !== -1
+  ) {
+    const _data = reportStore().getReportMapList(
+      _router.split("?")[0] as string,
+    );
+    breadcrumbList.value = [
+      { text: _data.ch, path: router.options.history.state.back },
+      { text: "", path: "" },
+    ];
+  } else {
+    const _data = reportStore().getReportMapList(
+      route.query.moduleName as string,
+    );
+    breadcrumbList.value[0].text = _data.ch;
+    breadcrumbList.value[0].path = _data.path;
+  }
 });
 </script>
 

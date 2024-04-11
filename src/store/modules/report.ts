@@ -16,12 +16,29 @@ export const reportStore = defineStore({
         path: "/quarterlyMonthlyReports",
       },
       { en: "WHITE_PAPER", ch: "白皮书", path: "/reportWhitePaper" },
+      {
+        en: "collection",
+        ch: "我的收藏",
+        path: "/homePersonal",
+      },
+      {
+        en: "winningTheBid",
+        ch: "中标",
+        path: "/dataWinningBid",
+      },
+    ],
+    reportMapList2: [
+      {
+        en: "ONLINE_REPORT",
+      },
     ],
   }),
   actions: {
     getReportMapList(key: string) {
-      const _data = this.reportMapList.filter((item) => {
-        return item.en === key || item.ch === key;
+      const _data = this.reportMapList.filter((item: any) => {
+        return (
+          item.en === key || item.ch === key || item.path.indexOf(key) !== -1
+        );
       });
       return _data[0];
     },
