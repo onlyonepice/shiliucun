@@ -1,7 +1,7 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
     <div class="header">
-      <p class="title">政策查找</p>
+      <p class="title">政策查找。</p>
       <Search width="368px" @onSearch="onSearch" v-model="keyword" />
     </div>
     <div class="content">
