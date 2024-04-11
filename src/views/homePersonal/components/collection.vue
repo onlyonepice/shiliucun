@@ -66,11 +66,7 @@ interface PAGEINFO {
 }
 import { ref, Ref } from "vue";
 import { myCollectListApi, deleteCollectApi } from "@/api/user";
-import {
-  getFilePathApi,
-  getFileApi,
-  getFileCheckApi,
-} from "@/api/reportDetail";
+import { getFilePathApi, getFileApi } from "@/api/reportDetail";
 import { useRouter } from "vue-router";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
@@ -122,13 +118,8 @@ const onClose = async (type: boolean) => {
 };
 // 下载功能
 const onDownload = async (item: any) => {
-  const { resp_code, datas }: any = await getFileCheckApi({
-    id: item.id,
-    moduleName: item.moduleName,
-  });
-  if (resp_code === 0) {
-    datas && getReportLink(item);
-    !datas && useUserStore().checkPermission("REPORT_DOWNLOAD");
+  if (useUserStore().checkPermission("REPORT_DOWNLOAD")) {
+    getReportLink(item);
   }
 };
 // 获取报告链接

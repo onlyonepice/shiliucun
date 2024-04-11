@@ -141,7 +141,6 @@ import { useUserStore } from "@/store/modules/user";
 import {
   getFilePathApi,
   getFileApi,
-  getFileCheckApi,
   setReportCollectApi,
   setReportFeedbackApi,
   setReportScoreApi,
@@ -234,13 +233,8 @@ const onBuyReport = async () => {
   if (props.isNeedBuy) {
     emit("onBuy");
   } else {
-    const { resp_code, datas }: any = await getFileCheckApi({
-      id: props.detail.id,
-      moduleName: props.detail.moduleName,
-    });
-    if (resp_code === 0) {
-      datas && getReportLink();
-      !datas && useUserStore().checkPermission("REPORT_DOWNLOAD");
+    if (useUserStore().checkPermission("REPORT_DOWNLOAD")) {
+      getReportLink();
     }
   }
 };
