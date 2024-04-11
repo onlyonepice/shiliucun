@@ -267,6 +267,7 @@ const changeTag = (e, row) => {
   filterParams.value[row.paramValue] =
     e.paramValue === filterParams.value[row.paramValue] ? "" : e.paramValue;
   policyFilterSearchFn();
+  policyReleased.value = "";
   getData();
 };
 // 过滤后的筛选项
