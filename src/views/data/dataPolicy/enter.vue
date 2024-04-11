@@ -154,6 +154,10 @@
             </el-collapse-item>
           </el-collapse>
         </div>
+        <el-empty
+          v-if="pageData.length === 0 && !filterLoading"
+          description="暂无数据~"
+        />
       </div>
       <el-scrollbar class="month-list">
         <p
