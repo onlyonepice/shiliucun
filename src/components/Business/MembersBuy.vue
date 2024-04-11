@@ -120,6 +120,7 @@ import weChat_icon from "@/assets/img/vip/membersBuy-dialog-weChat-icon.png";
 import ali_icon from "@/assets/img/vip/membersBuy-dialog-ali-icon.png";
 import { ElMessage } from "element-plus";
 import { getPayInfoList } from "@/api/vip";
+import { throttle } from "lodash";
 const loading = ref(false);
 const productList: any = ref(null);
 const showDialog = ref(false); // 弹窗动画控制器
@@ -182,7 +183,7 @@ const getMemberInfo = async () => {
   }
 };
 // 选择支付金额
-const onChoseMember = async (index) => {
+const onChoseMember = throttle(async (index) => {
   choseType.value = index;
   clearInterval(timer.value);
   clearTimeout(countDown.value);
@@ -212,7 +213,7 @@ const onChoseMember = async (index) => {
     (timer.value = setInterval(() => {
       getPayResultFn();
     }, 2000));
-};
+}, 800);
 // 刷新支付码
 const onResetQRCode = () => {
   payExpired.value = false;
