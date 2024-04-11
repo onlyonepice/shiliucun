@@ -2,7 +2,11 @@
   <div :class="[ns.b(), 'es-commonPage']">
     <div class="header">
       <p class="title">政策查找。</p>
-      <Search width="368px" @onSearch="onSearch" v-model="keyword" />
+      <Search
+        width="368px"
+        @onSearch="onSearch"
+        v-model="filterParams.keyword"
+      />
     </div>
     <div class="content">
       <div class="filter-box" v-if="filterOptionsData.length > 0">
@@ -202,7 +206,6 @@ const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
 
 const ns = useNamespace("policy");
-const keyword = ref("");
 const policyReleased = ref(""); //政策发布时间
 const treeRefFilter = ref(null);
 const defaultProps = {
@@ -217,6 +220,7 @@ const filterParams = ref({
   policyType: "",
   provincialLevel: "",
   year: "",
+  keyword: "",
 });
 interface ListType {
   dropDownBoxResp?: { paramValue: string }[];
@@ -263,7 +267,6 @@ const getData = async () => {
 
   const requestData = Object.assign(
     {
-      keyword: keyword.value,
       policyReleased: policyReleased.value,
       page: 1,
       limit: 0,
@@ -285,6 +288,7 @@ const getData = async () => {
 };
 const onSearch = () => {
   getData();
+  policyFilterSearchFn();
 };
 const changeTag = (e, row) => {
   if (!e.policyQuantity) return;
