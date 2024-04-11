@@ -1,7 +1,7 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
     <div class="header">
-      <p class="title">政策查找</p>
+      <p class="title">政策查找。</p>
       <Search width="368px" @onSearch="onSearch" v-model="keyword" />
     </div>
     <div class="content">
@@ -72,10 +72,7 @@
             <el-collapse-item :title="item.policyReleased" :name="index">
               <el-scrollbar
                 :style="{
-                  height:
-                    item.data.length > 10
-                      ? '500px'
-                      : item.data.length * 61 + 'px',
+                  height: item.data.length > 10 ? '500px' : 'auto',
                 }"
                 class="policy_item_box"
               >
