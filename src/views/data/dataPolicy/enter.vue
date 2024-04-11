@@ -154,6 +154,10 @@
             </el-collapse-item>
           </el-collapse>
         </div>
+        <el-empty
+          v-if="pageData.length === 0 && !filterLoading"
+          description="暂无数据~"
+        />
       </div>
       <el-scrollbar class="month-list">
         <p
@@ -267,6 +271,7 @@ const changeTag = (e, row) => {
   filterParams.value[row.paramValue] =
     e.paramValue === filterParams.value[row.paramValue] ? "" : e.paramValue;
   policyFilterSearchFn();
+  policyReleased.value = "";
   getData();
 };
 // 过滤后的筛选项
