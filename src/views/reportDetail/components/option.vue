@@ -132,15 +132,20 @@ import { ref, defineProps, Ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import StarEmpty from "@/assets/img/reportDetail/i-Report-star.png";
 import StarFull from "@/assets/img/reportDetail/i-Report-star-fill.png";
-import { setReportScoreApi } from "@/api/reportDetail.ts";
+import UploadImg from "@/assets/img/common/upload-image.png";
 import { ElMessage } from "element-plus";
 import useClipboard from "vue-clipboard3";
-import { setReportCollectApi, setReportFeedbackApi } from "@/api/reportDetail";
-import UploadImg from "@/assets/img/common/upload-image.png";
 import { getToken } from "@/utils/auth";
 import type { UploadProps } from "element-plus";
 import { useUserStore } from "@/store/modules/user";
-import { getFilePathApi, getFileApi } from "@/api/reportDetail";
+import {
+  getFilePathApi,
+  getFileApi,
+  getFileCheckApi,
+  setReportCollectApi,
+  setReportFeedbackApi,
+  setReportScoreApi,
+} from "@/api/reportDetail";
 import { reportStore } from "@/store/modules/report";
 import { regMobile } from "@/utils/rule";
 const ns = useNamespace("reportDetailOption");
@@ -225,12 +230,17 @@ const score: Ref<number> = ref(
   props.detail.reportScoring === 0 ? -1 : props.detail.reportScoring - 1,
 );
 // 购买报告
-const onBuyReport = () => {
+const onBuyReport = async () => {
   if (props.isNeedBuy) {
     emit("onBuy");
   } else {
-    if (useUserStore().checkPermission("REPORT_DOWNLOAD")) {
-      getReportLink();
+    const { resp_code, datas }: any = await getFileCheckApi({
+      id: props.detail.id,
+      moduleName: props.detail.moduleName,
+    });
+    if (resp_code === 0) {
+      datas && getReportLink();
+      !datas && useUserStore().checkPermission("REPORT_DOWNLOAD");
     }
   }
 };

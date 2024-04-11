@@ -188,3 +188,14 @@ export function getPayResultApi(params: any) {
     },
   );
 }
+
+// 下载报告校验
+export function getFileCheckApi(params: any) {
+  return http.request(
+    "get",
+    "/eesa-report/onlineReportNew/front/v1.1/reportDownloadVerification",
+    {
+      params,
+    },
+  );
+}
