@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import searchIcon from "@/assets/img/common/search-icon.png";
-import icon_clear from "@/assets/img/common/icon_clear.png";
+import icon_clear from "@/assets/img/common/cancel-icon.png";
 const value: any = ref(""); // 选中值
 const model = defineModel();
 const emit = defineEmits(["onSearch"]);
