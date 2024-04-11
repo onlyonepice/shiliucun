@@ -21,9 +21,15 @@
       <el-table-column prop="createTime" label="购买时间" width="200" />
       <el-table-column prop="totalAmount" label="订单金额" />
       <el-table-column label="操作">
-        <slot>
-          <p :class="[ns.b('buy')]" @click="onPay">再次购买</p>
-        </slot>
+        <template #default="scope">
+          <p
+            :class="[ns.b('buy')]"
+            @click="onPay"
+            v-if="scope.row.module === null"
+          >
+            再次购买
+          </p>
+        </template>
       </el-table-column>
     </el-table>
     <Pagination :total="total" @onchangeCurrent="onchangeCurrent" />
