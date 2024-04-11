@@ -195,6 +195,12 @@ import {
 import radio_true from "@/assets/img/common/i-Report-radio-true.png";
 import radio_false from "@/assets/img/common/i-Report-radio-false.png";
 import { cloneDeep } from "lodash";
+import { windowScrollStore } from "@/store/modules/windowScroll";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const windowScroll = windowScrollStore();
+windowScroll.SET_SCROLL_TOP(0);
+
 const ns = useNamespace("policy");
 const keyword = ref("");
 const policyReleased = ref(""); //政策发布时间
@@ -238,7 +244,6 @@ const policyFilterSearchFn = async () => {
   const data = await policyFilterSearch(filterParams.value);
   if (data.resp_code === 0) {
     filterOptions.value = [];
-
     data.datas.screen.forEach((item) => {
       item.showAll = item.dropDownBoxResp.length > 0 ? false : true;
     });
@@ -266,7 +271,14 @@ const getData = async () => {
     filterParams.value,
   );
   const data = await getPolicyByFiltrateNoPagination(requestData);
+  const routeId = ref(route.query.id ? route.query.id : null);
+
   if (data.resp_code === 0) {
+    data.datas.forEach((item) => {
+      item.data.forEach((row) => {
+        row.showDetail = row.id === routeId.value;
+      });
+    });
     pageData.value = data.datas;
   }
   filterLoading.value = false;
