@@ -252,9 +252,10 @@ const scoreSure: Ref<number> = ref(props.detail.reportScoring - 1);
 // 收藏按钮
 const onCollection = async () => {
   const { resp_code }: any = await setReportCollectApi({
-    collectionType: 1,
+    collectionType: "REPORT",
     reportId: props.detail.id,
     uncollect: props.detail.isCollected,
+    moduleName: props.detail.moduleName,
   });
   if (resp_code === 0) {
     ElMessage.success(
