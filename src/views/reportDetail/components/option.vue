@@ -55,6 +55,7 @@
     width="560px"
     height="432px"
     @onHandleClose="onHandleClose"
+    :class="ns.be('dialog--content', 'error')"
   >
     <template #content>
       <div :class="ns.be('content', 'dialog')">
@@ -76,6 +77,7 @@
           type="input"
           :defaultValue="errorContent.contactInformation"
           width="434px"
+          :maxlength="11"
           @onChange="
             (val) => {
               return onChangeInfo(val, 'contactInformation');
@@ -91,6 +93,7 @@
           specialType="textarea"
           width="434px"
           height="64px"
+          :maxlength="200"
           @onChange="
             (val) => {
               return onChangeInfo(val, 'describe');
@@ -115,7 +118,11 @@
       </div>
     </template>
   </Dialog>
-  <el-dialog v-model="dialogVisible" :append-to-body="true">
+  <el-dialog
+    v-model="dialogVisible"
+    :append-to-body="true"
+    :class="ns.be('dialog--content', 'preview')"
+  >
     <img w-full :src="dialogImageUrl" alt="Preview Image" />
   </el-dialog>
 </template>
@@ -135,6 +142,7 @@ import type { UploadProps } from "element-plus";
 import { useUserStore } from "@/store/modules/user";
 import { getFilePathApi, getFileApi } from "@/api/reportDetail";
 import { reportStore } from "@/store/modules/report";
+import { regMobile } from "@/utils/rule";
 const ns = useNamespace("reportDetailOption");
 const { toClipboard } = useClipboard();
 const emit = defineEmits(["onBuy"]);
@@ -193,6 +201,9 @@ const onHandleClose = async (type: boolean) => {
       errorContent.value.describe === ""
     ) {
       return ElMessage.warning("请将内容填写完整");
+    }
+    if (!regMobile.test(errorContent.value.contactInformation)) {
+      return ElMessage.error("请输入正确手机号");
     }
     const _data = errorContent.value;
     _data.url = fileList.value
@@ -374,7 +385,7 @@ const onScore = async (item: number) => {
   @include flex(flex-start, flex-start, nowrap);
   margin-bottom: 16px;
   &:nth-last-child(1) {
-    margin-top: 38px;
+    margin-top: 54px;
     margin-bottom: 0;
   }
   & > span {
@@ -408,9 +419,20 @@ const onScore = async (item: number) => {
     }
   }
 }
+.es-reportDetailOption-dialog--content__error {
+  .el-dialog__footer {
+    padding-top: 4px;
+  }
+}
 .es-reportDetailOption-content--hidden {
   .el-upload {
     display: none;
+  }
+}
+.es-reportDetailOption-dialog--content__preview {
+  .el-dialog__body {
+    @include flex();
+    height: 600px;
   }
 }
 </style>

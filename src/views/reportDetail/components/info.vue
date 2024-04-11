@@ -31,7 +31,7 @@
     <p>{{ detail.price }}</p>
     <img :src="BuyReport" />
   </div>
-  <div :class="[ns.bm('bottom', 'needVip')]" v-if="!allReport">
+  <div :class="[ns.bm('bottom', 'needVip')]" v-if="!allReport && !isNeedBuy">
     <p>完整内容需订阅会员查看</p>
     <div @click="onOpenVip()">
       <span>立即订阅</span>
