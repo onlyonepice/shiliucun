@@ -43,11 +43,15 @@ import {
   getBiddingContentApi,
 } from "@/api/data";
 import { NOOP } from "@vue/shared";
+import { windowScrollStore } from "@/store/modules/windowScroll";
+const windowScroll = windowScrollStore();
 const { VITE_I_REPORT_URL } = import.meta.env;
 const ns = useNamespace("dataTender");
 const choseTabs: Ref<number> = ref(2); // 选中的标签栏
 const contentFilter: Ref<Array<any>> = ref([]); // 招标内容筛选项
 const timeFilter: Ref<Array<any>> = ref([]); // 招标时间筛选项
+windowScroll.SET_SCROLL_TOP(0);
+
 const biddingContentFilter: Ref<Array<any>> = ref([
   {
     paramDesc: "招标内容",

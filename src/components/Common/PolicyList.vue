@@ -1,5 +1,5 @@
 <template>
-  <div :class="[ns.b()]">
+  <div :class="[ns.b()]" @click="handleItemClick">
     <p class="name">{{ pageData.policyName }}</p>
     <div class="tag-box">
       <p>{{ pageData.typeName }}</p>
@@ -9,13 +9,21 @@
 
 <script setup lang="ts">
 import useNamespace from "@/utils/nameSpace";
+import { useRouter } from "vue-router";
 const ns = useNamespace("policyList");
-defineProps({
+const router = useRouter();
+const props = defineProps({
   pageData: {
     type: Object,
     default: () => ({}),
   },
 });
+const handleItemClick = () => {
+  router.push({
+    name: "Policy",
+    query: { id: props.pageData.id },
+  });
+};
 </script>
 
 <style lang="scss" scoped>

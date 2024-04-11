@@ -3,7 +3,7 @@
     <template v-if="isLoading">
       <div class="title">
         <p class="title_text">行业数据。</p>
-        <img :src="rightArrow" alt="" />
+        <img @click="handleJump" :src="rightArrow" alt="" />
       </div>
       <div class="content">
         <div class="tab-box">
@@ -72,20 +72,28 @@ import rightArrow from "@/assets/img/common/right-arrow.png";
 import tagActiveBg from "@/assets/img/tag-active-bg.png";
 import { getLatestTender, getLatestPolicy } from "@/api/home";
 import { windowScrollStore } from "@/store/modules/windowScroll";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const ns = useNamespace("home-industryData");
 const isLoading = ref<boolean>(false);
+const windowScroll = windowScrollStore();
 
 const tabList = ref({
   biddingDynamics: {
     name: "招标动态",
+    path: "/dataTender",
   },
   newPolicy: {
     name: "最新政策",
+    path: "/policy",
   },
 });
 const policyData = ref([]);
 const biddingDynamicsData = ref([]);
 const currentTab = ref(Object.keys(tabList.value)[0]);
+const handleJump = () => {
+  router.push(tabList.value[currentTab.value].path);
+};
 const getLatestTenderFn = async () => {
   const data = await getLatestTender({
     keyword: "",
@@ -113,7 +121,6 @@ const handleTabClick = (key) => {
   currentTab.value = key;
 };
 
-const windowScroll = windowScrollStore();
 const scrollTop = ref<number>(0);
 watch(windowScroll, (e) => {
   scrollTop.value = e.scrollTop;
