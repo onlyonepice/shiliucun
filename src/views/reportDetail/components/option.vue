@@ -233,6 +233,9 @@ const onBuyReport = async () => {
   if (props.isNeedBuy) {
     emit("onBuy");
   } else {
+    if (props.detail.isTopping === 1) {
+      return getReportLink();
+    }
     if (useUserStore().checkPermission("REPORT_DOWNLOAD")) {
       getReportLink();
     }
