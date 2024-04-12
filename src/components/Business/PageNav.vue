@@ -140,7 +140,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 3,
         text: "电价",
-        path: VITE_I_REPORT_URL + "#/stored-leading/electricity-price",
+        path: "/electricityPrice",
       },
       {
         id: 4,
