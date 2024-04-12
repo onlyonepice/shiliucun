@@ -157,12 +157,11 @@ const navList: Ref<Array<NavList>> = ref([
   {
     id: 4,
     text: "分析",
-    path: ["/analyze"],
     children: [
       {
         id: 1,
         text: "工商业测算",
-        path: VITE_I_REPORT_URL + "#/stored-leading/invest-ROE/business",
+        path: "/calculate",
       },
     ],
   },

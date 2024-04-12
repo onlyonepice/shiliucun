@@ -4,7 +4,7 @@ import { http } from "@/utils/http";
 export const apiAreaData = () => {
   return http.request<{ datas; resp_code }>(
     "get",
-    "/electricity/electricityPriceTracking/front/v1.1/queryRegionIds",
+    "/eesa-report/electricityPriceTracking/front/openApi/v1.1/queryRegionIds",
   );
 };
 
@@ -12,7 +12,7 @@ export const apiAreaData = () => {
 export const apiStrategy = (params) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    "/investment/investmentIndustryCommerce/front/v1.1/getChargeDischargeStrategy",
+    "/eesa-report/front/openApi/v1.1/getChargeDischargeStrategy",
     { params },
   );
 };
@@ -21,7 +21,7 @@ export const apiStrategy = (params) => {
 export const apiElectricityType = (params) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    "/investment/investmentIndustryCommerce/front/v1.1/getElectricityType",
+    "/eesa-report/investmentIndustryCommerce/front/v1.1/getElectricityType",
     { params },
   );
 };
@@ -30,14 +30,14 @@ export const apiElectricityType = (params) => {
 export const apiProductList = () => {
   return http.request<{ datas; resp_code }>(
     "get",
-    "/investment/investmentProductLibrary/front/v1.0/frontFindList",
+    "/eesa-report/investmentProductLibrary/front/v1.0/frontFindList",
   );
 };
 // 选择产品获取详情
 export const apiProductDetail = (params) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    "/investment/investmentProductLibrary/front/v1.0/findUserById",
+    "/eesa-report/investmentProductLibrary/frontBack/v1.0/findUserById",
     { params },
   );
 };
@@ -68,7 +68,7 @@ export const apiPeriodList = () => {
 export const apiAnalyzeSearch = (data) => {
   return http.request<{ datas; resp_code }>(
     "post",
-    "/investment/investmentIndustryCommerce/front/v1.1/search",
+    "/eesa-report/investmentIndustryCommerce/front/v1.1/search",
     { data },
   );
 };
