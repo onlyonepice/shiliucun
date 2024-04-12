@@ -84,7 +84,7 @@ import {
   getElectricityType,
   getMonthDifference,
   getDischargeStrategy,
-} from "../../../api/priceTracking";
+} from "@/api/priceTracking";
 import * as echarts from "echarts";
 import { cloneDeep } from "lodash";
 import { vLoading } from "element-plus";
@@ -413,7 +413,7 @@ function handleTOUData() {
       eachTimePeriod.forEach((item: any, index) => {
         const label = {
           align: "left",
-          show: true,
+          show: index !== eachTimePeriod.length - 1,
           color: "#1C232F",
           fontSize: 14,
           fontWeight: 600,
@@ -430,11 +430,28 @@ function handleTOUData() {
         }
         _defaultData.forEach((_item) => {
           if (item.periodType === _item.periodType) {
-            _item.data.push({
+            const startData = {
               value: item.electrovalence,
-              label: index === 0 ? label : { ...label, show: false },
-              symbol: index === 0 ? "circle" : "none",
-            });
+              label: label,
+              symbol: "circle",
+              symbolSize: 8,
+              symbolKeepAspect: true,
+              itemStyle: {
+                color: "#fff", // 设置背景色为白色
+                borderWidth: 2, // 边框宽度
+                borderColor: _item.lineColor, // 边框颜色为白色
+              },
+            };
+            const noneData = {
+              value: item.electrovalence,
+              label: label,
+              symbol: "none",
+            };
+            index === 0
+              ? _item.data.push(startData)
+              : index === eachTimePeriod.length - 1
+                ? _item.data.push(startData)
+                : _item.data.push(noneData);
           } else {
             _item.data.push({
               value: "-",
@@ -472,10 +489,24 @@ function handleTOUData() {
     options.title[0].text = title;
     options.title[0].subtext = subtitle;
     options.title[1] = titleTwo.value;
-    options.legend = { ...options.legend, bottom: "100" };
     options.grid = { bottom: "150" };
-    options.legend = { ...options.legend, data: _data };
-    options.xAxis = { axisLabel: { interval: 0 }, data: xAxisData };
+    options.legend = {
+      ...options.legend,
+      data: _data.map((item) => {
+        item.icon = null;
+        return item;
+      }),
+      bottom: "100",
+    };
+    options.xAxis = {
+      data: xAxisData,
+      axisLabel: { interval: 0 },
+      axisTick: {
+        interval: function (index, value) {
+          return value === "" ? false : true;
+        },
+      },
+    };
     options.color = _color;
     options.series = _series;
     options.tooltip = {

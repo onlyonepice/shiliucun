@@ -1,7 +1,7 @@
 import { http } from "@/utils/http";
 interface Request {
-  code: number;
-  data: any;
+  resp_code: number;
+  datas: Array<{ any }> | Object;
 }
 // /electricityPriceTracking/front/openApi/v1.1/getTariffLevelIdByElectricityTypeOneName
 //获取地区数据
