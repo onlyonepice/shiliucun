@@ -46,21 +46,21 @@ export const apiProductDetail = (params) => {
 export const apiYearsList = () => {
   return http.request<{ datas; resp_code }>(
     "get",
-    "/investment/reInvestmentAnnualDays/front/v1.1/getFindList",
+    "/eesa-report/reInvestmentAnnualDays/front/v1.1/getFindList",
   );
 };
 // 贴现率列表
 export const apiRateList = () => {
   return http.request<{ datas; resp_code }>(
     "get",
-    "/investment/reInvestmentBankRate/front/v1.1/getFindList",
+    "/eesa-report/reInvestmentBankRate/front/v1.1/getFindList",
   );
 };
 // 测算周期列表
 export const apiPeriodList = () => {
   return http.request<{ datas; resp_code }>(
     "get",
-    "/investment/reInvestmentCalculationPeriod/front/v1.1/getFindList",
+    "/eesa-report/reInvestmentCalculationPeriod/front/v1.1/getFindList",
   );
 };
 
