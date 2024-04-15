@@ -136,30 +136,42 @@ function handleChange(data) {
 
 <style scoped lang="scss">
 @import "@/style/mixin.scss";
+
 .select {
   @include widthAndHeight(30%, 32px);
   @include flex(center, flex-start);
+  margin-top: 16px;
+
+  &:nth-child(1) {
+    @include margin();
+  }
+
+  &:nth-child(2) {
+    @include margin();
+  }
 }
-.select:nth-of-type(2n) {
-  @include margin(0, 0, 16px, 0);
-}
+
 .select__title {
   @include margin(0, 44px, 0, 0);
   @include font(14px, 400, #5b6985, 22px);
 }
+
 .select__content {
   flex: 1;
 }
+
 .select__input {
   @include widthAndHeight(48%, 32px);
   @include relative();
   border-radius: 4px;
   background-color: #f4f5f7;
+
   &:hover {
     box-shadow: none;
     background-color: #e5e6ec;
   }
 }
+
 .select__input-desc {
   @include widthAndHeight(auto, 32px);
   @include absolute(1, 0, 0, none, none);
@@ -167,14 +179,17 @@ function handleChange(data) {
   @include font(14px, 400, #1c232f, 22px);
   border-left: 1px solid #e5e6ea;
 }
+
 :deep(.select__input .el-input__wrapper) {
   @include widthAndHeight(100%, 32px);
   background: rgba(255, 255, 255, 0);
   border: 1px solid rgba(0, 0, 0, 0);
+
   &:hover {
     box-shadow: none;
   }
 }
+
 :deep(.select__input .el-input__wrapper.is-focus) {
   background: #ffffff !important;
   box-sizing: border-box;

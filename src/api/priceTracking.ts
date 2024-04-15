@@ -1,36 +1,30 @@
 import { http } from "@/utils/http";
 interface Request {
-  code: number;
-  data: any;
+  resp_code: number;
+  datas: Array<{ any }> | Object;
 }
-// 退出登录
-export const loginOutApi = (token) => {
-  return http.request<Request>(
-    "post",
-    `/api-uaa/oauth/remove/token?access_token=${token}`,
-  );
-};
-
+// /electricityPriceTracking/front/openApi/v1.1/getTariffLevelIdByElectricityTypeOneName
 //获取地区数据
 export const apiRegionalData = (params: { type: string } | null) => {
   return http.request<Request>(
     "get",
-    "/electricity/electricityPriceTracking/front/v1.1/queryRegionIds",
-    { params },
+    // "/eesa-report/electricityPriceTracking/front/openApi/v1.1/queryRegionIds",
+    "/eesa-report/electricityPriceTracking/front/openApi/v1.1/queryRegionIds",
+    { params: params || {} },
   );
 };
 // 分股价差筛选项
 export const getPeakAndValley = () => {
   return http.request<Request>(
     "post",
-    "/electricity/electricityPriceTracking/front/v1.1/getPeakValleySpread",
+    "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getPeakValleySpread",
   );
 };
 // 获取电压等级
 export const getVoltageLevel = (params) => {
   return http.request<Request>(
     "post",
-    "/electricity/electricityPriceTracking/front/v1.1/getTariffLevelIdByElectricityTypeOneName",
+    "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getTariffLevelIdByElectricityTypeOneName",
     { params },
   );
 };
@@ -38,7 +32,7 @@ export const getVoltageLevel = (params) => {
 export const getMonth = (params) => {
   return http.request<Request>(
     "post",
-    "/electricity/electricityPriceTracking/front/v1.1/getYearsByRegionElectricityTypeOneName",
+    "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getYearsByRegionElectricityTypeOneName",
     { params },
   );
 };
@@ -46,14 +40,14 @@ export const getMonth = (params) => {
 export const getNewTimeSharing = () => {
   return http.request<Request>(
     "post",
-    "/electricity/electricityFutureTimeShare/front/v1.1/getNewTimeSharing",
+    "/eesa-report/electricityFutureTimeShare/front/v1.1/getNewTimeSharing",
   );
 };
 // 获取差异排名
 export const getDifferentialRanking = (data) => {
   return http.request<Request>(
     "post",
-    "/electricity/electricityPriceTracking/front/v1.1/getDifferentialRanking",
+    "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getDifferentialRanking",
     { data },
   );
 };
@@ -61,7 +55,7 @@ export const getDifferentialRanking = (data) => {
 export const getElectricityType = (params) => {
   return http.request<Request>(
     "get",
-    "/electricity/electricityPriceTracking/front/v1.1/getElectricityType",
+    "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getElectricityType",
     { params },
   );
 };
@@ -69,7 +63,7 @@ export const getElectricityType = (params) => {
 export const getMonthByTime = (data) => {
   return http.request<Request>(
     "post",
-    "/electricity/electricityTimeShare/front/v1.1/getSelectMonth",
+    "/eesa-report/electricityTimeShare/front/openApi/v1.1/getSelectMonth",
     { data },
   );
 };
@@ -77,7 +71,7 @@ export const getMonthByTime = (data) => {
 export const getMonthPrice = (data) => {
   return http.request<Request>(
     "post",
-    "/electricity/electricityPriceTracking/front/v1.1/getMonthlyTariff",
+    "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getMonthlyTariff",
     { data },
   );
 };
@@ -85,7 +79,7 @@ export const getMonthPrice = (data) => {
 export const getTimePrice = (data) => {
   return http.request<Request>(
     "post",
-    "/electricity/electricityTimeShare/front/v1.1/getTimeElectricityPrice",
+    "/eesa-report/electricityTimeShare/front/openApi/v1.1/getTimeElectricityPrice",
     { data },
   );
 };
@@ -93,7 +87,7 @@ export const getTimePrice = (data) => {
 export const getMonthDifference = (data) => {
   return http.request<Request>(
     "post",
-    "/electricity/electricityPriceTracking/front/v1.1/getMonthlyDifference",
+    "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getMonthlyDifference",
     { data },
   );
 };
@@ -101,7 +95,7 @@ export const getMonthDifference = (data) => {
 export const getDischargeStrategy = (params) => {
   return http.request<Request>(
     "get",
-    "/investment/investmentIndustryCommerce/front/v1.1/getChargeDischargeStrategy",
+    "/eesa-report/front/openApi/v1.1/getChargeDischargeStrategy",
     { params },
   );
 };
@@ -109,6 +103,6 @@ export const getDischargeStrategy = (params) => {
 export const getPeakAndValleyImage = () => {
   return http.request<Request>(
     "post",
-    "/electricity/electricityFutureTimeShare/front/v1.1/getNewTimeSharingPicture",
+    "/eesa-report/electricityFutureTimeShare/front/v1.1/getNewTimeSharingPicture",
   );
 };

@@ -1,7 +1,6 @@
 <template>
   <el-dialog
     v-model="showDialog"
-    :append-to-body="true"
     width="560px"
     confirm-text="导出"
     title="图片格式选择"
@@ -39,8 +38,8 @@
 </template>
 <script>
 import { exportImg } from "@/utils/index";
-import RadioFalse from "@/assets/img/common/i-Report-radio-false.png";
-import RadioTrue from "@/assets/img/common/i-Report-radio-true.png";
+import RadioFalse from "@/assets/img/electricityPrice/i-Report-radio-false.png";
+import RadioTrue from "@/assets/img/electricityPrice/i-Report-radio-true.png";
 export default {
   props: {
     visible: {
@@ -105,22 +104,18 @@ export default {
   @include flex(center, flex-start);
   @include margin(0, 0, 8px, 0);
 }
-
 .export-type {
   @include flex(center, center);
   @include margin(0, 32px, 0, 0);
   cursor: pointer;
 }
-
 .export-type-img {
   @include widthAndHeight(24px, 24px);
   @include margin(0, 4px, 0, 0);
 }
-
 .export-type-text {
   @include font(16px, 400, #1c232f, 24px);
 }
-
 .export-type__content {
   @include widthAndHeight(512px);
   @include flex(center, center);
@@ -128,10 +123,9 @@ export default {
   background: rgba(248, 249, 251, 0);
   border-radius: 4px;
   border: 1px solid #f1f2f6;
-
   img {
     @include widthAndHeight(496px);
-    background-image: url("@/assets/img/common/canvas-img-bg.png");
+    background-image: url("@/assets/img/canvas-img-bg.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
   }

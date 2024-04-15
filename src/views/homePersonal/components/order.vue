@@ -68,7 +68,6 @@ const pageInfo: Ref<PAGEINFO> = ref({
   limit: 10,
 });
 const onInvoicing = () => {
-  console.log("onInvoicing");
   invoicingVisible.value = true;
 };
 // 关闭弹窗

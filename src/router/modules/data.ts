@@ -29,6 +29,16 @@ export default {
       },
     },
     {
+      path: "/electricityPrice",
+      name: "ElectricityPrice",
+      components: {
+        default: () => import("@/views/data/electricityPrice/enter.vue"),
+      },
+      meta: {
+        title: "电价",
+      },
+    },
+    {
       path: "/dataWinningBid",
       name: "DataWinningBid",
       components: {
