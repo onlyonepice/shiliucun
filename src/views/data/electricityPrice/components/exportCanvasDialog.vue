@@ -125,7 +125,7 @@ export default {
   border: 1px solid #f1f2f6;
   img {
     @include widthAndHeight(496px);
-    background-image: url("@/assets/img/canvas-img-bg.png");
+    background-image: url("@/assets/img/common/eesa-waterMark.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
   }
