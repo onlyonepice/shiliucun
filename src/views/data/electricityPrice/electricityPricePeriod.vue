@@ -9,7 +9,7 @@
             :key="i"
             class="masker-img"
             :style="{ top: i * 600 + 'px' }"
-            src="@/assets/img/eesa-waterMark.png"
+            src="@/assets/img/common/eesa-waterMark.png"
           />
         </div>
 
