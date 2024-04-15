@@ -624,7 +624,6 @@ async function onChangeData(data: string, type: string) {
 .product-desc {
   @include widthAndHeight(48%, 272px);
   @include flex(flex-start, flex-start, no-wrap);
-  margin-top: 16px;
   p {
     width: 70px;
     @include margin(0, 16px, 0, 0);
