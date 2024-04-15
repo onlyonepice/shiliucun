@@ -257,6 +257,7 @@ import { PatternAnalysis } from "./data";
 import { ElMessage } from "element-plus";
 import { useUserStore } from "@/store/modules/user";
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
+import { getToken } from "@/utils/auth";
 import {
   apiAreaData,
   apiStrategy,
@@ -270,7 +271,7 @@ const filterData: Ref<FILTERDATA> = ref({
   patternAnalysis: 0,
 });
 // 筛选项
-const searchParams = ref({
+const searchParams: Ref<any> = ref({
   regionName: "", // 地区
   electricityTypeOneName: "", // 用电类型1
   electricityTypeTwoName: "", // 用电类型2
@@ -316,6 +317,9 @@ const disabledProduct: Ref<boolean> = ref(true);
 const filterFinish: Ref<boolean> = ref(false);
 // 选择模式分析
 const onPatternAnalysis = (id: number) => {
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
   filterData.value.patternAnalysis = id;
   disabledUser.value = false;
 };
@@ -326,6 +330,9 @@ onMounted(() => {
 
 // 开始分析
 const onAnalysis = () => {
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
   if (filterData.value.patternAnalysis === 0) {
     return ElMessage({ message: "请选择模式分析", type: "warning" });
   }
@@ -385,6 +392,9 @@ const onAnalysis = () => {
 
 // 重置筛选项
 const onReset = () => {
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
   filterData.value = {
     patternAnalysis: 0,
   };

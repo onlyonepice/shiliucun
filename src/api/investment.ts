@@ -77,7 +77,7 @@ export const apiAnalyzeSearch = (data) => {
 export const apiCanvasData = (data) => {
   return http.request<{ datas; resp_code }>(
     "post",
-    "/electricity/electricityPriceTracking/front/v1.1/getMonthlyDifference",
+    "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getMonthlyDifference",
     { data },
   );
 };
@@ -85,7 +85,15 @@ export const apiCanvasData = (data) => {
 export const apiSliderConfig = (data) => {
   return http.request<{ datas; resp_code }>(
     "post",
-    "/electricity/electricityTimeShare/front/v1.1/dynamicPeriodType",
+    "/eesa-report/electricityTimeShare/front/openApi/v1.1/dynamicPeriodType",
+    { data },
+  );
+};
+// 评论
+export const apiComment = (data) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    "/eesa-report/sysFeedback/front/v1.1/userFeedback",
     { data },
   );
 };

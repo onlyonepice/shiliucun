@@ -2,13 +2,13 @@
   <div class="investment-eCharts">
     <div id="my-chart" ref="eCharts" />
     <div class="slider-wrapper">
-      <div class="slider-wrapper__title">
-        <span>峰谷价差</span>
-        <span @click="handleResetSlider">重置参数</span>
-      </div>
       <div class="slider-wrapper__desc">
         <img :src="TipsIcon" alt="" />
         <p>拖动滑块调整电价查看不同峰谷价差情况下的收益</p>
+      </div>
+      <div class="slider-wrapper__title">
+        <span>峰谷价差</span>
+        <span @click="handleResetSlider">重置参数</span>
       </div>
       <div
         v-for="item in slider"
@@ -19,31 +19,16 @@
           <div class="wrapper__text">
             <span>{{ getNewDate }}{{ item.name }}</span>
             <span
-              :class="{ 'special-color': getElectricityPrice(item.key) < 0 }"
-              >{{ getElectricityPrice(item.key) < 0 ? "" : "+"
-              }}{{ getElectricityPrice(item.key) }}</span
+              >{{ getElectricityPrice(item.key) < 0 ? "-" : ""
+              }}{{ slider[item.id].value }}%</span
             >
           </div>
-          <div class="wrapper__content">
-            <el-slider
-              v-model="item.value"
-              :min="item.min"
-              :max="item.max"
-              @change="(val) => handleSliderChange(val, item.id, item.key)"
-            />
-            <Select
-              type="input"
-              specialType="number"
-              width="111px"
-              inputText="元"
-              :defaultValue="defaultElectricityPrice[item.key]"
-              @onChange="
-                ($event) => {
-                  onChange($event, item.id, item.key);
-                }
-              "
-            />
-          </div>
+          <el-slider
+            v-model="item.value"
+            :min="item.min"
+            :max="item.max"
+            @change="(val) => handleSliderChange(val, item.id, item.key)"
+          />
         </div>
       </div>
     </div>
@@ -51,7 +36,6 @@
 </template>
 
 <script lang="ts" setup>
-import { cloneDeep } from "lodash";
 import { ref, Ref, onMounted, defineProps, computed, defineEmits } from "vue";
 import * as echarts from "echarts";
 import "echarts/lib/chart/line";
@@ -62,7 +46,7 @@ import {
   textStyle,
   flexStyle,
 } from "@/utils/eCharts";
-import TipsIcon from "@/assets/img/common/iReport-tips-icon.png";
+import TipsIcon from "@/assets/img/common/lament_icon.png";
 import { apiCanvasData, apiSliderConfig } from "@/api/investment";
 const emit = defineEmits(["onSearch"]);
 const props = defineProps({
@@ -75,7 +59,7 @@ const props = defineProps({
     default: false,
   },
 });
-const eChartsOption: Ref<any> = ref(cloneDeep(eChartsOptionCommon));
+const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 滑块配置
 const slider: Ref<any> = ref([
   {
@@ -160,34 +144,6 @@ const getElectricityPrice = computed(() => (key: string) => {
     ).toFixed(4),
   );
 });
-
-// 修改电价
-function onChange(data: string, id: number, key: string) {
-  if (Number(data) < slider.value[id].minValue) {
-    defaultElectricityPrice.value[key] = slider.value[id].minValue;
-    slider.value[id].value = slider.value[id].minNumber;
-  } else if (Number(data) > slider.value[id].maxValue) {
-    defaultElectricityPrice.value[key] = slider.value[id].maxValue;
-    slider.value[id].value = slider.value[id].maxNumber;
-  } else {
-    defaultElectricityPrice.value[key] = Number(data);
-    slider.value[id].value =
-      ((defaultElectricityPrice.value[key] -
-        defaultElectricityPriceFreeze.value[key]) /
-        defaultElectricityPriceFreeze.value[key]) *
-      100;
-  }
-  const _slider = slider.value;
-  emit(
-    "onSearch",
-    Object.assign(props.searchParams, {
-      topThan: _slider[0].value,
-      highThan: _slider[1].value,
-      flatThan: _slider[2].value,
-      lowThan: _slider[3].value,
-    }),
-  );
-}
 // 重置参数
 function handleResetSlider() {
   slider.value.forEach((item) => {
@@ -211,7 +167,7 @@ function handleResetSlider() {
   );
 }
 // 滑块发生变化
-function handleSliderChange(val: number, id: number, key: string) {
+function handleSliderChange(val: number, id: number) {
   const _data = slider.value[id];
   if (val < _data.minNumber) {
     _data.value = _data.minNumber;
@@ -220,12 +176,6 @@ function handleSliderChange(val: number, id: number, key: string) {
   } else {
     _data.value = val;
   }
-  defaultElectricityPrice.value[key] = Number(
-    (
-      defaultElectricityPriceFreeze.value[key] +
-      defaultElectricityPriceFreeze.value[key] * (_data.value / 100)
-    ).toFixed(4),
-  );
   const _slider = slider.value;
   emit(
     "onSearch",
@@ -260,7 +210,7 @@ function onHandleResize() {
 // 获取初始值
 
 // 获取图表数据
-async function getCanvasData(type = true) {
+async function getCanvasData() {
   const myChart = echarts.init(document.getElementById("my-chart"));
   myChart.clear();
   resetCanvas();
@@ -270,66 +220,39 @@ async function getCanvasData(type = true) {
     flatTime: slider.value[2].value,
     lowThan: slider.value[3].value,
   };
-  const res: any = await apiCanvasData(
+  const { datas }: any = await apiCanvasData(
     Object.assign(props.searchParams, _data),
   );
-  if (type) {
-    const _finallyMonthElectronically = res.data.finallyMonthElectronically;
-    for (const key in res.data.finallyMonthElectronically) {
-      _finallyMonthElectronically[key] = Number(
-        _finallyMonthElectronically[key].toFixed(4),
-      );
-    }
-    defaultElectricityPrice.value = JSON.parse(
-      JSON.stringify(_finallyMonthElectronically),
-    );
-    defaultElectricityPriceFreeze.value = JSON.parse(
-      JSON.stringify(_finallyMonthElectronically),
-    );
-  } else {
-    res.data.monthlySpreadData.forEach((item) => {
-      eChartsOption.value.xAxis.data.push(item.month);
-      echartsConfig.value[0].data.push({ value: item.data.sharpDifference });
-      echartsConfig.value[1].data.push({ value: item.data.heightDifference });
-      echartsConfig.value[2].data.push({ value: item.data.sharpAdjustment });
-      echartsConfig.value[3].data.push({ value: item.data.altitudeBalance });
+  datas.forEach((item) => {
+    eChartsOption.value.xAxis.data.push(item.month);
+    echartsConfig.value[0].data.push({ value: item.data.sharpDifference });
+    echartsConfig.value[1].data.push({ value: item.data.heightDifference });
+    echartsConfig.value[2].data.push({ value: item.data.sharpAdjustment });
+    echartsConfig.value[3].data.push({ value: item.data.altitudeBalance });
+  });
+  let _series = [];
+  echartsConfig.value.forEach((item) => {
+    _series.push({
+      type: "line",
+      name: item.name,
+      data: item.data,
+      areaStyle: { color: computedColor(item.lineColor) },
     });
-    let _series = [];
-    echartsConfig.value.forEach((item) => {
-      _series.push({
-        type: "line",
-        name: item.name,
-        data: item.data,
-        areaStyle: { color: computedColor(item.lineColor) },
-      });
-    });
-    eChartsOption.value.series = _series;
-    myChart.setOption(eChartsOption.value);
-  }
-  // 获取滑块配置
-  getSliderConfig();
+  });
+  eChartsOption.value.series = _series;
+  myChart.setOption(eChartsOption.value);
 }
 
 // 获取滑块配置
 async function getSliderConfig() {
-  const res: any = await apiSliderConfig(props.searchParams);
+  const { datas }: any = await apiSliderConfig(props.searchParams);
   const _freeze = defaultElectricityPriceFreeze.value;
-  res.data.forEach((item) => {
-    slider.value.forEach((_item) => {
+  datas.forEach((item) => {
+    slider.value.forEach((_item: any) => {
       if (_item.key === item.bucketType) {
         _item.show = true;
         _item.minNumber = item.min || -100;
         _item.maxNumber = item.max || 100;
-        _item.minValue = Number(
-          (_freeze[_item.key] + _freeze[_item.key] * (item.min / 100)).toFixed(
-            4,
-          ),
-        );
-        _item.maxValue = Number(
-          (_freeze[_item.key] + _freeze[_item.key] * (item.max / 100)).toFixed(
-            4,
-          ),
-        );
       }
     });
   });
@@ -372,11 +295,10 @@ onMounted(() => {
   };
   const myChart = echarts.init(document.getElementById("my-chart"));
   myChart.setOption(eChartsOption.value);
-  getCanvasData(true);
 });
 
 /* eslint-disable */
-defineExpose({ getCanvasData });
+defineExpose({ getCanvasData, getSliderConfig });
 /* eslint-enable */
 </script>
 
@@ -387,17 +309,17 @@ defineExpose({ getCanvasData });
 }
 #my-chart {
   width: 76% !important;
-  height: 402px;
+  height: 448px;
   min-width: 480px;
 }
 .slider-wrapper {
-  @include widthAndHeight(24%, 402px);
+  @include widthAndHeight(24%, 448px);
   @include padding(0, 0, 0, 17px);
-  // @include flex();
   box-sizing: border-box;
   min-width: 200px;
 }
 .slider-wrapper__content {
+  width: 100%;
   @include margin(0, 0, 4px, 0);
 }
 .slider-wrapper__title {
@@ -415,6 +337,9 @@ defineExpose({ getCanvasData });
   @include flex(flex-start, center, no-wrap);
   @include font(12px, 400, #5b6985, 20px);
   @include margin(0, 0, 8px, 0);
+  @include padding(6px, 8px, 6px, 8px);
+  background: #eff4ff;
+  border-radius: 4px;
   img {
     @include widthAndHeight(16px, 16px);
     @include margin(2px, 4px, 0, 0);
@@ -426,25 +351,16 @@ defineExpose({ getCanvasData });
 .wrapper__text {
   @include flex(center, space-between);
   @include margin(0, 0, 8px, 0);
-  span:nth-of-type(1) {
+  span {
     @include font(14px, 400, #5b6985, 22px);
   }
-  span:nth-of-type(2) {
-    @include font(14px, 600, green, 22px);
-  }
-  .special-color {
-    color: #f53f3f !important;
-  }
-}
-.wrapper__content {
-  @include flex(center, space-between, no-wrap);
 }
 </style>
 <style lang="scss">
 @import "@/style/mixin.scss";
 .slider-wrapper {
   .el-slider {
-    @include widthAndHeight(120px, 32px);
+    @include widthAndHeight(100%, 32px);
     @include margin(0, 8px, 0, 0);
   }
   .select {

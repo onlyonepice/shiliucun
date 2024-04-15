@@ -1,280 +1,365 @@
 <template>
   <div id="investment-return" class="es-commonPage">
     <Filter @onAnalysis="onAnalysis" @onReset="onReset" />
-    <div v-if="filterFinish">
-      <div class="common-title common-title-margin">检索条件</div>
-      <div class="showInfo" v-for="(item, index) in showInfoList" :key="index">
-        <div v-for="itemInfo in item" :key="itemInfo.title">
-          <span v-if="showSubsidyInfo(itemInfo)">
-            <span class="showInfo-title">{{ itemInfo.title }}</span>
-            <span class="showInfo-desc">{{ itemInfo.value }}</span>
-          </span>
-        </div>
-      </div>
-      <div class="common-title common-title-margin">充放电策略</div>
-      <p class="common-desc">{{ tipsInfo }}</p>
-      <div class="common-title common-title-margin">投资方案</div>
-      <div class="filter__content investment-filter__check">
-        <Select
-          width="30%"
-          title="年利用天数"
-          :options="yearList"
-          valueKey="paramName"
-          labelKey="paramDesc"
-          :defaultValue="searchParams.annualDays"
-          @onChange="
-            ($event) => {
-              onChangeFilter($event, 'annualDays');
-            }
-          "
-        />
-        <Select
-          width="30%"
-          title="贴现率"
-          :options="rateList"
-          valueKey="paramName"
-          labelKey="paramDesc"
-          :defaultValue="searchParams.bankRate"
-          @onChange="
-            ($event) => {
-              onChangeFilter($event, 'bankRate');
-            }
-          "
-        />
-        <Select
-          width="30%"
-          title="测算周期"
-          :options="periodList"
-          valueKey="paramName"
-          labelKey="paramDesc"
-          :defaultValue="searchParams.calculationPeriod"
-          @onChange="
-            ($event) => {
-              onChangeFilter($event, 'calculationPeriod');
-            }
-          "
-        />
-        <Select
-          v-if="showInfoList[0][0].value === 'EMC合同能源'"
-          width="30%"
-          title="业主分成"
-          type="number"
-          :defaultValue="searchParams.ownersShare"
-          @onChange="
-            ($event) => {
-              onChangeFilter($event, 'ownersShare');
-            }
-          "
-        />
-        <Select
-          v-if="showInfoList[0][0].value === 'EMC合同能源'"
-          width="30%"
-          title="投资方分成"
-          type="number"
-          :defaultValue="searchParams.dividedByInvestors"
-          @onChange="
-            ($event) => {
-              onChangeFilter($event, 'dividedByInvestors');
-            }
-          "
-        />
-      </div>
-      <div class="common-title common-title-margin">峰谷价差</div>
-      <Canvas
-        ref="searchCanvas"
-        :searchCanvas="searchCanvas"
-        :searchParams="searchParams"
-        @onSearch="onSearchData"
-      />
-      <div v-if="showInfoList[0][0].value === 'EMC合同能源'">
-        <div class="revenue-estimate">
-          <div class="common-title common-title-margin">
-            收益估算<span>/元</span>
-          </div>
-          <div class="estimate-info">
-            <span>资方内部收益率（IRR）：</span>
-            <span
-              :class="{
-                'color-red': searchResult.internalRateReturn.indexOf('-') > -1,
-              }"
-              >{{
-                searchResult.internalRateReturn === "NaN"
-                  ? "IRR过低"
-                  : searchResult.internalRateReturn + "%"
-              }}</span
-            >
-            <span>动态回收期：</span>
-            <span>{{ searchResult.paybackTime }}</span>
-          </div>
-        </div>
-        <el-table
-          :data="revenueEstimateList"
-          style="width: 100%"
-          header-row-class-name="table-class"
-        >
-          <el-table-column prop="variationFactor" label="年数" />
-          <el-table-column prop="financialCost" label="现金流">
-            <template #default="scope">
-              <span
-                :class="{
-                  'color-red': scope.row.financialCost.indexOf('-') > -1,
-                }"
-                >{{ scope.row.financialCost }}</span
-              >
-            </template>
-          </el-table-column>
-          <el-table-column prop="ownersAccumulatedIncome" label="业主累计收益">
-            <template #default="scope">
-              <span
-                :class="{
-                  'color-red':
-                    scope.row.ownersAccumulatedIncome.indexOf('-') > -1,
-                }"
-                >{{ scope.row.ownersAccumulatedIncome }}</span
-              >
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="cumulativeReturnInvestors"
-            label="投资方分享收益"
+    <template v-if="filterFinish">
+      <div class="es-calculate-evaluate">
+        <div class="es-calculate-evaluate__title">
+          <h3>测算结果</h3>
+          <div
+            class="es-calculate-evaluate__title-item"
+            v-for="item in evaluateList"
+            :key="item.id"
+            :type="choseEvaluate === item.text ? item.text : ''"
+            :class="
+              choseEvaluate === item.text
+                ? 'es-calculate-evaluate__title-item--chose'
+                : ''
+            "
+            @click="onEvaluate(item.text)"
           >
-            <template #default="scope">
-              <span
-                :class="{
-                  'color-red':
-                    scope.row.cumulativeReturnInvestors.indexOf('-') > -1,
-                }"
-                >{{ scope.row.cumulativeReturnInvestors }}</span
-              >
-            </template>
-          </el-table-column>
-          <el-table-column prop="investorNetPresentValue" label="投资方净现值">
-            <template #default="scope">
-              <span
-                :class="{
-                  'color-red':
-                    scope.row.investorNetPresentValue.indexOf('-') > -1,
-                }"
-                >{{ scope.row.investorNetPresentValue }}</span
-              >
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div v-else>
-        <div class="revenue-estimate">
-          <div class="common-title common-title-margin">收益估算</div>
-          <div class="estimate-info">
-            <span>IRR(内部收益率)：</span>
-            <span
-              :class="{
-                'color-red': searchResult.internalRateReturn.indexOf('-') > -1,
-              }"
-              >{{
-                searchResult.internalRateReturn === "NaN"
-                  ? "IRR过低"
-                  : searchResult.internalRateReturn + "%"
-              }}</span
-            >
+            <img
+              :src="choseEvaluate === item.text ? item.choseIcon : item.icon"
+              alt=""
+            />
+            <span>{{ item.text }}</span>
           </div>
         </div>
+        <el-button type="primary">下载报告</el-button>
+      </div>
+      <Tabs
+        :tabsList="tabsList"
+        @onHandleClick="onHandleClick"
+        :defaultId="choseTab"
+      />
+      <div v-show="choseTab === 1">
+        <div class="common-title common-title-margin">投资方案</div>
+        <div class="filter__content investment-filter__check">
+          <Select
+            width="30%"
+            title="年利用天数"
+            :options="yearList"
+            valueKey="paramName"
+            labelKey="paramDesc"
+            :defaultValue="searchParams.annualDays"
+            @onChange="
+              ($event) => {
+                onChangeFilter($event, 'annualDays');
+              }
+            "
+          />
+          <Select
+            width="30%"
+            title="贴现率"
+            :options="rateList"
+            valueKey="paramName"
+            labelKey="paramDesc"
+            :defaultValue="searchParams.bankRate"
+            @onChange="
+              ($event) => {
+                onChangeFilter($event, 'bankRate');
+              }
+            "
+          />
+          <Select
+            width="30%"
+            title="测算周期"
+            :options="periodList"
+            valueKey="paramName"
+            labelKey="paramDesc"
+            :defaultValue="searchParams.calculationPeriod"
+            @onChange="
+              ($event) => {
+                onChangeFilter($event, 'calculationPeriod');
+              }
+            "
+          />
+          <Select
+            v-if="showInfoList[0][0].value === 'EMC合同能源'"
+            width="30%"
+            title="业主分成"
+            type="number"
+            :defaultValue="searchParams.ownersShare"
+            @onChange="
+              ($event) => {
+                onChangeFilter($event, 'ownersShare');
+              }
+            "
+          />
+          <Select
+            v-if="showInfoList[0][0].value === 'EMC合同能源'"
+            width="30%"
+            title="投资方分成"
+            type="number"
+            :defaultValue="searchParams.dividedByInvestors"
+            @onChange="
+              ($event) => {
+                onChangeFilter($event, 'dividedByInvestors');
+              }
+            "
+          />
+        </div>
+        <div class="common-title common-title-margin">峰谷价差</div>
+        <Canvas
+          ref="searchCanvas"
+          :searchCanvas="searchCanvas"
+          :searchParams="searchParams"
+          @onSearch="onSearchData"
+        />
+        <div v-if="showInfoList[0][0].value === 'EMC合同能源'">
+          <div class="revenue-estimate">
+            <div class="common-title common-title-margin">
+              收益估算<span>/元</span>
+            </div>
+            <div class="estimate-info">
+              <span>资方内部收益率（IRR）：</span>
+              <span
+                :class="{
+                  'color-red':
+                    searchResult.internalRateReturn.indexOf('-') > -1,
+                }"
+                >{{
+                  searchResult.internalRateReturn === "NaN"
+                    ? "IRR过低"
+                    : searchResult.internalRateReturn + "%"
+                }}</span
+              >
+              <span>动态回收期：</span>
+              <span>{{ searchResult.paybackTime }}</span>
+            </div>
+          </div>
+          <el-table
+            :data="revenueEstimateList"
+            style="width: 100%"
+            header-row-class-name="table-class"
+            ref="tableMoney"
+          >
+            <el-table-column type="expand" width="1">
+              <template #default>
+                <div class="table-expand">
+                  <div class="table-expand--head">
+                    <div>
+                      <span>未来一年收益估算（元）</span>
+                      <el-tooltip
+                        class="box-item"
+                        effect="light"
+                        content="指根据过去一年该省份每个月峰谷价差估算的未来收益"
+                        placement="top-start"
+                      >
+                        <img :src="TipsIcon" alt="" />
+                      </el-tooltip>
+                    </div>
+                    <div>
+                      合计：<span
+                        >¥{{
+                          searchResult.revenueEstimationResps.futureIncome[
+                            searchResult.revenueEstimationResps.futureIncome
+                              .length - 1
+                          ]
+                        }}</span
+                      >
+                    </div>
+                  </div>
+                  <div class="table-expand--body">
+                    <div v-for="item in 12" :key="item">
+                      <p>
+                        {{
+                          searchResult.revenueEstimationResps.futureYears[
+                            item - 1
+                          ]
+                        }}
+                      </p>
+                      <span
+                        >¥{{
+                          searchResult.revenueEstimationResps.futureIncome[
+                            item - 1
+                          ]
+                        }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="variationFactor" label="年数">
+              <template #default="scope">
+                <span
+                  style="cursor: pointer"
+                  @click="
+                    scope.row.variationFactor === '1'
+                      ? onClickExpand(scope.row)
+                      : ''
+                  "
+                  >{{ scope.row.variationFactor === "1" ? "+" : "" }}
+                  {{ scope.row.variationFactor }}</span
+                >
+              </template>
+            </el-table-column>
+            <el-table-column prop="financialCost" label="现金流">
+              <template #default="scope">
+                <span
+                  :class="{
+                    'color-red': scope.row.financialCost.indexOf('-') > -1,
+                  }"
+                  >¥{{ scope.row.financialCost }}</span
+                >
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="ownersAccumulatedIncome"
+              label="业主累计收益"
+            >
+              <template #default="scope">
+                <span
+                  :class="{
+                    'color-red':
+                      scope.row.ownersAccumulatedIncome.indexOf('-') > -1,
+                  }"
+                  >¥{{ scope.row.ownersAccumulatedIncome }}</span
+                >
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="cumulativeReturnInvestors"
+              label="投资方分享收益"
+            >
+              <template #default="scope">
+                <span
+                  :class="{
+                    'color-red':
+                      scope.row.cumulativeReturnInvestors.indexOf('-') > -1,
+                  }"
+                  >¥{{ scope.row.cumulativeReturnInvestors }}</span
+                >
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="investorNetPresentValue"
+              label="投资方净现值"
+            >
+              <template #default="scope">
+                <span
+                  :class="{
+                    'color-red':
+                      scope.row.investorNetPresentValue.indexOf('-') > -1,
+                  }"
+                  >¥{{ scope.row.investorNetPresentValue }}</span
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div v-else>
+          <div class="revenue-estimate">
+            <div class="common-title common-title-margin">收益估算</div>
+            <div class="estimate-info">
+              <span>IRR(内部收益率)：</span>
+              <span
+                :class="{
+                  'color-red':
+                    searchResult.internalRateReturn.indexOf('-') > -1,
+                }"
+                >{{
+                  searchResult.internalRateReturn === "NaN"
+                    ? "IRR过低"
+                    : searchResult.internalRateReturn + "%"
+                }}</span
+              >
+            </div>
+          </div>
+          <el-table
+            :data="ownerRevenueEstimateList"
+            style="width: 100%"
+            header-row-class-name="table-class"
+          >
+            <el-table-column prop="variationFactor" label="年数" />
+            <el-table-column prop="financialCost" label="现金流/元">
+              <template #default="scope">
+                <span
+                  :class="{
+                    'color-red': scope.row.financialCost.indexOf('-') > -1,
+                  }"
+                  >¥{{ scope.row.financialCost }}</span
+                >
+              </template>
+            </el-table-column>
+            <el-table-column prop="innerReturnRate" label="NPV（净现值/元）">
+              <template #default="scope">
+                <span
+                  :class="{
+                    'color-red': scope.row.innerReturnRate.indexOf('-') > -1,
+                  }"
+                  >¥{{ scope.row.innerReturnRate }}</span
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+      <div v-show="choseTab === 2">
+        <div class="common-title common-title-margin">
+          充放电量<span>/万KWh</span>
+        </div>
         <el-table
-          :data="ownerRevenueEstimateList"
+          :data="dischargeList"
           style="width: 100%"
           header-row-class-name="table-class"
+          empty-text="暂无数据"
         >
           <el-table-column prop="variationFactor" label="年数" />
-          <el-table-column prop="financialCost" label="现金流/元">
+          <el-table-column prop="annualCharge" label="年充电量">
             <template #default="scope">
               <span
+                v-if="scope.row.annualCharge"
                 :class="{
-                  'color-red': scope.row.financialCost.indexOf('-') > -1,
+                  'color-red': scope.row.annualCharge.indexOf('-') > -1,
                 }"
-                >{{ scope.row.financialCost }}</span
+                >{{ scope.row.annualCharge }}</span
               >
+              <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="innerReturnRate" label="NPV（净现值/元）">
+          <el-table-column prop="annualDischarge" label="年放电量">
             <template #default="scope">
               <span
+                v-if="scope.row.annualDischarge"
                 :class="{
-                  'color-red': scope.row.innerReturnRate.indexOf('-') > -1,
+                  'color-red': scope.row.annualDischarge.indexOf('-') > -1,
                 }"
-                >{{ scope.row.innerReturnRate }}</span
+                >{{ scope.row.annualDischarge }}</span
               >
+              <span v-else>-</span>
             </template>
           </el-table-column>
         </el-table>
       </div>
-      <div class="common-title common-title-margin">
-        充放电量<span>/万KWh</span>
-      </div>
-      <el-table
-        :data="dischargeList"
-        style="width: 100%"
-        header-row-class-name="table-class"
-        empty-text="暂无数据"
-      >
-        <el-table-column prop="variationFactor" label="年数" />
-        <el-table-column prop="annualCharge" label="年充电量">
-          <template #default="scope">
-            <span
-              v-if="scope.row.annualCharge"
-              :class="{ 'color-red': scope.row.annualCharge.indexOf('-') > -1 }"
-              >{{ scope.row.annualCharge }}</span
-            >
-            <span v-else>-</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="annualDischarge" label="年放电量">
-          <template #default="scope">
-            <span
-              v-if="scope.row.annualDischarge"
-              :class="{
-                'color-red': scope.row.annualDischarge.indexOf('-') > -1,
-              }"
-              >{{ scope.row.annualDischarge }}</span
-            >
-            <span v-else>-</span>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, Ref, ref, watch, nextTick } from "vue";
+import { onMounted, Ref, ref, watch } from "vue";
 import Filter from "./filter/enter.vue";
 import Canvas from "./canvas.vue";
+import Dissatisfy from "@/assets/img/common/dissatisfy.png";
+import ChoseDissatisfy from "@/assets/img/common/chose-dissatisfy.png";
+import Normal from "@/assets/img/common/normal.png";
+import ChoseNormal from "@/assets/img/common/chose-normal.png";
+import Satisfaction from "@/assets/img/common/satisfaction.png";
+import ChoseSatisfaction from "@/assets/img/common/chose-satisfaction.png";
+import TipsIcon from "@/assets/img/common/lament_icon.png";
 import {
   apiYearsList,
   apiRateList,
   apiPeriodList,
   apiAnalyzeSearch,
+  apiComment,
 } from "@/api/investment";
+import { cloneDeep } from "lodash";
 // 展示筛选项内容
 const showInfoList: Ref<Array<Array<any>>> = ref([
   [{ title: "模式分析：", value: "" }],
-  [
-    { title: "地区：", value: "" },
-    { title: "用电类型 I：", value: "" },
-    { title: "用电类型Ⅱ：", value: "" },
-    { title: "期望接入的电压等级：", value: "1～10千伏" },
-  ],
-  [
-    { title: "期望装配储能容量：", value: "1.2kWh" },
-    { title: "选择产品：", value: "集装箱产品：(1)   5MWh（45尺标准高箱）" },
-    { title: "配置数量：", value: "" },
-    { title: "系统单价：", value: "" },
-  ],
-  [
-    { title: "是否补贴：", value: "" },
-    { title: "补贴金额：", value: "" },
-    { title: "补贴年限：", value: "" },
-  ],
 ]);
-//
+const tableMoney = ref(null); // 表格dom节点
 const revenueEstimateList: Ref<any> = ref([]); // 收益估算
 const ownerRevenueEstimateList: Ref<any> = ref([]); // 业主自投收益估算
 const dischargeList: Ref<any> = ref([]); // 充放电量
@@ -284,24 +369,28 @@ const searchParams: Ref<any> = ref({
   dividedByInvestors: 80,
 });
 const scrollTop: Ref<number> = ref(0); // 页面滚动距离
-const yearList: Ref<Array> = ref([]); // 年利用天数筛选项
-const rateList: Ref<Array> = ref([]); // 贴现率筛选项
-const periodList: Ref<Array> = ref([]); // 测算周期筛选项
+const yearList: Ref<any> = ref([]); // 年利用天数筛选项
+const rateList: Ref<any> = ref([]); // 贴现率筛选项
+const periodList: Ref<any> = ref([]); // 测算周期筛选项
+const evaluateList: Ref<any> = ref([
+  { id: 1, text: "不满意", icon: Dissatisfy, choseIcon: ChoseDissatisfy },
+  { id: 2, text: "一般", icon: Normal, choseIcon: ChoseNormal },
+  { id: 3, text: "满意", icon: Satisfaction, choseIcon: ChoseSatisfaction },
+]); // 评价列表
+const choseEvaluate: Ref<string> = ref(""); // 评价
+const tabsList = ref([
+  { id: 1, name: "金融方案" },
+  { id: 2, name: "充放电量" },
+]);
+const choseTab: Ref<number> = ref(1);
 // 是否完成筛选，由子组件控制
 const filterFinish: Ref<boolean> = ref(false);
-const tipsInfo: Ref<string> = ref(""); // 策略信息
-const searchResult = ref({
+const searchResult: Ref<any> = ref({
   internalRateReturn: "",
   paybackTime: "",
 }); // 搜索结果
 // 是否展示补贴相关检索的展示
-const showSubsidyInfo = computed(() => (itemInfo: any) => {
-  if (itemInfo.title === "补贴金额：" || itemInfo.title === "补贴年限：") {
-    return showInfoList.value[3][0].value === "是";
-  } else {
-    return true;
-  }
-});
+// const showSubsidyInfo = computed(() => (itemInfo: any) => {});
 let searchCanvas = ref();
 watch(
   () => filterFinish.value,
@@ -310,33 +399,45 @@ watch(
   },
   { immediate: true },
 );
+// tab切换
+const onHandleClick = (id: number) => {
+  choseTab.value !== id && (choseTab.value = id);
+};
 // 投资方案筛选项查找
 async function investmentProgramFn(type: string) {
-  const res: any =
+  const { datas }: any =
     type === "年利用"
       ? await apiYearsList()
       : type === "贴现率"
         ? await apiRateList()
         : await apiPeriodList();
   if (type === "年利用") {
-    yearList.value = res.data;
-    searchParams.value.annualDays = "330";
+    yearList.value = datas;
+    searchParams.value.annualDays = 300;
   }
   if (type === "贴现率") {
-    res.data.forEach((item) => {
+    datas.forEach((item) => {
       item.paramDesc = item.paramDesc + "%";
     });
-    rateList.value = res.data;
-    searchParams.value.bankRate = "0%";
+    rateList.value = datas;
+    searchParams.value.bankRate = "5%";
   }
   if (type === "测算周期") {
-    res.data.forEach((item) => {
+    datas.forEach((item) => {
       item.paramDesc = item.paramDesc + "年";
     });
-    periodList.value = res.data;
-    searchParams.value.calculationPeriod = "15年";
+    periodList.value = datas;
+    searchParams.value.calculationPeriod = "10年";
   }
 }
+// 评论
+const onEvaluate = async (text: string) => {
+  choseEvaluate.value = text;
+  await apiComment({
+    moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
+    satisfactionLevel: text,
+  });
+};
 // 修改投资方案筛选项
 function onChangeFilter(data: string, type: string) {
   searchParams.value[type] = data;
@@ -353,19 +454,37 @@ function onSearchData(data: any) {
   searchParams.value = data;
   onSearch();
 }
-
+// 展开表格行
+const onClickExpand = (row: any) => {
+  tableMoney.value.toggleRowExpansion(row);
+};
 // 查询接口
-async function onSearch() {
-  let _search: any = JSON.parse(JSON.stringify(searchParams.value));
+async function onSearch(type = false) {
+  let _search: any = cloneDeep(searchParams.value);
+  _search.callingMode = type;
+  _search.bankRate =
+    _search.bankRate !== undefined ? _search.bankRate.split("%")[0] : "";
+  _search.calculationPeriod =
+    _search.calculationPeriod !== undefined
+      ? _search.calculationPeriod.split("年")[0]
+      : "";
   delete _search.choseProduct;
-  const res: any = await apiAnalyzeSearch(_search);
-  if (res.code === 200) {
-    searchResult.value = res.data;
-    filterFinish.value = true;
-    const _data = res.data.revenueEstimationResps;
+  if (type) {
+    delete _search.annualDays;
+    delete _search.bankRate;
+    delete _search.calculationPeriod;
+  }
+  const { datas, resp_code }: any = await apiAnalyzeSearch(_search);
+  if (resp_code === 0) {
+    investmentProgramFn("年利用");
+    investmentProgramFn("贴现率");
+    investmentProgramFn("测算周期");
+    searchResult.value = datas;
+    const _data = datas.revenueEstimationResps;
     const _discharge = [];
     _data.annualCharge.unshift("-");
     _data.annualDischarge.unshift("-");
+    filterFinish.value = true;
     if (showInfoList.value[0][0].value === "EMC合同能源") {
       const _revenueEstimate = [];
       for (let index = 0; index < _data.variationFactor.length; index++) {
@@ -400,50 +519,30 @@ async function onSearch() {
     setTimeout(() => {
       searchCanvas.value.getCanvasData(false);
     }, 200);
-    scrollTop.value < 560 && scrollToBottom();
+    type &&
+      setTimeout(() => {
+        searchCanvas.value.getSliderConfig();
+      }, 400);
   }
 }
 
-const scrollToBottom = () => {
-  nextTick(() => {
-    window.scrollTo({
-      top: 560,
-      behavior: "smooth",
-    });
-  });
-};
 // 重置按钮
 function onReset() {
   filterFinish.value = false;
 }
 // 开始分析按钮
-function onAnalysis(data: any, tipsInfoText: string) {
+function onAnalysis(data: any) {
   const _showInfoList = showInfoList.value;
   _showInfoList[0][0].value =
     data.patternAnalysis === 1 ? "EMC合同能源" : "业主自投";
-  _showInfoList[1][0].value = data.regionName;
-  _showInfoList[1][1].value = data.electricityTypeOneNameText;
-  _showInfoList[1][2].value = data.electricityTypeTwoNameText;
-  _showInfoList[1][3].value = data.tariffLevelIdText;
-  _showInfoList[2][0].value = data.expectedCapacity + "kWh";
-  _showInfoList[2][1].value = `${data.productName}（${data.modelName}）`;
-  _showInfoList[2][2].value = data.number + "台";
-  _showInfoList[2][3].value = data.systemUnitPrice + "元/度";
-  _showInfoList[3][0].value = data.subsidy === 1 ? "是" : "否";
-  _showInfoList[3][1].value = data.subsidyAmount + "元/年";
-  _showInfoList[3][2].value = data.subsidyYear + "年";
-  tipsInfo.value = tipsInfoText;
   searchParams.value = Object.assign(searchParams.value, data);
-  onSearch();
+  onSearch(true);
 }
 
 function updateScrollTop() {
   scrollTop.value = window.scrollY;
 }
 onMounted(() => {
-  investmentProgramFn("年利用");
-  investmentProgramFn("贴现率");
-  investmentProgramFn("测算周期");
   window.addEventListener("scroll", updateScrollTop);
 });
 </script>
@@ -452,6 +551,43 @@ onMounted(() => {
 @import "@/style/mixin.scss";
 #investment-return {
   padding: 80px 0;
+}
+.es-calculate-evaluate {
+  @include flex(center, space-between, nowrap);
+  .es-calculate-evaluate__title {
+    @include flex(center, flex-start, nowrap);
+  }
+  .es-calculate-evaluate__title-item {
+    @include widthAndHeight(96px, 32px);
+    @include flex(center, center);
+    border-radius: 3px;
+    border: 1px solid #f2f3f5;
+    margin-right: 8px;
+    cursor: pointer;
+    background: #f2f3f5;
+    img {
+      @include widthAndHeight(20px, 20px);
+      margin-right: 4px;
+    }
+    span {
+      @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+    }
+    &:nth-of-type(1) {
+      margin-left: 16px;
+    }
+  }
+  div[type="不满意"] {
+    background: #fde0e2;
+    border: 1px solid #fbb4b9;
+  }
+  div[type="一般"] {
+    background: #fff1d1;
+    border: 1px solid #ffbd12;
+  }
+  div[type="满意"] {
+    background: #fff1d1;
+    border: 1px solid #ffbd12;
+  }
 }
 .investment__title {
   @include font(14px, 600, #5b6985, 22px);
@@ -466,16 +602,8 @@ onMounted(() => {
 }
 
 .common-title {
-  @include font(14px, 600, #1c232f, 12px);
+  @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
   @include flex(center, flex-start);
-
-  &::before {
-    content: "";
-    display: inline-block;
-    @include widthAndHeight(4px, 16px);
-    @include box(none, none, #165dff, 1px);
-    @include margin(0, 4px, 0, 0);
-  }
 
   span {
     @include font(14px, 400, #5b6985, 22px);
@@ -484,7 +612,7 @@ onMounted(() => {
 }
 
 .common-title-margin {
-  @include margin(24px, 0, 8px, 0);
+  @include margin(24px, 0, 16px, 0);
 }
 
 .common-desc {
@@ -525,6 +653,44 @@ onMounted(() => {
 
 .color-red {
   color: red !important;
+}
+.table-expand {
+}
+.table-expand--head {
+  padding: 0 272px 0 40px;
+  @include flex(center, flex-start);
+  height: 38px;
+  img {
+    @include widthAndHeight(16px, 16px);
+  }
+  div {
+    @include flex(center, flex-start);
+    @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
+    span {
+      @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+    }
+  }
+  & div:nth-of-type(1) {
+    margin-right: 490px;
+  }
+}
+.table-expand--body {
+  height: 144px;
+  padding: 0 272px 0 40px;
+  background: #f2f3f5;
+  border-radius: 4px;
+  @include flex(center, space-between);
+  div {
+    width: 28%;
+    @include flex(center, flex-start);
+    p {
+      @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
+      margin-right: 32px;
+    }
+    span {
+      @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+    }
+  }
 }
 </style>
 <style lang="scss">
