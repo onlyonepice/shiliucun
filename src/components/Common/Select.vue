@@ -1,8 +1,11 @@
 <template>
   <div class="select" :style="{ width: width }">
-    <span v-if="props.title !== ''" class="select__title">{{
-      props.title
-    }}</span>
+    <span
+      v-if="props.title !== ''"
+      class="select__title"
+      :style="{ width: titleWidth + 'px' }"
+      >{{ props.title }}</span
+    >
     <el-select
       v-if="props.type === 'select'"
       v-model="value"
@@ -29,7 +32,9 @@
         :show-word-limit="specialType === 'textarea'"
         :rows="3"
       />
-      <span v-if="inputDesc" class="select__input-desc">{{ inputText }}</span>
+      <span v-if="inputText !== ''" class="select__input-desc">{{
+        inputText
+      }}</span>
     </div>
     <div v-if="props.type === 'number'" class="select__input select__content">
       <el-input-number
@@ -62,6 +67,11 @@ const props = defineProps({
     type: String,
     default: "48%",
   },
+  // 标题宽度
+  titleWidth: {
+    type: Number,
+    default: 70,
+  },
   // 输入框/选择器标题
   title: {
     type: String,
@@ -76,10 +86,6 @@ const props = defineProps({
   type: {
     type: String,
     default: "select",
-  },
-  inputDesc: {
-    type: Boolean,
-    default: false,
   },
   specialType: {
     type: String,
@@ -152,8 +158,10 @@ function handleChange(data) {
 }
 
 .select__title {
-  @include margin(0, 44px, 0, 0);
-  @include font(14px, 400, #5b6985, 22px);
+  width: 84px;
+  @include margin(0, 16px, 0, 0);
+  @include font(14px, 400, rgba(0, 0, 00.6), 22px);
+  text-align: right;
 }
 
 .select__content {
