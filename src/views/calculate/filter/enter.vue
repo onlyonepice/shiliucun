@@ -118,7 +118,11 @@
       <!-- 产品参数 -->
       <h4 class="filter__title-margin filter__title-subsidy">产品参数</h4>
       <div>
-        <p class="filter__content-disabled" v-if="disabledProduct" />
+        <p
+          class="filter__content-disabled"
+          style="height: 336px"
+          v-if="disabledProduct"
+        />
         <div class="filter__content">
           <Select
             title="选择产品"
