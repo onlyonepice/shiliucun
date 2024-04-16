@@ -1,4 +1,5 @@
 <template>
+  <div class="common-title common-title-margin">峰谷价差</div>
   <div class="investment-eCharts">
     <div id="my-chart" ref="eCharts" />
     <div class="slider-wrapper">
@@ -354,6 +355,19 @@ defineExpose({ getCanvasData, getSliderConfig });
   span {
     @include font(14px, 400, #5b6985, 22px);
   }
+}
+.common-title {
+  @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
+  @include flex(center, flex-start);
+
+  span {
+    @include font(14px, 400, #5b6985, 22px);
+    @include margin(0, 0, 0, 4px);
+  }
+}
+
+.common-title-margin {
+  @include margin(24px, 0, 16px, 0);
 }
 </style>
 <style lang="scss">

@@ -43,9 +43,7 @@
           @onChangeFilter="onChangeFilter"
         />
         <template v-if="!addAreaType">
-          <div class="common-title common-title-margin">峰谷价差</div>
           <Canvas
-            v-if="!addAreaType"
             ref="searchCanvas"
             :searchCanvas="searchCanvas"
             :searchParams="searchParams"
@@ -229,7 +227,7 @@ async function onSearch(type? = false, source?: string) {
       });
     }
     dischargeList.value = _discharge;
-    if (source === "searchA") {
+    if (source === "searchA" && !addAreaType.value) {
       setTimeout(() => {
         searchCanvas.value.getCanvasData(false);
       }, 200);
@@ -303,56 +301,6 @@ onMounted(() => {
   div[type="满意"] {
     background: #fff1d1;
     border: 1px solid #ffbd12;
-  }
-}
-.investment__title {
-  @include font(14px, 600, #5b6985, 22px);
-}
-
-.investment__title-margin {
-  @include margin(24px, 0, 32px, 0);
-}
-
-.common-title {
-  @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
-  @include flex(center, flex-start);
-
-  span {
-    @include font(14px, 400, #5b6985, 22px);
-    @include margin(0, 0, 0, 4px);
-  }
-}
-
-.common-title-margin {
-  @include margin(24px, 0, 16px, 0);
-}
-
-.common-desc {
-  @include font(14px, 400, #5b6985, 22px);
-}
-
-.showInfo {
-  div {
-    display: inline-block;
-    @include margin(0, 0, 8px, 0);
-  }
-}
-
-.showInfo-title {
-  @include font(14px, 400, #919db5, 22px);
-}
-
-.showInfo-desc {
-  @include font(14px, 400, #1c232f, 22px);
-  @include margin(0, 24px, 0, 0);
-}
-</style>
-<style lang="scss">
-@import "@/style/mixin.scss";
-
-.investment-filter__check {
-  .select {
-    margin: 0 20px 16px 0 !important;
   }
 }
 </style>
