@@ -854,7 +854,6 @@ function timeToMinutes(time) {
     @include flex(center, space-between);
     @include padding(0, 0, 8px, 0);
     @include margin(24px, 0, 24px, 0);
-    border-bottom: 1px solid #e5e6ea;
   }
 
   .flex {
