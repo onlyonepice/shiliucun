@@ -551,8 +551,6 @@ async function onGetElectricityInfo(compare: string) {
       regionName: _searchParams.regionName,
     };
     const res: any = await apiStrategy(_data);
-    searchParams.value.chargeDischargeIdentifying =
-      res.datas.chargeDischargeIdentifying;
     const res1: any = await apiElectricityType(_data);
     electricityType2.value = res1.datas;
     voltageLevel.value = res1.datas[0].voltageLevel;
@@ -561,6 +559,8 @@ async function onGetElectricityInfo(compare: string) {
     } else {
       tipsInfoB.value = res.datas;
     }
+    _searchParams.chargeDischargeIdentifying =
+      res.datas.chargeDischargeIdentifying;
     _searchParams.electricityTypeTwoName = res1.datas[0].paramName;
     _searchParams.tariffLevelId = res1.datas[0].voltageLevel[0].paramName;
   } catch (error) {

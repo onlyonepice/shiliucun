@@ -42,19 +42,24 @@
           :showInfoList="showInfoList"
           @onChangeFilter="onChangeFilter"
         />
-        <template v-if="!addAreaType">
-          <Canvas
-            ref="searchCanvas"
-            :searchCanvas="searchCanvas"
-            :searchParams="searchParams"
-            @onSearch="onSearchData"
-          />
-        </template>
+        <Canvas
+          v-if="!addAreaType"
+          ref="searchCanvas"
+          :searchCanvas="searchCanvas"
+          :searchParams="searchParams"
+          @onSearch="onSearchData"
+        />
         <template v-if="showInfoList[0][0].value === 'EMC合同能源'">
-          <Estimate
-            :revenueEstimateList="revenueEstimateList"
-            :searchResult="searchResult"
-          />
+          <el-scrollbar>
+            <Estimate
+              :revenueEstimateList="revenueEstimateList"
+              :searchResult="searchResult"
+            />
+            <Estimate
+              :revenueEstimateList="revenueEstimateList"
+              :searchResult="searchResultB"
+            />
+          </el-scrollbar>
         </template>
         <template v-else>
           <Proprietor
@@ -96,8 +101,8 @@ const dischargeList: Ref<any> = ref([]); // 充放电量
 const showInvestment = ref(false);
 // 查询参数
 const searchParams: Ref<any> = ref({
-  ownersShare: 20,
-  dividedByInvestors: 80,
+  ownersShare: 10,
+  dividedByInvestors: 90,
 });
 const addAreaType: Ref<boolean> = ref(false); // 添加地区对比
 const scrollTop: Ref<number> = ref(0); // 页面滚动距离
@@ -142,11 +147,13 @@ const onHandleClick = (id: number) => {
 };
 // 评论
 const onEvaluate = async (text: string) => {
-  choseEvaluate.value = text;
-  await apiComment({
-    moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
-    satisfactionLevel: text,
-  });
+  if (choseEvaluate.value === "") {
+    choseEvaluate.value = text;
+    await apiComment({
+      moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
+      satisfactionLevel: text,
+    });
+  }
 };
 // 修改投资方案筛选项
 function onChangeFilter(data: string, type: string) {
@@ -169,17 +176,14 @@ async function onSearch(type? = false, source?: string) {
   let _search: any = cloneDeep(searchParams.value);
   _search.callingMode = type;
   _search.bankRate =
-    _search.bankRate !== undefined ? _search.bankRate.split("%")[0] : "";
+    _search.bankRate !== undefined
+      ? Number(_search.bankRate.split("%")[0])
+      : "";
   _search.calculationPeriod =
     _search.calculationPeriod !== undefined
-      ? _search.calculationPeriod.split("年")[0]
+      ? Number(_search.calculationPeriod.split("年")[0])
       : "";
   delete _search.choseProduct;
-  if (type) {
-    delete _search.annualDays;
-    delete _search.bankRate;
-    delete _search.calculationPeriod;
-  }
   const { datas, resp_code }: any = await apiAnalyzeSearch(_search);
   if (resp_code === 0) {
     if (source === "searchA") {
@@ -187,9 +191,7 @@ async function onSearch(type? = false, source?: string) {
     } else {
       return (searchResultB.value = datas);
     }
-    searchParams.value.annualDays = 300;
-    searchParams.value.bankRate = "5%";
-    searchParams.value.calculationPeriod = "10年";
+
     showInvestment.value = true;
     const _data = datas.revenueEstimationResps;
     const _discharge = [];
@@ -250,6 +252,9 @@ function onAnalysis(data: any, type: string) {
   _showInfoList[0][0].value =
     data.patternAnalysis === 1 ? "EMC合同能源" : "业主自投";
   searchParams.value = Object.assign(searchParams.value, data);
+  searchParams.value.annualDays = 300;
+  searchParams.value.bankRate = "5%";
+  searchParams.value.calculationPeriod = "10年";
   onSearch(true, type);
 }
 
