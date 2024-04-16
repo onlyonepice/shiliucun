@@ -321,11 +321,22 @@ onMounted(() => {
   @include flex(center, space-between);
   @include margin(24px, 0, 24px, 0);
 
+  ::v-deep(.select) {
+    width: 32.5% !important;
+
+    &:nth-child(3) {
+      margin-bottom: 16px !important;
+    }
+  }
+
   .select-p {
     @include widthAndHeight(32.5%, 32px);
     @include flex(center, flex-start);
+    @include margin(0, 0, 16px, 0);
 
     .select__title {
+      width: 70px;
+      text-align: right;
       @include margin(0, 44px, 0, 0);
       @include margin(0, 44px, 0, 0);
       @include font(14px, 400, #5b6985, 22px);

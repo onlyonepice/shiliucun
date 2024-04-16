@@ -64,13 +64,14 @@
     <div v-if="choseSpecific !== 1 && monthData.length" class="month-range">
       <div class="month-range-title">时间范围</div>
       <el-date-picker
-        v-model="value1"
+        v-model="monthRange"
         type="monthrange"
         range-separator="-"
         value-format="YYYY-MM"
         start-placeholder="开始时间"
         end-placeholder="结束时间"
         :disabled-date="disabledDate"
+        @change="handleMonthRangeChange"
       />
     </div>
     <div v-loading="loading" id="my-chart_electricity-price" ref="myeCharts" />
@@ -84,6 +85,7 @@
 </template>
 
 <script lang="ts" setup>
+import dayjs from "dayjs";
 import {
   textStyle,
   flexStyle,
@@ -107,16 +109,7 @@ import Select from "@/components/Common/Select.vue";
 import image from "@/assets/img/electricityPrice/icon_hint_nor.png";
 import { onMounted, computed, Ref, ref, onBeforeUnmount } from "vue";
 import ExportCanvasDialog from "@/components/Business/ExportCanvasDialog.vue";
-const value1 = ref("");
-function disabledDate(time) {
-  const { start, end } = timeFrame.value;
-  const currentTime = time.getTime();
-  if (currentTime >= start && currentTime <= end) {
-    // return true;
-  } else {
-    return true;
-  }
-}
+const monthRange = ref<any>(["", ""]);
 const eChartsOption: Ref<any> = ref({
   ...cloneDeep(eChartsOptionCommon),
   title: [
@@ -160,10 +153,7 @@ const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const choseSpecific: Ref<number> = ref(2);
 const monthData = ref<any>([]);
-const timeFrame = ref({
-  start: null,
-  end: null,
-});
+const timeFrame = ref({ start: null, end: null });
 const regionalData = ref<any>([]); // 城市数据
 const electricityType1 = ref<any>([]); // 用电类型1数组
 const electricityType2 = ref<any>([]); // 用电类型2数组
@@ -292,6 +282,7 @@ async function getDischargeStrategyData() {
     loading.value = false;
   }
 }
+
 // 获取地区数据
 const onGetRegionalData = async () => {
   apiRegionalData({ type: "all" })
@@ -315,6 +306,7 @@ const onGetRegionalData = async () => {
       loading.value = false;
     });
 };
+
 // 获取用电类型2数据
 async function getElectricityTypeTwo() {
   try {
@@ -328,26 +320,45 @@ async function getElectricityTypeTwo() {
     voltageLevelData.value = datas[0].voltageLevel;
     searchParams.value.tariffLevelId = datas[0].voltageLevel[0].paramName;
     getDischargeStrategyData();
-    getElectricityPrice();
+    getMonthByTimes();
   } catch (error) {
     console.error(error);
     loading.value = false;
   }
 }
+
+// 获取分时 分月电价 峰谷价差
+/**
+ * getMonthPriceData 获取分月电价
+ * getMonthByTimes 先获取月份 通过月份获取到分时电价
+ * getMonthPriceData 获取峰谷价差
+ */
 // 获取月份
 async function getMonthByTimes() {
   try {
     const { datas } = await getMonthByTime({ ...searchParams.value });
     monthData.value = datas;
+    monthRange.value = [
+      datas.length >= 12
+        ? dayjs(getTimeStamp(datas[datas.length - 12].paramName)).format(
+            "YYYY-MM",
+          )
+        : dayjs(getTimeStamp(datas[0].paramName)).format("YYYY-MM"),
+      dayjs(getTimeStamp(datas[datas.length - 1].paramName)).format("YYYY-MM"),
+    ];
+    console.log(monthRange.value);
     timeFrame.value.start = getTimeStamp(datas[0].paramName);
     timeFrame.value.end = getTimeStamp(datas[datas.length - 1].paramName);
     monthVal.value = datas[datas.length - 1].paramName;
     getTOUData();
+    getMonthPriceData();
+    getMonthDifferenceData();
   } catch (error) {
     console.error(error);
     loading.value = false;
   }
 }
+
 /* change */
 // 地区 change
 function changeRegion(val) {
@@ -361,12 +372,14 @@ function changeRegion(val) {
   searchParams.value.electricityTypeOneName = data[0].paramName;
   getElectricityTypeTwo();
 }
+
 // 用电类型1 change
 function changeElectricityTypeOne(val) {
   loading.value = true;
   searchParams.value.electricityTypeOneName = val;
   getElectricityTypeTwo();
 }
+
 // 用电类型2 change
 function changeElectricityTypeTwo(val) {
   loading.value = true;
@@ -377,30 +390,24 @@ function changeElectricityTypeTwo(val) {
   voltageLevelData.value = data;
   searchParams.value.tariffLevelId = data[0].paramName;
   getDischargeStrategyData();
-  getElectricityPrice();
+  getMonthByTimes();
 }
+
 // 月份 change
 function changeMonth(val) {
   loading.value = true;
   monthVal.value = val;
   getTOUData();
 }
+
 // 电压等级 change
 function changeVoltageLevel(val) {
   loading.value = true;
   searchParams.value.tariffLevelId = val;
-  getElectricityPrice();
-}
-
-// 获取分时 分月电价 峰谷价差
-/**
- * getMonthPriceData 获取分月电价
- * getMonthByTimes 先获取月份 通过月份获取到分时电价
- * getMonthPriceData 获取峰谷价差
- */
-function getElectricityPrice() {
-  getMonthPriceData();
   getMonthByTimes();
+}
+function handleMonthRangeChange() {
+  getMonthPriceData();
   getMonthDifferenceData();
 }
 
@@ -536,7 +543,9 @@ function handleTOUData() {
     };
     options.xAxis = {
       data: xAxisData,
-      axisLabel: { interval: 0 },
+      axisLabel: {
+        interval: 0,
+      },
       axisTick: {
         interval: function (index, value) {
           return value === "" ? false : true;
@@ -581,6 +590,7 @@ function handleTOUData() {
     console.log(error);
   }
 }
+
 // 处理分月电价图表
 function handleMonthData() {
   const _defaultData: any = [
@@ -655,10 +665,13 @@ function handleMonthData() {
   options.grid = { bottom: "150" };
   options.legend = { ...options.legend, data: _data };
   options.color = _color;
+  console.log(options.xAxis);
   options.xAxis = {
     ...options.xAxis,
     data: [...xAxisData],
-    // axisLabel: { interval: 0 },
+    axisLabel: {
+      interval: xAxisData.length > 14 ? 1 : 0,
+    },
   };
   options.series = _series;
   options.tooltip = {
@@ -688,6 +701,7 @@ function handleMonthData() {
   myChart.setOption(options);
   loading.value = false;
 }
+
 // 处理峰谷价差图表
 function handlePriceDifferenceData() {
   const _defaultData: any = [
@@ -756,7 +770,9 @@ function handlePriceDifferenceData() {
   options.xAxis = {
     ...options.xAxis,
     data: xAxisData,
-    axisLabel: { interval: 0 },
+    axisLabel: {
+      interval: xAxisData.length > 14 ? 1 : 0,
+    },
   };
   options.series = _series;
   options.tooltip = {
@@ -786,6 +802,7 @@ function handlePriceDifferenceData() {
   myChart.setOption(options);
   loading.value = false;
 }
+
 // 获取分时电价
 async function getTOUData() {
   try {
@@ -800,10 +817,16 @@ async function getTOUData() {
     loading.value = false;
   }
 }
+
 // 获取分月电价
 async function getMonthPriceData() {
   try {
-    const { datas } = await getMonthPrice({ ...searchParams.value });
+    const [startTime, endTime] = monthRange.value;
+    const { datas } = await getMonthPrice({
+      ...searchParams.value,
+      startTime,
+      endTime,
+    });
     monthElectricityPriceData.value = datas;
     choseSpecific.value === 2 && handleMonthData();
   } catch (error) {
@@ -811,12 +834,15 @@ async function getMonthPriceData() {
     loading.value = false;
   }
 }
+
 // 获取峰谷差价
 async function getMonthDifferenceData() {
   try {
+    const [startTime, endTime] = monthRange.value;
     const { datas } = await getMonthDifference({
       ...searchParams.value,
-      years: monthVal.value,
+      startTime,
+      endTime,
     });
     monthPriceDifferenceData.value = datas;
     choseSpecific.value === 3 && handlePriceDifferenceData();
@@ -825,6 +851,7 @@ async function getMonthDifferenceData() {
     loading.value = false;
   }
 }
+
 // 重新定义图标大小
 function reSizeEchart() {
   const myChart = echarts.init(
@@ -832,6 +859,7 @@ function reSizeEchart() {
   );
   myChart && myChart?.resize();
 }
+
 // 清除图表数据
 function clearEchart() {
   const myChart = echarts.init(
@@ -840,12 +868,14 @@ function clearEchart() {
   myChart && myChart?.clear();
   // myChart && myChart?.dispose();
 }
+
 onMounted(() => {
   loading.value = true;
   onGetRegionalData();
   // 监听窗口大小变化
   window.addEventListener("resize", reSizeEchart);
 });
+
 // 在组件销毁前移除事件监听器
 onBeforeUnmount(() => {
   // 销毁echarts实例
@@ -855,6 +885,7 @@ onBeforeUnmount(() => {
   myChart && myChart.dispose();
   window.removeEventListener("resize", reSizeEchart);
 });
+
 // 计算时间段的分钟数
 function timeToMinutes(time) {
   // 将时间拆分成小时和分钟
@@ -863,11 +894,23 @@ function timeToMinutes(time) {
   const totalMinutes = hours * 60 + minutes;
   return totalMinutes;
 }
+
 // 获取时间戳
 function getTimeStamp(time) {
   const [year, month] = time.split(".").map((part) => parseInt(part));
   new Date(year, month).getTime();
   return new Date(year, month - 1).getTime();
+}
+
+// 限制时间选择范围
+function disabledDate(time) {
+  const { start, end } = timeFrame.value;
+  const currentTime = time.getTime();
+  if (currentTime >= start && currentTime <= end) {
+    // return true;
+  } else {
+    return true;
+  }
 }
 </script>
 
@@ -909,10 +952,6 @@ function getTimeStamp(time) {
 
     ::v-deep(.select) {
       width: 32.5% !important;
-
-      &:nth-child(3) {
-        @include margin();
-      }
     }
   }
 
