@@ -1,5 +1,8 @@
 <template>
-  <div id="electricity-price" class="es-commonPage electricity-price page">
+  <div
+    id="time-electricity-price"
+    class="es-commonPage time-electricity-price page"
+  >
     <!-- 分时/分月电价 -->
     <div class="filter">
       <Select
@@ -56,8 +59,20 @@
       labelKey="paramDesc"
       v-if="choseSpecific === 1"
       title="月份选择"
-      width="30%"
+      width="28%"
     />
+    <div v-if="choseSpecific !== 1 && monthData.length" class="month-range">
+      <div class="month-range-title">时间范围</div>
+      <el-date-picker
+        v-model="value1"
+        type="monthrange"
+        range-separator="-"
+        value-format="YYYY-MM"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        :disabled-date="disabledDate"
+      />
+    </div>
     <div v-loading="loading" id="my-chart_electricity-price" ref="myeCharts" />
     <ExportCanvasDialog
       :visible="exportVisible"
@@ -92,6 +107,16 @@ import Select from "@/components/Common/Select.vue";
 import image from "@/assets/img/electricityPrice/icon_hint_nor.png";
 import { onMounted, computed, Ref, ref, onBeforeUnmount } from "vue";
 import ExportCanvasDialog from "@/components/Business/ExportCanvasDialog.vue";
+const value1 = ref("");
+function disabledDate(time) {
+  const { start, end } = timeFrame.value;
+  const currentTime = time.getTime();
+  if (currentTime >= start && currentTime <= end) {
+    // return true;
+  } else {
+    return true;
+  }
+}
 const eChartsOption: Ref<any> = ref({
   ...cloneDeep(eChartsOptionCommon),
   title: [
@@ -120,6 +145,7 @@ const eChartsOption: Ref<any> = ref({
     },
   },
 });
+
 const specificList: Ref<Array<{ id: number; text: string }>> = ref([
   { id: 1, text: "分时电价" },
   { id: 2, text: "分月电价" },
@@ -132,8 +158,12 @@ const myeCharts = ref<any>(null);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
-const choseSpecific: Ref<number> = ref(1);
+const choseSpecific: Ref<number> = ref(2);
 const monthData = ref<any>([]);
+const timeFrame = ref({
+  start: null,
+  end: null,
+});
 const regionalData = ref<any>([]); // 城市数据
 const electricityType1 = ref<any>([]); // 用电类型1数组
 const electricityType2 = ref<any>([]); // 用电类型2数组
@@ -151,12 +181,13 @@ const searchParams = ref({
 // 月份
 const monthVal = ref("");
 
-const timeElectricityPriceData = ref<any>([]); // 分时电价数据
-const monthElectricityPriceData = ref<any>([]); // 分时电价数据
-const monthPriceDifferenceData = ref<any>({}); // 峰谷价差数据
-
 // 策略
 const dischargeStrategyData = ref<string>("");
+
+// 数据
+const timeElectricityPriceData = ref<any>([]); // 分时电价数据
+const monthPriceDifferenceData = ref<any>({}); // 峰谷价差数据
+const monthElectricityPriceData = ref<any>([]); // 分时电价数据
 
 // 导出图片
 const exportResult = () => {
@@ -171,7 +202,7 @@ const exportResult = () => {
 };
 
 const titleTwo = computed(() => {
-  const width: number = document.getElementById("electricity-price")
+  const width: number = document.getElementById("time-electricity-price")
     ?.offsetWidth as number;
   const singleLineQuantity = Math.round(
     (width - Math.round((width / 40) * 2)) / 14,
@@ -308,6 +339,8 @@ async function getMonthByTimes() {
   try {
     const { datas } = await getMonthByTime({ ...searchParams.value });
     monthData.value = datas;
+    timeFrame.value.start = getTimeStamp(datas[0].paramName);
+    timeFrame.value.end = getTimeStamp(datas[datas.length - 1].paramName);
     monthVal.value = datas[datas.length - 1].paramName;
     getTOUData();
   } catch (error) {
@@ -315,9 +348,7 @@ async function getMonthByTimes() {
     loading.value = false;
   }
 }
-/* 
-  change
-*/
+/* change */
 // 地区 change
 function changeRegion(val) {
   loading.value = true;
@@ -361,7 +392,12 @@ function changeVoltageLevel(val) {
   getElectricityPrice();
 }
 
-// 获取分时分月电价 峰谷价差
+// 获取分时 分月电价 峰谷价差
+/**
+ * getMonthPriceData 获取分月电价
+ * getMonthByTimes 先获取月份 通过月份获取到分时电价
+ * getMonthPriceData 获取峰谷价差
+ */
 function getElectricityPrice() {
   getMonthPriceData();
   getMonthByTimes();
@@ -621,8 +657,8 @@ function handleMonthData() {
   options.color = _color;
   options.xAxis = {
     ...options.xAxis,
-    data: xAxisData,
-    axisLabel: { interval: 0 },
+    data: [...xAxisData],
+    // axisLabel: { interval: 0 },
   };
   options.series = _series;
   options.tooltip = {
@@ -819,6 +855,7 @@ onBeforeUnmount(() => {
   myChart && myChart.dispose();
   window.removeEventListener("resize", reSizeEchart);
 });
+// 计算时间段的分钟数
 function timeToMinutes(time) {
   // 将时间拆分成小时和分钟
   const [hours, minutes] = time.split(":").map(Number);
@@ -826,27 +863,42 @@ function timeToMinutes(time) {
   const totalMinutes = hours * 60 + minutes;
   return totalMinutes;
 }
+// 获取时间戳
+function getTimeStamp(time) {
+  const [year, month] = time.split(".").map((part) => parseInt(part));
+  new Date(year, month).getTime();
+  return new Date(year, month - 1).getTime();
+}
 </script>
 
 <style scoped lang="scss">
 @import "@/style/mixin.scss";
 
-.electricity-price {
+.time-electricity-price {
   .price-type {
+    border-radius: 2px;
+    height: 32px;
+    padding: 0 3px;
     @include flex(center, flex-start);
+    background-color: #f2f3f5;
 
     .price-type__item {
-      @include margin(0, 32px, 0, 0);
-      @include padding(6px, 0, 10px, 0);
-      @include font(16px, 400, #5b6985, 24px);
+      border-radius: 1px;
+      height: 26px;
+      @include margin(0, 2px, 0, 0);
+      @include padding(2px, 12px, 2px, 12px);
+      @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
       transition: all 0.2s;
       cursor: pointer;
-      border-bottom: 2px solid rgba(0, 0, 0, 0);
+
+      &:last-child {
+        @include margin(0, 0, 0, 0);
+      }
     }
 
     .price-type__item-chose {
-      @include font(16px, 600, #1d232e, 24px);
-      border-bottom: 2px solid #2d5cf6;
+      @include font(14px, 600, #244bf1, 22px);
+      background-color: #fff;
     }
   }
 
@@ -854,6 +906,44 @@ function timeToMinutes(time) {
     @include flex(center, space-between);
     @include padding(0, 0, 8px, 0);
     @include margin(24px, 0, 24px, 0);
+
+    ::v-deep(.select) {
+      width: 32.5% !important;
+
+      &:nth-child(3) {
+        @include margin();
+      }
+    }
+  }
+
+  ::v-deep(.select) {
+    .select__title {
+      @include margin(0, 16px, 0, 0);
+    }
+  }
+
+  .month-range {
+    margin-top: 16px;
+    width: 28%;
+    @include flex(center, space-between);
+
+    .month-range-title {
+      @include margin(0, 16px, 0, 0);
+      @include font(14px, 400, #5b6985);
+    }
+
+    ::v-deep(.el-date-editor) {
+      * {
+        cursor: pointer;
+      }
+
+      flex: 1;
+      background-color: #fff;
+
+      .el-input__wrapper {
+        box-shadow: none;
+      }
+    }
   }
 
   .flex {

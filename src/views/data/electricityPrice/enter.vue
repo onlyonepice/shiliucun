@@ -43,9 +43,10 @@ const priceTypeList: Ref<Array<{ id: number; text: string }>> = ref([
 @import "@/style/mixin.scss";
 
 .electricity-price {
+  padding-top: 80px;
   .price-type {
     @include flex(center, flex-start);
-
+    border-bottom: 1px solid #dbdce2;
     .price-type__item {
       @include margin(0, 32px, 0, 0);
       @include padding(6px, 0, 10px, 0);
