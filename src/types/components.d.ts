@@ -19,11 +19,6 @@ declare module 'vue' {
     ElOption: typeof import('element-plus/es')['ElOption']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
-    ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
-    ElSkeletonItem: typeof import('element-plus/es')['ElSkeletonItem']
-    ElTabPane: typeof import('element-plus/es')['ElTabPane']
-    ElTabs: typeof import('element-plus/es')['ElTabs']
-    ElTree: typeof import('element-plus/es')['ElTree']
     ExportCanvasDialog: typeof import('./../components/Business/ExportCanvasDialog.vue')['default']
     IndustryInsightList: typeof import('./../components/Common/IndustryInsightList.vue')['default']
     Loading: typeof import('./../components/Common/Loading.vue')['default']
@@ -46,7 +41,6 @@ declare module 'vue' {
     WhiteReport: typeof import('./../components/Business/WhiteReport.vue')['default']
   }
   export interface ComponentCustomProperties {
-    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
