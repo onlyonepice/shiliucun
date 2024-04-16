@@ -110,7 +110,7 @@
 }
 
 .el-input-number {
-  width: 100%;
+  width: 100% !important;
 }
 
 .el-popper {
@@ -184,6 +184,19 @@
   .slider-wrapper .el-slider__bar{
     background-color: #e4e7ed;
   }
+  .el-select__wrapper{
+    background-color: #f4f5f7 ;
+    box-shadow: none;
+  }
+  .el-select__wrapper.is-hovering:not(.is-focused){
+    box-shadow: none;
+  }
+  .el-select__wrapper:hover {
+    box-shadow: none;
+  }
+  .el-input-number .el-input__inner{
+    text-align: left;
+  }
 }
 
 .el-table__row {
@@ -221,16 +234,7 @@
   color: var(--el-text-color-secondary);
   font-size: 30px;
 }
-.el-select__wrapper{
-  background-color: #f4f5f7;
-  box-shadow: none;
-}
-.el-select__wrapper.is-hovering:not(.is-focused){
-  box-shadow: none;
-}
-.el-select__wrapper:hover {
-  box-shadow: none;
-}
+
 
 .el-table__cell{
   overflow: hidden;

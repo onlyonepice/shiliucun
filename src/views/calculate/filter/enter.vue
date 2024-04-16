@@ -28,96 +28,145 @@
         </div>
       </div>
       <!-- 用户参数 -->
-      <div>
+      <div class="extra-title">
         <h4 class="filter__title-margin">用户参数</h4>
+        <div class="extra-title-btn" @click="addArea()">
+          {{ addAreaType ? "关闭对比地区" : "添加对比地区" }}
+        </div>
       </div>
-      <div class="filter__content filter__content-half">
-        <p class="filter__content-disabled" v-if="disabledUser" />
-        <Select
-          title="地区"
-          :options="cityData"
-          valueKey="regionName"
-          :defaultValue="searchParams.regionName"
-          width="100%"
-          @onChange="
-            ($event) => {
-              onAreaChange($event, 'regionName');
-            }
-          "
+      <div class="filter-userInfo">
+        <p
+          class="filter__content-disabled"
+          style="height: 182px"
+          v-if="disabledUser"
         />
-        <Select
-          title="用电类型I"
-          :options="electricityType1"
-          valueKey="paramName"
-          labelKey="paramDesc"
-          width="100%"
-          :defaultValue="searchParams.electricityTypeOneName"
-          @onChange="
-            ($event) => {
-              onElectricityTypeOneName($event, 'electricityTypeOneName');
-            }
-          "
-        />
-        <Select
-          title="用电类型II"
-          :options="electricityType2"
-          valueKey="paramName"
-          labelKey="paramDesc"
-          width="100%"
-          :defaultValue="searchParams.electricityTypeTwoName"
-          @onChange="
-            ($event) => {
-              onElectricityTypeTwoName($event, 'electricityTypeTwoName');
-            }
-          "
-        />
-        <Select
-          title="电压等级"
-          :options="voltageLevel"
-          valueKey="paramName"
-          labelKey="paramDesc"
-          width="100%"
-          :defaultValue="searchParams.tariffLevelId"
-          @onChange="
-            ($event) => {
-              onChangeData($event, 'tariffLevelId');
-            }
-          "
-        />
+        <div class="filter__content filter__content-half">
+          <Select
+            :title="addAreaType ? '地区A' : '地区'"
+            :options="cityData"
+            valueKey="regionName"
+            :defaultValue="searchParams.regionName"
+            width="100%"
+            @onChange="
+              ($event) => {
+                onAreaChange($event, 'regionName', 'A');
+              }
+            "
+          />
+          <Select
+            title="用电类型I"
+            :options="electricityType1"
+            valueKey="paramName"
+            labelKey="paramDesc"
+            width="100%"
+            :defaultValue="searchParams.electricityTypeOneName"
+            @onChange="
+              ($event) => {
+                onElectricityTypeOneName($event, 'electricityTypeOneName', 'A');
+              }
+            "
+          />
+          <Select
+            title="用电类型II"
+            :options="electricityType2"
+            valueKey="paramName"
+            labelKey="paramDesc"
+            width="100%"
+            :defaultValue="searchParams.electricityTypeTwoName"
+            @onChange="
+              ($event) => {
+                onElectricityTypeTwoName($event, 'electricityTypeTwoName', 'A');
+              }
+            "
+          />
+          <Select
+            title="电压等级"
+            :options="voltageLevel"
+            valueKey="paramName"
+            labelKey="paramDesc"
+            width="100%"
+            :defaultValue="searchParams.tariffLevelId"
+            @onChange="
+              ($event) => {
+                onChangeData($event, 'tariffLevelId', 'A');
+              }
+            "
+          />
+          <template v-if="!disabledUser && tipsInfo.chargeDischargeStrategy">
+            <p
+              class="tips"
+              v-if="getTips(tipsInfo.chargeDischargeStrategy, 'A') !== ''"
+            >
+              {{ getTips(tipsInfo.chargeDischargeStrategy, "A") }}
+            </p>
+          </template>
+        </div>
+        <div class="filter__content filter__content-half" v-if="addAreaType">
+          <Select
+            title="地区B"
+            :options="cityData"
+            valueKey="regionName"
+            :defaultValue="searchParamsB.regionName"
+            width="100%"
+            @onChange="
+              ($event) => {
+                onAreaChange($event, 'regionName', 'B');
+              }
+            "
+          />
+          <Select
+            title="用电类型I"
+            :options="electricityType1"
+            valueKey="paramName"
+            labelKey="paramDesc"
+            width="100%"
+            :defaultValue="searchParamsB.electricityTypeOneName"
+            @onChange="
+              ($event) => {
+                onElectricityTypeOneName($event, 'electricityTypeOneName', 'B');
+              }
+            "
+          />
+          <Select
+            title="用电类型II"
+            :options="electricityType2"
+            valueKey="paramName"
+            labelKey="paramDesc"
+            width="100%"
+            :defaultValue="searchParamsB.electricityTypeTwoName"
+            @onChange="
+              ($event) => {
+                onElectricityTypeTwoName($event, 'electricityTypeTwoName', 'B');
+              }
+            "
+          />
+          <Select
+            title="电压等级"
+            :options="voltageLevel"
+            valueKey="paramName"
+            labelKey="paramDesc"
+            width="100%"
+            :defaultValue="searchParamsB.tariffLevelId"
+            @onChange="
+              ($event) => {
+                onChangeData($event, 'tariffLevelId', 'B');
+              }
+            "
+          />
+          <template v-if="!disabledUser && tipsInfoB.chargeDischargeStrategy">
+            <p
+              class="tips"
+              v-if="getTips(tipsInfoB.chargeDischargeStrategy, 'B') !== ''"
+            >
+              {{ getTips(tipsInfoB.chargeDischargeStrategy, "B") }}
+            </p>
+          </template>
+        </div>
       </div>
-      <div v-if="!disabledUser && tipsInfo.chargeDischargeStrategy">
-        <p
-          class="tips"
-          v-if="
-            searchParams.electricityTypeTwoName === 'BUSINESS_NDUSTRY' &&
-            tipsInfo.chargeDischargeStrategy.BUSINESS_NDUSTRY !== null
-          "
-        >
-          {{ tipsInfo.chargeDischargeStrategy.BUSINESS_NDUSTRY }}
-        </p>
-        <p
-          class="tips"
-          v-if="
-            searchParams.electricityTypeTwoName ===
-              'GENERAL_INDUSTRY_COMMERCE' &&
-            tipsInfo.chargeDischargeStrategy.GENERAL_INDUSTRY_COMMERCE !== null
-          "
-        >
-          {{ tipsInfo.chargeDischargeStrategy.GENERAL_INDUSTRY_COMMERCE }}
-        </p>
-        <p
-          class="tips"
-          v-if="
-            searchParams.electricityTypeTwoName === 'LARGE_INDUSTRY' &&
-            tipsInfo.chargeDischargeStrategy.LARGE_INDUSTRY !== null
-          "
-        >
-          {{ tipsInfo.chargeDischargeStrategy.LARGE_INDUSTRY }}
-        </p>
-      </div>
+
       <!-- 产品参数 -->
-      <h4 class="filter__title-margin filter__title-subsidy">产品参数</h4>
-      <div>
+      <h4 class="filter__title-margin">产品参数</h4>
+      <div class="filter__title-subsidy">
         <p
           class="filter__content-disabled"
           style="height: 336px"
@@ -253,7 +302,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref, defineEmits, onMounted } from "vue";
+import { Ref, ref, defineEmits, onMounted, computed } from "vue";
 import NoChoseRadio from "@/assets/img/common/i-Report-radio-false.png";
 import HasChoseRadio from "@/assets/img/common/i-Report-radio-true.png";
 import { PATTERNANALYSIS, FILTERDATA } from "./data";
@@ -262,6 +311,7 @@ import { ElMessage } from "element-plus";
 import { useUserStore } from "@/store/modules/user";
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 import { getToken } from "@/utils/auth";
+import { cloneDeep } from "lodash";
 import {
   apiAreaData,
   apiStrategy,
@@ -270,6 +320,7 @@ import {
   apiProductDetail,
 } from "@/api/investment";
 const emit = defineEmits(["onAnalysis", "onReset"]);
+const addAreaType: Ref<boolean> = ref(false); // 添加地区对比开关
 
 const filterData: Ref<FILTERDATA> = ref({
   patternAnalysis: 0,
@@ -292,14 +343,18 @@ const searchParams: Ref<any> = ref({
   picture: "", // 产品图片
   chargeDischargeIdentifying: "",
 });
-const subsidyData = ref({
-  subsidyAmount: "", // 补贴金额
-  subsidyYear: "", // 补贴年限
+// B地区筛选项
+const searchParamsB = ref({
+  regionName: "", // 地区
+  electricityTypeOneName: "", // 用电类型1
+  electricityTypeTwoName: "", // 用电类型2
+  tariffLevelId: "", // 期望接入电压等级
 });
 // 筛选项后端需求多传无用字段
 const searchParamsDefault: any = ref({});
 const cityData = ref([]); // 地区数据
 const tipsInfo: any = ref({}); // 提示文案
+const tipsInfoB: any = ref({}); // 提示文案
 const electricityType1 = ref([]); // 用电类型1
 const electricityType2 = ref([]); // 用电类型2
 const voltageLevel = ref([]); // 接入电压等级
@@ -331,6 +386,26 @@ const onPatternAnalysis = (id: number) => {
 onMounted(() => {
   getAreaData();
 });
+// 获取tips
+const getTips = computed(() => (data: any, compare: string) => {
+  return (
+    data[
+      compare === "A"
+        ? searchParams.value.electricityTypeTwoName
+        : searchParamsB.value.electricityTypeTwoName
+    ] || ""
+  );
+});
+// 添加地区对比
+const addArea = () => {
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
+  if (disabledUser.value) {
+    return;
+  }
+  addAreaType.value = !addAreaType.value;
+};
 
 // 开始分析
 const onAnalysis = () => {
@@ -346,52 +421,31 @@ const onAnalysis = () => {
   if (searchParams.value.choseProduct === "") {
     return ElMessage({ message: "请选择产品", type: "warning" });
   }
-  let electricityTypeOneNameText = ""; // 用电类型1选中项的文案
-  let electricityTypeTwoNameText = ""; // 用电类型2选中项的文案
-  let tariffLevelIdText = ""; // 期待接入的电压等级的文案
-  let choseProductText = ""; // 选择产品的文案
-  electricityType1.value.forEach((item) => {
-    item.paramName === searchParams.value.electricityTypeOneName &&
-      (electricityTypeOneNameText = item.paramDesc);
-  });
-  electricityType2.value.forEach((item) => {
-    item.paramName === searchParams.value.electricityTypeTwoName &&
-      (electricityTypeTwoNameText = item.paramDesc);
-  });
-  voltageLevel.value.forEach((item) => {
-    item.paramName === searchParams.value.tariffLevelId &&
-      (tariffLevelIdText = item.paramDesc);
-  });
-  productList.value.forEach((item) => {
-    item.paramName === searchParams.value.choseProduct &&
-      (choseProductText = item.paramDesc);
-  });
+  if (addAreaType.value && searchParamsB.value.regionName === "") {
+    return ElMessage({ message: "请选择对比地区", type: "warning" });
+  }
   filterFinish.value = true;
-  // 需要深拷贝防止数据污染
-  const _searchParams = JSON.parse(JSON.stringify(searchParams.value));
-  const _filterData = JSON.parse(JSON.stringify(filterData.value));
-  const _searchParamsDefault = JSON.parse(
-    JSON.stringify(searchParamsDefault.value),
-  );
-  const _data = Object.assign(
-    _searchParamsDefault,
-    _filterData,
-    _searchParams,
-    {
-      electricityTypeOneNameText,
-      electricityTypeTwoNameText,
-      tariffLevelIdText,
-      choseProductText,
-    },
-  );
-  Object.assign(_data, subsidyData.value);
   emit(
     "onAnalysis",
-    _data,
-    tipsInfo.value.chargeDischargeStrategy[
-      searchParams.value.electricityTypeTwoName
-    ],
+    Object.assign(
+      {},
+      cloneDeep(searchParams.value),
+      cloneDeep(filterData.value),
+      cloneDeep(searchParamsDefault.value),
+    ),
+    "searchA",
   );
+  addAreaType.value &&
+    emit(
+      "onAnalysis",
+      Object.assign(
+        {},
+        cloneDeep(searchParamsB.value),
+        cloneDeep(filterData.value),
+        cloneDeep(searchParamsDefault.value),
+      ),
+      "searchB",
+    );
 };
 
 // 重置筛选项
@@ -445,28 +499,41 @@ async function getProductList() {
     console.error(error);
   }
 }
+getProductList();
 // 地区筛选项改变
-async function onAreaChange(data: string, type: string) {
-  onChangeData(data, type);
+async function onAreaChange(data: string, type: string, compare: string) {
+  onChangeData(data, type, compare);
   cityData.value.forEach((item) => {
     if (item.regionName === data) {
       electricityType1.value = item.reInvestmentElectricityType;
-      searchParams.value.electricityTypeOneName =
-        item.reInvestmentElectricityType[0].paramName;
+      if (compare === "A") {
+        searchParams.value.electricityTypeOneName =
+          item.reInvestmentElectricityType[0].paramName;
+      } else {
+        searchParamsB.value.electricityTypeOneName =
+          item.reInvestmentElectricityType[0].paramName;
+      }
     }
   });
-  onGetElectricityInfo();
+  onGetElectricityInfo(compare);
   disabledProduct.value = false;
-  getProductList();
 }
 // 用电类型1改变
-async function onElectricityTypeOneName(data: string, type: string) {
-  onChangeData(data, type);
-  onGetElectricityInfo();
+async function onElectricityTypeOneName(
+  data: string,
+  type: string,
+  compare: string,
+) {
+  onChangeData(data, type, compare);
+  onGetElectricityInfo(compare);
 }
 // 用电类型2改变
-async function onElectricityTypeTwoName(data: string, type: string) {
-  onChangeData(data, type);
+async function onElectricityTypeTwoName(
+  data: string,
+  type: string,
+  compare: string,
+) {
+  onChangeData(data, type, compare);
   electricityType2.value.forEach((item) => {
     if (item.paramDesc === data) {
       voltageLevel.value = item.voltageLevel;
@@ -474,22 +541,28 @@ async function onElectricityTypeTwoName(data: string, type: string) {
   });
 }
 // 获取用电类型与电压等级
-async function onGetElectricityInfo() {
+async function onGetElectricityInfo(compare: string) {
+  const _searchParams =
+    compare === "A" ? searchParams.value : searchParamsB.value;
   try {
     const _data = {
-      region: searchParams.value.regionName,
-      electricityTypeOneName: searchParams.value.electricityTypeOneName,
-      regionName: searchParams.value.regionName,
+      region: _searchParams.regionName,
+      electricityTypeOneName: _searchParams.electricityTypeOneName,
+      regionName: _searchParams.regionName,
     };
     const res: any = await apiStrategy(_data);
-    tipsInfo.value = res.datas;
     searchParams.value.chargeDischargeIdentifying =
       res.datas.chargeDischargeIdentifying;
     const res1: any = await apiElectricityType(_data);
     electricityType2.value = res1.datas;
-    searchParams.value.electricityTypeTwoName = res1.datas[0].paramName;
     voltageLevel.value = res1.datas[0].voltageLevel;
-    searchParams.value.tariffLevelId = res1.datas[0].voltageLevel[0].paramName;
+    if (compare === "A") {
+      tipsInfo.value = res.datas;
+    } else {
+      tipsInfoB.value = res.datas;
+    }
+    _searchParams.electricityTypeTwoName = res1.datas[0].paramName;
+    _searchParams.tariffLevelId = res1.datas[0].voltageLevel[0].paramName;
   } catch (error) {
     console.error(error);
   }
@@ -521,8 +594,12 @@ async function onChoseProduct(data: any, type: string) {
   }
 }
 // 改变值
-async function onChangeData(data: string, type: string) {
-  searchParams.value[type] = data;
+async function onChangeData(data: string, type: string, compare = "A") {
+  if (compare === "A") {
+    searchParams.value[type] = data;
+  } else {
+    searchParamsB.value[type] = data;
+  }
 }
 </script>
 
@@ -565,7 +642,7 @@ async function onChangeData(data: string, type: string) {
 }
 
 .filter__title-subsidy {
-  @include margin(8px, 0, 16px, 0);
+  @include relative();
 }
 
 .filter__content {
@@ -580,7 +657,7 @@ async function onChangeData(data: string, type: string) {
 
 .filter__content-disabled {
   @include widthAndHeight(100%, 100%);
-  @include absolute(2);
+  @include absolute(2, 0, 0);
   cursor: no-drop;
 }
 
@@ -604,15 +681,13 @@ async function onChangeData(data: string, type: string) {
 }
 
 .tips {
-  width: 48%;
+  width: 100%;
   display: inline-block;
   @include font(12px, 400, #5b6985, 20px);
   @include relative();
   @include padding(6px, 26px, 6px, 26px);
   background: #eff4ff;
   border-radius: 4px;
-  margin-bottom: 24px;
-
   &::before {
     content: "";
     @include widthAndHeight(16px, 16px);
@@ -665,5 +740,23 @@ async function onChangeData(data: string, type: string) {
     border: 1px solid #dbdce2;
     @include font(14px, 400, rgba(0, 0, 0, 0.9), 32px);
   }
+}
+.extra-title {
+  @include flex(center, flex-start);
+  .extra-title-btn {
+    @include widthAndHeight(116px, 32px);
+    background: #ffffff;
+    border-radius: 4px;
+    border: 1px solid #244bf1;
+    @include font(14px, 400, #244bf1, 22px);
+    @include flex(center, center);
+    margin-left: 8px;
+    cursor: pointer;
+  }
+}
+
+.filter-userInfo {
+  @include flex(flex-start, space-between);
+  @include relative();
 }
 </style>
