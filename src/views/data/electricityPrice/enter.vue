@@ -13,7 +13,7 @@
     </div>
     <!-- 分时/分月电价 -->
     <div v-if="chosePriceType === 1">
-      <!-- <ElectricityPriceTime /> -->
+      <ElectricityPriceTime />
     </div>
     <!-- 电价分析 -->
     <div v-if="chosePriceType === 2">
@@ -28,8 +28,8 @@
 
 <script lang="ts" setup>
 import { ref, Ref } from "vue";
-// import ElectricityPriceTime from "./electricityPriceTime.vue";
 import ElectricityAnalysis from "./electricityAnalysis.vue";
+import ElectricityPriceTime from "./electricityPriceTime.vue";
 import ElectricityPricePeriod from "./electricityPricePeriod.vue";
 const chosePriceType = ref(1);
 const priceTypeList: Ref<Array<{ id: number; text: string }>> = ref([
@@ -43,9 +43,10 @@ const priceTypeList: Ref<Array<{ id: number; text: string }>> = ref([
 @import "@/style/mixin.scss";
 
 .electricity-price {
+  padding-top: 80px;
   .price-type {
     @include flex(center, flex-start);
-
+    border-bottom: 1px solid #dbdce2;
     .price-type__item {
       @include margin(0, 32px, 0, 0);
       @include padding(6px, 0, 10px, 0);

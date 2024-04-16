@@ -61,7 +61,7 @@ export const getElectricityType = (params) => {
 };
 // 分时月份
 export const getMonthByTime = (data) => {
-  return http.request<Request>(
+  return http.request<{ datas: Array<any>; resp_code: number }>(
     "post",
     "/eesa-report/electricityTimeShare/front/openApi/v1.1/getSelectMonth",
     { data },
@@ -93,7 +93,7 @@ export const getMonthDifference = (data) => {
 };
 // 请求放电策略
 export const getDischargeStrategy = (params) => {
-  return http.request<Request>(
+  return http.request<{ datas: { chargeDischargeStrategy: any } }>(
     "get",
     "/eesa-report/front/openApi/v1.1/getChargeDischargeStrategy",
     { params },

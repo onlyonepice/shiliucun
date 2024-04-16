@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="filter">
-      <div class="select-p">
+      <div class="select select-p">
         <span class="select__title">地区</span>
         <el-select
           :class="searchParams.regionName.length === 1 ? 'no-close-one' : ''"
@@ -57,7 +57,7 @@
         value-key="paramName"
         :label-key="'paramDesc'"
         title="峰谷价差"
-        width="30%"
+        width="20%"
       />
       <div class="export-image" @click="exportResult">导出图片</div>
     </div>
@@ -321,11 +321,22 @@ onMounted(() => {
   @include flex(center, space-between);
   @include margin(24px, 0, 24px, 0);
 
+  ::v-deep(.select) {
+    width: 32.5% !important;
+
+    &:nth-child(3) {
+      margin-bottom: 16px !important;
+    }
+  }
+
   .select-p {
-    @include widthAndHeight(48%, 32px);
+    @include widthAndHeight(32.5%, 32px);
     @include flex(center, flex-start);
+    @include margin(0, 0, 16px, 0);
 
     .select__title {
+      width: 70px;
+      text-align: right;
       @include margin(0, 44px, 0, 0);
       @include margin(0, 44px, 0, 0);
       @include font(14px, 400, #5b6985, 22px);
@@ -333,6 +344,18 @@ onMounted(() => {
 
     .select__content {
       flex: 1;
+    }
+  }
+
+  ::v-deep(.select) {
+    width: 32.5% !important;
+
+    &:nth-child(3) {
+      @include margin();
+    }
+
+    .select__title {
+      @include margin(0, 16px, 0, 0);
     }
   }
 }
@@ -343,6 +366,12 @@ onMounted(() => {
 
 .small-price-type {
   @include margin(0, 0, 16px, 0);
+
+  ::v-deep(.select) {
+    .select__title {
+      @include margin(0, 16px, 0, 0);
+    }
+  }
 }
 
 .export-image {

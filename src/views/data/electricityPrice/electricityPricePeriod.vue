@@ -1,6 +1,10 @@
 <template>
   <div class="province-peak-valley-time">
-    <el-button type="primary" @click="clickGeneratePicture">下载图片</el-button>
+    <div class="province-peak-valley-time-top">
+      <el-button type="primary" @click="clickGeneratePicture">
+        下载图片
+      </el-button>
+    </div>
     <div class="content">
       <div ref="faultTree" class="box">
         <div v-if="showLoading">
@@ -215,6 +219,11 @@ export default {
 <style lang="scss" scoped>
 .province-peak-valley-time {
   width: 100%;
+
+  .province-peak-valley-time-top {
+    display: flex;
+    flex-direction: row-reverse;
+  }
 }
 
 .content {
