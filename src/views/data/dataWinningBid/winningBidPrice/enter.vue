@@ -79,7 +79,6 @@ watch(
   (res: response[]) => {
     if (res.length > 0) {
       nextTick(() => {
-        console.log(res);
         options.value.forEach((item) => {
           switch (item.model) {
             case "biddingContent":

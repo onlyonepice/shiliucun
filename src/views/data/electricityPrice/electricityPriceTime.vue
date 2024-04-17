@@ -1,10 +1,13 @@
 <template>
-  <div id="electricity-price" class="es-commonPage electricity-price page">
-    <!-- 分时/分月电价 -->
+  <div
+    id="time-electricity-price"
+    class="es-commonPage time-electricity-price page"
+  >
     <div class="filter">
       <Select
         @on-change="changeRegion"
         title="地区"
+        @triggerForm="handleTriggerForm"
         :options="regionalData"
         valueKey="regionName"
         :defaultValue="searchParams.regionName"
@@ -12,6 +15,7 @@
       <Select
         @on-change="changeElectricityTypeOne"
         title="用电类型 I"
+        @triggerForm="handleTriggerForm"
         :options="electricityType1"
         valueKey="paramName"
         labelKey="paramDesc"
@@ -20,6 +24,7 @@
       <Select
         @on-change="changeElectricityTypeTwo"
         title="用电类型Ⅱ"
+        @triggerForm="handleTriggerForm"
         :options="electricityType2"
         valueKey="paramName"
         labelKey="paramDesc"
@@ -29,6 +34,7 @@
         @on-change="changeVoltageLevel"
         :options="voltageLevelData"
         valueKey="paramName"
+        @triggerForm="handleTriggerForm"
         labelKey="paramDesc"
         :defaultValue="searchParams.tariffLevelId"
         title="电压等级"
@@ -54,10 +60,26 @@
       :default-value="monthVal"
       valueKey="paramName"
       labelKey="paramDesc"
+      @triggerForm="handleTriggerForm"
       v-if="choseSpecific === 1"
       title="月份选择"
-      width="30%"
+      width="28%"
     />
+    <div v-if="choseSpecific !== 1 && monthData.length" class="month-range">
+      <div class="month-range-title">时间范围</div>
+      <el-date-picker
+        v-model="monthRange"
+        type="monthrange"
+        :clearable="false"
+        range-separator="-"
+        value-format="YYYY-MM"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        :disabled-date="disabledDate"
+        @change="handleMonthRangeChange"
+        @visible-change="handleTriggerForm"
+      />
+    </div>
     <div v-loading="loading" id="my-chart_electricity-price" ref="myeCharts" />
     <ExportCanvasDialog
       :visible="exportVisible"
@@ -69,6 +91,7 @@
 </template>
 
 <script lang="ts" setup>
+import dayjs from "dayjs";
 import {
   textStyle,
   flexStyle,
@@ -86,12 +109,17 @@ import {
   getDischargeStrategy,
 } from "@/api/priceTracking";
 import * as echarts from "echarts";
+import { onMounted, computed, Ref, ref, onBeforeUnmount } from "vue";
 import { cloneDeep } from "lodash";
 import { vLoading } from "element-plus";
-import Select from "@/components/Common/Select.vue";
+import { getToken } from "@/utils/auth";
+import { useUserStoreHook } from "@/store/modules/user";
+
 import image from "@/assets/img/electricityPrice/icon_hint_nor.png";
-import { onMounted, computed, Ref, ref, onBeforeUnmount } from "vue";
+import Select from "@/components/Common/Select.vue";
 import ExportCanvasDialog from "@/components/Business/ExportCanvasDialog.vue";
+
+const monthRange = ref<any>(["", ""]);
 const eChartsOption: Ref<any> = ref({
   ...cloneDeep(eChartsOptionCommon),
   title: [
@@ -120,6 +148,7 @@ const eChartsOption: Ref<any> = ref({
     },
   },
 });
+
 const specificList: Ref<Array<{ id: number; text: string }>> = ref([
   { id: 1, text: "分时电价" },
   { id: 2, text: "分月电价" },
@@ -134,6 +163,7 @@ const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const choseSpecific: Ref<number> = ref(1);
 const monthData = ref<any>([]);
+const timeFrame = ref({ start: null, end: null });
 const regionalData = ref<any>([]); // 城市数据
 const electricityType1 = ref<any>([]); // 用电类型1数组
 const electricityType2 = ref<any>([]); // 用电类型2数组
@@ -151,12 +181,13 @@ const searchParams = ref({
 // 月份
 const monthVal = ref("");
 
-const timeElectricityPriceData = ref<any>([]); // 分时电价数据
-const monthElectricityPriceData = ref<any>([]); // 分时电价数据
-const monthPriceDifferenceData = ref<any>({}); // 峰谷价差数据
-
 // 策略
 const dischargeStrategyData = ref<string>("");
+
+// 数据
+const timeElectricityPriceData = ref<any>([]); // 分时电价数据
+const monthPriceDifferenceData = ref<any>({}); // 峰谷价差数据
+const monthElectricityPriceData = ref<any>([]); // 分时电价数据
 
 // 导出图片
 const exportResult = () => {
@@ -171,7 +202,7 @@ const exportResult = () => {
 };
 
 const titleTwo = computed(() => {
-  const width: number = document.getElementById("electricity-price")
+  const width: number = document.getElementById("time-electricity-price")
     ?.offsetWidth as number;
   const singleLineQuantity = Math.round(
     (width - Math.round((width / 40) * 2)) / 14,
@@ -261,6 +292,7 @@ async function getDischargeStrategyData() {
     loading.value = false;
   }
 }
+
 // 获取地区数据
 const onGetRegionalData = async () => {
   apiRegionalData({ type: "all" })
@@ -269,7 +301,7 @@ const onGetRegionalData = async () => {
         (item) => !item.regionName.includes("2024"),
       );
       // 默认获取到浙江省
-      searchParams.value.regionName = "浙江省";
+      searchParams.value.regionName = "上海市";
       res.datas.forEach((item) => {
         if (item.regionName === searchParams.value.regionName) {
           electricityType1.value = item.reInvestmentElectricityType;
@@ -284,6 +316,7 @@ const onGetRegionalData = async () => {
       loading.value = false;
     });
 };
+
 // 获取用电类型2数据
 async function getElectricityTypeTwo() {
   try {
@@ -297,31 +330,52 @@ async function getElectricityTypeTwo() {
     voltageLevelData.value = datas[0].voltageLevel;
     searchParams.value.tariffLevelId = datas[0].voltageLevel[0].paramName;
     getDischargeStrategyData();
-    getElectricityPrice();
+    getMonthByTimes();
   } catch (error) {
     console.error(error);
     loading.value = false;
   }
 }
+
+/**
+ * getMonthPriceData 获取分月电价
+ * getMonthByTimes 先获取月份 通过月份获取到分时电价
+ * getMonthPriceData 获取峰谷价差
+ */
+
 // 获取月份
 async function getMonthByTimes() {
   try {
     const { datas } = await getMonthByTime({ ...searchParams.value });
     monthData.value = datas;
+    monthRange.value = [
+      datas.length >= 12
+        ? dayjs(getTimeStamp(datas[datas.length - 12].paramName)).format(
+            "YYYY-MM",
+          )
+        : dayjs(getTimeStamp(datas[0].paramName)).format("YYYY-MM"),
+      dayjs(getTimeStamp(datas[datas.length - 1].paramName)).format("YYYY-MM"),
+    ];
+    timeFrame.value.start = getTimeStamp(datas[0].paramName);
+    timeFrame.value.end = getTimeStamp(datas[datas.length - 1].paramName);
     monthVal.value = datas[datas.length - 1].paramName;
     getTOUData();
+    getMonthPriceData();
+    getMonthDifferenceData();
   } catch (error) {
     console.error(error);
     loading.value = false;
   }
 }
-/* 
-  change
-*/
+
+/* change */
 // 地区 change
 function changeRegion(val) {
-  loading.value = true;
   searchParams.value.regionName = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   // 获取到用电类型1
   const data = regionalData.value.find(
     (item) => item.regionName === val,
@@ -330,41 +384,58 @@ function changeRegion(val) {
   searchParams.value.electricityTypeOneName = data[0].paramName;
   getElectricityTypeTwo();
 }
+
 // 用电类型1 change
 function changeElectricityTypeOne(val) {
-  loading.value = true;
   searchParams.value.electricityTypeOneName = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   getElectricityTypeTwo();
 }
+
 // 用电类型2 change
 function changeElectricityTypeTwo(val) {
-  loading.value = true;
   searchParams.value.electricityTypeTwoName = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   const data = electricityType2.value.find(
     (item) => item.paramName === val,
   )?.voltageLevel;
   voltageLevelData.value = data;
   searchParams.value.tariffLevelId = data[0].paramName;
   getDischargeStrategyData();
-  getElectricityPrice();
-}
-// 月份 change
-function changeMonth(val) {
-  loading.value = true;
-  monthVal.value = val;
-  getTOUData();
-}
-// 电压等级 change
-function changeVoltageLevel(val) {
-  loading.value = true;
-  searchParams.value.tariffLevelId = val;
-  getElectricityPrice();
+  getMonthByTimes();
 }
 
-// 获取分时分月电价 峰谷价差
-function getElectricityPrice() {
-  getMonthPriceData();
+// 月份 change
+function changeMonth(val) {
+  monthVal.value = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
+  getTOUData();
+}
+
+// 电压等级 change
+function changeVoltageLevel(val) {
+  searchParams.value.tariffLevelId = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   getMonthByTimes();
+}
+// 时间范围 change
+function handleMonthRangeChange() {
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  getMonthPriceData();
   getMonthDifferenceData();
 }
 
@@ -489,7 +560,7 @@ function handleTOUData() {
     options.title[0].text = title;
     options.title[0].subtext = subtitle;
     options.title[1] = titleTwo.value;
-    options.grid = { bottom: "150" };
+    options.grid = { bottom: "150", top: "80" };
     options.legend = {
       ...options.legend,
       data: _data.map((item) => {
@@ -498,9 +569,12 @@ function handleTOUData() {
       }),
       bottom: "100",
     };
+    console.log(options.legend);
     options.xAxis = {
       data: xAxisData,
-      axisLabel: { interval: 0 },
+      axisLabel: {
+        interval: 0,
+      },
       axisTick: {
         interval: function (index, value) {
           return value === "" ? false : true;
@@ -545,6 +619,7 @@ function handleTOUData() {
     console.log(error);
   }
 }
+
 // 处理分月电价图表
 function handleMonthData() {
   const _defaultData: any = [
@@ -616,13 +691,15 @@ function handleMonthData() {
   options.title[0].subtext = subtitle;
   options.title[1] = titleTwo.value;
   options.legend = { ...options.legend, bottom: "100" };
-  options.grid = { bottom: "150" };
+  options.grid = { bottom: "150", top: "80" };
   options.legend = { ...options.legend, data: _data };
   options.color = _color;
   options.xAxis = {
     ...options.xAxis,
-    data: xAxisData,
-    axisLabel: { interval: 0 },
+    data: [...xAxisData],
+    axisLabel: {
+      interval: xAxisData.length > 14 ? 1 : 0,
+    },
   };
   options.series = _series;
   options.tooltip = {
@@ -652,6 +729,7 @@ function handleMonthData() {
   myChart.setOption(options);
   loading.value = false;
 }
+
 // 处理峰谷价差图表
 function handlePriceDifferenceData() {
   const _defaultData: any = [
@@ -715,12 +793,15 @@ function handlePriceDifferenceData() {
   const options = cloneDeep(eChartsOption.value);
   options.title[0].text = title;
   options.title[0].subtext = subtitle;
+  options.grid = { bottom: "80", top: "80" };
   options.legend = { ...options.legend, data: _data, bottom: "10" };
   options.color = _color;
   options.xAxis = {
     ...options.xAxis,
     data: xAxisData,
-    axisLabel: { interval: 0 },
+    axisLabel: {
+      interval: xAxisData.length > 14 ? 1 : 0,
+    },
   };
   options.series = _series;
   options.tooltip = {
@@ -750,6 +831,7 @@ function handlePriceDifferenceData() {
   myChart.setOption(options);
   loading.value = false;
 }
+
 // 获取分时电价
 async function getTOUData() {
   try {
@@ -764,10 +846,16 @@ async function getTOUData() {
     loading.value = false;
   }
 }
+
 // 获取分月电价
 async function getMonthPriceData() {
   try {
-    const { datas } = await getMonthPrice({ ...searchParams.value });
+    const [startTime, endTime] = monthRange.value;
+    const { datas } = await getMonthPrice({
+      ...searchParams.value,
+      startTime,
+      endTime,
+    });
     monthElectricityPriceData.value = datas;
     choseSpecific.value === 2 && handleMonthData();
   } catch (error) {
@@ -775,12 +863,15 @@ async function getMonthPriceData() {
     loading.value = false;
   }
 }
+
 // 获取峰谷差价
 async function getMonthDifferenceData() {
   try {
+    const [startTime, endTime] = monthRange.value;
     const { datas } = await getMonthDifference({
       ...searchParams.value,
-      years: monthVal.value,
+      startTime,
+      endTime,
     });
     monthPriceDifferenceData.value = datas;
     choseSpecific.value === 3 && handlePriceDifferenceData();
@@ -789,6 +880,7 @@ async function getMonthDifferenceData() {
     loading.value = false;
   }
 }
+
 // 重新定义图标大小
 function reSizeEchart() {
   const myChart = echarts.init(
@@ -796,6 +888,7 @@ function reSizeEchart() {
   );
   myChart && myChart?.resize();
 }
+
 // 清除图表数据
 function clearEchart() {
   const myChart = echarts.init(
@@ -804,12 +897,14 @@ function clearEchart() {
   myChart && myChart?.clear();
   // myChart && myChart?.dispose();
 }
+
 onMounted(() => {
   loading.value = true;
   onGetRegionalData();
   // 监听窗口大小变化
   window.addEventListener("resize", reSizeEchart);
 });
+
 // 在组件销毁前移除事件监听器
 onBeforeUnmount(() => {
   // 销毁echarts实例
@@ -819,6 +914,8 @@ onBeforeUnmount(() => {
   myChart && myChart.dispose();
   window.removeEventListener("resize", reSizeEchart);
 });
+
+// 计算时间段的分钟数
 function timeToMinutes(time) {
   // 将时间拆分成小时和分钟
   const [hours, minutes] = time.split(":").map(Number);
@@ -826,27 +923,76 @@ function timeToMinutes(time) {
   const totalMinutes = hours * 60 + minutes;
   return totalMinutes;
 }
+
+// 获取时间戳
+function getTimeStamp(time) {
+  const [year, month] = time.split(".").map((part) => parseInt(part));
+  new Date(year, month).getTime();
+  return new Date(year, month - 1).getTime();
+}
+
+// 限制时间选择范围
+function disabledDate(time) {
+  const { start, end } = timeFrame.value;
+  const currentTime = time.getTime();
+  if (currentTime >= start && currentTime <= end) {
+    // return true;
+  } else {
+    return true;
+  }
+}
+
+// 先把数据拷贝一份如果用户未登录就利用拷贝的数据把数据复原
+const backup_monthVal = ref(null); // 月份
+const backup_monthRange = ref(null); // 开始结束时间
+const backup_searchParams = ref(null); // 表单数据
+// 用户触发表单
+function handleTriggerForm() {
+  console.log(monthRange.value);
+  backup_monthVal.value = cloneDeep(monthVal.value);
+  backup_monthRange.value = cloneDeep(monthRange.value);
+  backup_searchParams.value = cloneDeep(searchParams.value);
+}
+// 打开登录弹窗
+function handleOpenLogin() {
+  setTimeout(() => {
+    monthVal.value = cloneDeep(backup_monthVal.value);
+    monthRange.value = cloneDeep(backup_monthRange.value);
+    searchParams.value = cloneDeep(backup_searchParams.value);
+    console.log(monthRange.value);
+  });
+  useUserStoreHook().openLogin(true);
+}
 </script>
 
 <style scoped lang="scss">
 @import "@/style/mixin.scss";
 
-.electricity-price {
+.time-electricity-price {
   .price-type {
+    border-radius: 2px;
+    height: 32px;
+    padding: 0 3px;
     @include flex(center, flex-start);
+    background-color: #f2f3f5;
 
     .price-type__item {
-      @include margin(0, 32px, 0, 0);
-      @include padding(6px, 0, 10px, 0);
-      @include font(16px, 400, #5b6985, 24px);
+      border-radius: 1px;
+      height: 26px;
+      @include margin(0, 2px, 0, 0);
+      @include padding(2px, 12px, 2px, 12px);
+      @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
       transition: all 0.2s;
       cursor: pointer;
-      border-bottom: 2px solid rgba(0, 0, 0, 0);
+
+      &:last-child {
+        @include margin(0, 0, 0, 0);
+      }
     }
 
     .price-type__item-chose {
-      @include font(16px, 600, #1d232e, 24px);
-      border-bottom: 2px solid #2d5cf6;
+      @include font(14px, 600, #244bf1, 22px);
+      background-color: #fff;
     }
   }
 
@@ -854,7 +1000,40 @@ function timeToMinutes(time) {
     @include flex(center, space-between);
     @include padding(0, 0, 8px, 0);
     @include margin(24px, 0, 24px, 0);
-    border-bottom: 1px solid #e5e6ea;
+
+    ::v-deep(.select) {
+      width: 32.5% !important;
+    }
+  }
+
+  ::v-deep(.select) {
+    .select__title {
+      @include margin(0, 16px, 0, 0);
+    }
+  }
+
+  .month-range {
+    margin-top: 16px;
+    width: 28%;
+    @include flex(center, space-between);
+
+    .month-range-title {
+      @include margin(0, 16px, 0, 0);
+      @include font(14px, 400, #5b6985);
+    }
+
+    ::v-deep(.el-date-editor) {
+      * {
+        cursor: pointer;
+      }
+
+      flex: 1;
+      background-color: #fff;
+
+      .el-input__wrapper {
+        box-shadow: none;
+      }
+    }
   }
 
   .flex {

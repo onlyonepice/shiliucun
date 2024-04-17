@@ -12,6 +12,7 @@
       placeholder="请选择"
       class="select__content"
       @change="handleChange"
+      @visible-change="handleVerifyLogin"
       :disabled="props.disabled"
     >
       <el-option
@@ -29,6 +30,7 @@
         :disabled="props.disabled"
         :maxlength="maxlength"
         @input="handleChange"
+        @focus="handleFocusVerifyLogin"
         :show-word-limit="specialType === 'textarea'"
         :rows="3"
       />
@@ -42,6 +44,7 @@
         placeholder="请输入"
         controls-position="right"
         :disabled="props.disabled"
+        @focus="handleFocusVerifyLogin"
         @input="handleChange"
       />
     </div>
@@ -53,6 +56,7 @@
         :props="cascaderOption"
         :disabled="props.disabled"
         @change="handleChange"
+        @visible-change="handleVerifyLogin"
       />
     </div>
   </div>
@@ -60,7 +64,7 @@
 
 <script lang="ts" setup>
 import { watch, ref } from "vue";
-const emit = defineEmits(["onChange"]);
+const emit = defineEmits(["onChange", "triggerForm"]);
 const props = defineProps({
   // 筛选项宽度
   width: {
@@ -131,12 +135,20 @@ watch(
   (val) => {
     value.value = val;
   },
-  { immediate: true },
+  { immediate: true, deep: true },
 );
 // 通过onChange事件传递值给父组件
 function handleChange(data) {
   emit("onChange", data);
   model.value = data;
+}
+function handleVerifyLogin(data: any) {
+  if (data) {
+    emit("triggerForm");
+  }
+}
+function handleFocusVerifyLogin() {
+  emit("triggerForm");
 }
 </script>
 

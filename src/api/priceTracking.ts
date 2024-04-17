@@ -40,12 +40,12 @@ export const getMonth = (params) => {
 export const getNewTimeSharing = () => {
   return http.request<Request>(
     "post",
-    "/eesa-report/electricityFutureTimeShare/front/v1.1/getNewTimeSharing",
+    "/eesa-report/front/openApi/v1.1/getNewTimeSharing",
   );
 };
 // 获取差异排名
 export const getDifferentialRanking = (data) => {
-  return http.request<Request>(
+  return http.request<{ resp_code: number; datas: Array<any> }>(
     "post",
     "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getDifferentialRanking",
     { data },
@@ -61,7 +61,7 @@ export const getElectricityType = (params) => {
 };
 // 分时月份
 export const getMonthByTime = (data) => {
-  return http.request<Request>(
+  return http.request<{ datas: Array<any>; resp_code: number }>(
     "post",
     "/eesa-report/electricityTimeShare/front/openApi/v1.1/getSelectMonth",
     { data },
@@ -93,7 +93,7 @@ export const getMonthDifference = (data) => {
 };
 // 请求放电策略
 export const getDischargeStrategy = (params) => {
-  return http.request<Request>(
+  return http.request<{ datas: { chargeDischargeStrategy: any } }>(
     "get",
     "/eesa-report/front/openApi/v1.1/getChargeDischargeStrategy",
     { params },
