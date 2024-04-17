@@ -201,6 +201,9 @@ import radio_false from "@/assets/img/common/i-Report-radio-false.png";
 import { cloneDeep } from "lodash";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 import { useRoute } from "vue-router";
+import { getToken } from "@/utils/auth";
+import { useUserStore } from "@/store/modules/user";
+
 const route = useRoute();
 const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
@@ -238,6 +241,16 @@ const handleHiddenDetailClick = (index, rowIndex) => {
   pageData.value[index].data[rowIndex].showDetail = false;
 };
 const handleItemClick = async (item, index, rowIndex) => {
+  if (!pageData.value[index].data[rowIndex].showDetail) {
+    if (!getToken()) {
+      useUserStore().openLogin(true);
+      return;
+    }
+    if (!pageData.value[index].data[rowIndex].isPermissions) {
+      useUserStore().openVip(true);
+      return;
+    }
+  }
   pageData.value[index].data[rowIndex].showDetail =
     !pageData.value[index].data[rowIndex].showDetail;
 };
@@ -279,7 +292,7 @@ const getData = async () => {
   if (data.resp_code === 0) {
     data.datas.forEach((item) => {
       item.data.forEach((row) => {
-        row.showDetail = row.id === routeId.value;
+        row.showDetail = row.id === routeId.value && row.isPermissions;
       });
     });
     pageData.value = data.datas;

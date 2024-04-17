@@ -7,7 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    BiddingDynamicsList: typeof import('./../components/Common/BiddingDynamicsList.vue')['default']
+    BiddingDynamicsList: typeof import('./../components/Business/BiddingDynamicsList.vue')['default']
     Breadcrumb: typeof import('./../components/Common/Breadcrumb.vue')['default']
     Dialog: typeof import('./../components/Common/Dialog/index.vue')['default']
     DownloadReport: typeof import('./../components/Common/Dialog/DownloadReport.vue')['default']

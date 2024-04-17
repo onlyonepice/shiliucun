@@ -22,6 +22,8 @@
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const ns = useNamespace("openVipDialog");
 const dialogVisible: Ref<boolean> = ref(false);
 const props = defineProps({
@@ -40,7 +42,11 @@ watch(
 const handleClose = (type: boolean) => {
   useUserStore().openVip(false);
   if (type) {
-    useUserStore().$state.showMembersBuy = true;
+    if (router.currentRoute.value.path === "/reportDetail") {
+      useUserStore().$state.showMembersBuy = true;
+    } else {
+      router.push("/vip");
+    }
   }
 };
 </script>

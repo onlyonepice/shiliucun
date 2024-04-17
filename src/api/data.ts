@@ -1,6 +1,29 @@
 import { http } from "@/utils/http";
 import { responseType } from "@/utils/type";
 
+// 获取招标查找列表
+export const getBidFinderApi = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/Policy/front/openApi/V1.0/getBidFinder",
+    { data },
+  );
+};
+// 获取招标查找详情
+export const getBidFinderDetail = (params) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/Policy/front/openApi/V1.0/getTenderParticulars",
+    { params },
+  );
+};
+//前台_招标查找筛选条件
+export const getTenderLookupApi = () => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/Policy/front/openApi/v1.0/tenderLookup",
+  );
+};
 // 获取招标内容筛选项
 export const getTenderFilterApi = () => {
   return http.request<responseType>(
