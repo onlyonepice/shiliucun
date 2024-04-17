@@ -40,9 +40,7 @@ const defaultProps = ref({
   label: "paramDesc",
 });
 
-const handleNodeClick = () => {
-  console.log(111);
-};
+const handleNodeClick = () => {};
 </script>
 
 <style lang="scss" scoped>

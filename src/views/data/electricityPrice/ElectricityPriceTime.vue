@@ -3,11 +3,11 @@
     id="time-electricity-price"
     class="es-commonPage time-electricity-price page"
   >
-    <!-- 分时/分月电价 -->
     <div class="filter">
       <Select
         @on-change="changeRegion"
         title="地区"
+        @triggerForm="handleTriggerForm"
         :options="regionalData"
         valueKey="regionName"
         :defaultValue="searchParams.regionName"
@@ -15,6 +15,7 @@
       <Select
         @on-change="changeElectricityTypeOne"
         title="用电类型 I"
+        @triggerForm="handleTriggerForm"
         :options="electricityType1"
         valueKey="paramName"
         labelKey="paramDesc"
@@ -23,6 +24,7 @@
       <Select
         @on-change="changeElectricityTypeTwo"
         title="用电类型Ⅱ"
+        @triggerForm="handleTriggerForm"
         :options="electricityType2"
         valueKey="paramName"
         labelKey="paramDesc"
@@ -32,6 +34,7 @@
         @on-change="changeVoltageLevel"
         :options="voltageLevelData"
         valueKey="paramName"
+        @triggerForm="handleTriggerForm"
         labelKey="paramDesc"
         :defaultValue="searchParams.tariffLevelId"
         title="电压等级"
@@ -57,6 +60,7 @@
       :default-value="monthVal"
       valueKey="paramName"
       labelKey="paramDesc"
+      @triggerForm="handleTriggerForm"
       v-if="choseSpecific === 1"
       title="月份选择"
       width="28%"
@@ -66,12 +70,14 @@
       <el-date-picker
         v-model="monthRange"
         type="monthrange"
+        :clearable="false"
         range-separator="-"
         value-format="YYYY-MM"
         start-placeholder="开始时间"
         end-placeholder="结束时间"
         :disabled-date="disabledDate"
         @change="handleMonthRangeChange"
+        @visible-change="handleTriggerForm"
       />
     </div>
     <div v-loading="loading" id="my-chart_electricity-price" ref="myeCharts" />
@@ -103,12 +109,17 @@ import {
   getDischargeStrategy,
 } from "@/api/priceTracking";
 import * as echarts from "echarts";
+import { onMounted, computed, Ref, ref, onBeforeUnmount } from "vue";
 import { cloneDeep } from "lodash";
 import { vLoading } from "element-plus";
-import Select from "@/components/Common/Select.vue";
+import { getToken } from "@/utils/auth";
+import { useUserStoreHook } from "@/store/modules/user";
+
 import image from "@/assets/img/electricityPrice/icon_hint_nor.png";
-import { onMounted, computed, Ref, ref, onBeforeUnmount } from "vue";
+
+import Select from "@/components/Common/Select.vue";
 import ExportCanvasDialog from "@/components/Business/ExportCanvasDialog.vue";
+
 const monthRange = ref<any>(["", ""]);
 const eChartsOption: Ref<any> = ref({
   ...cloneDeep(eChartsOptionCommon),
@@ -291,7 +302,7 @@ const onGetRegionalData = async () => {
         (item) => !item.regionName.includes("2024"),
       );
       // 默认获取到浙江省
-      searchParams.value.regionName = "浙江省";
+      searchParams.value.regionName = "上海市";
       res.datas.forEach((item) => {
         if (item.regionName === searchParams.value.regionName) {
           electricityType1.value = item.reInvestmentElectricityType;
@@ -327,12 +338,12 @@ async function getElectricityTypeTwo() {
   }
 }
 
-// 获取分时 分月电价 峰谷价差
 /**
  * getMonthPriceData 获取分月电价
  * getMonthByTimes 先获取月份 通过月份获取到分时电价
  * getMonthPriceData 获取峰谷价差
  */
+
 // 获取月份
 async function getMonthByTimes() {
   try {
@@ -346,7 +357,6 @@ async function getMonthByTimes() {
         : dayjs(getTimeStamp(datas[0].paramName)).format("YYYY-MM"),
       dayjs(getTimeStamp(datas[datas.length - 1].paramName)).format("YYYY-MM"),
     ];
-    console.log(monthRange.value);
     timeFrame.value.start = getTimeStamp(datas[0].paramName);
     timeFrame.value.end = getTimeStamp(datas[datas.length - 1].paramName);
     monthVal.value = datas[datas.length - 1].paramName;
@@ -362,8 +372,11 @@ async function getMonthByTimes() {
 /* change */
 // 地区 change
 function changeRegion(val) {
-  loading.value = true;
   searchParams.value.regionName = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   // 获取到用电类型1
   const data = regionalData.value.find(
     (item) => item.regionName === val,
@@ -375,15 +388,21 @@ function changeRegion(val) {
 
 // 用电类型1 change
 function changeElectricityTypeOne(val) {
-  loading.value = true;
   searchParams.value.electricityTypeOneName = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   getElectricityTypeTwo();
 }
 
 // 用电类型2 change
 function changeElectricityTypeTwo(val) {
-  loading.value = true;
   searchParams.value.electricityTypeTwoName = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   const data = electricityType2.value.find(
     (item) => item.paramName === val,
   )?.voltageLevel;
@@ -395,18 +414,28 @@ function changeElectricityTypeTwo(val) {
 
 // 月份 change
 function changeMonth(val) {
-  loading.value = true;
   monthVal.value = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   getTOUData();
 }
 
 // 电压等级 change
 function changeVoltageLevel(val) {
-  loading.value = true;
   searchParams.value.tariffLevelId = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   getMonthByTimes();
 }
+// 时间范围 change
 function handleMonthRangeChange() {
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
   getMonthPriceData();
   getMonthDifferenceData();
 }
@@ -532,7 +561,7 @@ function handleTOUData() {
     options.title[0].text = title;
     options.title[0].subtext = subtitle;
     options.title[1] = titleTwo.value;
-    options.grid = { bottom: "150" };
+    options.grid = { bottom: "150", top: "10" };
     options.legend = {
       ...options.legend,
       data: _data.map((item) => {
@@ -665,7 +694,6 @@ function handleMonthData() {
   options.grid = { bottom: "150" };
   options.legend = { ...options.legend, data: _data };
   options.color = _color;
-  console.log(options.xAxis);
   options.xAxis = {
     ...options.xAxis,
     data: [...xAxisData],
@@ -911,6 +939,28 @@ function disabledDate(time) {
   } else {
     return true;
   }
+}
+
+// 先把数据拷贝一份如果用户未登录就利用拷贝的数据把数据复原
+const backup_monthVal = ref(null); // 月份
+const backup_monthRange = ref(null); // 开始结束时间
+const backup_searchParams = ref(null); // 表单数据
+// 用户触发表单
+function handleTriggerForm() {
+  console.log(monthRange.value);
+  backup_monthVal.value = cloneDeep(monthVal.value);
+  backup_monthRange.value = cloneDeep(monthRange.value);
+  backup_searchParams.value = cloneDeep(searchParams.value);
+}
+// 打开登录弹窗
+function handleOpenLogin() {
+  setTimeout(() => {
+    monthVal.value = cloneDeep(backup_monthVal.value);
+    monthRange.value = cloneDeep(backup_monthRange.value);
+    searchParams.value = cloneDeep(backup_searchParams.value);
+    console.log(monthRange.value);
+  });
+  useUserStoreHook().openLogin(true);
 }
 </script>
 

@@ -60,6 +60,7 @@ export default {
     return {
       exportType: ["png", "jpg"], // 导出类型
       exportTypeValue: "png", // 导出类型值索引
+      showDialog: false,
     };
   },
   watch: {
@@ -101,6 +102,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/style";
+
 .es-dialog__body {
   @include flex(center, flex-start);
   @include margin(0, 0, 8px, 0);

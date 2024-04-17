@@ -87,7 +87,7 @@ import * as echarts from "echarts";
 import { eChartsOptionCommon } from "./data";
 import { onMounted, computed, Ref, ref } from "vue";
 import Select from "@/components/Common/Select.vue";
-import ExportCanvasDialog from "./components/exportCanvasDialog.vue";
+import ExportCanvasDialog from "@/components/Business/ExportCanvasDialog.vue";
 const eChartsOption: Ref<any> = ref(eChartsOptionCommon);
 // 获取echarts节点
 const myeCharts1 = ref<any>(null);
