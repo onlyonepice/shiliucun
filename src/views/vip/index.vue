@@ -9,6 +9,7 @@
     </div>
     <div
       class="dialog-wrapper"
+      :style="{ pointerEvents: QRvisible ? 'all' : 'none' }"
       :class="[
         {
           'dialog-wrapper-active': QRvisible,

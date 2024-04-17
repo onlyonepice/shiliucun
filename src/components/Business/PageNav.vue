@@ -180,7 +180,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 1,
         text: "融资方案",
-        path: VITE_I_REPORT_URL + "#/stored-leading/financing-plan",
+        path: ["/financingPlan"],
       },
       { id: 2, text: "供需对接", path: "" },
     ],
