@@ -45,7 +45,7 @@ export const getNewTimeSharing = () => {
 };
 // 获取差异排名
 export const getDifferentialRanking = (data) => {
-  return http.request<Request>(
+  return http.request<{ resp_code: number; datas: Array<any> }>(
     "post",
     "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getDifferentialRanking",
     { data },

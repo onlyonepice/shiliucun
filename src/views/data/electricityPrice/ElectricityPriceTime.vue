@@ -116,7 +116,6 @@ import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 
 import image from "@/assets/img/electricityPrice/icon_hint_nor.png";
-
 import Select from "@/components/Common/Select.vue";
 import ExportCanvasDialog from "@/components/Business/ExportCanvasDialog.vue";
 
@@ -162,7 +161,7 @@ const myeCharts = ref<any>(null);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
-const choseSpecific: Ref<number> = ref(2);
+const choseSpecific: Ref<number> = ref(1);
 const monthData = ref<any>([]);
 const timeFrame = ref({ start: null, end: null });
 const regionalData = ref<any>([]); // 城市数据
@@ -561,7 +560,7 @@ function handleTOUData() {
     options.title[0].text = title;
     options.title[0].subtext = subtitle;
     options.title[1] = titleTwo.value;
-    options.grid = { bottom: "150", top: "10" };
+    options.grid = { bottom: "150", top: "80" };
     options.legend = {
       ...options.legend,
       data: _data.map((item) => {
@@ -570,6 +569,7 @@ function handleTOUData() {
       }),
       bottom: "100",
     };
+    console.log(options.legend);
     options.xAxis = {
       data: xAxisData,
       axisLabel: {
@@ -691,7 +691,7 @@ function handleMonthData() {
   options.title[0].subtext = subtitle;
   options.title[1] = titleTwo.value;
   options.legend = { ...options.legend, bottom: "100" };
-  options.grid = { bottom: "150" };
+  options.grid = { bottom: "150", top: "80" };
   options.legend = { ...options.legend, data: _data };
   options.color = _color;
   options.xAxis = {
@@ -793,6 +793,7 @@ function handlePriceDifferenceData() {
   const options = cloneDeep(eChartsOption.value);
   options.title[0].text = title;
   options.title[0].subtext = subtitle;
+  options.grid = { bottom: "80", top: "80" };
   options.legend = { ...options.legend, data: _data, bottom: "10" };
   options.color = _color;
   options.xAxis = {

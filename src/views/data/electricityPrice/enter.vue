@@ -28,8 +28,8 @@
 
 <script lang="ts" setup>
 import { ref, Ref } from "vue";
-import ElectricityAnalysis from "./ElectricityAnalysis.vue";
-import ElectricityPriceTime from "./ElectricityPriceTime.vue";
+import ElectricityAnalysis from "./electricityAnalysis.vue";
+import ElectricityPriceTime from "./electricityPriceTime.vue";
 import ElectricityPricePeriod from "./electricityPricePeriod.vue";
 const chosePriceType = ref(1);
 const priceTypeList: Ref<Array<{ id: number; text: string }>> = ref([
