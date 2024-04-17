@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 // 校验ip地址
 export const regIP = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/;
 
@@ -21,3 +22,21 @@ export const regExcelType = /(\.csv|\.xlsx|\.xls)$/i;
 
 // 人物姓名校验只包含中文、英文、空格
 export const regName = /^[a-zA-Z\u4e00-\u9fa5\s]*$/;
+export const REGEXP = {
+  imgUrlReg: /https\:\/\/storageenergy\.oss\-cn\-shanghai\.aliyuncs\.com/,
+  imgUrl_page: {
+    dev: /https\:\/\/storageenergy\.oss\-accelerate\.aliyuncs\.com/,
+    test: /https\:\/\/storageenergy\.oss\-accelerate\.aliyuncs\.com/,
+    prod: /https\:\/\/storageenergy\.oss\-accelerate\.aliyuncs\.com/,
+  },
+  isVarText: /[a-zA-Z]*/g,
+  isCreateTime: /[0-9\-]*\s/,
+  color16Reg: /^#([0-9a-fA-F]{6}){1}$/,
+  colorRgbReg: /^(rgb|RGB|rgba|RGBA)\((\d+),\s*(\d+),\s*(\d+)(,\s*)?(\d+)?\)$/,
+  numberReg: /^-?\d+(\.\d+)?$/,
+  stringReg: /^[\w\-\_\.\/0-9\?\=\&]+$/,
+  emailReg: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+  integerReg: /^-?\d+$/,
+  minusReg: /^-\d+(,\d{3})*(\.\d+)?$/,
+  percentReg: /^-?\d+(,\d{3})*(\.\d+)?%$/,
+};

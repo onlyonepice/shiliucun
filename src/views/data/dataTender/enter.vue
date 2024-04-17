@@ -4,13 +4,14 @@
       :tabsList="tabsList"
       @onHandleClick="onHandleClick"
       :defaultId="choseTabs"
-      :disableId="1"
     />
-    <template v-if="contentFilter.length !== 0 && timeFilter.length !== 0">
-      <Search
-        v-if="choseTabs === 1"
-        :biddingContentFilter="biddingContentFilter"
-      />
+    <template
+      v-if="
+        (contentFilter.length !== 0 && timeFilter.length !== 0) ||
+        choseTabs === 1
+      "
+    >
+      <TenderSearch v-if="choseTabs === 1" />
       <MonthlyAnalysis v-if="choseTabs === 2" :contentFilter="contentFilter" />
       <BusinessAnalysis
         v-if="choseTabs === 3"
@@ -33,7 +34,7 @@ interface TabsList {
 }
 import { ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import Search from "./components/search.vue";
+import TenderSearch from "./components/tenderSearch.vue";
 import MonthlyAnalysis from "./components/monthlyAnalysis.vue";
 import BusinessAnalysis from "./components/businessAnalysis.vue";
 import AreaAnalysis from "./components/areaAnalysis.vue";
@@ -45,9 +46,8 @@ import {
 import { NOOP } from "@vue/shared";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 const windowScroll = windowScrollStore();
-const { VITE_I_REPORT_URL } = import.meta.env;
 const ns = useNamespace("dataTender");
-const choseTabs: Ref<number> = ref(2); // 选中的标签栏
+const choseTabs: Ref<number> = ref(1); // 选中的标签栏
 const contentFilter: Ref<Array<any>> = ref([]); // 招标内容筛选项
 const timeFilter: Ref<Array<any>> = ref([]); // 招标时间筛选项
 windowScroll.SET_SCROLL_TOP(0);
@@ -71,14 +71,7 @@ const tabsList: Ref<Array<TabsList>> = ref([
 ]);
 // 选择标签栏
 const onHandleClick = (id: number) => {
-  if (id === 1) {
-    return window.open(
-      VITE_I_REPORT_URL + "#/stored-leading/tenderDynamics",
-      "externalWindow",
-    );
-  } else {
-    choseTabs.value = id;
-  }
+  choseTabs.value = id;
 };
 // 招标查找-招标内容筛选项
 const getContentFilter = async () => {

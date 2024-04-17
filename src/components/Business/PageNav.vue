@@ -82,7 +82,7 @@ import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
 import PersonalAvatar from "@/assets/img/common/personal-avatar.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
-const { VITE_I_REPORT_URL, VITE_INDUSTRIALMAP_URL } = import.meta.env;
+const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
 const router = useRouter();
 const route = useRoute();
@@ -179,7 +179,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 1,
         text: "融资方案",
-        path: VITE_I_REPORT_URL + "#/stored-leading/financing-plan",
+        path: ["/financingPlan"],
       },
       { id: 2, text: "供需对接", path: "" },
     ],
