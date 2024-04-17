@@ -97,3 +97,16 @@ export const apiComment = (data) => {
     { data },
   );
 };
+
+// 文件转换
+export const apiFileConversion = (params, data) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    "/file-service/file/convertFile",
+    {
+      params,
+      data,
+      responseType: "blob",
+    },
+  );
+};

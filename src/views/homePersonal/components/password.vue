@@ -228,6 +228,7 @@ const countDown = () => {
   }
 }
 .es-homePersonalPassword-step1__content {
+  height: 32px;
   @include flex(center, center, nowrap);
   p {
     width: 120px;
