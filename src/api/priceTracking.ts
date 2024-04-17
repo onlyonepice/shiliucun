@@ -8,7 +8,6 @@ interface Request {
 export const apiRegionalData = (params: { type: string } | null) => {
   return http.request<Request>(
     "get",
-    // "/eesa-report/electricityPriceTracking/front/openApi/v1.1/queryRegionIds",
     "/eesa-report/electricityPriceTracking/front/openApi/v1.1/queryRegionIds",
     { params: params || {} },
   );

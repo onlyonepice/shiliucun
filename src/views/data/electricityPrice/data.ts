@@ -1,3 +1,10 @@
+// tooltip标题样式
+export const titleStyle = `line-height:24px; font-width: 400;font-weight: 600; font-size: 12px; color:#000;`;
+// tooltip正文文字样式
+export const textStyle = `font-weight: 600; font-size: 12px; color:#000;`;
+// tooltip的flex布局
+export const flexStyle = `display: flex; align-items: center; justify-content: space-between;`;
+
 export const eChartsOptionCommon = () => {
   return {
     color: ["#244BF1", "#FF892E"],
@@ -20,25 +27,6 @@ export const eChartsOptionCommon = () => {
       text: "月各省市代理购电价峰谷价差排名",
       left: "center",
       subtext: "",
-    },
-    tooltip: {
-      trigger: "axis",
-      borderWidth: 0,
-      axisPointer: {
-        type: "line",
-        lineStyle: {
-          shadowColor: "rgba(0, 0, 0, 0.5)",
-        },
-      },
-      textStyle: {
-        color: "#6d6d6d",
-        fontSize: 12,
-        fontWeight: 600,
-        lineHeight: 24,
-      },
-      confine: true,
-      className: "custom-tooltip",
-      extraCssText: "padding: 16px; border-radius: 8px;",
     },
     dataZoom: [
       {

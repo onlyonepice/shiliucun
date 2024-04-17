@@ -83,12 +83,41 @@ import {
   getVoltageLevel,
   getDifferentialRanking,
 } from "@/api/priceTracking";
-import * as echarts from "echarts";
 import { eChartsOptionCommon } from "./data";
+import { titleStyle, textStyle, flexStyle } from "@/utils/eCharts";
+import * as echarts from "echarts";
 import { onMounted, computed, Ref, ref } from "vue";
 import Select from "@/components/Common/Select.vue";
 import ExportCanvasDialog from "@/components/Business/ExportCanvasDialog.vue";
-const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
+const eChartsOption: Ref<any> = ref({
+  ...eChartsOptionCommon(),
+  tooltip: {
+    trigger: "axis",
+    borderWidth: 0,
+    confine: true,
+    className: "custom-tooltip",
+    extraCssText: "padding: 16px; border-radius: 8px;",
+    formatter: (params: any) => {
+      let contentText = "";
+      params.forEach((item) => {
+        contentText += `<div style="${flexStyle}"><div style='width: 150px;'>${item.marker}<span style="${textStyle}">${item.seriesName}</span></div><span style="${textStyle}">${item.value}</span></div>`;
+      });
+      const { differencePrice } = searchParams.value;
+      const type = priceDifferenceData.value.find(
+        (item: { paramName: string; paramDesc: string }) => {
+          return item.paramName === differencePrice;
+        },
+      ).paramDesc;
+      return `<div style="${titleStyle}">${params[0].axisValueLabel}:<span style="margin-left: 10px;">${type}</span></div>${contentText}`;
+    },
+    axisPointer: {
+      type: "line",
+      lineStyle: {
+        shadowColor: "rgba(0, 0, 0, 0.5)",
+      },
+    },
+  },
+});
 
 // 获取echarts节点
 const myeCharts1 = ref<any>(null);
@@ -99,11 +128,12 @@ const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 
 // select option 数据
-const regionalData = ref<any>([]); // 城市数据
-const priceDifferenceData = ref<any>([]); // 峰谷价差
-const voltageLevelData = ref<any>([]); // 电压等级
 const yearData = ref<any>([]); // 时间数据
+const regionalData = ref<any>([]); // 城市数据
+const voltageLevelData = ref<any>([]); // 电压等级
+const priceDifferenceData = ref<any>([]); // 峰谷价差
 const electricityTypes = ref<any>([]); // 用电类型1数组
+
 const loading = ref(false);
 
 // 筛选项搜索结果
@@ -126,6 +156,7 @@ function exportResult() {
   exportImgTitle.value = "储能月度招标分析";
   exportVisible.value = true;
 }
+
 // 返回副标题
 const titleText = computed(() => {
   const obj = {

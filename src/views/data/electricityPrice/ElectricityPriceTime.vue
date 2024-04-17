@@ -121,7 +121,7 @@ import ExportCanvasDialog from "@/components/Business/ExportCanvasDialog.vue";
 
 const monthRange = ref<any>(["", ""]);
 const eChartsOption: Ref<any> = ref({
-  ...cloneDeep(eChartsOptionCommon),
+  ...cloneDeep(eChartsOptionCommon()),
   title: [
     // 这里需要用到多个标题
     {
@@ -295,13 +295,17 @@ async function getDischargeStrategyData() {
 
 // 获取地区数据
 const onGetRegionalData = async () => {
-  apiRegionalData({ type: "all" })
+  apiRegionalData(null)
     .then((res: any) => {
       regionalData.value = res.datas.filter(
-        (item) => !item.regionName.includes("2024"),
+        (item) =>
+          !item.regionName.includes("(") &&
+          !item.regionName.includes("（") &&
+          !item.regionName.includes(")") &&
+          !item.regionName.includes("）"),
       );
       // 默认获取到浙江省
-      searchParams.value.regionName = "上海市";
+      searchParams.value.regionName = res.datas[0].regionName;
       res.datas.forEach((item) => {
         if (item.regionName === searchParams.value.regionName) {
           electricityType1.value = item.reInvestmentElectricityType;
@@ -312,7 +316,7 @@ const onGetRegionalData = async () => {
       getElectricityTypeTwo();
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
       loading.value = false;
     });
 };
@@ -569,7 +573,6 @@ function handleTOUData() {
       }),
       bottom: "100",
     };
-    console.log(options.legend);
     options.xAxis = {
       data: xAxisData,
       axisLabel: {
@@ -616,7 +619,7 @@ function handleTOUData() {
       loading.value = false;
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -654,9 +657,23 @@ function handleMonthData() {
       data: [],
     },
   ];
-  const xAxisData: any = [];
+  const arbitrageSpace: Array<number> = []; // 度电套利空间
+  const xAxisData: any = []; // x轴数据
   monthElectricityPriceData.value.forEach((item) => {
     xAxisData.push(item.month);
+    // 计算套利空间
+    const numbers: Array<number> = Object.values(item.data)
+      .map((num: string) => {
+        return Number(num);
+      })
+      .filter((num: number) => {
+        return !isNaN(num);
+      })
+      .sort((a, b) => a - b);
+    const mtp = 100000;
+    arbitrageSpace.push(
+      (numbers[numbers.length - 1] * mtp - numbers[0] * mtp) / mtp,
+    );
     for (const key in item.data) {
       _defaultData.forEach((_item) => {
         if (_item.periodType === key) {
@@ -666,8 +683,8 @@ function handleMonthData() {
     }
   });
   let _series: any = [];
-  let _color: any = [];
   let _data: any = [];
+  let _color: any = [];
   const title = `${titleText.value.regionName}代理工商业购电分月电价图`;
   const subtitle = `·${titleText.value.electricityTypeOneName}·${titleText.value.electricityTypeTwoName}·${titleText.value.tariffLevelId}`;
   _defaultData.forEach((item) => {
@@ -680,19 +697,32 @@ function handleMonthData() {
       });
       _color.push(item.lineColor);
       _data.push({
-        icon: "roundRect",
+        icon: null,
         name: item.name,
         textStyle: { color: "#5B6985" },
       });
     }
   });
+  _data.push({
+    icon: null,
+    name: "度电套利空间",
+    textStyle: { color: "#5B6985" },
+  });
+  _series.push({
+    type: "line",
+    name: "度电套利空间",
+    color: "#ADB0C2",
+    lineStyle: {
+      type: "dashed",
+    },
+    data: arbitrageSpace,
+  });
   const options = cloneDeep(eChartsOption.value);
   options.title[0].text = title;
   options.title[0].subtext = subtitle;
   options.title[1] = titleTwo.value;
-  options.legend = { ...options.legend, bottom: "100" };
-  options.grid = { bottom: "150", top: "80" };
   options.legend = { ...options.legend, data: _data };
+  options.grid = { bottom: "150", top: "80" };
   options.color = _color;
   options.xAxis = {
     ...options.xAxis,
@@ -723,6 +753,7 @@ function handleMonthData() {
       return `<div style="${titleStyle}">${params[0].name}</div>${contentText}`;
     },
   };
+  clearEchart();
   const myChart = echarts.init(
     document.getElementById("my-chart_electricity-price") as any,
   );
@@ -825,6 +856,7 @@ function handlePriceDifferenceData() {
       return `<div style="${titleStyle}">${params[0].name}</div>${contentText}`;
     },
   };
+  clearEchart();
   const myChart = echarts.init(
     document.getElementById("my-chart_electricity-price") as any,
   );
@@ -895,7 +927,6 @@ function clearEchart() {
     document.getElementById("my-chart_electricity-price") as any,
   );
   myChart && myChart?.clear();
-  // myChart && myChart?.dispose();
 }
 
 onMounted(() => {
@@ -948,7 +979,6 @@ const backup_monthRange = ref(null); // 开始结束时间
 const backup_searchParams = ref(null); // 表单数据
 // 用户触发表单
 function handleTriggerForm() {
-  console.log(monthRange.value);
   backup_monthVal.value = cloneDeep(monthVal.value);
   backup_monthRange.value = cloneDeep(monthRange.value);
   backup_searchParams.value = cloneDeep(searchParams.value);
@@ -959,7 +989,6 @@ function handleOpenLogin() {
     monthVal.value = cloneDeep(backup_monthVal.value);
     monthRange.value = cloneDeep(backup_monthRange.value);
     searchParams.value = cloneDeep(backup_searchParams.value);
-    console.log(monthRange.value);
   });
   useUserStoreHook().openLogin(true);
 }
@@ -969,6 +998,7 @@ function handleOpenLogin() {
 @import "@/style/mixin.scss";
 
 .time-electricity-price {
+  padding-bottom: 24px;
   .price-type {
     border-radius: 2px;
     height: 32px;
@@ -998,7 +1028,6 @@ function handleOpenLogin() {
 
   .filter {
     @include flex(center, space-between);
-    @include padding(0, 0, 8px, 0);
     @include margin(24px, 0, 24px, 0);
 
     ::v-deep(.select) {
