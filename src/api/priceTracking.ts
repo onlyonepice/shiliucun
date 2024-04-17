@@ -40,12 +40,12 @@ export const getMonth = (params) => {
 export const getNewTimeSharing = () => {
   return http.request<Request>(
     "post",
-    "/eesa-report/electricityFutureTimeShare/front/v1.1/getNewTimeSharing",
+    "/eesa-report/front/openApi/v1.1/getNewTimeSharing",
   );
 };
 // 获取差异排名
 export const getDifferentialRanking = (data) => {
-  return http.request<Request>(
+  return http.request<{ resp_code: number; datas: Array<any> }>(
     "post",
     "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getDifferentialRanking",
     { data },

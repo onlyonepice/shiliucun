@@ -87,14 +87,17 @@ import * as echarts from "echarts";
 import { eChartsOptionCommon } from "./data";
 import { onMounted, computed, Ref, ref } from "vue";
 import Select from "@/components/Common/Select.vue";
-import ExportCanvasDialog from "./components/exportCanvasDialog.vue";
-const eChartsOption: Ref<any> = ref(eChartsOptionCommon);
+import ExportCanvasDialog from "@/components/Business/ExportCanvasDialog.vue";
+const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
+
 // 获取echarts节点
 const myeCharts1 = ref<any>(null);
+
 // 导出图片相关
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+
 // select option 数据
 const regionalData = ref<any>([]); // 城市数据
 const priceDifferenceData = ref<any>([]); // 峰谷价差
@@ -123,6 +126,7 @@ function exportResult() {
   exportImgTitle.value = "储能月度招标分析";
   exportVisible.value = true;
 }
+// 返回副标题
 const titleText = computed(() => {
   const obj = {
     electricityTypeOneName: "", // 用电类型
@@ -144,6 +148,7 @@ const titleText = computed(() => {
   ).paramDesc;
   return obj;
 });
+
 // 获取地区数据
 async function onGetRegionalData() {
   try {
@@ -173,6 +178,7 @@ async function onGetRegionalData() {
     loading.value = false;
   }
 }
+
 // 获取电压等级
 async function handelGetVoltageLevel() {
   try {
@@ -187,6 +193,7 @@ async function handelGetVoltageLevel() {
     loading.value = false;
   }
 }
+
 // 获取峰谷价差筛选项
 async function onGetPeakAndValley() {
   try {
@@ -198,6 +205,7 @@ async function onGetPeakAndValley() {
     loading.value = false;
   }
 }
+
 // 获取月份
 async function onGetMonth() {
   try {
@@ -213,6 +221,7 @@ async function onGetMonth() {
     loading.value = false;
   }
 }
+
 // 地区change
 function handleChange(val: Array<string>) {
   if (val[val.length - 1] === "全国") {
@@ -225,30 +234,35 @@ function handleChange(val: Array<string>) {
     searchParams.value.regionName = ["全国"];
   }
 }
+
 // 用电类型change
 function changeElectricityTypes(val: string) {
   loading.value = true;
   searchParams.value.electricityTypeOneName = val;
   handelGetVoltageLevel();
 }
+
 // 电压等级change
 function changeVoltageLevel(val) {
   loading.value = true;
   searchParams.value.tariffLevelId = val;
   onGetMonth();
 }
+
 // 月份change
 function changeMonth(val) {
   loading.value = true;
   searchParams.value.years = val;
   getElectricityTypeOneName();
 }
+
 // 峰谷价差change
 function changePriceDifference(val) {
   loading.value = true;
   searchParams.value.differencePrice = val;
   getElectricityTypeOneName();
 }
+
 // 当地区选择框关闭时触发
 function visibleChange(val) {
   if (!val) {
@@ -263,23 +277,32 @@ function handelRemoveTag() {
 }
 // 获取差异排名
 async function getElectricityTypeOneName() {
+  const {
+    electricityTypeOneName,
+    differencePrice,
+    tariffLevelId,
+    regionName,
+    years,
+  } = searchParams.value;
   const { datas } = await getDifferentialRanking({
-    electricityTypeOneName: searchParams.value.electricityTypeOneName,
-    differencePrice: searchParams.value.differencePrice,
-    tariffLevelId: searchParams.value.tariffLevelId,
-    regionName: searchParams.value.regionName,
-    years: searchParams.value.years,
+    electricityTypeOneName,
+    differencePrice,
+    tariffLevelId,
+    regionName,
+    years,
   });
   eChartsOption.value.title.text =
     titleText.value.years + "月各省市代理购电价峰谷价差排名";
   eChartsOption.value.title.subtext = `·${titleText.value.electricityTypeOneName}·${titleText.value.tariffLevelId}·${titleText.value.differencePrice}`;
-  eChartsOption.value.series.data = datas.map(
+  eChartsOption.value.series[0].data = datas.map(
     (item) => item.electrovalenceDifference,
   );
+  eChartsOption.value.series[1].data = datas.map((item) => item.sameRatio);
   eChartsOption.value.xAxis.data = datas.map((item) => item.regionName);
   loading.value = false;
   createEcharts();
 }
+
 // 创建图表
 function createEcharts() {
   if (document.getElementById("my-chart_electricity-price-analysis")) {
@@ -289,6 +312,7 @@ function createEcharts() {
     myChart.setOption(eChartsOption.value);
   }
 }
+
 onMounted(() => {
   loading.value = true;
   // 获取所有数据
@@ -381,7 +405,7 @@ onMounted(() => {
 }
 
 #my-chart_electricity-price-analysis {
-  @include widthAndHeight(100%, 418px);
+  @include widthAndHeight(100%, 518px);
 }
 
 ::v-deep(.no-close-one) {

@@ -221,13 +221,13 @@ export default {
   width: 100%;
 
   .province-peak-valley-time-top {
+    margin: 24px 0;
     display: flex;
     flex-direction: row-reverse;
   }
 }
 
 .content {
-  margin-top: 16px;
   width: 100%;
   height: 68vh;
   overflow: auto;
