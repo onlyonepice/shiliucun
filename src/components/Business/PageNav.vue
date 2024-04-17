@@ -82,7 +82,7 @@ import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
 import PersonalAvatar from "@/assets/img/common/personal-avatar.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
-const { VITE_I_REPORT_URL, VITE_INDUSTRIALMAP_URL } = import.meta.env;
+const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
 const router = useRouter();
 const route = useRoute();
@@ -140,7 +140,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 3,
         text: "电价",
-        path: VITE_I_REPORT_URL + "#/stored-leading/electricity-price",
+        path: "/electricityPrice",
       },
       {
         id: 4,
@@ -157,12 +157,11 @@ const navList: Ref<Array<NavList>> = ref([
   {
     id: 4,
     text: "分析",
-    path: ["/analyze"],
     children: [
       {
         id: 1,
         text: "工商业测算",
-        path: VITE_I_REPORT_URL + "#/stored-leading/invest-ROE/business",
+        path: "/calculate",
       },
     ],
   },

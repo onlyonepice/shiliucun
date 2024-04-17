@@ -13,13 +13,13 @@
     "lint": "pnpm lint:eslint && pnpm lint:prettier"
   },
   "dependencies": {
-    "qrcode": "^1.5.3",
     "@types/echarts": "^4.9.22",
     "animate.css": "4.1.1",
     "axios": "1.2.0",
     "clipboard": "2.0.11",
     "core-js": "^3.8.3",
     "dayjs": "1.11.6",
+    "docx": "7.4.1",
     "echarts": "5.3.3",
     "element-plus": "2.5.6",
     "html2canvas": "1.4.1",
@@ -27,6 +27,7 @@
     "lodash": "4.17.21",
     "path": "0.12.7",
     "pinia": "2.1.7",
+    "qrcode": "^1.5.3",
     "qs": "^=6.11.0",
     "register-service-worker": "^1.7.2",
     "swiper": "^11.0.7",
@@ -38,7 +39,7 @@
     "vuex": "4.0.0"
   },
   "devDependencies": {
-    "@EESA/components": "1.1.28",
+    "@EESA/components": "1.1.32",
     "@types/node": "^18.15.3",
     "@types/vue": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",

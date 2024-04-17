@@ -117,11 +117,12 @@ export function modifyMb(data: any) {
 }
 
 // 获取地区信息
-export function getAreaApi() {
-  return http.request<void>(
-    "get",
-    `/eesa-report/region/openApi/getRegions?level=5&page=1&limit=1000&pcode=156`,
-  );
+export function getAreaApi(
+  params = { level: 5, page: 1, limit: 1000, pcode: 156 },
+) {
+  return http.request<void>("get", `/eesa-report/region/openApi/getRegions`, {
+    params,
+  });
 }
 // 编辑用户信息
 export function editUserInfoApi(data: any) {

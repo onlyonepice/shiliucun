@@ -172,7 +172,6 @@ const computedFilter = (row, current) => {
   if (current.includes("all") && current.length > 1) {
     current.splice(current.indexOf("all"), 1);
   }
-  console.log(current);
   return current;
 };
 const getPageData = () => {

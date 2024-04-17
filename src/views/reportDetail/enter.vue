@@ -188,7 +188,7 @@ onMounted(() => {
 <style lang="scss">
 @import "@/style/mixin.scss";
 .es-reportDetail {
-  height: calc(100vh - 56px -80px);
+  height: calc(100vh - 56px - 80px);
   background: #f2f3f5;
 }
 .es-reportDetail-content {
