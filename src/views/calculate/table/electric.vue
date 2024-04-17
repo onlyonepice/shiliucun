@@ -10,7 +10,7 @@
         width: addAreaType ? '550px' : '',
       }"
     >
-      充放电量<span>/万KWh</span>
+      {{ title }}<span>/万KWh</span>
     </div>
     <el-table
       :data="dischargeList"
@@ -57,6 +57,10 @@ defineProps({
   addAreaType: {
     type: Boolean,
     default: false,
+  },
+  title: {
+    type: String,
+    default: "",
   },
 });
 </script>

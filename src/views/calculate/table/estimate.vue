@@ -10,9 +10,7 @@
         width: addAreaType ? '800px' : '',
       }"
     >
-      <div class="common-title common-title-margin">
-        收益估算<span>/元</span>
-      </div>
+      <div class="common-title">{{ title }}<span>/元</span></div>
       <div class="estimate-info">
         <span>资方内部收益率（IRR）：</span>
         <span
@@ -36,6 +34,8 @@
       }"
       header-row-class-name="table-class"
       ref="tableMoney"
+      row-key="variationFactor"
+      :expand-row-keys="expands"
     >
       <el-table-column type="expand" width="1">
         <template #default>
@@ -83,11 +83,17 @@
       <el-table-column prop="variationFactor" label="年数">
         <template #default="scope">
           <span
-            style="cursor: pointer"
+            style="cursor: pointer; display: flex; align-items: center"
             @click="
               scope.row.variationFactor === '1' ? onClickExpand(scope.row) : ''
             "
-            >{{ scope.row.variationFactor === "1" ? "+" : "" }}
+          >
+            <img
+              v-if="scope.row.variationFactor === '1'"
+              style="width: 12px; height: 12px; margin-right: 10px"
+              :src="expands.length === 0 ? ExpandIcon : PutAwayIcon"
+              alt=""
+            />
             {{ scope.row.variationFactor }}</span
           >
         </template>
@@ -137,8 +143,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, Ref } from "vue";
+import { ref, Ref, onMounted } from "vue";
 import TipsIcon from "@/assets/img/common/lament_icon.png";
+import ExpandIcon from "@/assets/img/common/icon_expand.png";
+import PutAwayIcon from "@/assets/img/common/icon_put away.png";
 const tableMoney: Ref<any> = ref(null); // 表格dom节点
 defineProps({
   addAreaType: {
@@ -146,17 +154,25 @@ defineProps({
     default: false,
   },
   revenueEstimateList: {
-    type: Array,
+    type: Array as any,
     default: () => [],
   },
   searchResult: {
     type: Object,
     default: () => {},
   },
+  title: {
+    type: String,
+    default: "",
+  },
 });
-const onClickExpand = (row: any) => {
-  tableMoney.value.toggleRowExpansion(row);
+const expands = ref([]); // 默认展开行
+const onClickExpand = () => {
+  expands.value = expands.value.length === 0 ? ["1"] : [];
 };
+onMounted(() => {
+  onClickExpand();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -198,6 +214,7 @@ const onClickExpand = (row: any) => {
 .revenue-estimate {
   width: 100%;
   @include flex(center, space-between);
+  margin: 32px 0 16px;
 
   .estimate-info {
     @include font(14px, 600, #1c232f, 22px);

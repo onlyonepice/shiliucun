@@ -30,7 +30,11 @@
       <!-- 用户参数 -->
       <div class="extra-title">
         <h4 class="filter__title-margin">用户参数</h4>
-        <div class="extra-title-btn" @click="addArea()">
+        <div
+          v-if="useUserStore().$state.token !== ''"
+          class="extra-title-btn"
+          @click="addArea()"
+        >
           {{ addAreaType ? "关闭对比地区" : "添加对比地区" }}
         </div>
       </div>
@@ -404,9 +408,6 @@ const getTips = computed(() => (data: any, compare: string) => {
 });
 // 添加地区对比
 const addArea = () => {
-  if (!getToken()) {
-    return useUserStore().openLogin(true);
-  }
   if (disabledUser.value) {
     return;
   }
@@ -577,10 +578,12 @@ async function onGetElectricityInfo(compare: string) {
 async function onChoseProduct(data: any, type: string) {
   onChangeData(data, type);
   let name = "";
+  let reportTitle = "";
   productList.value.forEach((item) => {
     item.secondLevelRespList.forEach((_item) => {
       if (_item.id === data[1]) {
         name = _item.secondLevelRespList[0].name;
+        reportTitle = _item.name;
       }
     });
   });
@@ -596,7 +599,8 @@ async function onChoseProduct(data: any, type: string) {
     searchParams.value.dischargeDepth = datas.dischargeDepth; // 放电深度
     searchParams.value.annualDecay = datas.annualDecay; // 年衰减率
     searchParams.value.annualMaintenance = datas.annualMaintenance; // 年维护费用
-    searchParams.value.picture = datas.picture;
+    searchParams.value.picture = datas.picture; // 产品图片
+    searchParams.value.reportTitle = reportTitle;
   }
 }
 // 改变值

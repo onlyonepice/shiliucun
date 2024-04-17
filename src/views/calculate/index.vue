@@ -28,7 +28,9 @@
             <span>{{ item.text }}</span>
           </div>
         </div>
-        <el-button type="primary">下载报告</el-button>
+        <el-button type="primary" @click="downloadReportShow = true"
+          >下载报告</el-button
+        >
       </div>
       <Tabs
         :tabsList="tabsList"
@@ -58,11 +60,13 @@
               :addAreaType="addAreaType"
               :revenueEstimateList="revenueEstimateList"
               :searchResult="searchResult"
+              :title="addAreaType ? '收益估算A' : '收益估算B'"
             />
             <Estimate
               v-if="addAreaType"
+              title="收益估算B"
               :addAreaType="addAreaType"
-              :revenueEstimateList="revenueEstimateList"
+              :revenueEstimateList="revenueEstimateListB"
               :searchResult="searchResultB"
             />
           </div>
@@ -79,16 +83,27 @@
           style="overflow-x: scroll; overflow-y: hidden"
           :style="{ display: addAreaType ? 'flex' : 'block' }"
         >
-          <Electric :dischargeList="dischargeList" :addAreaType="addAreaType" />
+          <Electric
+            :dischargeList="dischargeList"
+            :addAreaType="addAreaType"
+            :title="addAreaType ? '充放电量A' : '充放电量'"
+          />
           <Electric
             v-if="addAreaType"
-            :dischargeList="dischargeList"
+            title="充放电量B"
+            :dischargeList="dischargeListB"
             :addAreaType="addAreaType"
           />
         </div>
       </div>
     </template>
   </div>
+  <DownloadReport
+    v-if="downloadReportShow"
+    :defaultTitle="searchParams.regionName + '-' + searchParams.reportTitle"
+    @exportAll="onExportAll"
+    @handleCancel="downloadReportShow = false"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -112,8 +127,12 @@ const showInfoList: Ref<Array<Array<any>>> = ref([
   [{ title: "模式分析：", value: "" }],
 ]);
 const revenueEstimateList: Ref<any> = ref([]); // 收益估算
+const revenueEstimateListB: Ref<any> = ref([]); // 收益估算对比地区
 const ownerRevenueEstimateList: Ref<any> = ref([]); // 业主自投收益估算
+const ownerRevenueEstimateListB: Ref<any> = ref([]); // 业主自投收益估算对比地区
 const dischargeList: Ref<any> = ref([]); // 充放电量
+const dischargeListB: Ref<any> = ref([]); // 充放电量对比地区
+const downloadReportShow: Ref<boolean> = ref(false); // 下载报告弹窗
 const showInvestment = ref(false);
 // 查询参数
 const searchParams: Ref<any> = ref({
@@ -182,10 +201,14 @@ function onChangeFilter(data: string, type: string) {
   }
   onSearch();
 }
-
+// 下载报告
+const onExportAll = (type, value) => {
+  console.log("12131323", type, value);
+};
 function onSearchData(data: any) {
   searchParams.value = data;
-  onSearch();
+  addAreaType.value = false;
+  onSearch(false, "searchA");
 }
 // 查询接口
 async function onSearch(type? = false, source?: string) {
@@ -206,7 +229,7 @@ async function onSearch(type? = false, source?: string) {
     if (source === "searchA") {
       searchResult.value = datas;
     } else {
-      return (searchResultB.value = datas);
+      searchResultB.value = datas;
     }
 
     showInvestment.value = true;
@@ -226,7 +249,12 @@ async function onSearch(type? = false, source?: string) {
           investorNetPresentValue: _data.investorNetPresentValue[index],
         });
       }
-      revenueEstimateList.value = _revenueEstimate;
+
+      if (source === "searchA") {
+        revenueEstimateList.value = _revenueEstimate;
+      } else {
+        revenueEstimateListB.value = _revenueEstimate;
+      }
     } else {
       const _ownerRevenueEstimate = [];
       for (let index = 0; index < _data.variationFactor.length; index++) {
@@ -237,6 +265,11 @@ async function onSearch(type? = false, source?: string) {
         });
       }
       ownerRevenueEstimateList.value = _ownerRevenueEstimate;
+      if (source === "searchA") {
+        ownerRevenueEstimateList.value = _ownerRevenueEstimate;
+      } else {
+        ownerRevenueEstimateListB.value = _ownerRevenueEstimate;
+      }
     }
     for (let index = 0; index < _data.variationFactor.length; index++) {
       _discharge.push({
@@ -245,7 +278,11 @@ async function onSearch(type? = false, source?: string) {
         annualDischarge: _data.annualDischarge[index],
       });
     }
-    dischargeList.value = _discharge;
+    if (source === "searchA") {
+      dischargeList.value = _discharge;
+    } else {
+      return (dischargeListB.value = _discharge);
+    }
     if (source === "searchA" && !addAreaType.value) {
       setTimeout(() => {
         searchCanvas.value.getCanvasData(false);
@@ -264,7 +301,7 @@ function onReset() {
 }
 // 开始分析按钮
 function onAnalysis(data: any, type: string) {
-  type === "searchB" && (addAreaType.value = true);
+  addAreaType.value = type === "searchB";
   const _showInfoList = showInfoList.value;
   _showInfoList[0][0].value =
     data.patternAnalysis === 1 ? "EMC合同能源" : "业主自投";
