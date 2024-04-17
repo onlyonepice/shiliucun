@@ -48,6 +48,7 @@ declare module 'vue' {
     MiniAppNeed: typeof import('./../components/Common/Dialog/miniAppNeed.vue')['default']
     OnLineReportList: typeof import('./../components/Business/OnLineReportList.vue')['default']
     OpenVip: typeof import('./../components/Common/Dialog/OpenVip.vue')['default']
+    OptionNav: typeof import('./../components/Business/OptionNav.vue')['default']
     PageBottom: typeof import('./../components/Business/PageBottom.vue')['default']
     PageNav: typeof import('./../components/Business/PageNav.vue')['default']
     Pagination: typeof import('./../components/Common/Pagination.vue')['default']
