@@ -40,7 +40,7 @@
           style="height: 182px"
           v-if="disabledUser"
         />
-        <div class="filter__content filter__content-half">
+        <div class="filter__content filter__content-half filter__content-enter">
           <Select
             :title="addAreaType ? '地区A' : '地区'"
             :options="cityData"
@@ -101,7 +101,11 @@
             </p>
           </template>
         </div>
-        <div class="filter__content filter__content-half" v-if="addAreaType">
+        <div
+          class="filter__content filter__content-half filter__content-enter"
+          style="margin-right: 0"
+          v-if="addAreaType"
+        >
           <Select
             title="地区B"
             :options="cityData"
@@ -165,14 +169,16 @@
       </div>
 
       <!-- 产品参数 -->
-      <h4 class="filter__title-margin">产品参数</h4>
+      <h4 class="filter__title-margin">
+        产品参数<span>（以下参数为默认值，可根据情况自行修改）</span>
+      </h4>
       <div class="filter__title-subsidy">
         <p
           class="filter__content-disabled"
           style="height: 336px"
           v-if="disabledProduct"
         />
-        <div class="filter__content">
+        <div class="filter__content filter__content-enter">
           <Select
             title="选择产品"
             type="cascader"
@@ -198,7 +204,7 @@
           />
         </div>
         <div class="filter__content-product">
-          <div class="filter__content-product__left">
+          <div class="filter__content-product__left filter__content-enter">
             <Select
               title="系统单价"
               type="input"
@@ -618,7 +624,6 @@ async function onChangeData(data: string, type: string, compare = "A") {
 
 .filter__left {
   @include widthAndHeight(90%, 100%);
-  @include padding(0, 24px, 0, 0);
   flex: 1;
 }
 .filter__right {
@@ -639,6 +644,9 @@ async function onChangeData(data: string, type: string, compare = "A") {
 
 .filter__title-margin {
   @include margin(24px, 0, 16px, 0);
+  span {
+    @include font(14px, 600, #ff892e, 22px);
+  }
 }
 
 .filter__title-subsidy {
@@ -758,5 +766,12 @@ async function onChangeData(data: string, type: string, compare = "A") {
 .filter-userInfo {
   @include flex(flex-start, space-between);
   @include relative();
+}
+</style>
+<style lang="scss">
+.filter__content-enter {
+  .select {
+    margin-bottom: 16px;
+  }
 }
 </style>

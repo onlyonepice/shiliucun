@@ -50,16 +50,22 @@
           @onSearch="onSearchData"
         />
         <template v-if="showInfoList[0][0].value === 'EMC合同能源'">
-          <el-scrollbar>
+          <div
+            style="overflow-x: scroll; overflow-y: hidden"
+            :style="{ display: addAreaType ? 'flex' : 'block' }"
+          >
             <Estimate
+              :addAreaType="addAreaType"
               :revenueEstimateList="revenueEstimateList"
               :searchResult="searchResult"
             />
             <Estimate
+              v-if="addAreaType"
+              :addAreaType="addAreaType"
               :revenueEstimateList="revenueEstimateList"
               :searchResult="searchResultB"
             />
-          </el-scrollbar>
+          </div>
         </template>
         <template v-else>
           <Proprietor
@@ -69,7 +75,17 @@
         </template>
       </div>
       <div v-show="choseTab === 2">
-        <Electric :dischargeList="dischargeList" />
+        <div
+          style="overflow-x: scroll; overflow-y: hidden"
+          :style="{ display: addAreaType ? 'flex' : 'block' }"
+        >
+          <Electric :dischargeList="dischargeList" :addAreaType="addAreaType" />
+          <Electric
+            v-if="addAreaType"
+            :dischargeList="dischargeList"
+            :addAreaType="addAreaType"
+          />
+        </div>
       </div>
     </template>
   </div>
@@ -184,6 +200,7 @@ async function onSearch(type? = false, source?: string) {
       ? Number(_search.calculationPeriod.split("年")[0])
       : "";
   delete _search.choseProduct;
+  _search.systemUnitPrice = Number(_search.systemUnitPrice);
   const { datas, resp_code }: any = await apiAnalyzeSearch(_search);
   if (resp_code === 0) {
     if (source === "searchA") {
@@ -307,5 +324,8 @@ onMounted(() => {
     background: #fff1d1;
     border: 1px solid #ffbd12;
   }
+}
+.scrollbar-flex-content {
+  overflow-x: auto;
 }
 </style>

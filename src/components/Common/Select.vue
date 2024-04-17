@@ -146,7 +146,6 @@ function handleChange(data) {
 .select {
   @include widthAndHeight(30%, 32px);
   @include flex(center, flex-start);
-  margin-bottom: 16px;
 }
 
 .select__title {

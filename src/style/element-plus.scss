@@ -62,9 +62,7 @@
   @include font(14px, 400, #1c232f, 22px);
 }
 
-.el-table th.el-table__cell {
-  background-color: transparent;
-}
+
 
 .el-table__header-wrapper {
   background-color: #f2f3f5;
@@ -74,7 +72,9 @@
   padding-top: 0;
   padding-bottom: 0;
 }
-
+.el-dialog{
+  padding: 0 !important;
+}
 .el-button--primary {
   background: #2d5cf6 !important;
   color: #ffffff !important;
@@ -196,6 +196,9 @@
   }
   .el-input-number .el-input__inner{
     text-align: left;
+  }
+  .el-table th.el-table__cell {
+    background-color: #F2F3F5 ;
   }
 }
 

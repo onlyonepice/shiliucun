@@ -2,7 +2,7 @@
   <div class="common-title common-title-margin">投资方案</div>
   <div class="filter__content investment-filter__check">
     <Select
-      width="30%"
+      width="19.5%"
       title="年利用天数"
       :options="yearList"
       valueKey="paramName"
@@ -15,7 +15,7 @@
       "
     />
     <Select
-      width="30%"
+      width="19.5%"
       title="贴现率"
       :options="rateList"
       valueKey="paramName"
@@ -28,7 +28,7 @@
       "
     />
     <Select
-      width="30%"
+      width="19.5%"
       title="测算周期"
       :options="periodList"
       valueKey="paramName"
@@ -42,7 +42,7 @@
     />
     <Select
       v-if="showInfoList[0][0].value === 'EMC合同能源'"
-      width="30%"
+      width="19.5%"
       title="业主分成"
       type="number"
       :defaultValue="searchParams.ownersShare"
@@ -54,7 +54,7 @@
     />
     <Select
       v-if="showInfoList[0][0].value === 'EMC合同能源'"
-      width="30%"
+      width="19.5%"
       title="投资方分成"
       type="number"
       :defaultValue="searchParams.dividedByInvestors"
@@ -119,7 +119,7 @@ const onChangeFilter = (value: any, type: string) => {
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .filter__content {
-  @include flex(center, flex-start);
+  @include flex(center, space-between, nowrap);
 }
 
 .common-title {

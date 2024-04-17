@@ -38,7 +38,7 @@
     "vuex": "4.0.0"
   },
   "devDependencies": {
-    "@EESA/components": "1.1.28",
+    "@EESA/components": "1.1.32",
     "@types/node": "^18.15.3",
     "@types/vue": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",

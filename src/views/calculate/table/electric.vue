@@ -1,45 +1,62 @@
 <template>
-  <div class="common-title common-title-margin">
-    充放电量<span>/万KWh</span>
-  </div>
-  <el-table
-    :data="dischargeList"
-    style="width: 100%"
-    header-row-class-name="table-class"
-    empty-text="暂无数据"
+  <div
+    :style="{
+      'margin-right': addAreaType ? '24px' : '0',
+    }"
   >
-    <el-table-column prop="variationFactor" label="年数" />
-    <el-table-column prop="annualCharge" label="年充电量">
-      <template #default="scope">
-        <span
-          v-if="scope.row.annualCharge"
-          :class="{
-            'color-red': scope.row.annualCharge.indexOf('-') > -1,
-          }"
-          >{{ scope.row.annualCharge }}</span
-        >
-        <span v-else>-</span>
-      </template>
-    </el-table-column>
-    <el-table-column prop="annualDischarge" label="年放电量">
-      <template #default="scope">
-        <span
-          v-if="scope.row.annualDischarge"
-          :class="{
-            'color-red': scope.row.annualDischarge.indexOf('-') > -1,
-          }"
-          >{{ scope.row.annualDischarge }}</span
-        >
-        <span v-else>-</span>
-      </template>
-    </el-table-column>
-  </el-table>
+    <div
+      class="common-title common-title-margin"
+      :style="{
+        width: addAreaType ? '550px' : '',
+      }"
+    >
+      充放电量<span>/万KWh</span>
+    </div>
+    <el-table
+      :data="dischargeList"
+      :style="{
+        width: addAreaType ? '550px' : '',
+      }"
+      header-row-class-name="table-class"
+      empty-text="暂无数据"
+    >
+      <el-table-column prop="variationFactor" label="年数" />
+      <el-table-column prop="annualCharge" label="年充电量">
+        <template #default="scope">
+          <span
+            v-if="scope.row.annualCharge"
+            :class="{
+              'color-red': scope.row.annualCharge.indexOf('-') > -1,
+            }"
+            >{{ scope.row.annualCharge }}</span
+          >
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="annualDischarge" label="年放电量">
+        <template #default="scope">
+          <span
+            v-if="scope.row.annualDischarge"
+            :class="{
+              'color-red': scope.row.annualDischarge.indexOf('-') > -1,
+            }"
+            >{{ scope.row.annualDischarge }}</span
+          >
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 <script lang="ts" setup>
 defineProps({
   dischargeList: {
     type: Object,
     default: () => {},
+  },
+  addAreaType: {
+    type: Boolean,
+    default: false,
   },
 });
 </script>

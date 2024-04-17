@@ -221,42 +221,45 @@ async function getCanvasData() {
     flatTime: slider.value[2].value,
     lowThan: slider.value[3].value,
   };
-  const { datas }: any = await apiCanvasData(
+  const { datas, resp_code }: any = await apiCanvasData(
     Object.assign(props.searchParams, _data),
   );
-  datas.forEach((item) => {
-    eChartsOption.value.xAxis.data.push(item.month);
-    echartsConfig.value[0].data.push({ value: item.data.sharpDifference });
-    echartsConfig.value[1].data.push({ value: item.data.heightDifference });
-    echartsConfig.value[2].data.push({ value: item.data.sharpAdjustment });
-    echartsConfig.value[3].data.push({ value: item.data.altitudeBalance });
-  });
-  let _series = [];
-  echartsConfig.value.forEach((item) => {
-    _series.push({
-      type: "line",
-      name: item.name,
-      data: item.data,
-      areaStyle: { color: computedColor(item.lineColor) },
+  if (resp_code === 0) {
+    datas.forEach((item) => {
+      eChartsOption.value.xAxis.data.push(item.month);
+      echartsConfig.value[0].data.push({ value: item.data.sharpDifference });
+      echartsConfig.value[1].data.push({ value: item.data.heightDifference });
+      echartsConfig.value[2].data.push({ value: item.data.sharpAdjustment });
+      echartsConfig.value[3].data.push({ value: item.data.altitudeBalance });
     });
-  });
-  eChartsOption.value.series = _series;
-  myChart.setOption(eChartsOption.value);
+    let _series = [];
+    echartsConfig.value.forEach((item) => {
+      _series.push({
+        type: "line",
+        name: item.name,
+        data: item.data,
+        areaStyle: { color: computedColor(item.lineColor) },
+      });
+    });
+    eChartsOption.value.series = _series;
+    myChart.setOption(eChartsOption.value);
+  }
 }
 
 // 获取滑块配置
 async function getSliderConfig() {
-  const { datas }: any = await apiSliderConfig(props.searchParams);
-  const _freeze = defaultElectricityPriceFreeze.value;
-  datas.forEach((item) => {
-    slider.value.forEach((_item: any) => {
-      if (_item.key === item.bucketType) {
-        _item.show = true;
-        _item.minNumber = item.min || -100;
-        _item.maxNumber = item.max || 100;
-      }
+  const { datas, resp_code }: any = await apiSliderConfig(props.searchParams);
+  if (resp_code === 0) {
+    datas.forEach((item) => {
+      slider.value.forEach((_item: any) => {
+        if (_item.key === item.bucketType) {
+          _item.show = true;
+          _item.minNumber = item.min || -100;
+          _item.maxNumber = item.max || 100;
+        }
+      });
     });
-  });
+  }
 }
 
 onMounted(() => {
