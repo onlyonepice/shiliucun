@@ -119,6 +119,11 @@
   color: #5b6985;
 }
 
+.el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path{
+  color: #1c232f !important;
+  font-weight: 600 !important;
+}
+
 .el-input.is-disabled .el-input__wrapper {
   box-shadow: none;
 }
