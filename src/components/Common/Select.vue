@@ -190,13 +190,4 @@ function handleFocusVerifyLogin() {
   @include font(14px, 400, #1c232f, 22px);
   border-left: 1px solid #e5e6ea;
 }
-
-:deep(.select__input .el-input__wrapper) {
-  @include widthAndHeight(100%, 32px);
-  background: rgba(255, 255, 255, 0);
-
-  &:hover {
-    box-shadow: none;
-  }
-}
 </style>
