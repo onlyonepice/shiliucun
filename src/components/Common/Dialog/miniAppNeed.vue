@@ -7,7 +7,10 @@
     :append-to-body="true"
     style="padding: 0"
   >
-    <img :src="MiniAppNeed" :class="ns.b('img')" />
+    <img
+      :src="type === 'miniApp' ? MiniAppNeed : ProductNeed"
+      :class="ns.b('img')"
+    />
     <div :class="ns.b('empty')" @click="handleClose" />
   </el-dialog>
 </template>
@@ -16,6 +19,7 @@
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import MiniAppNeed from "@/assets/img/common/miniApp-need.png";
+import ProductNeed from "@/assets/img/common/product-need.png";
 const ns = useNamespace("miniAppDialog");
 const dialogVisible: Ref<boolean> = ref(false);
 const emits = defineEmits(["onHandleClose"]);
@@ -23,6 +27,10 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
+  },
+  type: {
+    type: String,
+    default: "miniApp",
   },
 });
 watch(

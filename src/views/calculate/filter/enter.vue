@@ -301,7 +301,7 @@
               </el-image>
               <div class="product-desc__info__btn">
                 <div @click="onLinkTo()">联系企业</div>
-                <div>产品入驻</div>
+                <div @click="productVisible = true">产品入驻</div>
               </div>
             </div>
           </div>
@@ -309,6 +309,11 @@
       </div>
     </div>
   </div>
+  <MiniAppNeed
+    :visible="productVisible"
+    type="product"
+    @onHandleClose="productVisible = false"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -331,7 +336,7 @@ import {
 } from "@/api/investment";
 const emit = defineEmits(["onAnalysis", "onReset", "getDesc"]);
 const addAreaType: Ref<boolean> = ref(false); // 添加地区对比开关
-
+const productVisible: Ref<boolean> = ref(false);
 const filterData: Ref<FILTERDATA> = ref({
   patternAnalysis: 0,
 });

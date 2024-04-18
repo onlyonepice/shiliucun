@@ -162,6 +162,7 @@ import {
   REPORT_DATA_DOM_TYPE,
 } from "@/utils/downReport";
 import { exportDocument } from "@/utils/docx";
+import { ElMessage } from "element-plus";
 // 展示筛选项内容
 const showInfoList: Ref<Array<Array<any>>> = ref([
   [{ title: "模式分析：", value: "" }],
@@ -241,6 +242,7 @@ const onEvaluate = async (text: string) => {
       moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
       satisfactionLevel: text,
     });
+    ElMessage.success("感谢您的评价");
   }
 };
 // 修改投资方案筛选项
