@@ -6,13 +6,13 @@
       <span
         :class="{
           'color-red':
-            searchResult.internalRateReturn !== null &&
-            searchResult.internalRateReturn.indexOf('-') > -1,
+            searchResult.contentYield !== null &&
+            searchResult.contentYield.indexOf('-') > -1,
         }"
         >{{
-          searchResult.internalRateReturn === null
+          searchResult.contentYield === null
             ? "IRR过低"
-            : searchResult.internalRateReturn + "%"
+            : searchResult.contentYield + "%"
         }}</span
       >
     </div>
