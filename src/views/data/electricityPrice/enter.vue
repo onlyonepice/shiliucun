@@ -12,17 +12,11 @@
       </div>
     </div>
     <!-- 分时/分月电价 -->
-    <div v-if="chosePriceType === 1">
-      <ElectricityPriceTime />
-    </div>
+    <ElectricityPriceTime v-if="chosePriceType === 1" />
     <!-- 电价分析 -->
-    <div v-if="chosePriceType === 2">
-      <ElectricityAnalysis />
-    </div>
+    <ElectricityAnalysis v-if="chosePriceType === 2" />
     <!-- 各省峰谷时段 -->
-    <div v-if="chosePriceType === 3">
-      <ElectricityPricePeriod />
-    </div>
+    <ElectricityPricePeriod v-if="chosePriceType === 3" />
   </div>
 </template>
 
