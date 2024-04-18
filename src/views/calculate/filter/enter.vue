@@ -329,7 +329,7 @@ import {
   apiProductList,
   apiProductDetail,
 } from "@/api/investment";
-const emit = defineEmits(["onAnalysis", "onReset"]);
+const emit = defineEmits(["onAnalysis", "onReset", "getDesc"]);
 const addAreaType: Ref<boolean> = ref(false); // 添加地区对比开关
 
 const filterData: Ref<FILTERDATA> = ref({
@@ -360,7 +360,6 @@ const searchParamsB = ref({
   electricityTypeTwoName: "", // 用电类型2
   tariffLevelId: "", // 期望接入电压等级
 });
-const searchParamsShow = ref({}); // 筛选项展示
 // 筛选项后端需求多传无用字段
 const searchParamsDefault: any = ref({});
 const cityData = ref([]); // 地区数据
@@ -456,7 +455,7 @@ const onAnalysis = () => {
     );
 };
 const getDesc = () => {
-  const _searchParamsShow: any = searchParamsShow.value;
+  const _searchParamsShow: any = {};
   const _searchParams = searchParams.value;
   _searchParamsShow.regionName = _searchParams.regionName;
   _searchParamsShow.electricityTypeOneName =
@@ -491,7 +490,7 @@ const getDesc = () => {
   _searchParamsShow.dischargeDepth = _searchParams.dischargeDepth + "%";
   _searchParamsShow.annualDecay = _searchParams.annualDecay + "%";
   _searchParamsShow.annualMaintenance = _searchParams.annualMaintenance + "元";
-  console.log("==========111111", _searchParamsShow);
+  emit("getDesc", _searchParamsShow);
 };
 // 重置筛选项
 const onReset = () => {

@@ -23,6 +23,7 @@
                 v-for="item in getConditionLabel"
                 :key="item.unit"
                 class="item"
+                style="margin-right: 24px"
               >
                 <span
                   style="font-weight: 400; font-size: 14px; color: #939db3"
@@ -34,7 +35,6 @@
                     font-size: 14px;
                     color: #1d232e;
                     padding: 0px 20px 0px 10px;
-                    margin-right: 24px;
                   "
                   >{{ item.unit }}</span
                 >
@@ -448,7 +448,20 @@ export default {
     getConditionLabel() {
       const { condition } = this;
       console.log("=======", condition);
-      return [{ label: "地区", unit: condition.regionName }];
+      return [
+        { label: "地区：", unit: condition.regionName },
+        { label: "用电类型I：", unit: condition.electricityTypeOneName },
+        { label: "用电类型II：", unit: condition.electricityTypeTwoName },
+        { label: "电压等级：", unit: condition.tariffLevelId },
+        { label: "选择产品：", unit: condition.choseProduct },
+        { label: "配置数量：", unit: condition.number },
+        { label: "系统单价：", unit: condition.systemUnitPrice },
+        { label: "系统容量：", unit: condition.systemEnergyCapacity },
+        { label: "系统综合效率：", unit: condition.systemEfficiency },
+        { label: "放电深度：", unit: condition.dischargeDepth },
+        { label: "年衰减率：", unit: condition.annualDecay },
+        { label: "年维护费用：", unit: condition.annualMaintenance },
+      ];
     },
     getThat() {
       const { data } = this;
