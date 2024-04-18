@@ -55,17 +55,15 @@
             <template #append>MWh</template>
           </el-input>
         </el-form-item>
-        <el-form-item v-else label="新建光伏规模" prop="energyStorageScale">
-          <el-input placeholder="请输入" v-model="ruleForm.energyStorageScale">
+        <el-form-item v-else label="新建光伏规模" prop="photovoltaicScale">
+          <el-input placeholder="请输入" v-model="ruleForm.photovoltaicScale">
             <template #append>MW</template>
           </el-input>
         </el-form-item>
         <el-form-item label="投资类型" prop="investmentType">
           <el-radio-group v-model="ruleForm.investmentType">
-            <el-radio label="1">业主自投{{ ruleForm.investmentType }}</el-radio>
-            <el-radio label="2"
-              >第三方投资{{ ruleForm.investmentType }}</el-radio
-            >
+            <el-radio label="1">业主自投</el-radio>
+            <el-radio label="2">第三方投资</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="联系人姓名" prop="contactName">
@@ -128,6 +126,7 @@ const ruleForm = ref({
   phoneNumber: "",
   mailbox: "",
   remark: "",
+  photovoltaicScale: "",
   type: "BUSINESS_INDUSTRY",
 });
 
@@ -142,6 +141,7 @@ const rules = reactive({
     { required: true, message: "请选择", trigger: ["input", "blur"] },
   ],
   energyStorageScale: [
+    { required: true },
     {
       validator: (rule, value, callback) => {
         if (value && !REGEXP.numberReg.test(value)) callback("请输入数字");
@@ -154,6 +154,7 @@ const rules = reactive({
     },
   ],
   photovoltaicScale: [
+    { required: true },
     {
       validator: (rule, value, callback) => {
         if (value && !REGEXP.numberReg.test(value)) callback("请输入数字");
@@ -233,7 +234,13 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   });
 };
 const submitFn = async () => {
-  const data = await sddFindList(ruleForm.value);
+  let requestData = {};
+  Object.keys(ruleForm.value).forEach((item) => {
+    if (ruleForm.value[item] !== "") {
+      requestData[item] = ruleForm.value[item];
+    }
+  });
+  const data = await sddFindList(requestData);
   if (data.resp_code === 0) {
     drawer.value = false;
     ElMessage.success("提交成功");

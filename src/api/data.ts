@@ -155,6 +155,14 @@ export const winningReport = (data) => {
   );
 };
 
+// 政策详情
+export const getPolicyDetailsApi = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/Policy/front/openApi/all/V1.0/getPolicyDetails",
+    { data },
+  );
+};
 // 政策查找筛选类
 export const policyFilterSearch = (data) => {
   return http.request<responseType>(
