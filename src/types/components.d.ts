@@ -10,7 +10,6 @@ declare module 'vue' {
     BiddingDynamicsList: typeof import('./../components/Common/BiddingDynamicsList.vue')['default']
     Breadcrumb: typeof import('./../components/Common/Breadcrumb.vue')['default']
     Dialog: typeof import('./../components/Common/Dialog/index.vue')['default']
-    DownloadReport: typeof import('./../components/Common/Dialog/DownloadReport.vue')['default']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']

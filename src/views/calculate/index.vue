@@ -28,7 +28,10 @@
             <span>{{ item.text }}</span>
           </div>
         </div>
-        <el-button type="primary" @click="downloadReportShow = true"
+        <el-button
+          v-if="false"
+          type="primary"
+          @click="downloadReportShow = true"
           >下载报告</el-button
         >
       </div>
@@ -100,9 +103,22 @@
   </div>
   <DownloadReport
     v-if="downloadReportShow"
-    :defaultTitle="searchParams.regionName + '-' + searchParams.reportTitle"
+    :defaultTitle="
+      searchParams.regionName +
+      '-' +
+      searchParams.reportTitle +
+      '-工商业投资回报性分析'
+    "
     @exportAll="onExportAll"
     @handleCancel="downloadReportShow = false"
+  />
+  <Dom
+    v-if="filterFinish"
+    ref="formatDom"
+    class="format-dom"
+    :data="[{ id: 1, ...searchResult }]"
+    :mode="showInfoList[0][0].value"
+    :condition="searchParams"
   />
 </template>
 
@@ -110,6 +126,8 @@
 import { onMounted, Ref, ref, watch } from "vue";
 import Filter from "./filter/enter.vue";
 import Canvas from "./canvas.vue";
+import DownloadReport from "./downLoad/DownloadReport.vue";
+import Dom from "./downLoad/dom.vue";
 import Dissatisfy from "@/assets/img/common/dissatisfy.png";
 import ChoseDissatisfy from "@/assets/img/common/chose-dissatisfy.png";
 import Normal from "@/assets/img/common/normal.png";
@@ -122,6 +140,8 @@ import Proprietor from "./table/proprietor.vue";
 import Investment from "./filter/Investment.vue";
 import { apiAnalyzeSearch, apiComment } from "@/api/investment";
 import { cloneDeep } from "lodash";
+import { WORD_COVER, VALUE_PROPERTY } from "@/utils/downReport";
+import { exportDocument } from "@/utils/docx";
 // 展示筛选项内容
 const showInfoList: Ref<Array<Array<any>>> = ref([
   [{ title: "模式分析：", value: "" }],
@@ -147,6 +167,14 @@ const evaluateList: Ref<any> = ref([
   { id: 3, text: "满意", icon: Satisfaction, choseIcon: ChoseSatisfaction },
 ]); // 评价列表
 const choseEvaluate: Ref<string> = ref(""); // 评价
+// 生成报告
+const report: Ref<any> = ref({
+  reportName: "",
+  reportRootMenu: {},
+  reportSubMenus: [],
+  menuRootId: 1078,
+  menuSort: 0,
+});
 const tabsList = ref([
   { id: 1, name: "金融方案" },
   { id: 2, name: "充放电量" },
@@ -202,8 +230,39 @@ function onChangeFilter(data: string, type: string) {
   onSearch();
 }
 // 下载报告
-const onExportAll = (type, value) => {
-  console.log("12131323", type, value);
+const onExportAll = async (type, value) => {
+  let _report = report.value;
+  console.log("=====", value);
+  _report.reportName = value;
+  _report.reportRootMenu = {
+    id: 1079,
+    menuName: "投资回报性分析",
+    menuRootId: 1078,
+    menuSort: 0,
+  };
+  const cover = JSON.parse(WORD_COVER.NORMAL);
+
+  const curTime = new Date().toLocaleDateString().split("/").join("-");
+  _report.updateTime = curTime;
+
+  const { formData, name } = await exportDocument(
+    cloneDeep(_report),
+    VALUE_PROPERTY,
+    {
+      type: "word",
+      menu: false,
+      cover,
+      menuOrder: 2,
+      menuLevel: "1-2",
+    },
+  );
+
+  const a = document.createElement("a");
+  const _url = URL || window.URL || window.webkitURL;
+  a.href = _url.createObjectURL(formData);
+  a.download = name;
+  a.click();
+  _url.revokeObjectURL(a.href);
 };
 function onSearchData(data: any) {
   searchParams.value = data;

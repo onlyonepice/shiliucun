@@ -30,9 +30,10 @@
 .el-select .el-input__wrapper {
   background: #f4f5f7;
   box-shadow: none;
-  border: 1px solid rgba(255, 255, 255, 0) !important;
 }
-
+.el-input__wrapper {
+  box-shadow: none !important;
+}
 .el-select .el-input__wrapper:hover {
   background-color: #e5e6ec !important;
 }
@@ -162,11 +163,6 @@
 .el-input__wrapper:hover {
   box-shadow: 0 0 0 1px #e5e6ea inset;
   background-color: #e5e6ea;
-}
-
-.el-input__wrapper.is-focus {
-  box-shadow: 0 0 0 1px #165dff inset;
-  background-color: #ffffff;
 }
 
 #app {
