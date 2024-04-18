@@ -84,7 +84,7 @@ const getReleaseTime = () => {
   const _data = props.timeFilter.filter((item) => {
     return item.defaultValue;
   });
-  releaseTime.value = _data[0].paramDesc;
+  releaseTime.value = _data[0].paramValue;
 };
 getReleaseTime();
 // 招标内容筛选项改变
