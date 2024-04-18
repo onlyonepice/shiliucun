@@ -139,7 +139,6 @@
 import copy_icon from "@/assets/img/common/copy_icon.png";
 import lament_icon from "@/assets/img/common/lament_icon.png";
 import right_more from "@/assets/img/common/right-more.png";
-import { windowScrollStore } from "@/store/modules/windowScroll";
 import { useUserStore } from "@/store/modules/user";
 import redNew from "@/assets/img/red_new.png";
 import { ref, watch } from "vue";
@@ -159,7 +158,6 @@ function copyToClipboard(text) {
   document.execCommand("copy");
   document.body.removeChild(textarea);
 }
-const windowStore = windowScrollStore();
 const ns = useNamespace("biddingDynamicsList");
 const router = useRouter();
 const props = defineProps({
@@ -203,9 +201,8 @@ const handleSetDetailShowClick = async () => {
     });
     return;
   }
-
   if (currentData.value.showDetail) {
-    windowStore.SET_SCROLL_TOP(windowStore.scrollTop - 579);
+    currentData.value.showDetail = false;
   } else {
     if (!getToken()) {
       useUserStore().openLogin(true);
@@ -220,13 +217,13 @@ const handleSetDetailShowClick = async () => {
     const data = await getBidFinderDetail({ id: currentData.value.id });
     if (data.resp_code === 0) {
       detailData.value = data.datas;
+      currentData.value.showDetail = true;
     } else if (data.resp_code === 10027) {
       //观看次数到达上限
       useUserStore().openVip(true);
+      currentData.value.showDetail = false;
     }
   }
-
-  currentData.value.showDetail = !currentData.value.showDetail;
 };
 
 const handleLinkClick = (link) => {
