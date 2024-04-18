@@ -1,6 +1,6 @@
 <template>
   <div class="electricity-price-analysis">
-    <div class="filter">
+    <div class="filter-form">
       <div class="select select-p">
         <span class="select__title">地区</span>
         <el-select
@@ -61,18 +61,18 @@
       />
       <div class="export-image" @click="exportResult">导出图片</div>
     </div>
+    <div
+      v-loading="loading"
+      id="my-chart_electricity-price-analysis"
+      ref="myeCharts1"
+    />
+    <ExportCanvasDialog
+      :visible="exportVisible"
+      :img-url="exportImgUrl"
+      :img-title="exportImgTitle"
+      @close="exportVisible = false"
+    />
   </div>
-  <div
-    v-loading="loading"
-    id="my-chart_electricity-price-analysis"
-    ref="myeCharts1"
-  />
-  <ExportCanvasDialog
-    :visible="exportVisible"
-    :img-url="exportImgUrl"
-    :img-title="exportImgTitle"
-    @close="exportVisible = false"
-  />
 </template>
 
 <script lang="ts" setup>
@@ -125,7 +125,7 @@ const seriesName = computed(() => {
     (item: { paramName: string; paramDesc: string }) => {
       return item.paramName === differencePrice;
     },
-  ).paramDesc;
+  )?.paramDesc;
 });
 
 // 获取echarts节点
@@ -366,25 +366,9 @@ onMounted(() => {
 @import "@/style/mixin.scss";
 
 .electricity-price-analysis {
-  .price-type {
-    @include flex(center, flex-start);
+  padding-bottom: 80px;
 
-    .price-type__item {
-      @include margin(0, 32px, 0, 0);
-      @include padding(6px, 0, 10px, 0);
-      @include font(16px, 400, #5b6985, 24px);
-      transition: all 0.2s;
-      cursor: pointer;
-      border-bottom: 2px solid rgba(0, 0, 0, 0);
-    }
-
-    .price-type__item-chose {
-      @include font(16px, 600, #1d232e, 24px);
-      border-bottom: 2px solid #2d5cf6;
-    }
-  }
-
-  .filter {
+  .filter-form {
     @include flex(center, space-between);
     @include margin(24px, 0, 24px, 0);
 
@@ -408,6 +392,18 @@ onMounted(() => {
         @include margin(0, 44px, 0, 0);
         @include margin(0, 44px, 0, 0);
         @include font(14px, 400, #5b6985, 22px);
+      }
+
+      ::v-deep(.no-close-one) {
+        .el-select__tags {
+          .el-tag__close {
+            display: none;
+          }
+        }
+
+        .el-tag {
+          padding-right: 9px !important;
+        }
       }
 
       .select__content {
@@ -437,11 +433,8 @@ onMounted(() => {
     }
   }
 
-  .flex {
-    @include flex(center, space-between);
-  }
-
   .small-price-type {
+    @include flex(center, space-between);
     @include margin(0, 0, 16px, 0);
 
     ::v-deep(.select) {
@@ -449,29 +442,16 @@ onMounted(() => {
         @include margin(0, 16px, 0, 0);
       }
     }
-  }
 
-  .export-image {
-    @include box(5px 12px, none, #2d5cf6, 4px);
-    @include font(14px, 400, #ffffff, 22px);
-    cursor: pointer;
+    .export-image {
+      @include box(5px 12px, none, #2d5cf6, 4px);
+      @include font(14px, 400, #ffffff, 22px);
+      cursor: pointer;
+    }
   }
 
   #my-chart_electricity-price-analysis {
     @include widthAndHeight(100%, 518px);
-  }
-
-  ::v-deep(.no-close-one) {
-    .el-select__tags {
-      // padding-right: 9px !important;
-      .el-tag__close {
-        display: none;
-      }
-    }
-
-    .el-tag {
-      padding-right: 9px !important;
-    }
   }
 }
 </style>

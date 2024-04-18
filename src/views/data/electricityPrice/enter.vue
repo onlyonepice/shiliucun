@@ -25,7 +25,7 @@ import { ref, Ref } from "vue";
 import ElectricityAnalysis from "./electricityAnalysis.vue";
 import ElectricityPriceTime from "./electricityPriceTime.vue";
 import ElectricityPricePeriod from "./electricityPricePeriod.vue";
-const chosePriceType = ref(1);
+const chosePriceType = ref(3);
 const priceTypeList: Ref<Array<{ id: number; text: string }>> = ref([
   { id: 1, text: "分时/分月电价" },
   { id: 2, text: "电价分析" },
