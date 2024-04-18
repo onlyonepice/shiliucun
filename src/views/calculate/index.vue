@@ -29,7 +29,10 @@
             <span>{{ item.text }}</span>
           </div>
         </div>
-        <el-button type="primary" @click="downloadReportShow = true"
+        <el-button
+          v-if="false"
+          type="primary"
+          @click="downloadReportShow = true"
           >下载报告</el-button
         >
       </div>

@@ -112,7 +112,28 @@ investmentProgramFn("贴现率");
 investmentProgramFn("测算周期");
 
 const onChangeFilter = (value: any, type: string) => {
-  emits("onChangeFilter", { value, type });
+  if (type === "annualDays") {
+    return emits(
+      "onChangeFilter",
+      yearList.value[Number(value) - 1].paramDesc,
+      type,
+    );
+  }
+  if (type === "bankRate") {
+    return emits(
+      "onChangeFilter",
+      rateList.value[Number(value) - 1].paramDesc,
+      type,
+    );
+  }
+  if (type === "calculationPeriod") {
+    return emits(
+      "onChangeFilter",
+      periodList.value[Number(value) - 1].paramDesc,
+      type,
+    );
+  }
+  emits("onChangeFilter", value, type);
 };
 </script>
 
