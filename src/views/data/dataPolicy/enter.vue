@@ -257,13 +257,14 @@ const handleItemClick = async (index, rowIndex) => {
     });
     if (data.resp_code === 0) {
       pageData.value[index].data[rowIndex].detailData = data.datas;
+      pageData.value[index].data[rowIndex].showDetail = true;
     } else if (data.resp_code === 10027) {
       //观看次数到达上限
       useUserStore().openVip(true);
     }
+  } else {
+    pageData.value[index].data[rowIndex].showDetail = false;
   }
-  pageData.value[index].data[rowIndex].showDetail =
-    !pageData.value[index].data[rowIndex].showDetail;
 };
 const handleLinkClick = (link) => {
   window.open(link);

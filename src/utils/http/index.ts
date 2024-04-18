@@ -142,6 +142,8 @@ class PureHttp {
             // 小程序登录报错兼容
             case 2044:
               break;
+            case 10027:
+              break;
             default:
               if (config.params && config.params.hideError) return data;
               ElMessage.error(data?.resp_msg || "Error");
