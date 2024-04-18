@@ -4,9 +4,10 @@
       @onAnalysis="onAnalysis"
       @onReset="onReset"
       @onAddArea="onAddArea"
+      @getDesc="getDesc"
     />
     <template v-if="filterFinish">
-      <div class="es-calculate-evaluate">
+      <div class="es-calculate-evaluate" v-if="!addAreaType">
         <div class="es-calculate-evaluate__title">
           <h3>测算结果</h3>
           <div
@@ -36,6 +37,7 @@
         :tabsList="tabsList"
         @onHandleClick="onHandleClick"
         :defaultId="choseTab"
+        class="es-calculate-tabs"
       />
       <div v-show="choseTab === 1">
         <Investment
@@ -55,6 +57,7 @@
           <div
             style="overflow-x: scroll; overflow-y: hidden"
             :style="{ display: addAreaType ? 'flex' : 'block' }"
+            v-if="searchResult.internalRateReturn !== null"
           >
             <Estimate
               :addAreaType="addAreaType"
@@ -72,10 +75,25 @@
           </div>
         </template>
         <template v-else>
-          <Proprietor
-            :ownerRevenueEstimateList="ownerRevenueEstimateList"
-            :searchResult="searchResult"
-          />
+          <div
+            style="overflow-x: scroll; overflow-y: hidden"
+            :style="{ display: addAreaType ? 'flex' : 'block' }"
+            v-if="searchResult.contentYield !== null"
+          >
+            <Proprietor
+              :addAreaType="addAreaType"
+              :ownerRevenueEstimateList="ownerRevenueEstimateList"
+              :searchResult="searchResult"
+              :title="addAreaType ? '收益估算A' : '收益估算B'"
+            />
+            <Proprietor
+              v-if="addAreaType"
+              title="收益估算B"
+              :addAreaType="addAreaType"
+              :ownerRevenueEstimateList="ownerRevenueEstimateListB"
+              :searchResult="searchResultB"
+            />
+          </div>
         </template>
       </div>
       <div v-show="choseTab === 2">
@@ -100,9 +118,22 @@
   </div>
   <DownloadReport
     v-if="downloadReportShow"
-    :defaultTitle="searchParams.regionName + '-' + searchParams.reportTitle"
+    :defaultTitle="
+      searchParams.regionName +
+      '-' +
+      searchParams.reportTitle +
+      '-工商业投资回报性分析'
+    "
     @exportAll="onExportAll"
     @handleCancel="downloadReportShow = false"
+  />
+  <Dom
+    v-if="filterFinish"
+    ref="formatDom"
+    class="format-dom"
+    :data="[{ id: 1, ...searchResult }]"
+    :mode="showInfoList[0][0].value"
+    :condition="searchParamsShow"
   />
 </template>
 
@@ -110,6 +141,8 @@
 import { onMounted, Ref, ref, watch } from "vue";
 import Filter from "./filter/enter.vue";
 import Canvas from "./canvas.vue";
+import DownloadReport from "./downLoad/DownloadReport.vue";
+import Dom from "./downLoad/dom.vue";
 import Dissatisfy from "@/assets/img/common/dissatisfy.png";
 import ChoseDissatisfy from "@/assets/img/common/chose-dissatisfy.png";
 import Normal from "@/assets/img/common/normal.png";
@@ -122,6 +155,14 @@ import Proprietor from "./table/proprietor.vue";
 import Investment from "./filter/Investment.vue";
 import { apiAnalyzeSearch, apiComment } from "@/api/investment";
 import { cloneDeep } from "lodash";
+import { stringifyData, getImageInfo } from "@/utils/richText";
+import {
+  WORD_COVER,
+  VALUE_PROPERTY,
+  REPORT_DATA_DOM_TYPE,
+} from "@/utils/downReport";
+import { exportDocument } from "@/utils/docx";
+import { ElMessage } from "element-plus";
 // 展示筛选项内容
 const showInfoList: Ref<Array<Array<any>>> = ref([
   [{ title: "模式分析：", value: "" }],
@@ -134,6 +175,7 @@ const dischargeList: Ref<any> = ref([]); // 充放电量
 const dischargeListB: Ref<any> = ref([]); // 充放电量对比地区
 const downloadReportShow: Ref<boolean> = ref(false); // 下载报告弹窗
 const showInvestment = ref(false);
+const formatDom = ref(null); // dom结构
 // 查询参数
 const searchParams: Ref<any> = ref({
   ownersShare: 10,
@@ -147,6 +189,15 @@ const evaluateList: Ref<any> = ref([
   { id: 3, text: "满意", icon: Satisfaction, choseIcon: ChoseSatisfaction },
 ]); // 评价列表
 const choseEvaluate: Ref<string> = ref(""); // 评价
+const searchParamsShow = ref({}); // 展示筛选项
+// 生成报告
+const report: Ref<any> = ref({
+  reportName: "",
+  reportRootMenu: {},
+  reportSubMenus: [],
+  menuRootId: 1078,
+  menuSort: 0,
+});
 const tabsList = ref([
   { id: 1, name: "金融方案" },
   { id: 2, name: "充放电量" },
@@ -172,6 +223,9 @@ watch(
   },
   { immediate: true },
 );
+const getDesc = (data: any) => {
+  searchParamsShow.value = data;
+};
 // 添加地区对比
 const onAddArea = (type: boolean) => {
   addAreaType.value = type;
@@ -188,6 +242,7 @@ const onEvaluate = async (text: string) => {
       moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
       satisfactionLevel: text,
     });
+    ElMessage.success("感谢您的评价");
   }
 };
 // 修改投资方案筛选项
@@ -202,9 +257,89 @@ function onChangeFilter(data: string, type: string) {
   onSearch();
 }
 // 下载报告
-const onExportAll = (type, value) => {
-  console.log("12131323", type, value);
+const onExportAll = async (type, value) => {
+  await filterTable();
+  let _report = report.value;
+  _report.reportName = value;
+  _report.reportRootMenu = {
+    id: 1078,
+    menuName: "投资回报性分析",
+    menuRootId: 1078,
+    menuSort: 0,
+  };
+  const cover = JSON.parse(WORD_COVER.NORMAL);
+
+  const curTime = new Date().toLocaleDateString().split("/").join("-");
+  _report.updateTime = curTime;
+
+  const { formData, name } = await exportDocument(
+    cloneDeep(_report),
+    VALUE_PROPERTY,
+    {
+      type: "word",
+      menu: false,
+      cover,
+      menuOrder: 2,
+      menuLevel: "1-2",
+    },
+  );
+
+  const a = document.createElement("a");
+  const _url = URL || window.URL || window.webkitURL;
+  a.href = _url.createObjectURL(formData);
+  a.download = name;
+  a.click();
+  _url.revokeObjectURL(a.href);
 };
+const filterTable = async () => {
+  console.log(formatDom.value.getDom());
+  const arr = [];
+  const financialReportsData = formatDom.value.getDom();
+  for (const item of financialReportsData) {
+    if (item.tagName === REPORT_DATA_DOM_TYPE.DOM_TYPE.TABLE) {
+      arr.push({
+        dataContent: await stringifyData(item.outerHTML),
+        dataSort: 1,
+        dataType: REPORT_DATA_DOM_TYPE.DATA_TYPE.TABLE,
+      });
+    } else if (item.tagName === REPORT_DATA_DOM_TYPE.DOM_TYPE.P) {
+      arr.push({
+        dataContent: await stringifyData(item.outerHTML),
+        dataSort: 1,
+        dataType: REPORT_DATA_DOM_TYPE.DATA_TYPE.P,
+      });
+    } else if (item.tagName === REPORT_DATA_DOM_TYPE.DOM_TYPE.IMG) {
+      arr.push({
+        dataContent: await getImageInfo(item.src),
+        dataSort: 1,
+        dataType: REPORT_DATA_DOM_TYPE.DATA_TYPE.IMG,
+      });
+    } else if (item.tagName === REPORT_DATA_DOM_TYPE.DOM_TYPE.DIV) {
+      arr.push({
+        dataContent: await stringifyData(item.outerHTML),
+        dataSort: 1,
+        dataType: REPORT_DATA_DOM_TYPE.DATA_TYPE.DIV,
+      });
+    }
+  }
+  arr.forEach((item) => {
+    if (item.dataType !== REPORT_DATA_DOM_TYPE.DATA_TYPE.IMG) {
+      item.dataContent = JSON.stringify(item.dataContent);
+    }
+  });
+  const finance = {
+    id: 1079,
+    menuName: "中国工商业储能",
+    menuRootId: 1078,
+    menuSort: 1,
+    parentId: 1078,
+    reportMenuData: arr,
+    reportSubMenus: [],
+    state: 1,
+  };
+  report.value.reportSubMenus[0] = finance;
+};
+
 function onSearchData(data: any) {
   searchParams.value = data;
   addAreaType.value = false;
@@ -237,7 +372,7 @@ async function onSearch(type? = false, source?: string) {
     const _discharge = [];
     _data.annualCharge.unshift("-");
     _data.annualDischarge.unshift("-");
-    filterFinish.value = true;
+
     if (showInfoList.value[0][0].value === "EMC合同能源") {
       const _revenueEstimate = [];
       for (let index = 0; index < _data.variationFactor.length; index++) {
@@ -283,6 +418,7 @@ async function onSearch(type? = false, source?: string) {
     } else {
       return (dischargeListB.value = _discharge);
     }
+    filterFinish.value = true;
     if (source === "searchA" && !addAreaType.value) {
       setTimeout(() => {
         searchCanvas.value.getCanvasData(false);
@@ -303,6 +439,7 @@ function onReset() {
 function onAnalysis(data: any, type: string) {
   addAreaType.value = type === "searchB";
   const _showInfoList = showInfoList.value;
+  choseEvaluate.value = "";
   _showInfoList[0][0].value =
     data.patternAnalysis === 1 ? "EMC合同能源" : "业主自投";
   searchParams.value = Object.assign(searchParams.value, data);
@@ -364,5 +501,15 @@ onMounted(() => {
 }
 .scrollbar-flex-content {
   overflow-x: auto;
+}
+.es-calculate-tabs {
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 999;
+}
+.format-dom {
+  position: absolute;
+  z-index: -1;
 }
 </style>

@@ -21,7 +21,7 @@
         <span class="right">{{ currentData.countdown }}</span>
       </div>
     </div>
-    <div class="detail-data" v-if="currentData.showDetail">
+    <div class="detail-data" v-if="currentData.showDetail && detailData">
       <div class="detail_content">
         <div class="detail_content_item">
           <p class="detail_content_item_label">基本信息</p>
@@ -98,16 +98,16 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">联系人</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.tenderingAgencyContactNumber }}
+                {{ detailData.tenderingAgencyContactPerson }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">联系电话</p>
               <p class="detail_content_item_value_item_value">
-                <span>{{ detailData.tenderingAgencyContactPerson }}</span>
+                <span>{{ detailData.tenderingAgencyContactNumber }}</span>
                 <img
                   @click="
-                    copyToClipboard(detailData.tenderingAgencyContactPerson)
+                    copyToClipboard(detailData.tenderingAgencyContactNumber)
                   "
                   class="copy_icon"
                   :src="copy_icon"
@@ -139,7 +139,6 @@
 import copy_icon from "@/assets/img/common/copy_icon.png";
 import lament_icon from "@/assets/img/common/lament_icon.png";
 import right_more from "@/assets/img/common/right-more.png";
-import { windowScrollStore } from "@/store/modules/windowScroll";
 import { useUserStore } from "@/store/modules/user";
 import redNew from "@/assets/img/red_new.png";
 import { ref, watch } from "vue";
@@ -148,7 +147,7 @@ import { cloneDeep } from "lodash";
 import { useRouter } from "vue-router";
 import { getToken } from "@/utils/auth";
 import { getBidFinderDetail } from "@/api/data";
-
+import { ElMessage } from "element-plus";
 function copyToClipboard(text) {
   var textarea: any = document.createElement("textarea");
   textarea.style.position = "fixed";
@@ -158,8 +157,8 @@ function copyToClipboard(text) {
   textarea.select();
   document.execCommand("copy");
   document.body.removeChild(textarea);
+  ElMessage.success("复制成功");
 }
-const windowStore = windowScrollStore();
 const ns = useNamespace("biddingDynamicsList");
 const router = useRouter();
 const props = defineProps({
@@ -190,25 +189,24 @@ const handleVipClick = () => {
   router.push("/vip");
 };
 const currentData = ref<dataType>({});
-watch(
-  () => props.pageData,
-  (newVal) => {
-    currentData.value = cloneDeep(newVal);
-  },
-  { deep: true, immediate: true },
-);
+
 const detailData = ref(null);
 
 const handleSetDetailShowClick = async () => {
+  if ("showDetail" in props.pageData === false) {
+    router.push({
+      path: "/dataTender",
+      query: {
+        id: currentData.value.id,
+      },
+    });
+    return;
+  }
   if (currentData.value.showDetail) {
-    windowStore.SET_SCROLL_TOP(windowStore.scrollTop - 579);
+    currentData.value.showDetail = false;
   } else {
     if (!getToken()) {
       useUserStore().openLogin(true);
-      return;
-    }
-    if (!currentData.value.isPermissions) {
-      useUserStore().openVip(true);
       return;
     }
     useUserStore().permissionList.forEach((item) => {
@@ -216,29 +214,35 @@ const handleSetDetailShowClick = async () => {
         isVip.value = item.permission;
       }
     });
-    if ("showDetail" in props.pageData === false) {
-      router.push({
-        path: "/dataTender",
-        query: {
-          id: currentData.value.id,
-        },
-      });
-      return;
-    }
-    if (!detailData.value) {
-      const data = await getBidFinderDetail({ id: currentData.value.id });
-      if (data.resp_code === 0) {
-        detailData.value = data.datas;
-      }
+
+    const data = await getBidFinderDetail({ id: currentData.value.id });
+    if (data.resp_code === 0) {
+      detailData.value = data.datas;
+      currentData.value.showDetail = true;
+    } else if (data.resp_code === 10027) {
+      //观看次数到达上限
+      useUserStore().openVipTitle =
+        "当日的查看次数已达到上限，请开通VIP继续查看。";
+      useUserStore().openVip(true);
+      currentData.value.showDetail = false;
     }
   }
-
-  currentData.value.showDetail = !currentData.value.showDetail;
 };
 
 const handleLinkClick = (link) => {
   window.open(link);
 };
+watch(
+  () => props.pageData,
+  (newVal) => {
+    currentData.value = cloneDeep(newVal);
+    if (newVal?.showDetail === true) {
+      currentData.value.showDetail = false;
+      handleSetDetailShowClick();
+    }
+  },
+  { deep: true, immediate: true },
+);
 </script>
 
 <style lang="scss" scoped>

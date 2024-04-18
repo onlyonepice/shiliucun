@@ -142,6 +142,7 @@ const ns = useNamespace("dataSearch");
 import { getBidFinderApi, getTenderLookupApi } from "@/api/data";
 import { useRoute } from "vue-router";
 import { cloneDeep } from "lodash";
+import { windowScrollStore } from "@/store/modules/windowScroll";
 const route = useRoute();
 const loading = ref(false);
 const filterParams = ref({
@@ -158,7 +159,7 @@ const defaultProps = ref({
   value: "paramValue",
 });
 const page = ref(1);
-const limit = ref(10);
+const limit = ref(20);
 const total = ref(0);
 const onSearch = () => {
   page.value = 1;
@@ -193,7 +194,7 @@ const getData = async () => {
   if (data.resp_code === 0) {
     total.value = data.datas.total;
     pageData.value = data.datas.records.map((item) => {
-      item.showDetail = route.query.id === item.id && item.isPermissions;
+      item.showDetail = route.query.id === item.id;
       return item;
     });
   }
@@ -289,6 +290,7 @@ const handleShowAllClick = (key, _data) => {
 const onchangeCurrent = (e) => {
   page.value = e;
   getData();
+  windowScrollStore().SET_SCROLL_TOP(0);
 };
 const changeYearRangeTag = (e, row) => {
   if (!e.policyQuantity) return;

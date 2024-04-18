@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="开通VIP会员，继续使用该功能。"
+    :title="title"
     :class="ns.b()"
     :show-close="false"
     :close-on-click-modal="false"
@@ -30,6 +30,10 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
+  },
+  title: {
+    type: String,
+    default: "开通VIP会员，继续使用该功能。",
   },
 });
 watch(
@@ -64,6 +68,11 @@ const handleClose = (type: boolean) => {
     font-weight: 600;
     line-height: 26px;
     color: rgba(0, 0, 0, 1);
+  }
+  .el-dialog__footer {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
   }
   .el-dialog__body {
     height: 80px;
