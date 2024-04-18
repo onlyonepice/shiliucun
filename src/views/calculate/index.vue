@@ -4,6 +4,7 @@
       @onAnalysis="onAnalysis"
       @onReset="onReset"
       @onAddArea="onAddArea"
+      @getDesc="getDesc"
     />
     <template v-if="filterFinish">
       <div class="es-calculate-evaluate">
@@ -28,10 +29,7 @@
             <span>{{ item.text }}</span>
           </div>
         </div>
-        <el-button
-          v-if="false"
-          type="primary"
-          @click="downloadReportShow = true"
+        <el-button type="primary" @click="downloadReportShow = true"
           >下载报告</el-button
         >
       </div>
@@ -118,7 +116,7 @@
     class="format-dom"
     :data="[{ id: 1, ...searchResult }]"
     :mode="showInfoList[0][0].value"
-    :condition="searchParams"
+    :condition="searchParamsShow"
   />
 </template>
 
@@ -140,7 +138,12 @@ import Proprietor from "./table/proprietor.vue";
 import Investment from "./filter/Investment.vue";
 import { apiAnalyzeSearch, apiComment } from "@/api/investment";
 import { cloneDeep } from "lodash";
-import { WORD_COVER, VALUE_PROPERTY } from "@/utils/downReport";
+import { stringifyData, getImageInfo } from "@/utils/richText";
+import {
+  WORD_COVER,
+  VALUE_PROPERTY,
+  REPORT_DATA_DOM_TYPE,
+} from "@/utils/downReport";
 import { exportDocument } from "@/utils/docx";
 // 展示筛选项内容
 const showInfoList: Ref<Array<Array<any>>> = ref([
@@ -154,6 +157,7 @@ const dischargeList: Ref<any> = ref([]); // 充放电量
 const dischargeListB: Ref<any> = ref([]); // 充放电量对比地区
 const downloadReportShow: Ref<boolean> = ref(false); // 下载报告弹窗
 const showInvestment = ref(false);
+const formatDom = ref(null); // dom结构
 // 查询参数
 const searchParams: Ref<any> = ref({
   ownersShare: 10,
@@ -167,6 +171,7 @@ const evaluateList: Ref<any> = ref([
   { id: 3, text: "满意", icon: Satisfaction, choseIcon: ChoseSatisfaction },
 ]); // 评价列表
 const choseEvaluate: Ref<string> = ref(""); // 评价
+const searchParamsShow = ref({}); // 展示筛选项
 // 生成报告
 const report: Ref<any> = ref({
   reportName: "",
@@ -200,6 +205,9 @@ watch(
   },
   { immediate: true },
 );
+const getDesc = (data: any) => {
+  searchParamsShow.value = data;
+};
 // 添加地区对比
 const onAddArea = (type: boolean) => {
   addAreaType.value = type;
@@ -231,11 +239,11 @@ function onChangeFilter(data: string, type: string) {
 }
 // 下载报告
 const onExportAll = async (type, value) => {
+  await filterTable();
   let _report = report.value;
-  console.log("=====", value);
   _report.reportName = value;
   _report.reportRootMenu = {
-    id: 1079,
+    id: 1078,
     menuName: "投资回报性分析",
     menuRootId: 1078,
     menuSort: 0,
@@ -264,6 +272,55 @@ const onExportAll = async (type, value) => {
   a.click();
   _url.revokeObjectURL(a.href);
 };
+const filterTable = async () => {
+  console.log(formatDom.value.getDom());
+  const arr = [];
+  const financialReportsData = formatDom.value.getDom();
+  for (const item of financialReportsData) {
+    if (item.tagName === REPORT_DATA_DOM_TYPE.DOM_TYPE.TABLE) {
+      arr.push({
+        dataContent: await stringifyData(item.outerHTML),
+        dataSort: 1,
+        dataType: REPORT_DATA_DOM_TYPE.DATA_TYPE.TABLE,
+      });
+    } else if (item.tagName === REPORT_DATA_DOM_TYPE.DOM_TYPE.P) {
+      arr.push({
+        dataContent: await stringifyData(item.outerHTML),
+        dataSort: 1,
+        dataType: REPORT_DATA_DOM_TYPE.DATA_TYPE.P,
+      });
+    } else if (item.tagName === REPORT_DATA_DOM_TYPE.DOM_TYPE.IMG) {
+      arr.push({
+        dataContent: await getImageInfo(item.src),
+        dataSort: 1,
+        dataType: REPORT_DATA_DOM_TYPE.DATA_TYPE.IMG,
+      });
+    } else if (item.tagName === REPORT_DATA_DOM_TYPE.DOM_TYPE.DIV) {
+      arr.push({
+        dataContent: await stringifyData(item.outerHTML),
+        dataSort: 1,
+        dataType: REPORT_DATA_DOM_TYPE.DATA_TYPE.DIV,
+      });
+    }
+  }
+  arr.forEach((item) => {
+    if (item.dataType !== REPORT_DATA_DOM_TYPE.DATA_TYPE.IMG) {
+      item.dataContent = JSON.stringify(item.dataContent);
+    }
+  });
+  const finance = {
+    id: 1079,
+    menuName: "中国工商业储能",
+    menuRootId: 1078,
+    menuSort: 1,
+    parentId: 1078,
+    reportMenuData: arr,
+    reportSubMenus: [],
+    state: 1,
+  };
+  report.value.reportSubMenus[0] = finance;
+};
+
 function onSearchData(data: any) {
   searchParams.value = data;
   addAreaType.value = false;

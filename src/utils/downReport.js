@@ -78,7 +78,7 @@ export const WORD_SETTING = {
         borderStyle: {
           color: "DEE1E8",
           style: BorderStyle.SINGLE,
-          size: 8,
+          size: 16,
         },
         head: "table-header",
       },
@@ -165,10 +165,26 @@ export const getJsonData = (data) => {
 };
 export const WORD_COVER = {
   NORMAL:
-    '[{"class":"Paragraph","frame":{"anchor":{"horizontal":"PAGE","vertical":"PAGE"},"width":"535.5pt","height":"780pt","position":{"y":"30pt","x":"30pt"}},"border":{"left":{"style":"single","color":"1D3B80","size":5},"top":{"style":"single","color":"1D3B80","size":5},"bottom":{"style":"single","color":"1D3B80","size":5},"right":{"style":"single","color":"1D3B80","size":5}},"children":[{"class":"ImageRun","data":"https://oss.eesaenergy.com/eesa/ci/static/report/word-img-header.png","transformation":{"width":88,"height":40},"floating":{"horizontalPosition":{"relative":"PAGE","offset":760000},"verticalPosition":{"relative":"CHARACTER","offset":760000},"behindDocument":true,"layoutInCell":true,"wrap":{"type":"TOP_AND_BOTTOM","side":"BOTH_SIDES"}}}]},{"class":"Paragraph","frame":{"anchor":{"horizontal":"PAGE","vertical":"PAGE"},"width":"567pt","height":"180pt","position":{"x":"0pt","y":"210pt"}},"shading":{"fill":"1D3B80","type":"pct50"}},{"class":"Paragraph","frame":{"anchor":{"horizontal":"PAGE","vertical":"PAGE"},"width":"420pt","height":"72pt","position":{"x":"60pt","y":"240pt"}},"children":[{"class":"TextRun","text":"$report.reportName","size":"24pt","font":"微软雅黑","color":"ffffff","bold":true},{"class":"TextRun","text":"$report.reportSubtitle","size":"18pt","font":"微软雅黑","color":"ffffff","break":1}],"alignment":"LEFT"},{"class":"Paragraph","frame":{"height":"16.5pt","anchor":{"horizontal":"PAGE","vertical":"PAGE"},"position":{"x":"60pt","y":"420pt"}},"alignment":"LEFT","children":[{"class":"TextRun","text":"储能领跑者联盟","size":"12pt","font":"微软雅黑","color":"011617"},{"class":"TextRun","text":" ","size":"3pt"},{"class":"TextRun","text":"www.eesaenergy.com","size":"12pt","font":"微软雅黑","color":"011617","break":1}]},{"class":"Paragraph","frame":{"width":"150pt","height":"16.5pt","anchor":{"horizontal":"PAGE","vertical":"PAGE"},"position":{"x":"386.25pt","y":"420pt"}},"alignment":"RIGHT","children":[{"class":"TextRun","text":"编撰日期：","size":"12pt","font":"微软雅黑","color":"011617"},{"class":"TextRun","text":"$report.updateTime","size":"11pt","font":"微软雅黑","color":"011617"}]},{"class":"Paragraph","frame":{"width":"120pt","height":"24pt","anchor":{"horizontal":"PAGE","vertical":"PAGE"},"position":{"x":"447pt","y":"785.25pt"}},"shading":{"fill":"1D3B80","type":"pct50"},"alignment":"CENTER","spacing":{"line":240,"lineRule":"auto"},"children":[{"class":"TextRun","text":"一心向储 · 坚定不移","size":"10.5pt","font":"微软雅黑","color":"ffffff"}]}]',
+    '[{"class":"Paragraph","frame":{"anchor":{"horizontal":"PAGE","vertical":"PAGE"},"width":"535.5pt","height":"780pt","position":{"y":"30pt","x":"30pt"}},"border":{"left":{"style":"single","color":"1D3B80","size":5},"top":{"style":"single","color":"1D3B80","size":5},"bottom":{"style":"single","color":"1D3B80","size":5},"right":{"style":"single","color":"1D3B80","size":5}},"children":[{"class":"ImageRun","data":"https://oss.eesaenergy.com/eesa/ci/static/report/word-img-header.png","transformation":{"width":88,"height":40},"floating":{"horizontalPosition":{"relative":"PAGE","offset":760000},"verticalPosition":{"relative":"CHARACTER","offset":760000},"behindDocument":true,"layoutInCell":true,"wrap":{"type":"TOP_AND_BOTTOM","side":"BOTH_SIDES"}}}]},{"class":"Paragraph","frame":{"anchor":{"horizontal":"PAGE","vertical":"PAGE"},"width":"567pt","height":"180pt","position":{"x":"0pt","y":"210pt"}},"shading":{"fill":"1D3B80","type":"pct50"}},{"class":"Paragraph","frame":{"anchor":{"horizontal":"PAGE","vertical":"PAGE"},"width":"420pt","height":"72pt","position":{"x":"60pt","y":"240pt"}},"children":[{"class":"TextRun","text":"$report.reportName","size":"42pt","font":"微软雅黑","color":"ffffff","bold":true},{"class":"TextRun","text":"$report.reportSubtitle","size":"18pt","font":"微软雅黑","color":"ffffff","break":1}],"alignment":"LEFT"},{"class":"Paragraph","frame":{"height":"16.5pt","anchor":{"horizontal":"PAGE","vertical":"PAGE"},"position":{"x":"60pt","y":"420pt"}},"alignment":"LEFT","children":[{"class":"TextRun","text":"储能领跑者联盟","size":"22pt","font":"微软雅黑","color":"011617"},{"class":"TextRun","text":" ","size":"3pt"},{"class":"TextRun","text":"www.eesaenergy.com","size":"22pt","font":"微软雅黑","color":"011617","break":1}]},{"class":"Paragraph","frame":{"width":"150pt","height":"16.5pt","anchor":{"horizontal":"PAGE","vertical":"PAGE"},"position":{"x":"386.25pt","y":"420pt"}},"alignment":"RIGHT","children":[{"class":"TextRun","text":"编撰日期：","size":"22pt","font":"微软雅黑","color":"011617"},{"class":"TextRun","text":"$report.updateTime","size":"21pt","font":"微软雅黑","color":"011617"}]},{"class":"Paragraph","frame":{"width":"120pt","height":"24pt","anchor":{"horizontal":"PAGE","vertical":"PAGE"},"position":{"x":"447pt","y":"785.25pt"}},"shading":{"fill":"1D3B80","type":"pct50"},"alignment":"CENTER","spacing":{"line":240,"lineRule":"auto"},"children":[{"class":"TextRun","text":"一心向储 · 坚定不移","size":"24pt","font":"微软雅黑","color":"ffffff"}]}]',
 };
 
 export const PREVIEW_TYPE = {
   NORMAL: "html",
   WORD: "word",
+};
+
+export const REPORT_DATA_DOM_TYPE = {
+  DATA_TYPE: {
+    IMG: "2",
+    P: "1",
+    DIV: "1",
+    TABLE: "3",
+  },
+  DOM_TYPE: {
+    IMG: "IMG",
+    TABLE: "TABLE",
+    P: "P",
+    DIV: "DIV",
+    CODE: "CODE",
+  },
 };

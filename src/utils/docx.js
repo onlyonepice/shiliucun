@@ -426,7 +426,7 @@ const insertTable = (data, order) => {
                   children: [
                     new TextRun({
                       text: " ",
-                      size: pxToPt("9pt"),
+                      size: pxToPt("14pt"),
                       font: characterSizeDict.FONT_NORMAL,
                     }),
                   ],
@@ -440,7 +440,7 @@ const insertTable = (data, order) => {
                   children: [
                     new TextRun({
                       text: tdNode.content,
-                      size: pxToPt("9pt"),
+                      size: pxToPt("14pt"),
                       color: getTableCellTextColor(td.attrs, trIndex),
                       font: characterSizeDict.FONT_NORMAL,
                       bold: getTableCellTextBold(td.attrs, trIndex),
@@ -511,7 +511,7 @@ const insertTable = (data, order) => {
         children: [
           new TextRun({
             text: `表 ${order}  ${tableOrder}`,
-            size: pxToPt("9pt"),
+            size: pxToPt("14pt"),
             font: characterSizeDict.FONT_NORMAL,
           }),
         ],
@@ -541,12 +541,12 @@ const insertTable = (data, order) => {
         children: [
           new TextRun({
             text: "数据来源：",
-            size: pxToPt("9pt"),
+            size: pxToPt("14pt"),
             font: characterSizeDict.FONT_NORMAL,
           }),
           new TextRun({
             text: `${tableSource}`,
-            size: pxToPt("9pt"),
+            size: pxToPt("14pt"),
             font: characterSizeDict.FONT_NORMAL,
           }),
         ],
@@ -735,7 +735,7 @@ const insertImage = ({ img: dataContent }, order) => {
             children: [
               new TextRun({
                 text: `图 ${order}  ${dataContent.title ? dataContent.title.text : dataContent.order}`,
-                size: pxToPt("9pt"),
+                size: pxToPt("14pt"),
                 font: characterSizeDict.FONT_NORMAL,
               }),
             ],
@@ -814,7 +814,7 @@ const chapterDict = (option, data) => {
 const pxToPt = (num) => {
   if (endsWith(num, "px")) {
     const numCount = num.split("px")[0];
-    return `${numCount * 0.75}pt`;
+    return `${numCount}pt`;
   }
   return num;
 };
@@ -1096,7 +1096,7 @@ const convertToWord = async (data, parent, properties = {}) => {
                   children: [
                     new TextRun({
                       text: "www.eesaenergy.com",
-                      size: "9pt",
+                      size: "14pt",
                     }),
                   ],
                   link: "https://www.eesaenergy.com",
@@ -1322,7 +1322,7 @@ export const exportWord = (sections, wordName = "报告", username) => {
               quickFormat: true,
               run: {
                 color: "000000",
-                size: "9pt",
+                size: "14pt",
                 font: characterSizeDict.FONT_NORMAL,
               },
               paragraph: {
@@ -1380,7 +1380,7 @@ export const appendParagraph = (text = "", option = {}) => {
 export const appendText = (text = "", option = {}) => {
   return new TextRun({
     font: characterSizeDict.FONT_NORMAL,
-    size: pxToPt("9pt"),
+    size: pxToPt("14pt"),
     text,
     ...option,
   });
