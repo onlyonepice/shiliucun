@@ -482,17 +482,7 @@ const onReset = () => {
   filterData.value = {
     patternAnalysis: 0,
   };
-  searchParams.value = {
-    regionName: "", // 地区
-    electricityTypeOneName: "", // 用电类型1
-    electricityTypeTwoName: "", // 用电类型2
-    tariffLevelId: "", // 期望接入电压等级
-    choseProduct: "", // 选择产品
-    number: null, // 配置数量
-    systemUnitPrice: "", // 系统单价
-
-    chargeDischargeIdentifying: "",
-  };
+  searchParams.value = {};
   disabledUser.value = true;
   disabledProduct.value = true;
   filterFinish.value = false;
