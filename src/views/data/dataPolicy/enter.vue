@@ -260,6 +260,8 @@ const handleItemClick = async (index, rowIndex) => {
       pageData.value[index].data[rowIndex].showDetail = true;
     } else if (data.resp_code === 10027) {
       //观看次数到达上限
+      useUserStore().openVipTitle =
+        "当日的查看次数已达到上限，请开通VIP继续查看。";
       useUserStore().openVip(true);
     }
   } else {
