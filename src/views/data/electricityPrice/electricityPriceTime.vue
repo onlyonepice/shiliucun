@@ -567,11 +567,10 @@ function handleTOUData() {
     options.grid = { bottom: "150", top: "80" };
     options.legend = {
       ...options.legend,
+      y: "78%",
       data: _data.map((item) => {
-        item.icon = null;
-        return item;
+        return { ...item, icon: null };
       }),
-      bottom: "100",
     };
     options.xAxis = {
       data: xAxisData,
@@ -610,6 +609,7 @@ function handleTOUData() {
         return `<div style="${titleStyle}">${startTime}-${endTime}</div>${contentText}`;
       },
     };
+    console.log(options.legend);
     clearEchart();
     const myChart = echarts.init(
       document.getElementById("my-chart_electricity-price") as any,
@@ -721,7 +721,7 @@ function handleMonthData() {
   options.title[0].text = title;
   options.title[0].subtext = subtitle;
   options.title[1] = titleTwo.value;
-  options.legend = { ...options.legend, data: _data };
+  options.legend = { ...options.legend, y: "78%", data: _data };
   options.grid = { bottom: "150", top: "80" };
   options.color = _color;
   options.xAxis = {
@@ -825,7 +825,7 @@ function handlePriceDifferenceData() {
   options.title[0].text = title;
   options.title[0].subtext = subtitle;
   options.grid = { bottom: "80", top: "80" };
-  options.legend = { ...options.legend, data: _data, bottom: "10" };
+  options.legend = { ...options.legend, data: _data };
   options.color = _color;
   options.xAxis = {
     ...options.xAxis,
