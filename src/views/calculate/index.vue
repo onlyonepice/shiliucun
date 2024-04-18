@@ -456,6 +456,7 @@ async function onSearch(type? = false, source?: string) {
         annualDischarge: _data.annualDischarge[index],
       });
     }
+    _discharge.shift();
     if (source === "searchA") {
       dischargeList.value = _discharge;
     } else {
