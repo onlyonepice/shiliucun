@@ -6,15 +6,13 @@
     <el-button @click="handleFinancingClick('BUSINESS_INDUSTRY')" type="primary"
       >申请融资</el-button
     >
-    <img
-      class="financing_plan_three"
-      @click="handleFinancingClick('PHOTOVOLTAIC')"
-      :src="financing_plan_three"
-      alt=""
-    />
-    <el-button type="primary">申请融资</el-button>
+    <img class="financing_plan_three" :src="financing_plan_three" alt="" />
+    <el-button type="primary" @click="handleFinancingClick('PHOTOVOLTAIC')"
+      >申请融资</el-button
+    >
   </div>
   <el-drawer
+    v-if="drawer"
     :custom-class="ns.b('drawer')"
     append-to-body
     lock-scroll
@@ -33,7 +31,6 @@
         :rules="rules"
         label-width="auto"
         class="demo-ruleForm"
-        :size="formSize"
         status-icon
       >
         <el-form-item label="企业名称" prop="enterpriseName">
@@ -41,11 +38,24 @@
         </el-form-item>
         <el-form-item label="企业所在地" prop="locationEnterprise">
           <el-select placeholder="请选择" v-model="ruleForm.locationEnterprise">
-            <el-option label="Zone one" value="shanghai" />
-            <el-option label="Zone two" value="beijing" />
+            <el-option
+              v-for="item in regions"
+              :key="item.code"
+              :label="item.name"
+              :value="item.name"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="新建储能电站规模" prop="energyStorageScale">
+        <el-form-item
+          v-if="ruleForm.type === 'BUSINESS_INDUSTRY'"
+          label="新建储能电站规模"
+          prop="energyStorageScale"
+        >
+          <el-input placeholder="请输入" v-model="ruleForm.energyStorageScale">
+            <template #append>MWh</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item v-else label="新建光伏规模" prop="energyStorageScale">
           <el-input placeholder="请输入" v-model="ruleForm.energyStorageScale">
             <template #append>MW</template>
           </el-input>
@@ -78,7 +88,7 @@
     </template>
     <template #footer>
       <div>
-        <el-button @click="resetForm(ruleFormRef)">取消</el-button>
+        <el-button @click="closeDrawer">取消</el-button>
 
         <el-button type="primary" @click="submitForm(ruleFormRef)">
           提交
@@ -89,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import financing_plan_one from "@/assets/img/financingPlan/financing_plan_one.png";
 import financing_plan_two from "@/assets/img/financingPlan/financing_plan_two.png";
@@ -97,19 +107,19 @@ import financing_plan_three from "@/assets/img/financingPlan/financing_plan_thre
 import { REGEXP, regMobile, regEmail } from "@/utils/rule";
 import { sddFindList } from "@/api/financingPlan";
 import { ElMessage, type FormInstance } from "element-plus";
+import { getAreaApi } from "@/api/user";
 const typeConfig = {
   BUSINESS_INDUSTRY: "工商业储能",
   PHOTOVOLTAIC: "分布式光伏",
 };
 const ns = useNamespace("financing-plan");
-const drawer = ref(true);
+const drawer = ref(false);
 const handleClose = () => {
   drawer.value = false;
 };
 
-const formSize = ref("default");
 const ruleFormRef = ref<FormInstance>();
-const ruleForm = reactive({
+const ruleForm = ref({
   locationEnterprise: "",
   enterpriseName: "",
   energyStorageScale: "",
@@ -121,6 +131,9 @@ const ruleForm = reactive({
   type: "BUSINESS_INDUSTRY",
 });
 
+const closeDrawer = () => {
+  drawer.value = false;
+};
 const rules = reactive({
   enterpriseName: [
     { required: true, message: "请输入", trigger: ["input", "blur"] },
@@ -188,12 +201,28 @@ const rules = reactive({
     },
   ],
 });
+watch(
+  () => drawer.value,
+  (newVal) => {
+    if (newVal === false) {
+      ruleFormRef.value.resetFields();
+    }
+  },
+);
+let regions = ref([]);
+const getAreaFn = async () => {
+  const data = await getAreaApi({ level: 4, page: 1, limit: 1000, pcode: 156 });
+  console.log(data);
+  if (data.resp_code === 0) {
+    regions.value = data.datas.records;
+  }
+};
 const handleFinancingClick = (type) => {
-  ruleForm.type = type;
+  ruleForm.value.type = type;
   drawer.value = true;
 };
 const submitForm = async (formEl: FormInstance | undefined) => {
-  console.log(ruleForm);
+  console.log(ruleForm.value);
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
@@ -204,16 +233,14 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   });
 };
 const submitFn = async () => {
-  const data = await sddFindList(ruleForm);
+  const data = await sddFindList(ruleForm.value);
   if (data.resp_code === 0) {
+    drawer.value = false;
     ElMessage.success("提交成功");
   }
 };
 
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.resetFields();
-};
+getAreaFn();
 </script>
 
 <style lang="scss" scoped>
@@ -257,5 +284,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
     color: rgba(0, 0, 0, 0.9);
     line-height: 24px;
   }
+}
+.el-drawer__footer {
+  border-top: 1px solid #dbdce2;
+  padding-top: 23px;
 }
 </style>

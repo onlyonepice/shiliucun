@@ -36,12 +36,12 @@
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-  border-color: #244bf1;
-  background-color: #244bf1;
+  border-color: #244bf1 !important;
+  background-color: #244bf1 !important;
 }
 
 .el-radio__input.is-checked+.el-radio__label {
-  color: #244bf1;
+  color: #244bf1 !important;
 }
 
 .el-select .el-select__wrapper {
