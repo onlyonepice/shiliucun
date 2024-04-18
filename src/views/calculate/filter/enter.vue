@@ -458,14 +458,16 @@ const getDesc = () => {
   const _searchParamsShow: any = {};
   const _searchParams = searchParams.value;
   _searchParamsShow.regionName = _searchParams.regionName;
-  _searchParamsShow.electricityTypeOneName =
-    electricityType1.value.find(
-      (item: any) => item.paramName === _searchParams.electricityTypeOneName,
-    ).paramDesc || "";
-  _searchParamsShow.electricityTypeTwoName =
-    electricityType2.value.find(
-      (item: any) => item.paramName === _searchParams.electricityTypeTwoName,
-    ).paramDesc || "";
+  electricityType1.value.length !== 0 &&
+    (_searchParamsShow.electricityTypeOneName =
+      electricityType1.value.find(
+        (item: any) => item.paramName === _searchParams.electricityTypeOneName,
+      ).paramDesc || "");
+  electricityType2.value.length !== 0 &&
+    (_searchParamsShow.electricityTypeTwoName =
+      electricityType2.value.find(
+        (item: any) => item.paramName === _searchParams.electricityTypeTwoName,
+      ).paramDesc || "");
   _searchParamsShow.tariffLevelId =
     voltageLevel.value.find(
       (item: any) => item.paramName === _searchParams.tariffLevelId,

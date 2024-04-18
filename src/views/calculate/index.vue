@@ -7,7 +7,7 @@
       @getDesc="getDesc"
     />
     <template v-if="filterFinish">
-      <div class="es-calculate-evaluate">
+      <div class="es-calculate-evaluate" v-if="!addAreaType">
         <div class="es-calculate-evaluate__title">
           <h3>测算结果</h3>
           <div
@@ -37,6 +37,7 @@
         :tabsList="tabsList"
         @onHandleClick="onHandleClick"
         :defaultId="choseTab"
+        class="es-calculate-tabs"
       />
       <div v-show="choseTab === 1">
         <Investment
@@ -56,6 +57,7 @@
           <div
             style="overflow-x: scroll; overflow-y: hidden"
             :style="{ display: addAreaType ? 'flex' : 'block' }"
+            v-if="searchResult.internalRateReturn !== null"
           >
             <Estimate
               :addAreaType="addAreaType"
@@ -73,10 +75,25 @@
           </div>
         </template>
         <template v-else>
-          <Proprietor
-            :ownerRevenueEstimateList="ownerRevenueEstimateList"
-            :searchResult="searchResult"
-          />
+          <div
+            style="overflow-x: scroll; overflow-y: hidden"
+            :style="{ display: addAreaType ? 'flex' : 'block' }"
+            v-if="searchResult.contentYield !== null"
+          >
+            <Proprietor
+              :addAreaType="addAreaType"
+              :ownerRevenueEstimateList="ownerRevenueEstimateList"
+              :searchResult="searchResult"
+              :title="addAreaType ? '收益估算A' : '收益估算B'"
+            />
+            <Proprietor
+              v-if="addAreaType"
+              title="收益估算B"
+              :addAreaType="addAreaType"
+              :ownerRevenueEstimateList="ownerRevenueEstimateListB"
+              :searchResult="searchResultB"
+            />
+          </div>
         </template>
       </div>
       <div v-show="choseTab === 2">
@@ -353,7 +370,7 @@ async function onSearch(type? = false, source?: string) {
     const _discharge = [];
     _data.annualCharge.unshift("-");
     _data.annualDischarge.unshift("-");
-    filterFinish.value = true;
+
     if (showInfoList.value[0][0].value === "EMC合同能源") {
       const _revenueEstimate = [];
       for (let index = 0; index < _data.variationFactor.length; index++) {
@@ -399,6 +416,7 @@ async function onSearch(type? = false, source?: string) {
     } else {
       return (dischargeListB.value = _discharge);
     }
+    filterFinish.value = true;
     if (source === "searchA" && !addAreaType.value) {
       setTimeout(() => {
         searchCanvas.value.getCanvasData(false);
@@ -419,6 +437,7 @@ function onReset() {
 function onAnalysis(data: any, type: string) {
   addAreaType.value = type === "searchB";
   const _showInfoList = showInfoList.value;
+  choseEvaluate.value = "";
   _showInfoList[0][0].value =
     data.patternAnalysis === 1 ? "EMC合同能源" : "业主自投";
   searchParams.value = Object.assign(searchParams.value, data);
@@ -480,6 +499,12 @@ onMounted(() => {
 }
 .scrollbar-flex-content {
   overflow-x: auto;
+}
+.es-calculate-tabs {
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 999;
 }
 .format-dom {
   position: absolute;

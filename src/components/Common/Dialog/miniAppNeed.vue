@@ -5,6 +5,7 @@
     :show-close="false"
     :close-on-click-modal="false"
     :append-to-body="true"
+    style="padding: 0"
   >
     <img :src="MiniAppNeed" :class="ns.b('img')" />
     <div :class="ns.b('empty')" @click="handleClose" />
