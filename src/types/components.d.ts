@@ -12,6 +12,8 @@ declare module 'vue' {
     ConsultationNav: typeof import('./../components/Business/ConsultationNav.vue')['default']
     Dialog: typeof import('./../components/Common/Dialog/index.vue')['default']
     DownloadReport: typeof import('./../components/Common/Dialog/DownloadReport.vue')['default']
+    ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
+    ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCascader: typeof import('element-plus/es')['ElCascader']
     ElCollapse: typeof import('element-plus/es')['ElCollapse']

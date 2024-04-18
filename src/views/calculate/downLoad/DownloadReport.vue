@@ -12,7 +12,7 @@
           ref="input_name"
           v-model.trim="inputVal"
           type="text"
-          placeholder="请输入20字以内的名称"
+          placeholder="请输入名称"
           @focus="inputFocus('input_name')"
           @blur="inputBlur('input_name')"
         />
@@ -52,7 +52,7 @@ import exportPdf from "@/assets/img/common/icon_export_pdf.png";
 import exportWord from "@/assets/img/common/icon_export_word.png";
 import radioFalse from "@/assets/img/common/i-Report-radio-false.png";
 import radioTrue from "@/assets/img/common/i-Report-radio-true.png";
-import { WORD_COVER, PREVIEW_TYPE } from "@/utils/downReport";
+import { WORD_COVER, VALUE_PROPERTY } from "@/utils/downReport";
 import { cloneDeep } from "lodash";
 import { exportDocument } from "@/utils/docx";
 export default {
@@ -65,14 +65,7 @@ export default {
   data() {
     return {
       inputVal: "",
-      report: {
-        id: REPORT_ID.PARENT_ID,
-        reportName: "0",
-        reportSubMenus: [],
-        reportYear: "",
-        reportTags: [],
-        reportSubtitle: "",
-      },
+
       list: [
         {
           flag: true,
@@ -116,52 +109,42 @@ export default {
         const index = this.list.findIndex((item) => item.flag);
         this.type = this.list[index].type;
         if (index === -1) return;
-        this.generateFile();
+        this.$emit("exportAll", this.type, this.inputVal);
       }
     },
     // 生成报告
-    async dataToFile() {
-      let cover = WORD_COVER();
-      console.log("11111111", this.report);
-      this.report.createTime = new Date()
-        .toLocaleDateString()
-        .split("/")
-        .join("-");
+    async createDocument() {
+      const { report } = this;
+      report.reportName = this.inputVal;
+      report.reportRootMenu = {
+        id: 1079,
+        menuName: "投资回报性分析",
+        menuRootId: 1078,
+        menuSort: 0,
+      };
+      const cover = JSON.parse(WORD_COVER.NORMAL);
 
-      const res = await exportDocument(cloneDeep(this.report), VALUE_PROPERTY, {
-        type: PREVIEW_TYPE.WORD,
-        report: "",
-        menu: false,
-        cover,
-      });
-      const wordFile = new window.File([res.formData], `${res.name}.docx`, {
-        type: res.formData.type,
-      });
-      return { wordFile, res };
-    },
-    // 上传文件并下载
-    async generateFile() {
-      try {
-        const { wordFile, res } = await this.dataToFile();
-        convertFile({
-          file: wordFile,
-          fileType: this.type,
-          moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
-        }).then((data) => {
-          this.exportLoading = false;
-          const blob = new Blob([data]);
-          const link = document.createElement("a");
-          link.download = `${res.name + "." + this.type}`;
-          link.style.display = "none";
-          link.href = window.URL.createObjectURL(blob);
-          this.type === "pdf" && (link.target = "_blank");
-          document.body.append(link);
-          link.click();
-          window.URL.revokeObjectURL(link.href);
-        });
-      } catch (error) {
-        return false;
-      }
+      const curTime = new Date().toLocaleDateString().split("/").join("-");
+      report.updateTime = curTime;
+
+      const { formData, name } = await exportDocument(
+        cloneDeep(report),
+        VALUE_PROPERTY,
+        {
+          type: "word",
+          menu: false,
+          cover,
+          menuOrder: 2,
+          menuLevel: "1-2",
+        },
+      );
+
+      const a = document.createElement("a");
+      const _url = URL || window.URL || window.webkitURL;
+      a.href = _url.createObjectURL(formData);
+      a.download = name;
+      a.click();
+      _url.revokeObjectURL(a.href);
     },
 
     handleCancel() {
@@ -198,14 +181,14 @@ export default {
         };
         return false;
       }
-      if (this.inputVal.length > 20) {
-        this.$refs[refName].style["border-color"] = "#F00";
-        this.errTitle = {
-          errTitleText: "请输入20字以内的名称",
-          errTitleShow: true,
-        };
-        return false;
-      }
+      // if (this.inputVal.length > 20) {
+      //   this.$refs[refName].style["border-color"] = "#F00";
+      //   this.errTitle = {
+      //     errTitleText: "请输入20字以内的名称",
+      //     errTitleShow: true,
+      //   };
+      //   return false;
+      // }
       return true;
     },
   },

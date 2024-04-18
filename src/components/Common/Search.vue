@@ -2,6 +2,7 @@
   <div class="el-search-box" :style="{ width: width, height: height }">
     <div class="homeTopSearch">
       <el-input
+        autocomplete="off"
         v-model="value"
         placeholder="请输入关键字…"
         @keyup.enter="onSearch"

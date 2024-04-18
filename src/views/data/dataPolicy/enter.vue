@@ -87,14 +87,17 @@
                 >
                   <div
                     class="policy_item_value"
-                    @click="handleItemClick(row, index, rowIndex)"
+                    @click="handleItemClick(index, rowIndex)"
                   >
                     <p class="policy-name">{{ row.policyName }}</p>
                     <div class="tag-box">
                       <p class="tag">{{ row.typeName }}</p>
                     </div>
                   </div>
-                  <div class="detail-data" v-if="row.showDetail">
+                  <div
+                    class="detail-data"
+                    v-if="row.showDetail && row.detailData"
+                  >
                     <div class="detail_content">
                       <div class="detail_content_item">
                         <p class="detail_content_item_label">基本信息</p>
@@ -104,7 +107,7 @@
                               发布时间
                             </p>
                             <p class="detail_content_item_value_item_value">
-                              {{ row.releaseTime }}
+                              {{ row.detailData.releaseTime }}
                             </p>
                           </div>
                           <div class="detail_content_item_value_item">
@@ -112,18 +115,18 @@
                               发布地区
                             </p>
                             <p class="detail_content_item_value_item_value">
-                              {{ getRegion(row.regionName) }}
+                              {{ getRegion(row.detailData.regionName) }}
                             </p>
                           </div>
                           <div
                             class="detail_content_item_value_item"
-                            v-if="row.allocationStorageRatio"
+                            v-if="row.detailData.allocationStorageRatio"
                           >
                             <p class="detail_content_item_value_item_label">
                               配储比例
                             </p>
                             <p class="detail_content_item_value_item_value">
-                              {{ row.allocationStorageRatio }}
+                              {{ row.detailData.allocationStorageRatio }}
                             </p>
                           </div>
                           <div class="detail_content_item_value_item">
@@ -131,7 +134,9 @@
                               原文链接
                             </p>
                             <p
-                              @click="handleLinkClick(row.originalLink)"
+                              @click="
+                                handleLinkClick(row.detailData.originalLink)
+                              "
                               style="color: #244bf1; cursor: pointer"
                               class="detail_content_item_value_item_value"
                             >
@@ -148,7 +153,7 @@
                               摘要内容
                             </p>
                             <p class="detail_content_item_value_item_value">
-                              {{ row.summary }}
+                              {{ row.detailData.summary }}
                             </p>
                           </div>
                         </div>
@@ -195,6 +200,7 @@ import useNamespace from "@/utils/nameSpace";
 import {
   policyFilterSearch,
   getPolicyByFiltrateNoPagination,
+  getPolicyDetailsApi,
 } from "@/api/data";
 import radio_true from "@/assets/img/common/i-Report-radio-true.png";
 import radio_false from "@/assets/img/common/i-Report-radio-false.png";
@@ -240,19 +246,27 @@ const getRegion = (regionName) => {
 const handleHiddenDetailClick = (index, rowIndex) => {
   pageData.value[index].data[rowIndex].showDetail = false;
 };
-const handleItemClick = async (item, index, rowIndex) => {
+const handleItemClick = async (index, rowIndex) => {
   if (!pageData.value[index].data[rowIndex].showDetail) {
     if (!getToken()) {
       useUserStore().openLogin(true);
       return;
     }
-    if (!pageData.value[index].data[rowIndex].isPermissions) {
+    const data = await getPolicyDetailsApi({
+      id: pageData.value[index].data[rowIndex].id,
+    });
+    if (data.resp_code === 0) {
+      pageData.value[index].data[rowIndex].detailData = data.datas;
+      pageData.value[index].data[rowIndex].showDetail = true;
+    } else if (data.resp_code === 10027) {
+      //观看次数到达上限
+      useUserStore().openVipTitle =
+        "当日的查看次数已达到上限，请开通VIP继续查看。";
       useUserStore().openVip(true);
-      return;
     }
+  } else {
+    pageData.value[index].data[rowIndex].showDetail = false;
   }
-  pageData.value[index].data[rowIndex].showDetail =
-    !pageData.value[index].data[rowIndex].showDetail;
 };
 const handleLinkClick = (link) => {
   window.open(link);
@@ -290,9 +304,15 @@ const getData = async () => {
   const routeId = ref(route.query.id ? route.query.id : null);
 
   if (data.resp_code === 0) {
-    data.datas.forEach((item) => {
-      item.data.forEach((row) => {
-        row.showDetail = row.id === routeId.value && row.isPermissions;
+    data.datas.forEach((item, index) => {
+      item.data.forEach((row, rowIndex) => {
+        if (row.id === routeId.value) {
+          setTimeout(() => {
+            handleItemClick(index, rowIndex);
+          });
+        } else {
+          row.showDetail = false;
+        }
       });
     });
     pageData.value = data.datas;

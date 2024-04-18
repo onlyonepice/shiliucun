@@ -1,3 +1,4 @@
+import hearImg from "@/assets/img/common/word-img-header.png";
 import {
   Document,
   Packer,
@@ -38,6 +39,8 @@ import {
   base64toFile,
   getJsonData,
 } from "./downReport";
+const VUE_APP_IMAGE_URL = "https://oss.eesaenergy.com";
+const VUE_APP_IMAGE_PATH_FIELD = "test";
 
 export const docxDict = {
   width: "width",
@@ -423,7 +426,7 @@ const insertTable = (data, order) => {
                   children: [
                     new TextRun({
                       text: " ",
-                      size: pxToPt("9pt"),
+                      size: pxToPt("14pt"),
                       font: characterSizeDict.FONT_NORMAL,
                     }),
                   ],
@@ -437,7 +440,7 @@ const insertTable = (data, order) => {
                   children: [
                     new TextRun({
                       text: tdNode.content,
-                      size: pxToPt("9pt"),
+                      size: pxToPt("14pt"),
                       color: getTableCellTextColor(td.attrs, trIndex),
                       font: characterSizeDict.FONT_NORMAL,
                       bold: getTableCellTextBold(td.attrs, trIndex),
@@ -508,7 +511,7 @@ const insertTable = (data, order) => {
         children: [
           new TextRun({
             text: `表 ${order}  ${tableOrder}`,
-            size: pxToPt("9pt"),
+            size: pxToPt("14pt"),
             font: characterSizeDict.FONT_NORMAL,
           }),
         ],
@@ -538,12 +541,12 @@ const insertTable = (data, order) => {
         children: [
           new TextRun({
             text: "数据来源：",
-            size: pxToPt("9pt"),
+            size: pxToPt("14pt"),
             font: characterSizeDict.FONT_NORMAL,
           }),
           new TextRun({
             text: `${tableSource}`,
-            size: pxToPt("9pt"),
+            size: pxToPt("14pt"),
             font: characterSizeDict.FONT_NORMAL,
           }),
         ],
@@ -700,10 +703,10 @@ const insertImage = ({ img: dataContent }, order) => {
       typeof dataContent === "string" ? dataContent : dataContent.img;
     const img = getImgFile(
       splicePicturePath(_img)
-        .replace(REGEXP.imgUrlReg, process.env.VUE_APP_IMAGE_URL)
+        .replace(REGEXP.imgUrlReg, VUE_APP_IMAGE_URL)
         .replace(
-          REGEXP.imgUrl_page[process.env.VUE_APP_IMAGE_PATH_FIELD],
-          process.env.VUE_APP_IMAGE_URL,
+          REGEXP.imgUrl_page[VUE_APP_IMAGE_PATH_FIELD],
+          VUE_APP_IMAGE_URL,
         )
         .replace(/\"/g, ""),
     );
@@ -732,7 +735,7 @@ const insertImage = ({ img: dataContent }, order) => {
             children: [
               new TextRun({
                 text: `图 ${order}  ${dataContent.title ? dataContent.title.text : dataContent.order}`,
-                size: pxToPt("9pt"),
+                size: pxToPt("14pt"),
                 font: characterSizeDict.FONT_NORMAL,
               }),
             ],
@@ -811,7 +814,7 @@ const chapterDict = (option, data) => {
 const pxToPt = (num) => {
   if (endsWith(num, "px")) {
     const numCount = num.split("px")[0];
-    return `${numCount * 0.75}pt`;
+    return `${numCount}pt`;
   }
   return num;
 };
@@ -869,10 +872,10 @@ const parsingCover = (data) => {
       item.data = splicePicturePath(item.data);
       const data = getImgFile(
         item.data
-          .replace(REGEXP.imgUrlReg, process.env.VUE_APP_IMAGE_URL)
+          .replace(REGEXP.imgUrlReg, VUE_APP_IMAGE_URL)
           .replace(
-            REGEXP.imgUrl_page[process.env.VUE_APP_IMAGE_PATH_FIELD],
-            process.env.VUE_APP_IMAGE_URL,
+            REGEXP.imgUrl_page[VUE_APP_IMAGE_PATH_FIELD],
+            VUE_APP_IMAGE_URL,
           )
           .replace(/\"/g, ""),
       );
@@ -928,7 +931,6 @@ export const exportDocument = async (
     disclaimer: true,
   },
 ) => {
-  console.log("-------===========");
   WORD_SETTING.report = data;
   WORD_SETTING.cover = get(setting, "cover", []);
   try {
@@ -983,6 +985,7 @@ export const exportDocument = async (
     // 导出
     return exportWord(section, data.reportName, username);
   } catch (err) {
+    console.log("=======", err);
     ElMessage.warning("下载失败，请检查文档");
   }
 };
@@ -1093,7 +1096,7 @@ const convertToWord = async (data, parent, properties = {}) => {
                   children: [
                     new TextRun({
                       text: "www.eesaenergy.com",
-                      size: "9pt",
+                      size: "14pt",
                     }),
                   ],
                   link: "https://www.eesaenergy.com",
@@ -1157,8 +1160,7 @@ const convertToWord = async (data, parent, properties = {}) => {
   });
 };
 
-const getWordHeaderImg = async () =>
-  await getImgFile(require("@/assets/image/report/word-img-header.png"));
+const getWordHeaderImg = async () => await getImgFile(hearImg);
 
 /**
  *  @description 将本地图片转为Blob对象
@@ -1320,7 +1322,7 @@ export const exportWord = (sections, wordName = "报告", username) => {
               quickFormat: true,
               run: {
                 color: "000000",
-                size: "9pt",
+                size: "14pt",
                 font: characterSizeDict.FONT_NORMAL,
               },
               paragraph: {
@@ -1378,7 +1380,7 @@ export const appendParagraph = (text = "", option = {}) => {
 export const appendText = (text = "", option = {}) => {
   return new TextRun({
     font: characterSizeDict.FONT_NORMAL,
-    size: pxToPt("9pt"),
+    size: pxToPt("14pt"),
     text,
     ...option,
   });
