@@ -9,6 +9,11 @@
   background-color: #244bf1 !important;
 }
 
+.el-checkbox__inner:hover {
+  border-color: #244bf1 !important;
+
+}
+
 // 多选框tag样式
 .el-select__tags {
   .el-tag--info {

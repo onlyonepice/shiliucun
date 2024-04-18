@@ -98,16 +98,16 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">联系人</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.tenderingAgencyContactNumber }}
+                {{ detailData.tenderingAgencyContactPerson }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">联系电话</p>
               <p class="detail_content_item_value_item_value">
-                <span>{{ detailData.tenderingAgencyContactPerson }}</span>
+                <span>{{ detailData.tenderingAgencyContactNumber }}</span>
                 <img
                   @click="
-                    copyToClipboard(detailData.tenderingAgencyContactPerson)
+                    copyToClipboard(detailData.tenderingAgencyContactNumber)
                   "
                   class="copy_icon"
                   :src="copy_icon"
@@ -147,7 +147,7 @@ import { cloneDeep } from "lodash";
 import { useRouter } from "vue-router";
 import { getToken } from "@/utils/auth";
 import { getBidFinderDetail } from "@/api/data";
-
+import { ElMessage } from "element-plus";
 function copyToClipboard(text) {
   var textarea: any = document.createElement("textarea");
   textarea.style.position = "fixed";
@@ -157,6 +157,7 @@ function copyToClipboard(text) {
   textarea.select();
   document.execCommand("copy");
   document.body.removeChild(textarea);
+  ElMessage.success("复制成功");
 }
 const ns = useNamespace("biddingDynamicsList");
 const router = useRouter();
@@ -220,6 +221,8 @@ const handleSetDetailShowClick = async () => {
       currentData.value.showDetail = true;
     } else if (data.resp_code === 10027) {
       //观看次数到达上限
+      useUserStore().openVipTitle =
+        "当日的查看次数已达到上限，请开通VIP继续查看。";
       useUserStore().openVip(true);
       currentData.value.showDetail = false;
     }
