@@ -481,4 +481,8 @@ onMounted(() => {
 .scrollbar-flex-content {
   overflow-x: auto;
 }
+.format-dom {
+  position: absolute;
+  z-index: -1;
+}
 </style>
