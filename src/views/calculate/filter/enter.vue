@@ -440,7 +440,7 @@ const onAnalysis = () => {
   if (searchParams.value.choseProduct === "") {
     return ElMessage({ message: "请选择产品", type: "warning" });
   }
-  if (addAreaType.value && searchParamsB.value.regionName === "") {
+  if (addAreaType.value && searchParamsB.value.regionName === undefined) {
     return ElMessage({ message: "请选择对比地区", type: "warning" });
   }
   filterFinish.value = true;
