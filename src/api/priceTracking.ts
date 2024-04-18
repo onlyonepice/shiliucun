@@ -6,7 +6,7 @@ interface Request {
 // /electricityPriceTracking/front/openApi/v1.1/getTariffLevelIdByElectricityTypeOneName
 //获取地区数据
 export const apiRegionalData = (params: { type: string } | null) => {
-  return http.request<Request>(
+  return http.request<{ datas: Array<any> }>(
     "get",
     "/eesa-report/electricityPriceTracking/front/openApi/v1.1/queryRegionIds",
     { params: params || {} },
@@ -29,7 +29,7 @@ export const getVoltageLevel = (params) => {
 };
 // 获取月份
 export const getMonth = (params) => {
-  return http.request<Request>(
+  return http.request<{ datas: Array<any> }>(
     "post",
     "/eesa-report/electricityPriceTracking/front/openApi/v1.1/getYearsByRegionElectricityTypeOneName",
     { params },
@@ -37,7 +37,7 @@ export const getMonth = (params) => {
 };
 // 各省峰谷时段
 export const getNewTimeSharing = () => {
-  return http.request<Request>(
+  return http.request<{ datas: Array<any> }>(
     "post",
     "/eesa-report/front/openApi/v1.1/getNewTimeSharing",
   );

@@ -1,3 +1,4 @@
+import hearImg from "@/assets/img/common/word-img-header.png";
 import {
   Document,
   Packer,
@@ -38,6 +39,8 @@ import {
   base64toFile,
   getJsonData,
 } from "./downReport";
+const VUE_APP_IMAGE_URL = "https://oss.eesaenergy.com";
+const VUE_APP_IMAGE_PATH_FIELD = "test";
 
 export const docxDict = {
   width: "width",
@@ -700,10 +703,10 @@ const insertImage = ({ img: dataContent }, order) => {
       typeof dataContent === "string" ? dataContent : dataContent.img;
     const img = getImgFile(
       splicePicturePath(_img)
-        .replace(REGEXP.imgUrlReg, process.env.VUE_APP_IMAGE_URL)
+        .replace(REGEXP.imgUrlReg, VUE_APP_IMAGE_URL)
         .replace(
-          REGEXP.imgUrl_page[process.env.VUE_APP_IMAGE_PATH_FIELD],
-          process.env.VUE_APP_IMAGE_URL,
+          REGEXP.imgUrl_page[VUE_APP_IMAGE_PATH_FIELD],
+          VUE_APP_IMAGE_URL,
         )
         .replace(/\"/g, ""),
     );
@@ -869,10 +872,10 @@ const parsingCover = (data) => {
       item.data = splicePicturePath(item.data);
       const data = getImgFile(
         item.data
-          .replace(REGEXP.imgUrlReg, process.env.VUE_APP_IMAGE_URL)
+          .replace(REGEXP.imgUrlReg, VUE_APP_IMAGE_URL)
           .replace(
-            REGEXP.imgUrl_page[process.env.VUE_APP_IMAGE_PATH_FIELD],
-            process.env.VUE_APP_IMAGE_URL,
+            REGEXP.imgUrl_page[VUE_APP_IMAGE_PATH_FIELD],
+            VUE_APP_IMAGE_URL,
           )
           .replace(/\"/g, ""),
       );
@@ -928,7 +931,6 @@ export const exportDocument = async (
     disclaimer: true,
   },
 ) => {
-  console.log("-------===========");
   WORD_SETTING.report = data;
   WORD_SETTING.cover = get(setting, "cover", []);
   try {
@@ -983,6 +985,7 @@ export const exportDocument = async (
     // 导出
     return exportWord(section, data.reportName, username);
   } catch (err) {
+    console.log("=======", err);
     ElMessage.warning("下载失败，请检查文档");
   }
 };
@@ -1157,8 +1160,7 @@ const convertToWord = async (data, parent, properties = {}) => {
   });
 };
 
-const getWordHeaderImg = async () =>
-  await getImgFile(require("@/assets/image/report/word-img-header.png"));
+const getWordHeaderImg = async () => await getImgFile(hearImg);
 
 /**
  *  @description 将本地图片转为Blob对象

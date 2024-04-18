@@ -249,7 +249,7 @@
             <Select
               title="放电深度"
               type="input"
-              inputText="度"
+              inputText="%"
               :defaultValue="searchParams.dischargeDepth"
               width="100%"
               @onChange="
@@ -261,7 +261,7 @@
             <Select
               title="年衰减率"
               type="input"
-              inputText="度"
+              inputText="%"
               :defaultValue="searchParams.annualDecay"
               width="100%"
               @onChange="
@@ -273,7 +273,7 @@
             <Select
               title="年维护费用"
               type="input"
-              inputText="度"
+              inputText="元"
               :defaultValue="searchParams.annualMaintenance"
               width="100%"
               @onChange="
@@ -360,6 +360,7 @@ const searchParamsB = ref({
   electricityTypeTwoName: "", // 用电类型2
   tariffLevelId: "", // 期望接入电压等级
 });
+const searchParamsShow = ref({}); // 筛选项展示
 // 筛选项后端需求多传无用字段
 const searchParamsDefault: any = ref({});
 const cityData = ref([]); // 地区数据
@@ -435,18 +436,18 @@ const onAnalysis = () => {
   emit(
     "onAnalysis",
     Object.assign(
-      {},
       cloneDeep(searchParams.value),
       cloneDeep(filterData.value),
       cloneDeep(searchParamsDefault.value),
     ),
     "searchA",
   );
+  // 获取筛选项描述文字，用于生成下载报告
+  getDesc();
   addAreaType.value &&
     emit(
       "onAnalysis",
       Object.assign(
-        {},
         cloneDeep(searchParamsB.value),
         cloneDeep(filterData.value),
         cloneDeep(searchParamsDefault.value),
@@ -454,7 +455,44 @@ const onAnalysis = () => {
       "searchB",
     );
 };
-
+const getDesc = () => {
+  const _searchParamsShow: any = searchParamsShow.value;
+  const _searchParams = searchParams.value;
+  _searchParamsShow.regionName = _searchParams.regionName;
+  _searchParamsShow.electricityTypeOneName =
+    electricityType1.value.find(
+      (item: any) => item.paramName === _searchParams.electricityTypeOneName,
+    ).paramDesc || "";
+  _searchParamsShow.electricityTypeTwoName =
+    electricityType2.value.find(
+      (item: any) => item.paramName === _searchParams.electricityTypeTwoName,
+    ).paramDesc || "";
+  _searchParamsShow.tariffLevelId =
+    voltageLevel.value.find(
+      (item: any) => item.paramName === _searchParams.tariffLevelId,
+    ).paramDesc || "";
+  productList.value.forEach((item) => {
+    item.secondLevelRespList.forEach((_item) => {
+      if (_item.id === _searchParams.choseProduct[1]) {
+        _searchParamsShow.choseProduct =
+          item.name +
+          "/" +
+          _item.name +
+          "/" +
+          _item.secondLevelRespList[0].name;
+      }
+    });
+  });
+  _searchParamsShow.number = _searchParams.number + "台";
+  _searchParamsShow.systemUnitPrice = _searchParams.systemUnitPrice + "元/度";
+  _searchParamsShow.systemEnergyCapacity =
+    _searchParams.systemEnergyCapacity + "度";
+  _searchParamsShow.systemEfficiency = _searchParams.systemEfficiency + "%";
+  _searchParamsShow.dischargeDepth = _searchParams.dischargeDepth + "%";
+  _searchParamsShow.annualDecay = _searchParams.annualDecay + "%";
+  _searchParamsShow.annualMaintenance = _searchParams.annualMaintenance + "元";
+  console.log("==========111111", _searchParamsShow);
+};
 // 重置筛选项
 const onReset = () => {
   if (!getToken()) {
@@ -463,18 +501,7 @@ const onReset = () => {
   filterData.value = {
     patternAnalysis: 0,
   };
-  searchParams.value = {
-    regionName: "", // 地区
-    electricityTypeOneName: "", // 用电类型1
-    electricityTypeTwoName: "", // 用电类型2
-    tariffLevelId: "", // 期望接入电压等级
-    expectedCapacity: "", // 期望装配储能容量
-    choseProduct: "", // 选择产品
-    number: 1, // 配置数量
-    systemUnitPrice: "", // 系统单价
-
-    chargeDischargeIdentifying: "",
-  };
+  searchParams.value = {};
   disabledUser.value = true;
   disabledProduct.value = true;
   filterFinish.value = false;
