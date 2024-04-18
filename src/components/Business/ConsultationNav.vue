@@ -20,10 +20,11 @@ import miniApp from "@/assets/img/consultationNav/miniApp.png";
 import weChat from "@/assets/img/consultationNav/weChat.png";
 import miniAppHover from "@/assets/img/consultationNav/miniApp-hover.png";
 import weChatHover from "@/assets/img/consultationNav/weChat-hover.png";
+import customerServiceHover from "@/assets/img/consultationNav/customerService-hover.png";
 const ns = useNamespace("consultation-nav");
 
 const navList = ref([
-  { name: "客服", icon: customerService },
+  { name: "客服", icon: customerService, iconHover: customerServiceHover },
   { name: "小程序", icon: miniApp, iconHover: miniAppHover },
   { name: "微信", icon: weChat, iconHover: weChatHover },
 ]);
