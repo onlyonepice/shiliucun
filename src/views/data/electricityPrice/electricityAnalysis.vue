@@ -10,7 +10,7 @@
           multiple
           collapse-tags
           collapse-tags-tooltip
-          :max-collapse-tags="3"
+          :max-collapse-tags="2"
           v-model="searchParams.regionName"
           placeholder="请选择"
           class="select__content"
@@ -411,6 +411,15 @@ onMounted(() => {
 
     .select__content {
       flex: 1;
+      // ::v-deep(.el-select__wrapper) {
+      //   .el-select__selected-item {
+      //     .el-tag {
+      //       .el-tag__content {
+      //         max-width: 40px;
+      //       }
+      //     }
+      //   }
+      // }
     }
   }
 
