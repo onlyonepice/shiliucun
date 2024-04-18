@@ -442,7 +442,6 @@ async function onSearch(type? = false, source?: string) {
           innerReturnRate: _data.innerReturnRate[index],
         });
       }
-      ownerRevenueEstimateList.value = _ownerRevenueEstimate;
       if (source === "searchA") {
         ownerRevenueEstimateList.value = _ownerRevenueEstimate;
       } else {

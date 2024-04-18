@@ -317,7 +317,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref, defineEmits, onMounted, computed } from "vue";
+import { Ref, ref, onMounted, computed, watch } from "vue";
 import NoChoseRadio from "@/assets/img/common/i-Report-radio-false.png";
 import HasChoseRadio from "@/assets/img/common/i-Report-radio-true.png";
 import { PATTERNANALYSIS, FILTERDATA } from "./data";
@@ -359,7 +359,7 @@ const searchParams: Ref<any> = ref({
   chargeDischargeIdentifying: "",
 });
 // B地区筛选项
-const searchParamsB = ref({
+const searchParamsB: Ref<any> = ref({
   regionName: "", // 地区
   electricityTypeOneName: "", // 用电类型1
   electricityTypeTwoName: "", // 用电类型2
@@ -397,7 +397,14 @@ const onPatternAnalysis = (id: number) => {
   filterData.value.patternAnalysis = id;
   disabledUser.value = false;
 };
-
+watch(
+  () => addAreaType.value,
+  (val) => {
+    if (!val) {
+      searchParamsB.value = {};
+    }
+  },
+);
 onMounted(() => {
   getAreaData();
 });
@@ -433,7 +440,7 @@ const onAnalysis = () => {
   if (searchParams.value.choseProduct === "") {
     return ElMessage({ message: "请选择产品", type: "warning" });
   }
-  if (addAreaType.value && searchParamsB.value.regionName === "") {
+  if (addAreaType.value && searchParamsB.value.regionName === undefined) {
     return ElMessage({ message: "请选择对比地区", type: "warning" });
   }
   filterFinish.value = true;
@@ -547,7 +554,6 @@ async function getProductList() {
     console.error(error);
   }
 }
-getProductList();
 // 地区筛选项改变
 async function onAreaChange(data: string, type: string, compare: string) {
   onChangeData(data, type, compare);
@@ -565,6 +571,7 @@ async function onAreaChange(data: string, type: string, compare: string) {
   });
   onGetElectricityInfo(compare);
   disabledProduct.value = false;
+  getProductList();
 }
 // 用电类型1改变
 async function onElectricityTypeOneName(
