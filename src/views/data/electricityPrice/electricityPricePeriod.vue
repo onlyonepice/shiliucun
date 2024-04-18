@@ -109,13 +109,21 @@ function clickGeneratePicture() {
 async function getData() {
   const { datas } = await getNewTimeSharing();
   if (datas.length > 0) {
-    tableData.value = datas.map((item) => {
-      let row = Object.values(item);
-      row = row.map((key: string) => {
-        return key.split(",");
+    tableData.value = datas
+      .map((item) => {
+        let row = Object.values(item);
+        row = row.map((key: string) => {
+          return key.split(",");
+        });
+        return row;
+      })
+      .map((item) => {
+        return item.filter((_item: Array<string>) => {
+          return _item.every((__item) => {
+            return isNaN(Number(__item));
+          });
+        });
       });
-      return row;
-    });
   }
 }
 function setColor(item) {
@@ -187,7 +195,6 @@ getData();
         height: 319px;
       }
       .th-box {
-        width: 100%;
         height: 48px;
         background: #f2f3f5;
         border-radius: 4px 4px 0px 0px;
