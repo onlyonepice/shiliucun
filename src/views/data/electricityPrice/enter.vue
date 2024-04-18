@@ -12,17 +12,11 @@
       </div>
     </div>
     <!-- 分时/分月电价 -->
-    <div v-if="chosePriceType === 1">
-      <ElectricityPriceTime />
-    </div>
+    <ElectricityPriceTime v-if="chosePriceType === 1" />
     <!-- 电价分析 -->
-    <div v-if="chosePriceType === 2">
-      <ElectricityAnalysis />
-    </div>
+    <ElectricityAnalysis v-if="chosePriceType === 2" />
     <!-- 各省峰谷时段 -->
-    <div v-if="chosePriceType === 3">
-      <ElectricityPricePeriod />
-    </div>
+    <ElectricityPricePeriod v-if="chosePriceType === 3" />
   </div>
 </template>
 
@@ -31,7 +25,7 @@ import { ref, Ref } from "vue";
 import ElectricityAnalysis from "./electricityAnalysis.vue";
 import ElectricityPriceTime from "./electricityPriceTime.vue";
 import ElectricityPricePeriod from "./electricityPricePeriod.vue";
-const chosePriceType = ref(1);
+const chosePriceType = ref(3);
 const priceTypeList: Ref<Array<{ id: number; text: string }>> = ref([
   { id: 1, text: "分时/分月电价" },
   { id: 2, text: "电价分析" },
