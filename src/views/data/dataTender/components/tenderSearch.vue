@@ -193,7 +193,7 @@ const getData = async () => {
   if (data.resp_code === 0) {
     total.value = data.datas.total;
     pageData.value = data.datas.records.map((item) => {
-      item.showDetail = route.query.id === item.id && item.isPermissions;
+      item.showDetail = route.query.id === item.id;
       return item;
     });
   }

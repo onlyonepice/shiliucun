@@ -21,7 +21,7 @@
         <span class="right">{{ currentData.countdown }}</span>
       </div>
     </div>
-    <div class="detail-data" v-if="currentData.showDetail">
+    <div class="detail-data" v-if="currentData.showDetail && detailData">
       <div class="detail_content">
         <div class="detail_content_item">
           <p class="detail_content_item_label">基本信息</p>
@@ -190,16 +190,20 @@ const handleVipClick = () => {
   router.push("/vip");
 };
 const currentData = ref<dataType>({});
-watch(
-  () => props.pageData,
-  (newVal) => {
-    currentData.value = cloneDeep(newVal);
-  },
-  { deep: true, immediate: true },
-);
+
 const detailData = ref(null);
 
 const handleSetDetailShowClick = async () => {
+  if ("showDetail" in props.pageData === false) {
+    router.push({
+      path: "/dataTender",
+      query: {
+        id: currentData.value.id,
+      },
+    });
+    return;
+  }
+
   if (currentData.value.showDetail) {
     windowStore.SET_SCROLL_TOP(windowStore.scrollTop - 579);
   } else {
@@ -207,29 +211,18 @@ const handleSetDetailShowClick = async () => {
       useUserStore().openLogin(true);
       return;
     }
-    if (!currentData.value.isPermissions) {
-      useUserStore().openVip(true);
-      return;
-    }
     useUserStore().permissionList.forEach((item) => {
       if (item.code === "CONTACT_INFORMATION_TENDERER") {
         isVip.value = item.permission;
       }
     });
-    if ("showDetail" in props.pageData === false) {
-      router.push({
-        path: "/dataTender",
-        query: {
-          id: currentData.value.id,
-        },
-      });
-      return;
-    }
-    if (!detailData.value) {
-      const data = await getBidFinderDetail({ id: currentData.value.id });
-      if (data.resp_code === 0) {
-        detailData.value = data.datas;
-      }
+
+    const data = await getBidFinderDetail({ id: currentData.value.id });
+    if (data.resp_code === 0) {
+      detailData.value = data.datas;
+    } else if (data.resp_code === 10027) {
+      //观看次数到达上限
+      useUserStore().openVip(true);
     }
   }
 
@@ -239,6 +232,17 @@ const handleSetDetailShowClick = async () => {
 const handleLinkClick = (link) => {
   window.open(link);
 };
+watch(
+  () => props.pageData,
+  (newVal) => {
+    currentData.value = cloneDeep(newVal);
+    if (newVal?.showDetail === true) {
+      currentData.value.showDetail = false;
+      handleSetDetailShowClick();
+    }
+  },
+  { deep: true, immediate: true },
+);
 </script>
 
 <style lang="scss" scoped>
