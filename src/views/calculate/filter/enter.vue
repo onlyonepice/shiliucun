@@ -249,7 +249,7 @@
             <Select
               title="放电深度"
               type="input"
-              inputText="度"
+              inputText="%"
               :defaultValue="searchParams.dischargeDepth"
               width="100%"
               @onChange="
@@ -261,7 +261,7 @@
             <Select
               title="年衰减率"
               type="input"
-              inputText="度"
+              inputText="%"
               :defaultValue="searchParams.annualDecay"
               width="100%"
               @onChange="
@@ -273,7 +273,7 @@
             <Select
               title="年维护费用"
               type="input"
-              inputText="度"
+              inputText="元"
               :defaultValue="searchParams.annualMaintenance"
               width="100%"
               @onChange="
@@ -471,8 +471,27 @@ const getDesc = () => {
     voltageLevel.value.find(
       (item: any) => item.paramName === _searchParams.tariffLevelId,
     ).paramDesc || "";
-  _searchParamsShow.expectedCapacity = _searchParams.expectedCapacity;
-  console.log("==========", _searchParamsShow);
+  productList.value.forEach((item) => {
+    item.secondLevelRespList.forEach((_item) => {
+      if (_item.id === _searchParams.choseProduct[1]) {
+        _searchParamsShow.choseProduct =
+          item.name +
+          "/" +
+          _item.name +
+          "/" +
+          _item.secondLevelRespList[0].name;
+      }
+    });
+  });
+  _searchParamsShow.number = _searchParams.number + "台";
+  _searchParamsShow.systemUnitPrice = _searchParams.systemUnitPrice + "元/度";
+  _searchParamsShow.systemEnergyCapacity =
+    _searchParams.systemEnergyCapacity + "度";
+  _searchParamsShow.systemEfficiency = _searchParams.systemEfficiency + "%";
+  _searchParamsShow.dischargeDepth = _searchParams.dischargeDepth + "%";
+  _searchParamsShow.annualDecay = _searchParams.annualDecay + "%";
+  _searchParamsShow.annualMaintenance = _searchParams.annualMaintenance + "元";
+  console.log("==========111111", _searchParamsShow);
 };
 // 重置筛选项
 const onReset = () => {
