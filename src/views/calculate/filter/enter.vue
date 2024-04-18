@@ -554,7 +554,6 @@ async function getProductList() {
     console.error(error);
   }
 }
-getProductList();
 // 地区筛选项改变
 async function onAreaChange(data: string, type: string, compare: string) {
   onChangeData(data, type, compare);
@@ -572,6 +571,7 @@ async function onAreaChange(data: string, type: string, compare: string) {
   });
   onGetElectricityInfo(compare);
   disabledProduct.value = false;
+  getProductList();
 }
 // 用电类型1改变
 async function onElectricityTypeOneName(
