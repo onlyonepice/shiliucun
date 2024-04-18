@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="searchResult.internalRateReturn !== null"
     :style="{
       'margin-right': addAreaType ? '24px' : '0',
     }"
