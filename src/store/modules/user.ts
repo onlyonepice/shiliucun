@@ -17,6 +17,7 @@ export const useUserStore = defineStore({
     publicKey: "", // 加密密钥 用于监听
     openLoginVisible: false, // 打开登录弹窗
     openVipVisible: false, // 打开vip弹窗
+    openVipTitle: "开通VIP会员，继续使用该功能。",
     permissionList: [], // 用户权限
     showMembersBuy: false, //订阅会员弹框
   }),
@@ -64,6 +65,11 @@ export const useUserStore = defineStore({
     // 打开开通vip弹窗
     openVip(type: Boolean) {
       this.openVipVisible = type;
+      if (type === false) {
+        setTimeout(() => {
+          this.openVipTitle = "开通VIP会员，继续使用该功能。";
+        }, 500);
+      }
     },
     // 获取用户权限
     async getPermissionList() {

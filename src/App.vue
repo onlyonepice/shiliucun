@@ -33,7 +33,10 @@
     </div>
     <PageBottom />
   </el-scrollbar>
-  <OpenVip :visible="useUserStore().$state.openVipVisible" />
+  <OpenVip
+    :title="useUserStore().$state.openVipTitle"
+    :visible="useUserStore().$state.openVipVisible"
+  />
   <Login
     class="animate__animated"
     v-if="openLoginAnimate"
