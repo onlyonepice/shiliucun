@@ -239,17 +239,6 @@ watch(
   },
   { immediate: true },
 );
-watch(
-  () => addAreaType.value,
-  () => {
-    revenueEstimateList.value = []; // 收益估算
-    revenueEstimateListB.value = []; // 收益估算对比地区
-    ownerRevenueEstimateList.value = []; // 业主自投收益估算
-    ownerRevenueEstimateListB.value = []; // 业主自投收益估算对比地区
-    dischargeList.value = []; // 充放电量
-    dischargeListB.value = []; // 充放电量对比地区
-  },
-);
 const getDesc = (data: any) => {
   searchParamsShow.value = data;
 };
@@ -453,7 +442,6 @@ async function onSearch(type? = false, source?: string) {
           innerReturnRate: _data.innerReturnRate[index],
         });
       }
-      ownerRevenueEstimateList.value = _ownerRevenueEstimate;
       if (source === "searchA") {
         ownerRevenueEstimateList.value = _ownerRevenueEstimate;
       } else {
