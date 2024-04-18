@@ -609,7 +609,6 @@ function handleTOUData() {
         return `<div style="${titleStyle}">${startTime}-${endTime}</div>${contentText}`;
       },
     };
-    console.log(options.legend);
     clearEchart();
     const myChart = echarts.init(
       document.getElementById("my-chart_electricity-price") as any,
