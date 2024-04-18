@@ -239,6 +239,19 @@ watch(
   },
   { immediate: true },
 );
+watch(
+  () => addAreaType.value,
+  (val) => {
+    if( !val ){
+      revenueEstimateList.value = [];// 收益估算
+      revenueEstimateListB.value = [];// 收益估算对比地区
+      ownerRevenueEstimateList.value = [];// 业主自投收益估算
+      ownerRevenueEstimateListB.value = [];// 业主自投收益估算对比地区
+      dischargeList.value = [];// 充放电量
+      dischargeListB.value = [];// 充放电量对比地区
+    }
+  }
+)
 const getDesc = (data: any) => {
   searchParamsShow.value = data;
 };
