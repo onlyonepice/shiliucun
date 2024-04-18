@@ -45,6 +45,7 @@
         : 'animate__fadeOut'
     "
   />
+  <ConsultationNav />
   <!-- 会员支付弹窗 -->
   <MembersBuy v-if="showMembersBuy" />
 </template>
