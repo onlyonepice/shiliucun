@@ -10,7 +10,7 @@
           multiple
           collapse-tags
           collapse-tags-tooltip
-          :max-collapse-tags="3"
+          :max-collapse-tags="2"
           v-model="searchParams.regionName"
           placeholder="请选择"
           class="select__content"
@@ -99,16 +99,16 @@ const eChartsOption: Ref<any> = ref({
     extraCssText: "padding: 16px; border-radius: 8px;",
     formatter: (params: any) => {
       let contentText = "";
-      params.forEach((item) => {
-        contentText += `<div style="${flexStyle}"><div style='width: 150px;'>${item.marker}<span style="${textStyle}">${item.seriesName}</span></div><span style="${textStyle}">${item.value}</span></div>`;
-      });
       const { differencePrice } = searchParams.value;
       const type = priceDifferenceData.value.find(
         (item: { paramName: string; paramDesc: string }) => {
           return item.paramName === differencePrice;
         },
       ).paramDesc;
-      return `<div style="${titleStyle}">${params[0].axisValueLabel}:<span style="margin-left: 10px;">${type}</span></div>${contentText}`;
+      params.forEach((item, index: number) => {
+        contentText += `<div style="${flexStyle}"><div style='width: 150px;'>${item.marker}<span style="${textStyle}">${index === 0 ? type : item.seriesName}</span></div><span style="${textStyle}">${item.value}</span></div>`;
+      });
+      return `<div style="${titleStyle}">${params[0].axisValueLabel}</div>${contentText}`;
     },
     axisPointer: {
       type: "line",
@@ -117,6 +117,15 @@ const eChartsOption: Ref<any> = ref({
       },
     },
   },
+});
+
+const seriesName = computed(() => {
+  const { differencePrice } = searchParams.value;
+  return priceDifferenceData.value.find(
+    (item: { paramName: string; paramDesc: string }) => {
+      return item.paramName === differencePrice;
+    },
+  ).paramDesc;
 });
 
 // 获取echarts节点
@@ -328,6 +337,8 @@ async function getElectricityTypeOneName() {
   eChartsOption.value.series[0].data = datas.map(
     (item) => item.electrovalenceDifference,
   );
+  eChartsOption.value.series[0].name = seriesName;
+  eChartsOption.value.legend.data[0].name = seriesName;
   eChartsOption.value.series[1].data = datas.map((item) => item.sameRatio);
   eChartsOption.value.xAxis.data = datas.map((item) => item.regionName);
   loading.value = false;
@@ -378,16 +389,17 @@ onMounted(() => {
 
   ::v-deep(.select) {
     width: 32.5% !important;
+    margin-top: 0px !important;
 
-    &:nth-child(3) {
-      margin-bottom: 16px !important;
+    &:nth-child(4) {
+      margin-top: 16px !important;
     }
   }
 
   .select-p {
     @include widthAndHeight(32.5%, 32px);
     @include flex(center, flex-start);
-    @include margin(0, 0, 16px, 0);
+    @include margin(0, 0, 0, 0);
 
     .select__title {
       width: 70px;
@@ -399,6 +411,15 @@ onMounted(() => {
 
     .select__content {
       flex: 1;
+      // ::v-deep(.el-select__wrapper) {
+      //   .el-select__selected-item {
+      //     .el-tag {
+      //       .el-tag__content {
+      //         max-width: 40px;
+      //       }
+      //     }
+      //   }
+      // }
     }
   }
 

@@ -999,6 +999,7 @@ function handleOpenLogin() {
 
 .time-electricity-price {
   padding-bottom: 24px;
+
   .price-type {
     border-radius: 2px;
     height: 32px;
@@ -1032,6 +1033,11 @@ function handleOpenLogin() {
 
     ::v-deep(.select) {
       width: 32.5% !important;
+      margin-top: 0px !important;
+
+      &:nth-child(4) {
+        margin-top: 16px !important;
+      }
     }
   }
 
