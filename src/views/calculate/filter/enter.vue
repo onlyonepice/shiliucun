@@ -460,44 +460,51 @@ const onAnalysis = () => {
     );
 };
 const getDesc = () => {
-  const _searchParamsShow: any = {};
-  const _searchParams = searchParams.value;
-  _searchParamsShow.regionName = _searchParams.regionName;
-  electricityType1.value.length !== 0 &&
-    (_searchParamsShow.electricityTypeOneName =
-      electricityType1.value.find(
-        (item: any) => item.paramName === _searchParams.electricityTypeOneName,
-      ).paramDesc || "");
-  electricityType2.value.length !== 0 &&
-    (_searchParamsShow.electricityTypeTwoName =
-      electricityType2.value.find(
-        (item: any) => item.paramName === _searchParams.electricityTypeTwoName,
-      ).paramDesc || "");
-  _searchParamsShow.tariffLevelId =
-    voltageLevel.value.find(
-      (item: any) => item.paramName === _searchParams.tariffLevelId,
-    ).paramDesc || "";
-  productList.value.forEach((item) => {
-    item.secondLevelRespList.forEach((_item) => {
-      if (_item.id === _searchParams.choseProduct[1]) {
-        _searchParamsShow.choseProduct =
-          item.name +
-          "/" +
-          _item.name +
-          "/" +
-          _item.secondLevelRespList[0].name;
-      }
+  try {
+    const _searchParamsShow: any = {};
+    const _searchParams = searchParams.value;
+    _searchParamsShow.regionName = _searchParams.regionName;
+    electricityType1.value.length !== 0 &&
+      (_searchParamsShow.electricityTypeOneName =
+        electricityType1.value.find(
+          (item: any) =>
+            item.paramName === _searchParams.electricityTypeOneName,
+        ).paramDesc || "");
+    electricityType2.value.length !== 0 &&
+      (_searchParamsShow.electricityTypeTwoName =
+        electricityType2.value.find(
+          (item: any) =>
+            item.paramName === _searchParams.electricityTypeTwoName,
+        ).paramDesc || "");
+    _searchParamsShow.tariffLevelId =
+      voltageLevel.value.find(
+        (item: any) => item.paramName === _searchParams.tariffLevelId,
+      ).paramDesc || "";
+    productList.value.forEach((item) => {
+      item.secondLevelRespList.forEach((_item) => {
+        if (_item.id === _searchParams.choseProduct[1]) {
+          _searchParamsShow.choseProduct =
+            item.name +
+            "/" +
+            _item.name +
+            "/" +
+            _item.secondLevelRespList[0].name;
+        }
+      });
     });
-  });
-  _searchParamsShow.number = _searchParams.number + "台";
-  _searchParamsShow.systemUnitPrice = _searchParams.systemUnitPrice + "元/度";
-  _searchParamsShow.systemEnergyCapacity =
-    _searchParams.systemEnergyCapacity + "度";
-  _searchParamsShow.systemEfficiency = _searchParams.systemEfficiency + "%";
-  _searchParamsShow.dischargeDepth = _searchParams.dischargeDepth + "%";
-  _searchParamsShow.annualDecay = _searchParams.annualDecay + "%";
-  _searchParamsShow.annualMaintenance = _searchParams.annualMaintenance + "元";
-  emit("getDesc", _searchParamsShow);
+    _searchParamsShow.number = _searchParams.number + "台";
+    _searchParamsShow.systemUnitPrice = _searchParams.systemUnitPrice + "元/度";
+    _searchParamsShow.systemEnergyCapacity =
+      _searchParams.systemEnergyCapacity + "度";
+    _searchParamsShow.systemEfficiency = _searchParams.systemEfficiency + "%";
+    _searchParamsShow.dischargeDepth = _searchParams.dischargeDepth + "%";
+    _searchParamsShow.annualDecay = _searchParams.annualDecay + "%";
+    _searchParamsShow.annualMaintenance =
+      _searchParams.annualMaintenance + "元";
+    emit("getDesc", _searchParamsShow);
+  } catch (error) {
+    console.error(error);
+  }
 };
 // 重置筛选项
 const onReset = () => {
@@ -512,6 +519,7 @@ const onReset = () => {
   disabledProduct.value = true;
   filterFinish.value = false;
   searchParamsDefault.value = {};
+  addAreaType.value = false;
   emit("onReset");
 };
 // 链接跳转

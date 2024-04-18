@@ -63,11 +63,11 @@
               :addAreaType="addAreaType"
               :revenueEstimateList="revenueEstimateList"
               :searchResult="searchResult"
-              :title="addAreaType ? '收益估算A' : '收益估算B'"
+              :title="addAreaType ? `地区A：${titleA}` : '收益估算B'"
             />
             <Estimate
               v-if="addAreaType"
-              title="收益估算B"
+              :title="'地区B：' + titleB"
               :addAreaType="addAreaType"
               :revenueEstimateList="revenueEstimateListB"
               :searchResult="searchResultB"
@@ -84,11 +84,11 @@
               :addAreaType="addAreaType"
               :ownerRevenueEstimateList="ownerRevenueEstimateList"
               :searchResult="searchResult"
-              :title="addAreaType ? '收益估算A' : '收益估算B'"
+              :title="addAreaType ? `地区A：${titleA}` : '收益估算B'"
             />
             <Proprietor
               v-if="addAreaType"
-              title="收益估算B"
+              :title="'地区B：' + titleB"
               :addAreaType="addAreaType"
               :ownerRevenueEstimateList="ownerRevenueEstimateListB"
               :searchResult="searchResultB"
@@ -127,6 +127,10 @@
     @exportAll="onExportAll"
     @handleCancel="downloadReportShow = false"
   />
+  <OpenVip
+    title="今日体验次数已达上限，请开通VIP会员继续使用。"
+    :visible="useUserStore().$state.openVipVisible"
+  />
   <Dom
     v-if="filterFinish"
     ref="formatDom"
@@ -138,7 +142,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, Ref, ref, watch } from "vue";
+import { onMounted, Ref, ref, watch, nextTick } from "vue";
 import Filter from "./filter/enter.vue";
 import Canvas from "./canvas.vue";
 import DownloadReport from "./downLoad/DownloadReport.vue";
@@ -153,8 +157,14 @@ import Estimate from "./table/estimate.vue";
 import Electric from "./table/electric.vue";
 import Proprietor from "./table/proprietor.vue";
 import Investment from "./filter/Investment.vue";
-import { apiAnalyzeSearch, apiComment } from "@/api/investment";
+import { useUserStore } from "@/store/modules/user";
+import {
+  apiAnalyzeSearch,
+  apiComment,
+  apiFileConversion,
+} from "@/api/investment";
 import { cloneDeep } from "lodash";
+import { windowScrollStore } from "@/store/modules/windowScroll";
 import { stringifyData, getImageInfo } from "@/utils/richText";
 import {
   WORD_COVER,
@@ -202,6 +212,9 @@ const tabsList = ref([
   { id: 1, name: "金融方案" },
   { id: 2, name: "充放电量" },
 ]);
+const titleA = ref("");
+const titleB = ref("");
+
 const choseTab: Ref<number> = ref(1);
 // 是否完成筛选，由子组件控制
 const filterFinish: Ref<boolean> = ref(false);
@@ -283,6 +296,33 @@ const onExportAll = async (type, value) => {
       menuLevel: "1-2",
     },
   );
+
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    const binaryData = event.target.result;
+    // 处理二进制数据
+    console.log(binaryData);
+  };
+  console.log("======--------", reader.readAsArrayBuffer(formData));
+
+  const _files = new FormData();
+  _files.set(
+    "file",
+    new File([formData], `${name}.docx`, {
+      type,
+    }),
+  );
+  const convertParams = {
+    fileType: "docx",
+    moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
+    outputFile: true,
+  };
+  try {
+    await apiFileConversion(convertParams, _files);
+    // console.log("1111", file);
+  } catch (err) {
+    console.info("business convert file err", err);
+  }
 
   const a = document.createElement("a");
   const _url = URL || window.URL || window.webkitURL;
@@ -419,6 +459,9 @@ async function onSearch(type? = false, source?: string) {
       return (dischargeListB.value = _discharge);
     }
     filterFinish.value = true;
+    nextTick(() => {
+      windowScrollStore().SET_SCROLL_TOP(940);
+    });
     if (source === "searchA" && !addAreaType.value) {
       setTimeout(() => {
         searchCanvas.value.getCanvasData(false);
@@ -428,6 +471,8 @@ async function onSearch(type? = false, source?: string) {
           searchCanvas.value.getSliderConfig();
         }, 400);
     }
+  } else {
+    useUserStore().$state.openVipVisible = true;
   }
 }
 
@@ -438,6 +483,12 @@ function onReset() {
 // 开始分析按钮
 function onAnalysis(data: any, type: string) {
   addAreaType.value = type === "searchB";
+  if (type === "searchA") {
+    titleA.value = data.regionName;
+  } else {
+    titleB.value = data.regionName;
+  }
+  console.log("----111111", titleA.value, titleB.value);
   const _showInfoList = showInfoList.value;
   choseEvaluate.value = "";
   _showInfoList[0][0].value =

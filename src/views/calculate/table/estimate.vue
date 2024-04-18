@@ -10,7 +10,7 @@
         width: addAreaType ? '800px' : '',
       }"
     >
-      <div class="common-title">{{ title }}<span>/元</span></div>
+      <div class="common-title">{{ title }}</div>
       <div class="estimate-info">
         <span>资方内部收益率（IRR）：</span>
         <span
