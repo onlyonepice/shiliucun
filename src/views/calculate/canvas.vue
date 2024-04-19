@@ -308,35 +308,43 @@ defineExpose({ getCanvasData, getSliderConfig });
 
 <style scoped lang="scss">
 @import "@/style/mixin.scss";
+
 .investment-eCharts {
   @include flex(center, space-between, no-wrap);
 }
+
 #my-chart {
   width: 76% !important;
   height: 448px;
   min-width: 480px;
 }
+
 .slider-wrapper {
   @include widthAndHeight(24%, 448px);
   @include padding(0, 0, 0, 17px);
   box-sizing: border-box;
   min-width: 200px;
 }
+
 .slider-wrapper__content {
   width: 100%;
   @include margin(0, 0, 4px, 0);
 }
+
 .slider-wrapper__title {
   @include flex(center, space-between);
   @include widthAndHeight(100%, 22px);
+
   span:nth-of-type(1) {
     @include font(14px, 600, #1d232e, 22px);
   }
+
   span:nth-of-type(2) {
     @include font(12px, 400, #165dff, 22px);
     cursor: pointer;
   }
 }
+
 .slider-wrapper__desc {
   @include flex(flex-start, center, no-wrap);
   @include font(12px, 400, #5b6985, 20px);
@@ -344,21 +352,26 @@ defineExpose({ getCanvasData, getSliderConfig });
   @include padding(6px, 8px, 6px, 8px);
   background: #eff4ff;
   border-radius: 4px;
+
   img {
     @include widthAndHeight(16px, 16px);
     @include margin(2px, 4px, 0, 0);
   }
+
   span {
     @include font(12px, 400, #5b6985, 20px);
   }
 }
+
 .wrapper__text {
   @include flex(center, space-between);
   @include margin(0, 0, 8px, 0);
+
   span {
     @include font(14px, 400, #5b6985, 22px);
   }
 }
+
 .common-title {
   @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
   @include flex(center, flex-start);
@@ -375,23 +388,28 @@ defineExpose({ getCanvasData, getSliderConfig });
 </style>
 <style lang="scss">
 @import "@/style/mixin.scss";
+
 .slider-wrapper {
   .el-slider {
     @include widthAndHeight(100%, 32px);
     @include margin(0, 8px, 0, 0);
   }
+
   .select {
     width: 111px;
     margin: 0 0 0 0 !important;
     flex: 1;
   }
+
   .el-slider__runway {
     height: 2px;
   }
+
   .el-slider__bar {
     height: 2px;
     background-color: #165dff;
   }
+
   .el-slider__button {
     @include widthAndHeight(16px, 16px);
     @include margin(-4px, 0, 0, 0);

@@ -202,7 +202,7 @@
             :defaultValue="searchParams.number"
             @onChange="
               ($event) => {
-                onChangeData($event, 'number');
+                onChangeData($event, 'number', 'AB');
               }
             "
           />
@@ -217,7 +217,7 @@
               width="100%"
               @onChange="
                 ($event) => {
-                  onChangeData($event, 'systemUnitPrice');
+                  onChangeData($event, 'systemUnitPrice', 'AB');
                 }
               "
             />
@@ -229,7 +229,7 @@
               width="100%"
               @onChange="
                 ($event) => {
-                  onChangeData($event, 'systemEnergyCapacity');
+                  onChangeData($event, 'systemEnergyCapacity', 'AB');
                 }
               "
             />
@@ -242,7 +242,7 @@
               width="100%"
               @onChange="
                 ($event) => {
-                  onChangeData($event, 'systemEfficiency');
+                  onChangeData($event, 'systemEfficiency', 'AB');
                 }
               "
             />
@@ -254,7 +254,7 @@
               width="100%"
               @onChange="
                 ($event) => {
-                  onChangeData($event, 'dischargeDepth');
+                  onChangeData($event, 'dischargeDepth', 'AB');
                 }
               "
             />
@@ -266,7 +266,7 @@
               width="100%"
               @onChange="
                 ($event) => {
-                  onChangeData($event, 'annualDecay');
+                  onChangeData($event, 'annualDecay', 'AB');
                 }
               "
             />
@@ -278,7 +278,7 @@
               width="100%"
               @onChange="
                 ($event) => {
-                  onChangeData($event, 'annualMaintenance');
+                  onChangeData($event, 'annualMaintenance', 'AB');
                 }
               "
             />
@@ -624,7 +624,7 @@ async function onGetElectricityInfo(compare: string) {
 }
 // 选择产品修改
 async function onChoseProduct(data: any, type: string) {
-  onChangeData(data, type);
+  onChangeData(data, type, "AB");
   let name = "";
   let reportTitle = "";
   productList.value.forEach((item) => {
@@ -659,7 +659,10 @@ async function onChoseProduct(data: any, type: string) {
 async function onChangeData(data: string, type: string, compare = "A") {
   if (compare === "A") {
     searchParams.value[type] = data;
+  } else if (compare === "B") {
+    searchParamsB.value[type] = data;
   } else {
+    searchParams.value[type] = data;
     searchParamsB.value[type] = data;
   }
 }
