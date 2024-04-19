@@ -29,10 +29,7 @@
             <span>{{ item.text }}</span>
           </div>
         </div>
-        <el-button
-          v-if="false"
-          type="primary"
-          @click="downloadReportShow = true"
+        <el-button type="primary" @click="downloadReportShow = true"
           >下载报告</el-button
         >
       </div>
@@ -306,39 +303,28 @@ const onExportAll = async (type, value) => {
     },
   );
 
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    const binaryData = event.target.result;
-    // 处理二进制数据
-    console.log(binaryData);
-  };
-  console.log("======--------", reader.readAsArrayBuffer(formData));
-
-  const _files = new FormData();
-  _files.set(
-    "file",
-    new File([formData], `${name}.docx`, {
-      type,
-    }),
-  );
   const convertParams = {
-    fileType: "docx",
+    fileType: type,
     moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
     outputFile: true,
   };
+  const wordFile = new window.File([formData], `${name}.docx`, {
+    type,
+  });
+  const _files = new FormData();
+  _files.set("file", wordFile);
+
   try {
-    await apiFileConversion(convertParams, _files);
-    // console.log("1111", file);
+    const file: any = await apiFileConversion(convertParams, _files);
+    const a = document.createElement("a");
+    const _url = URL || window.URL || window.webkitURL;
+    a.href = _url.createObjectURL(file.data);
+    a.download = name + "." + type;
+    a.click();
+    _url.revokeObjectURL(a.href);
   } catch (err) {
     console.info("business convert file err", err);
   }
-
-  const a = document.createElement("a");
-  const _url = URL || window.URL || window.webkitURL;
-  a.href = _url.createObjectURL(formData);
-  a.download = name;
-  a.click();
-  _url.revokeObjectURL(a.href);
 };
 const filterTable = async () => {
   console.log(formatDom.value.getDom());
