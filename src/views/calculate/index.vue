@@ -393,7 +393,6 @@ function onSearchData(data: any) {
 }
 // 查询接口
 async function onSearch(type? = false, source?: string) {
-  console.log("0000000", source);
   let _search: any = {};
   _search =
     source === "searchA"

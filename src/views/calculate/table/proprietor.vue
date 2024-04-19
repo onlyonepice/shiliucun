@@ -144,7 +144,7 @@ const onClickExpand = (row: any) => {
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .table-expand--head {
-  padding: 0 272px 0 40px;
+  padding: 0 24px 0 24px;
   @include flex(center, flex-start);
   height: 38px;
   img {
