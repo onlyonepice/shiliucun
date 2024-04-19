@@ -29,10 +29,7 @@
             <span>{{ item.text }}</span>
           </div>
         </div>
-        <el-button
-          v-if="false"
-          type="primary"
-          @click="downloadReportShow = true"
+        <el-button type="primary" @click="downloadReportShow = true"
           >下载报告</el-button
         >
       </div>
@@ -45,7 +42,7 @@
       <div v-show="choseTab === 1">
         <Investment
           v-if="showInvestment"
-          :searchParams="searchParams"
+          :searchParams="searchParamsA"
           :showInfoList="showInfoList"
           @onChangeFilter="onChangeFilter"
         />
@@ -53,7 +50,7 @@
           v-if="!addAreaType"
           ref="searchCanvas"
           :searchCanvas="searchCanvas"
-          :searchParams="searchParams"
+          :searchParams="searchParamsA"
           @onSearch="onSearchData"
         />
         <template v-if="showInfoList[0][0].value === 'EMC合同能源'">
@@ -122,9 +119,9 @@
   <DownloadReport
     v-if="downloadReportShow"
     :defaultTitle="
-      searchParams.regionName +
+      searchParamsA.regionName +
       '-' +
-      searchParams.reportTitle +
+      searchParamsA.reportTitle +
       '-工商业投资回报性分析'
     "
     @exportAll="onExportAll"
@@ -190,10 +187,8 @@ const downloadReportShow: Ref<boolean> = ref(false); // 下载报告弹窗
 const showInvestment = ref(false);
 const formatDom = ref(null); // dom结构
 // 查询参数
-const searchParams: Ref<any> = ref({
-  ownersShare: 10,
-  dividedByInvestors: 90,
-});
+const searchParamsA: Ref<any> = ref({});
+const searchParamsB: Ref<any> = ref({});
 const addAreaType: Ref<boolean> = ref(false); // 添加地区对比
 const scrollTop: Ref<number> = ref(0); // 页面滚动距离
 const evaluateList: Ref<any> = ref([
@@ -263,12 +258,15 @@ const onEvaluate = async (text: string) => {
 };
 // 修改投资方案筛选项
 function onChangeFilter(data: string, type: string) {
-  searchParams.value[type] = data;
+  searchParamsA.value[type] = data;
+  searchParamsB.value[type] = data;
   if (type === "ownersShare") {
-    searchParams.value.dividedByInvestors = 100 - Number(data);
+    searchParamsA.value.dividedByInvestors = 100 - Number(data);
+    searchParamsB.value.dividedByInvestors = 100 - Number(data);
   }
   if (type === "dividedByInvestors") {
-    searchParams.value.ownersShare = 100 - Number(data);
+    searchParamsA.value.ownersShare = 100 - Number(data);
+    searchParamsB.value.ownersShare = 100 - Number(data);
   }
   if (!addAreaType.value) {
     onSearch(false, "searchA");
@@ -389,13 +387,17 @@ const filterTable = async () => {
 };
 
 function onSearchData(data: any) {
-  searchParams.value = data;
+  searchParamsA.value = data;
   addAreaType.value = false;
   onSearch(false, "searchA");
 }
 // 查询接口
 async function onSearch(type? = false, source?: string) {
-  let _search: any = cloneDeep(searchParams.value);
+  let _search: any = {};
+  _search =
+    source === "searchA"
+      ? cloneDeep(searchParamsA.value)
+      : cloneDeep(searchParamsB.value);
   _search.callingMode = type;
   _search.bankRate =
     _search.bankRate !== undefined
@@ -479,7 +481,7 @@ async function onSearch(type? = false, source?: string) {
           searchCanvas.value.getSliderConfig();
         }, 400);
     }
-  } else {
+  } else if (resp_code === 10027) {
     useUserStore().$state.openVipVisible = true;
   }
 }
@@ -490,21 +492,31 @@ function onReset() {
 }
 // 开始分析按钮
 function onAnalysis(data: any, type: string) {
+  showInvestment.value = false;
   addAreaType.value = type === "searchB";
-  if (type === "searchA") {
-    titleA.value = data.regionName;
-  } else {
-    titleB.value = data.regionName;
-  }
+
   const _showInfoList = showInfoList.value;
   choseEvaluate.value = "";
   _showInfoList[0][0].value =
     data.patternAnalysis === 1 ? "EMC合同能源" : "业主自投";
-  searchParams.value = Object.assign(searchParams.value, data);
-  searchParams.value.annualDays = 300;
-  searchParams.value.bankRate = "5%";
-  searchParams.value.calculationPeriod = "10年";
-  onSearch(true, type);
+
+  if (type === "searchA") {
+    titleA.value = data.regionName;
+    searchParamsA.value = Object.assign(searchParamsA.value, cloneDeep(data));
+    searchParamsA.value.annualDays = 300;
+    searchParamsA.value.bankRate = "5%";
+    searchParamsA.value.calculationPeriod = "10年";
+  } else {
+    titleB.value = data.regionName;
+    searchParamsB.value = Object.assign(searchParamsB.value, cloneDeep(data));
+    searchParamsB.value.annualDays = 300;
+    searchParamsB.value.bankRate = "5%";
+    searchParamsB.value.calculationPeriod = "10年";
+  }
+  nextTick(() => {
+    showInvestment.value = true;
+    onSearch(true, type);
+  });
 }
 
 function updateScrollTop() {
