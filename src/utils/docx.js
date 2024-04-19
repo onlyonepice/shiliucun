@@ -812,12 +812,12 @@ const chapterDict = (option, data) => {
 };
 
 const pxToPt = (num) => {
-  if (endsWith(num, 'px')) {
-    const numCount = num.split('px')[0]
-    return `${numCount * 0.75}pt`
+  if (endsWith(num, "px")) {
+    const numCount = num.split("px")[0];
+    return `${numCount * 0.75}pt`;
   }
-  return num
-}
+  return num;
+};
 
 // 递归循环生成封面内容 包括封面图片，编撰日期等
 const parsingCover = (data) => {

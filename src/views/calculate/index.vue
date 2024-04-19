@@ -139,6 +139,7 @@
     :mode="showInfoList[0][0].value"
     :condition="searchParamsShow"
   />
+  <Loading v-if="downloadLoading" bg="rgba(0,0,0,0.2)" />
 </template>
 
 <script lang="ts" setup>
@@ -186,6 +187,7 @@ const dischargeListB: Ref<any> = ref([]); // 充放电量对比地区
 const downloadReportShow: Ref<boolean> = ref(false); // 下载报告弹窗
 const showInvestment = ref(false);
 const formatDom = ref(null); // dom结构
+const downloadLoading: Ref<boolean> = ref(false); // 下载loading
 // 查询参数
 const searchParamsA: Ref<any> = ref({});
 const searchParamsB: Ref<any> = ref({});
@@ -277,6 +279,7 @@ function onChangeFilter(data: string, type: string) {
 }
 // 下载报告
 const onExportAll = async (type, value) => {
+  downloadLoading.value = true;
   await filterTable();
   let _report = report.value;
   _report.reportName = value;
@@ -316,6 +319,8 @@ const onExportAll = async (type, value) => {
 
   try {
     const file: any = await apiFileConversion(convertParams, _files);
+    downloadLoading.value = false;
+    downloadReportShow.value = false;
     const a = document.createElement("a");
     const _url = URL || window.URL || window.webkitURL;
     a.href = _url.createObjectURL(file.data);
