@@ -640,15 +640,19 @@ async function onChoseProduct(data: any, type: string) {
     name,
   });
   if (resp_code === 0) {
-    searchParams.value.number = 1;
-    searchParams.value.systemUnitPrice = datas.systemUnitPrice; // 系统单价
-    searchParams.value.systemEnergyCapacity = datas.systemEnergyCapacity; // 系统容量
-    searchParams.value.systemEfficiency = datas.systemEfficiency; // 系统综合效率
-    searchParams.value.dischargeDepth = datas.dischargeDepth; // 放电深度
-    searchParams.value.annualDecay = datas.annualDecay; // 年衰减率
-    searchParams.value.annualMaintenance = datas.annualMaintenance; // 年维护费用
-    searchParams.value.picture = datas.picture; // 产品图片
-    searchParams.value.reportTitle = reportTitle;
+    const _data = {
+      number: 1,
+      systemUnitPrice: datas.systemUnitPrice,
+      systemEnergyCapacity: datas.systemEnergyCapacity,
+      systemEfficiency: datas.systemEfficiency,
+      dischargeDepth: datas.dischargeDepth,
+      annualDecay: datas.annualDecay,
+      annualMaintenance: datas.annualMaintenance,
+      picture: datas.picture,
+      reportTitle: reportTitle,
+    };
+    Object.assign(searchParams.value, cloneDeep(_data));
+    Object.assign(searchParamsB.value, cloneDeep(_data));
   }
 }
 // 改变值
