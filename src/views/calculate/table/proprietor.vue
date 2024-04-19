@@ -16,7 +16,7 @@
         <span
           :class="{
             'color-red':
-              searchResult.contentYield !== null &&
+              searchResult.contentYield &&
               searchResult.contentYield.indexOf('-') > -1,
           }"
           >{{
@@ -35,6 +35,8 @@
       :style="{
         width: addAreaType ? '800px' : '',
       }"
+      row-key="variationFactor"
+      :expand-row-keys="expands"
     >
       <el-table-column type="expand" width="1">
         <template #default>
@@ -82,11 +84,17 @@
       <el-table-column prop="variationFactor" label="年数">
         <template #default="scope">
           <span
-            style="cursor: pointer"
+            style="cursor: pointer; display: flex; align-items: center"
             @click="
               scope.row.variationFactor === '1' ? onClickExpand(scope.row) : ''
             "
-            >{{ scope.row.variationFactor === "1" ? "+" : "" }}
+          >
+            <img
+              v-if="scope.row.variationFactor === '1'"
+              style="width: 12px; height: 12px; margin-right: 10px"
+              :src="expands.length === 0 ? ExpandIcon : PutAwayIcon"
+              alt=""
+            />
             {{ scope.row.variationFactor }}</span
           >
         </template>
@@ -115,8 +123,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import TipsIcon from "@/assets/img/common/lament_icon.png";
+import ExpandIcon from "@/assets/img/common/icon_expand.png";
+import PutAwayIcon from "@/assets/img/common/icon_put away.png";
 const proprietor = ref(null);
 defineProps({
   addAreaType: {
@@ -136,34 +146,35 @@ defineProps({
     default: "",
   },
 });
-const onClickExpand = (row: any) => {
-  proprietor.value.toggleRowExpansion(row);
+const expands = ref([]); // 默认展开行
+const onClickExpand = () => {
+  expands.value = expands.value.length === 0 ? ["1"] : [];
 };
+onMounted(() => {
+  onClickExpand();
+});
 </script>
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .table-expand--head {
   padding: 0 24px 0 24px;
-  @include flex(center, flex-start);
+  @include flex(center, space-between, nowrap);
   height: 38px;
   img {
     @include widthAndHeight(16px, 16px);
   }
   div {
-    @include flex(center, flex-start);
+    @include flex(center, flex-start, nowrap);
     @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
     span {
       @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
     }
   }
-  & div:nth-of-type(1) {
-    margin-right: 490px;
-  }
 }
 .table-expand--body {
   height: 144px;
-  padding: 0 272px 0 40px;
+  padding: 0 24px 0 24px;
   background: #f2f3f5;
   border-radius: 4px;
   @include flex(center, space-between);
