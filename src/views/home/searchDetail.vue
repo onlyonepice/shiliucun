@@ -180,7 +180,7 @@ const pageOptions = ref<any>({
   ONLINE_REPORT: { name: "在线报告", show: false },
 }) as any;
 const handleEnergy_Storage_FrontierClick = (url) => {
-  window.open(VITE_I_REPORT_URL + url);
+  router.push(url);
 };
 // 搜索事件
 const onSearch = () => {
@@ -211,27 +211,27 @@ const searchFn = async () => {
             case "工商业投资回报性":
               item.img = return_on_investment;
               item.code = "Return on investment";
-              item.url = "#/stored-leading/invest-ROE/business";
+              item.url = "/calculate";
               break;
             case "代理购电价格追踪":
               item.img = price_tracking;
               item.code = "Price tracking";
-              item.url = "#/stored-leading/electricity-price";
+              item.url = "/electricityPrice";
               break;
             case "中标项目追踪":
               item.img = winning_bid_tracking;
               item.code = "Winning bid tracking";
-              item.url = "#/bid-price-tracking";
+              item.url = "/dataWinningBid";
               break;
             case "政策追踪":
               item.img = policy_tracking;
               item.code = "Policy tracking";
-              item.url = "#/stored-leading/policy-trace";
+              item.url = "/policy";
               break;
             case "融资方案":
               item.img = financing_plan;
               item.code = "Financing plan";
-              item.url = "#/stored-leading/financing-plan";
+              item.url = "/financingPlan";
               break;
             default:
               break;
