@@ -1,6 +1,5 @@
 <template>
   <div
-    v-if="searchResult.internalRateReturn !== null"
     :style="{
       'margin-right': addAreaType ? '24px' : '0',
     }"
@@ -16,7 +15,9 @@
         <span>资方内部收益率（IRR）：</span>
         <span
           :class="{
-            'color-red': searchResult.internalRateReturn.indexOf('-') > -1,
+            'color-red':
+              searchResult.internalRateReturn &&
+              searchResult.internalRateReturn.indexOf('-') > -1,
           }"
           >{{
             searchResult.internalRateReturn === "NaN"
