@@ -1,61 +1,101 @@
 <template>
-  <div ref="loading" class="loading animate__animated animate__fadeIn">
-    <div class="container">
-      <Lottie :options="defaultOptions" :height="160" :width="160" />
-      <p>{{ text }}...</p>
+  <div :class="['page-loading', loading ? 'show' : 'hide']">
+    <div class="page-loading-container">
+      <div class="container" />
     </div>
   </div>
 </template>
 
-<script>
-import animationData from "@/config/loadingLottieFiles.json";
-export default {
-  name: "Loading",
-  props: {
-    backgroundColor: {
-      type: String,
-      default: () => "0,0,0,.7",
-    },
-    text: {
-      type: String,
-      default: () => "加载中请稍等",
-    },
+<script setup lang="ts">
+defineProps({
+  loading: {
+    type: Boolean,
+    default: true,
   },
-  data() {
-    return {
-      defaultOptions: { animationData: animationData },
-      animationSpeed: 1,
-      anim: {},
-    };
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.$refs["loading"] &&
-        (this.$refs["loading"].style = `background:${this.backgroundColor}`);
-    });
-  },
-};
+});
 </script>
 
 <style lang="scss" scoped>
-.loading {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+@import "@/style";
+
+.page-loading {
+  position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(255, 255, 255);
-  z-index: 99;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .container {
-    width: 200px;
-    text-align: center;
-    font-size: 14px;
-    p {
-      margin-top: -40px;
+  z-index: 99999;
+
+  @include widthAndHeight(100vw, 100vh);
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  background-color: #ffffff;
+
+  .page-loading-container {
+    @include flex();
+    @include widthAndHeight();
+    .container {
+      --uib-size: 40px;
+      --uib-color: #244bf1;
+      --uib-speed: 0.9s;
+      --uib-stroke: 5px;
+      --mask-size: calc(var(--uib-size) / 2 - var(--uib-stroke));
+      @include widthAndHeight(var(--uib-size), var(--uib-size));
+      -webkit-mask: radial-gradient(
+        circle var(--mask-size),
+        transparent 99%,
+        #000 100%
+      );
+      mask: radial-gradient(
+        circle var(--mask-size),
+        transparent 99%,
+        #000 100%
+      );
+      background-image: conic-gradient(transparent 25%, var(--uib-color));
+      animation: spin calc(var(--uib-speed)) linear infinite;
+      border-radius: 50%;
     }
+  }
+}
+
+.show {
+  animation-name: loadingShow;
+}
+
+.hide {
+  animation-name: loadingHide;
+}
+
+@keyframes loadingShow {
+  0% {
+    display: block;
+    opacity: 0.2;
+  }
+  25% {
+    opacity: 0.6;
+  }
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+
+@keyframes loadingHide {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    display: none;
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>

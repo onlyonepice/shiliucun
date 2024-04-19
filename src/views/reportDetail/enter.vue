@@ -1,8 +1,8 @@
 <template>
   <div :class="ns.b()">
     <breadcrumb :breadcrumbList="breadcrumbList" />
-    <Loading v-if="loading" />
-    <template v-else>
+    <Loading :loading="loading" />
+    <template v-if="!loading">
       <div :class="[ns.b('content'), 'es-commonPage']" v-if="reportDetail.id">
         <div :class="ns.be('content', 'left')">
           <reportInfo
