@@ -270,7 +270,12 @@ function onChangeFilter(data: string, type: string) {
   if (type === "dividedByInvestors") {
     searchParams.value.ownersShare = 100 - Number(data);
   }
-  onSearch();
+  if (!addAreaType.value) {
+    onSearch(false, "searchA");
+  } else {
+    onSearch(false, "searchA");
+    onSearch(false, "searchB");
+  }
 }
 // 下载报告
 const onExportAll = async (type, value) => {
@@ -491,7 +496,6 @@ function onAnalysis(data: any, type: string) {
   } else {
     titleB.value = data.regionName;
   }
-  console.log("----111111", titleA.value, titleB.value);
   const _showInfoList = showInfoList.value;
   choseEvaluate.value = "";
   _showInfoList[0][0].value =
