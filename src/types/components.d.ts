@@ -15,6 +15,8 @@ declare module 'vue' {
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCascader: typeof import('element-plus/es')['ElCascader']
+    ElCollapse: typeof import('element-plus/es')['ElCollapse']
+    ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
@@ -27,6 +29,8 @@ declare module 'vue' {
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElPagination: typeof import('element-plus/es')['ElPagination']
+    ElRadio: typeof import('element-plus/es')['ElRadio']
+    ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
@@ -59,7 +63,6 @@ declare module 'vue' {
     Select: typeof import('./../components/Common/Select.vue')['default']
     SkipMask: typeof import('./../components/Common/SkipMask.vue')['default']
     Tabs: typeof import('./../components/Common/Tabs.vue')['default']
-    TreeCheck: typeof import('./../components/Business/TreeCheck.vue')['default']
     WhiteReport: typeof import('./../components/Business/WhiteReport.vue')['default']
   }
   export interface ComponentCustomProperties {
