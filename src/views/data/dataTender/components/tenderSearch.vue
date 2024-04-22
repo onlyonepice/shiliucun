@@ -256,7 +256,7 @@ const getTenderLookupFn = async () => {
 const itemCategoryRef = ref(null);
 const biddingContentTwoRef = ref(null);
 const provincialLevelRef = ref(null);
-const changeTag = (value, index) => {
+const changeTag = (value) => {
   let checked = [];
   switch (value.paramValue) {
     case "itemCategory":
