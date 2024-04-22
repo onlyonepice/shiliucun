@@ -25,6 +25,10 @@ export function getPluginsList(
      * vite-plugin-router-warn只在开发环境下启用，只处理vue-router文件并且只在服务启动或重启时运行一次，性能消耗可忽略不计
      */
     removeNoMatch(),
+    eslintPlugin({
+      include: ["src/**/*.ts", "src/**/*.vue", "src/*.ts", "src/*.vue"],
+    }),
+    VITE_CDN ? cdn : null,
     Components({
       // 指定组件所在文件夹的位置，默认是src/components
       dirs: ["src/components"],
@@ -33,10 +37,6 @@ export function getPluginsList(
       resolvers: [ElementPlusResolver()],
       dts: "src/types/components.d.ts",
     }),
-    eslintPlugin({
-      include: ["src/**/*.ts", "src/**/*.vue", "src/*.ts", "src/*.vue"],
-    }),
-    VITE_CDN ? cdn : null,
     configCompressPlugin(VITE_COMPRESSION),
   ];
 }
