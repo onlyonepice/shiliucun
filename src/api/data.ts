@@ -187,3 +187,11 @@ export const getPolicyDetails = (data) => {
     { data },
   );
 };
+// 专家访谈列表 /eesa-report/alliance/newsInformation/openApi/v1.0/appletListExpertInterviews
+export const getExpertInterviewList = (params) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/alliance/newsInformation/front/openApi/v1.0/expertInterviews",
+    { params },
+  );
+};
