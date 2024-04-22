@@ -10,4 +10,23 @@ import { store } from "./store";
 const app = createApp(App);
 app.config.warnHandler = () => null;
 
-createApp(App).use(store).use(router).use(ElementPlus).mount("#app");
+//
+const modules: Record<string, any> = import.meta.glob(
+  [
+    "./components/Business/**.vue",
+    "./components/Common/**.vue",
+    "./components/Common/Dialog/**.vue",
+  ],
+  {
+    eager: true,
+  },
+);
+Object.keys(modules).forEach((key) => {
+  console.log("========", key);
+});
+
+createApp(App)
+  .use(store)
+  .use(router)
+  .use(ElementPlus, { locale: zhCn })
+  .mount("#app");

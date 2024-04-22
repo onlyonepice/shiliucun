@@ -5,6 +5,7 @@
       background
       layout="prev, pager, next"
       :total="total"
+      :page-size="20"
       @current-change="onchangeCurrent"
     />
   </div>
@@ -19,6 +20,7 @@ defineProps({
     type: Number,
     default: 0,
   },
+  
 });
 const onchangeCurrent = (data: any) => {
   emits("onchangeCurrent", data);
