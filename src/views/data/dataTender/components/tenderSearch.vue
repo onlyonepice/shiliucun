@@ -277,7 +277,6 @@ const changeTag = (value, index) => {
       filterParams.value[value.paramValue].push(item.paramValue);
     }
   });
-  console.log(filterParams.value[value.paramValue], index);
 
   page.value = 1;
 
