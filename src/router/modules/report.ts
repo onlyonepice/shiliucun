@@ -51,6 +51,17 @@ export default {
       },
     },
     {
+      path: "/expertInterviews",
+      name: "ExpertInterviews",
+      components: {
+        default: () => import("@/views/report/expertInterviews/enter.vue"),
+      },
+      meta: {
+        title: "专家访谈",
+        backgroundColor: "",
+      },
+    },
+    {
       path: "/quarterlyMonthlyReports",
       name: "QuarterlyMonthlyReports",
       components: {
