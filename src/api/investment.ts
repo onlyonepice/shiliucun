@@ -105,8 +105,11 @@ export const apiFileConversion = (params, data) => {
     "/file-service/file/convertFile",
     {
       params,
-      data,
       responseType: "blob",
+      data,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     },
   );
 };

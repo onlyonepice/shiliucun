@@ -126,7 +126,7 @@
                     :class="{
                       minus: IRRFormatter(formatter(getIRR)).minus,
                     }"
-                    width="50"
+                    width="100"
                   >
                     {{ IRRFormatter(formatter(getIRR)).text }}
                   </td>
@@ -143,7 +143,7 @@
                     style="text-align: right; border: none"
                     cell-color="#000000"
                     cell-header="#ffffff"
-                    width="75"
+                    width="100"
                   >
                     {{ getThat.paybackTime }}
                   </td>

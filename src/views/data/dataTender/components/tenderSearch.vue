@@ -6,18 +6,18 @@
           class="tree-item"
           v-for="(value, key) in filterOptionsData"
           :key="key"
+          v-once
         >
-          <template v-if="value.paramValue !== 'yearRange'">
+          <div v-if="value.paramValue !== 'yearRange'">
             <el-tree
               @check="() => changeTag(value, key)"
-              ref="treeRefFilter"
+              :ref="`${value.paramValue}Ref`"
               :data="[value]"
               default-expand-all
               highlight-current
               :props="defaultProps"
               node-key="paramValue"
               show-checkbox
-              :default-checked-keys="filterParams[value.paramValue]"
             >
               <template #default="{ node, data }">
                 <span class="custom-tree_item">
@@ -59,8 +59,8 @@
                 </span>
               </template>
             </el-tree>
-          </template>
-          <template v-else>
+          </div>
+          <div v-else>
             <el-tree
               @node-click="(val) => changeYearRangeTag(val, value)"
               :data="[value]"
@@ -109,7 +109,7 @@
             >
               收起更多
             </p>
-          </template>
+          </div>
         </div>
       </div>
     </div>
@@ -253,16 +253,33 @@ const getTenderLookupFn = async () => {
   }
 };
 
-const treeRefFilter = ref(null);
+const itemCategoryRef = ref(null);
+const biddingContentTwoRef = ref(null);
+const provincialLevelRef = ref(null);
 const changeTag = (value, index) => {
-  const checked = treeRefFilter.value[index].getCheckedNodes();
+  let checked = [];
+  switch (value.paramValue) {
+    case "itemCategory":
+      checked = itemCategoryRef.value[0].getCheckedNodes();
+      break;
+    case "provincialLevel":
+      checked = provincialLevelRef.value[0].getCheckedNodes();
+      break;
+    default:
+    case "biddingContentTwo":
+      checked = biddingContentTwoRef.value[0].getCheckedNodes();
+      break;
+  }
+
   filterParams.value[value.paramValue] = [];
   checked.forEach((item) => {
     if (!item.dropDownBoxResp || item.dropDownBoxResp.length === 0) {
       filterParams.value[value.paramValue].push(item.paramValue);
     }
   });
+
   page.value = 1;
+
   getData();
 };
 const handleShowAllClick = (key, _data) => {
@@ -364,6 +381,7 @@ onMounted(() => {
     width: 100%;
     margin-top: 24px;
     min-height: 200px;
+    height: 1964px;
     .item {
       width: 100%;
     }
