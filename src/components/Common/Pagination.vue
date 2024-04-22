@@ -20,7 +20,6 @@ defineProps({
     type: Number,
     default: 0,
   },
-  
 });
 const onchangeCurrent = (data: any) => {
   emits("onchangeCurrent", data);
