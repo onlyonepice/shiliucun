@@ -10,6 +10,11 @@ export const cdn = importToCDN({
   prodUrl: "https://cdn.eesaenergy.com/libs/{name}/{version}/{path}",
   modules: [
     {
+      name: "vue",
+      var: "Vue",
+      path: "vue.global.prod.min.js",
+    },
+    {
       name: "vue-router",
       var: "VueRouter",
       path: "vue-router.global.min.js",
