@@ -56,6 +56,7 @@ declare module 'vue' {
     Select: typeof import('./../components/Common/Select.vue')['default']
     SkipMask: typeof import('./../components/Common/SkipMask.vue')['default']
     Tabs: typeof import('./../components/Common/Tabs.vue')['default']
+    TreeCheck: typeof import('./../components/Business/TreeCheck.vue')['default']
     WhiteReport: typeof import('./../components/Business/WhiteReport.vue')['default']
   }
   export interface ComponentCustomProperties {
