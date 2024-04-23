@@ -24,6 +24,10 @@
       :formOptions="formOptions"
     />
     <WinningBidReport v-if="currentTab === 'report'" />
+    <WinningBidScenes
+      v-if="currentTab === 'scenes'"
+      :formOptions="formOptions"
+    />
   </div>
 </template>
 
@@ -33,12 +37,15 @@ import useNamespace from "@/utils/nameSpace";
 import WinningBidPrice from "./winningBidPrice/enter.vue";
 import WinningBidEnterprise from "./winningBidEnterprise/enter.vue";
 import WinningBidReport from "./winningBidReport/enter.vue";
+import WinningBidScenes from "./winningBidScenes/index.vue";
 import {
   bidWinningContentData_V2,
   technologyType_V2,
   durationData_V2,
   applicationScenariosBox,
   winingBidTime,
+  getTenderTimeFilterApi,
+  getUnitListApi,
 } from "@/api/data";
 const ns = useNamespace("dataWinningBid");
 const tabList = ref([
@@ -57,6 +64,11 @@ const tabList = ref([
     value: "report",
     code: "bidwin_region_click",
   },
+  {
+    name: "应用场景分析",
+    value: "scenes",
+    code: "bidwin_scenes_click",
+  },
 ]);
 const currentTab = ref("price");
 const handleTabChange = (value: string) => {
@@ -73,6 +85,8 @@ const getSelectData = () => {
     durationData_V2(),
     applicationScenariosBox("all"),
     winingBidTime(),
+    getTenderTimeFilterApi(),
+    getUnitListApi(),
   ]).then((res) => {
     formOptions.value = res.filter((item: response) => {
       return item.resp_code === 0;

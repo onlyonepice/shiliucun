@@ -53,7 +53,7 @@ import { onMounted, ref, Ref, nextTick } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getBusinessDynamicsListApi } from "@/api/data";
-import { eChartsOptionCommon, textStyleObject } from "@/utils/eCharts";
+import { eChartsOptionCommon, textStyleObject } from "@/utils/echarts/eCharts";
 import { cloneDeep } from "lodash";
 import { useUserStore } from "@/store/modules/user";
 const eChartsOption: Ref<any> = ref(eChartsOptionCommon());

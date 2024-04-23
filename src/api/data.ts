@@ -195,3 +195,11 @@ export const getExpertInterviewList = (params) => {
     { params },
   );
 };
+
+// 获取统计单位
+export const getUnitListApi = () => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/Policy/openApi/v1.0/getUnitsStatistics",
+  );
+};

@@ -14,6 +14,7 @@
       @change="handleChange"
       @visible-change="handleVerifyLogin"
       :disabled="props.disabled"
+      :multiple="multiple"
     >
       <el-option
         v-for="item in options"
@@ -126,6 +127,10 @@ const props = defineProps({
   maxlength: {
     type: Number,
     default: 999999,
+  },
+  multiple: {
+    type: Boolean,
+    default: false,
   },
 });
 const value: any = ref(""); // 选中值

@@ -84,7 +84,7 @@ import {
   getDifferentialRanking,
 } from "@/api/priceTracking";
 import { eChartsOptionCommon } from "./data";
-import { titleStyle, textStyle, flexStyle } from "@/utils/eCharts";
+import { titleStyle, textStyle, flexStyle } from "@/utils/echarts/eCharts";
 import * as echarts from "echarts";
 import { onMounted, computed, Ref, ref } from "vue";
 import Select from "@/components/Common/Select.vue";
