@@ -11,6 +11,11 @@ export const reportStore = defineStore({
         path: "/reportOnLine",
       },
       {
+        en: "INTERVIEW_EXPERT",
+        ch: "专家访谈",
+        path: "/expertInterviews",
+      },
+      {
         en: "QUARTERLY_AND_MONTHLY_REPORTS",
         ch: "季报月报",
         path: "/quarterlyMonthlyReports",
