@@ -1,8 +1,8 @@
 <template>
   <div :class="ns.b()">
     <breadcrumb :breadcrumbList="breadcrumbList" />
-    <Loading v-if="loading" />
-    <template v-else>
+    <Loading :loading="loading" />
+    <template v-if="!loading">
       <div :class="[ns.b('content'), 'es-commonPage']" v-if="reportDetail.id">
         <div :class="ns.be('content', 'left')">
           <reportInfo
@@ -188,7 +188,7 @@ onMounted(() => {
 <style lang="scss">
 @import "@/style/mixin.scss";
 .es-reportDetail {
-  height: calc(100vh - 56px -80px);
+  height: calc(100vh);
   background: #f2f3f5;
 }
 .es-reportDetail-content {

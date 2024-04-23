@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="开通VIP会员，继续使用该功能。"
+    :title="title"
     :class="ns.b()"
     :show-close="false"
     :close-on-click-modal="false"
@@ -22,12 +22,18 @@
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const ns = useNamespace("openVipDialog");
 const dialogVisible: Ref<boolean> = ref(false);
 const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
+  },
+  title: {
+    type: String,
+    default: "开通VIP会员，继续使用该功能。",
   },
 });
 watch(
@@ -40,7 +46,11 @@ watch(
 const handleClose = (type: boolean) => {
   useUserStore().openVip(false);
   if (type) {
-    useUserStore().$state.showMembersBuy = true;
+    if (router.currentRoute.value.path === "/reportDetail") {
+      useUserStore().$state.showMembersBuy = true;
+    } else {
+      router.push("/vip");
+    }
   }
 };
 </script>
@@ -58,6 +68,11 @@ const handleClose = (type: boolean) => {
     font-weight: 600;
     line-height: 26px;
     color: rgba(0, 0, 0, 1);
+  }
+  .el-dialog__footer {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
   }
   .el-dialog__body {
     height: 80px;

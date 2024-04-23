@@ -1,32 +1,20 @@
-import { createApp } from "vue";
-import ElementPlus from "element-plus";
-import App from "./App.vue";
-import "element-plus/dist/index.css";
 import "animate.css";
+import App from "./App.vue";
 import "./style/index.scss";
-import "./style/element-plus.scss";
 import router from "./router";
+import { createApp } from "vue";
 import { store } from "./store";
+import "./style/element-plus.scss";
+import "element-plus/dist/index.css";
+import ElementPlus from "element-plus";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
+import components from "@/components/index";
 const app = createApp(App);
 app.config.warnHandler = () => null;
-
-//
-const modules: Record<string, any> = import.meta.glob(
-  [
-    "./components/Business/**.vue",
-    "./components/Common/**.vue",
-    "./components/Common/Dialog/**.vue",
-  ],
-  {
-    eager: true,
-  },
-);
-Object.keys(modules).forEach((key) => {
-  console.log("========", key);
-});
 
 createApp(App)
   .use(store)
   .use(router)
+  .use(components)
   .use(ElementPlus, { locale: zhCn })
   .mount("#app");

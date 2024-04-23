@@ -98,10 +98,10 @@ export const computedColor = (lineColor: string) => {
 };
 
 // tooltip标题样式
-export const titleStyle = `line-height:24px; font-width: 400;font-weight: 600; font-size: 16px; color:#000;`;
+export const titleStyle = `line-height:22px; font-width: 400;font-weight: 600; font-size: 14px; color:#000;`;
 export const titleStyleMini = `font-weight: 600; color:#000;`;
 // tooltip正文文字样式
-export const textStyle = `font-weight: 600; font-size: 16px; color:#000;`;
+export const textStyle = `font-weight: 600; font-size: 14px; color:#000;`;
 export const textStyleMini = `font-weight: 400; color:#000;`;
 // tooltip的flex布局
 export const flexStyle = `display: flex; align-items: center; justify-content: space-between;`;

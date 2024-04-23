@@ -209,6 +209,7 @@ const sendLogin = async (data: any) => {
       setToken(datas);
       onCloseDialog();
       useUserStore().$state.token = datas.access_token;
+      useUserStore().handleGetUserInfo();
     }
   } catch (error) {
     NOOP();

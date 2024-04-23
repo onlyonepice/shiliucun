@@ -12,10 +12,12 @@ export const useUserStore = defineStore({
   state: (): userType => ({
     token: "", // 用户token 用于判断用户登录还是退出 通过watch监听
     fileUrl: "", // 文件路径
+    imgUrl: "", // i-report报告缓存
     userInfo: {}, // 用户信息
     publicKey: "", // 加密密钥 用于监听
     openLoginVisible: false, // 打开登录弹窗
     openVipVisible: false, // 打开vip弹窗
+    openVipTitle: "开通VIP会员，继续使用该功能。",
     permissionList: [], // 用户权限
     showMembersBuy: false, //订阅会员弹框
   }),
@@ -63,6 +65,11 @@ export const useUserStore = defineStore({
     // 打开开通vip弹窗
     openVip(type: Boolean) {
       this.openVipVisible = type;
+      if (type === false) {
+        setTimeout(() => {
+          this.openVipTitle = "开通VIP会员，继续使用该功能。";
+        }, 500);
+      }
     },
     // 获取用户权限
     async getPermissionList() {
@@ -114,6 +121,7 @@ export const useUserStore = defineStore({
           .then(({ datas }: any) => {
             if (datas) {
               this.fileUrl = datas[0].url;
+              this.imgUrl = datas.find((item) => item.type === "REPORT_CACHE");
               resolve(datas);
             }
           })

@@ -40,8 +40,8 @@ const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
 import { getReNewsInformations } from "@/api/report";
 import { onMounted, ref, Ref } from "vue";
-import useNamespace from "@/utils/nameSpace";
 import IndustryInsightList from "@/components/Common/IndustryInsightList.vue";
+import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("industryInsight");
 const currentPage1 = ref(1);
 const background = ref(true);
@@ -108,12 +108,6 @@ onMounted(() => {
 </style>
 <style lang="scss">
 .es-industryInsight {
-  .el-pagination.is-background .el-pager li.is-active {
-    background: #dee8ff;
-    border-radius: 4px;
-    color: #244bf1;
-  }
-
   .el-pagination.is-background .btn-prev:disabled,
   .el-pagination.is-background .btn-next:disabled,
   .el-pagination.is-background .btn-next,
@@ -123,6 +117,11 @@ onMounted(() => {
 
   .el-pagination.is-background .el-pager li {
     background: none;
+  }
+  .el-pagination.is-background .el-pager li.is-active {
+    background: #dee8ff;
+    border-radius: 4px;
+    color: #244bf1;
   }
 }
 </style>

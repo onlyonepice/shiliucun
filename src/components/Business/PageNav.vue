@@ -82,7 +82,7 @@ import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
 import PersonalAvatar from "@/assets/img/common/personal-avatar.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
-const { VITE_I_REPORT_URL, VITE_INDUSTRIALMAP_URL } = import.meta.env;
+const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
 const router = useRouter();
 const route = useRoute();
@@ -121,6 +121,7 @@ const navList: Ref<Array<NavList>> = ref([
     path: ["/report", "/reportDetail", "", "", ""],
     children: [
       { id: 1, text: "行业洞察", path: "/industryInsight" },
+      { id: 1, text: "专家访谈", path: "/expertInterviews" },
       { id: 2, text: "季报月报", path: "/quarterlyMonthlyReports" },
       { id: 3, text: "在线报告", path: "/reportOnLine?source=在线报告" },
       { id: 4, text: "白皮书", path: "/reportWhitePaper" },
@@ -140,7 +141,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 3,
         text: "电价",
-        path: VITE_I_REPORT_URL + "#/stored-leading/electricity-price",
+        path: "/electricityPrice",
       },
       {
         id: 4,
@@ -157,12 +158,11 @@ const navList: Ref<Array<NavList>> = ref([
   {
     id: 4,
     text: "分析",
-    path: ["/analyze"],
     children: [
       {
         id: 1,
         text: "工商业测算",
-        path: VITE_I_REPORT_URL + "#/stored-leading/invest-ROE/business",
+        path: "/calculate",
       },
     ],
   },
@@ -180,7 +180,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 1,
         text: "融资方案",
-        path: VITE_I_REPORT_URL + "#/stored-leading/financing-plan",
+        path: ["/financingPlan"],
       },
       { id: 2, text: "供需对接", path: "" },
     ],

@@ -84,7 +84,7 @@ const getReleaseTime = () => {
   const _data = props.timeFilter.filter((item) => {
     return item.defaultValue;
   });
-  releaseTime.value = _data[0].paramDesc;
+  releaseTime.value = _data[0].paramValue;
 };
 getReleaseTime();
 // 招标内容筛选项改变
@@ -95,7 +95,10 @@ const onChangeFilter = (id: string | number, type: string) => {
   } else {
     nextTick(() => {
       contentDict.value = props.contentFilter[0].id;
-      releaseTime.value = props.timeFilter[0].paramValue;
+      const _data = props.timeFilter.filter((item) => {
+        return item.defaultValue;
+      });
+      releaseTime.value = _data[0].paramValue;
     });
   }
 };

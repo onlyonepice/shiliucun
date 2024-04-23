@@ -49,7 +49,7 @@ export const cdn = importToCDN({
     {
       name: "echarts",
       var: "echarts",
-      path: "echarts.min.js",
+      path: "echarts.common.min.js",
     },
   ],
 });

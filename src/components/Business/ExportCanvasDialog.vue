@@ -60,6 +60,7 @@ export default {
     return {
       exportType: ["png", "jpg"], // 导出类型
       exportTypeValue: "png", // 导出类型值索引
+      showDialog: false,
     };
   },
   watch: {
@@ -101,22 +102,27 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/style";
+
 .es-dialog__body {
   @include flex(center, flex-start);
   @include margin(0, 0, 8px, 0);
 }
+
 .export-type {
   @include flex(center, center);
   @include margin(0, 32px, 0, 0);
   cursor: pointer;
 }
+
 .export-type-img {
   @include widthAndHeight(24px, 24px);
   @include margin(0, 4px, 0, 0);
 }
+
 .export-type-text {
   @include font(16px, 400, #1c232f, 24px);
 }
+
 .export-type__content {
   @include widthAndHeight(512px);
   @include flex(center, center);
@@ -124,6 +130,7 @@ export default {
   background: rgba(248, 249, 251, 0);
   border-radius: 4px;
   border: 1px solid #f1f2f6;
+
   img {
     @include widthAndHeight(496px);
     background-image: url("@/assets/img/common/canvas-img-bg.png");

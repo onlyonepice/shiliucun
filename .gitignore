@@ -27,3 +27,4 @@ package-lock.json
 # eslint
 .eslintcache
 tsconfig.tsbuildinfo
+test.html
