@@ -23,6 +23,7 @@
         :contentFilter="contentFilter"
         :timeFilter="timeFilter"
       />
+      <DurationAnalysis v-if="choseTabs === 6" />
     </template>
   </div>
 </template>
@@ -32,24 +33,25 @@ interface TabsList {
   id: number;
   name: string;
 }
+import {
+  getTenderFilterApi,
+  getBiddingContentApi,
+  getTenderTimeFilterApi,
+} from "@/api/data";
 import { ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import TenderSearch from "./components/tenderSearch.vue";
+import AreaAnalysis from "./components/areaAnalysis.vue";
 import MonthlyAnalysis from "./components/monthlyAnalysis.vue";
 import BusinessAnalysis from "./components/businessAnalysis.vue";
-import AreaAnalysis from "./components/areaAnalysis.vue";
-import {
-  getTenderFilterApi,
-  getTenderTimeFilterApi,
-  getBiddingContentApi,
-} from "@/api/data";
+import DurationAnalysis from "./components/durationAnalysis.vue";
 import { NOOP } from "@vue/shared";
 import { windowScrollStore } from "@/store/modules/windowScroll";
-const windowScroll = windowScrollStore();
 const ns = useNamespace("dataTender");
-const choseTabs: Ref<number> = ref(1); // 选中的标签栏
-const contentFilter: Ref<Array<any>> = ref([]); // 招标内容筛选项
+const windowScroll = windowScrollStore();
+const choseTabs: Ref<number> = ref(6); // 选中的标签栏
 const timeFilter: Ref<Array<any>> = ref([]); // 招标时间筛选项
+const contentFilter: Ref<Array<any>> = ref([]); // 招标内容筛选项
 windowScroll.SET_SCROLL_TOP(0);
 
 const biddingContentFilter: Ref<Array<any>> = ref([
@@ -68,6 +70,7 @@ const tabsList: Ref<Array<TabsList>> = ref([
   { id: 2, name: "招标月度分析" },
   { id: 3, name: "招标企业分析" },
   { id: 4, name: "招标地区分析" },
+  { id: 6, name: "储能时长分析" },
 ]);
 // 选择标签栏
 const onHandleClick = (id: number) => {
