@@ -138,6 +138,7 @@ const model = defineModel();
 watch(
   () => props.defaultValue,
   (val) => {
+    console.log(val);
     value.value = val;
   },
   { immediate: true, deep: true },

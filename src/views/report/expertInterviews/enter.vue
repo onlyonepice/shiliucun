@@ -50,10 +50,12 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import { getExpertInterviewList } from "@/api/data";
+import { useRouter } from "vue-router";
 import useNamespace from "@/utils/nameSpace";
-const ns = useNamespace("expertInterviews");
+import { getExpertInterviewList } from "@/api/data";
+const router = useRouter();
 const paginationTotal = ref<number>(0);
+const ns = useNamespace("expertInterviews");
 const pagination = ref({ limit: 10, page: 1 });
 const interviewRecordsData = ref<Array<any>>([]);
 // 分页
@@ -74,7 +76,7 @@ async function getExpertInterviews() {
   }
 }
 function handleOpenReport(item: any) {
-  window.open(item.link);
+  router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 }
 getExpertInterviews();
 </script>
