@@ -213,7 +213,6 @@ watch(
 let regions = ref([]);
 const getAreaFn = async () => {
   const data = await getAreaApi({ level: 4, page: 1, limit: 1000, pcode: 156 });
-  console.log(data);
   if (data.resp_code === 0) {
     regions.value = data.datas.records;
   }
@@ -223,7 +222,6 @@ const handleFinancingClick = (type) => {
   drawer.value = true;
 };
 const submitForm = async (formEl: FormInstance | undefined) => {
-  console.log(ruleForm.value);
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {

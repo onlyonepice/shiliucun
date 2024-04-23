@@ -332,7 +332,6 @@ const onExportAll = async (type, value) => {
   }
 };
 const filterTable = async () => {
-  console.log(formatDom.value.getDom());
   const arr = [];
   const financialReportsData = formatDom.value.getDom();
   for (const item of financialReportsData) {
@@ -523,14 +522,18 @@ onMounted(() => {
 
 <style scoped lang="scss">
 @import "@/style/mixin.scss";
+
 #investment-return {
   padding: 80px 0;
 }
+
 .es-calculate-evaluate {
   @include flex(center, space-between, nowrap);
+
   .es-calculate-evaluate__title {
     @include flex(center, flex-start, nowrap);
   }
+
   .es-calculate-evaluate__title-item {
     @include widthAndHeight(96px, 32px);
     @include flex(center, center);
@@ -539,39 +542,48 @@ onMounted(() => {
     margin-right: 8px;
     cursor: pointer;
     background: #f2f3f5;
+
     img {
       @include widthAndHeight(20px, 20px);
       margin-right: 4px;
     }
+
     span {
       @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
     }
+
     &:nth-of-type(1) {
       margin-left: 16px;
     }
   }
+
   div[type="不满意"] {
     background: #fde0e2;
     border: 1px solid #fbb4b9;
   }
+
   div[type="一般"] {
     background: #fff1d1;
     border: 1px solid #ffbd12;
   }
+
   div[type="满意"] {
     background: #fff1d1;
     border: 1px solid #ffbd12;
   }
 }
+
 .scrollbar-flex-content {
   overflow-x: auto;
 }
+
 .es-calculate-tabs {
   position: sticky;
   top: 0;
   background: #ffffff;
   z-index: 999;
 }
+
 .format-dom {
   position: absolute;
   z-index: -1;
