@@ -61,6 +61,7 @@ const handleClose = (type: boolean) => {
   @include margin(0, 0, 0, 0);
   transform: translate(-50%, -50%);
   border-radius: 10px;
+  padding: 0 !important;
   .el-dialog__header {
     font-weight: 600;
     line-height: 26px;

@@ -1,5 +1,8 @@
 <template>
-  <div :class="['page-loading', loading ? 'show' : 'hide']">
+  <div
+    :class="['page-loading', loading ? 'show' : 'hide']"
+    :style="{ 'background-color': bg }"
+  >
     <div class="page-loading-container">
       <div class="container" />
     </div>
@@ -11,6 +14,9 @@ defineProps({
   loading: {
     type: Boolean,
     default: true,
+  },
+  bg: {
+    default: "#ffffff",
   },
 });
 </script>

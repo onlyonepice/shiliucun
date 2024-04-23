@@ -254,6 +254,7 @@
           <Select
             type="input"
             :defaultValue="modifyInfoFreeze.mobile"
+            :disabled="true"
             @onChange="
               (val) => {
                 return onChangeInfo(val, 'mobile');
