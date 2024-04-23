@@ -179,7 +179,6 @@ onMounted(() => {
     const _data = reportStore().getReportMapList(
       route.query.moduleName as string,
     );
-    console.log(breadcrumbList.value);
     breadcrumbList.value[0].text = _data.ch;
     breadcrumbList.value[0].path = _data.path;
   }
