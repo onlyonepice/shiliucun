@@ -5,13 +5,11 @@ import removeConsole from "vite-plugin-remove-console";
 import removeNoMatch from "vite-plugin-router-warn";
 import { configCompressPlugin } from "./compress";
 import eslintPlugin from "vite-plugin-eslint";
-import Components from "unplugin-vue-components/vite";
 import type { PluginOption } from "vite";
-import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 export function getPluginsList(
   VITE_CDN: boolean,
-  VITE_COMPRESSION: ViteCompression,
+  VITE_COMPRESSION,
 ): PluginOption[] {
   return [
     vue(),
@@ -29,14 +27,6 @@ export function getPluginsList(
       include: ["src/**/*.ts", "src/**/*.vue", "src/*.ts", "src/*.vue"],
     }),
     VITE_CDN ? cdn : null,
-    Components({
-      // 指定组件所在文件夹的位置，默认是src/components
-      dirs: ["src/components"],
-      // ui库解析器
-      extensions: ["vue"], //文件扩展
-      resolvers: [ElementPlusResolver()],
-      dts: "src/types/components.d.ts",
-    }),
     configCompressPlugin(VITE_COMPRESSION),
   ];
 }

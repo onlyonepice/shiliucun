@@ -8,11 +8,13 @@ import "./style/element-plus.scss";
 import "element-plus/dist/index.css";
 import ElementPlus from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
+import components from "@/components/index";
 const app = createApp(App);
 app.config.warnHandler = () => null;
 
 createApp(App)
   .use(store)
   .use(router)
+  .use(components)
   .use(ElementPlus, { locale: zhCn })
   .mount("#app");
