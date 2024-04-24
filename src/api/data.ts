@@ -203,3 +203,24 @@ export const getUnitListApi = () => {
     "/eesa-report/Policy/openApi/v1.0/getUnitsStatistics",
   );
 };
+
+// 获取招标地区
+export const getBiddingAreaApi = () => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/Policy/openApi/v1.0/getProvincialDivisions",
+  );
+};
+
+// 获取招标储能时长分析
+export const getEnergyStorageDurationAnalysis = (params: {
+  contentDict: string;
+  partition: string;
+  releaseTime: string;
+}) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/Policy/openApi/v1.0/getEnergyStorageDurationAnalysis",
+    { params },
+  );
+};

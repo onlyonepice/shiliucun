@@ -1,4 +1,4 @@
-import { graphic, registerMap, getMap } from "echarts/core";
+// import { graphic, registerMap, getMap } from "echarts/core";
 export function pieEChartsOption() {
   return {
     // 设置标题

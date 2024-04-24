@@ -46,7 +46,7 @@ import { ref, watch, Ref, nextTick } from "vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("winningBidScenes");
 import { get } from "lodash";
-import { enterScenesFormOptions } from "../data.js";
+import { enterScenesFormOptions } from "../data";
 // import { capacityAnalysis_V2 } from "@/api/data";
 // import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
@@ -76,7 +76,6 @@ interface response {
 watch(
   () => props.formOptions,
   (res: response[]) => {
-    console.log("1231311231", res);
     if (res.length > 0) {
       nextTick(() => {
         options.value.forEach((item) => {
@@ -126,6 +125,7 @@ watch(
     immediate: true,
   },
 );
+
 const getData = async () => {
   loading.value = true;
   try {

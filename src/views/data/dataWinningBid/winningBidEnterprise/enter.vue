@@ -50,7 +50,7 @@ import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("winningBidEnterprise");
 import { enterpriseAnalysis } from "@/api/data";
 import { get } from "lodash";
-import { enterpriseFormOptions } from "../data.js";
+import { enterpriseFormOptions } from "../data";
 import lament_icon from "@/assets/img/common/lament_icon.png";
 import * as echarts from "echarts";
 import { useUserStore } from "@/store/modules/user";
