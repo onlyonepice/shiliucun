@@ -29,14 +29,14 @@
       >下载图片</el-button
     >
     <div :class="ns.b('eCharts-box')">
-      <div v-loading="loading" id="eChart-winningBidPrice" ref="eChartsDom" />
-      <ExportCanvasDialog
-        :visible="exportVisible"
-        :img-url="exportImgUrl"
-        :img-title="`储能月度中标单价/容量分析-${requestData.biddingContent}（${requestData.technologyType}）`"
-        @close="exportVisible = false"
-      />
+      <div v-loading="loading" id="eChart-winningBidScenes" ref="eChartsDom" />
     </div>
+    <ExportCanvasDialog
+      :visible="exportVisible"
+      :img-url="exportImgUrl"
+      :img-title="`储能月度中标单价/容量分析-${requestData.contentDict}（${requestData.technologyType}）`"
+      @close="exportVisible = false"
+    />
   </div>
 </template>
 
@@ -46,18 +46,17 @@ import { ref, watch, Ref, nextTick } from "vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("winningBidScenes");
 import { get } from "lodash";
+import { getWinningScenariosApi } from "@/api/data";
 import { enterScenesFormOptions } from "../data.js";
-// import { capacityAnalysis_V2 } from "@/api/data";
-// import { cloneDeep } from "lodash";
+import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
-// import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
-const EChartOptions: Ref<any> = ref({});
+import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 // 获取eCharts节点
 const eChartsDom: Ref<any> = ref(null);
-// const eChartsOption: Ref<any> = ref(pieEChartsOption());
+const eChartsOption: Ref<any> = ref(pieEChartsOption());
 const props = defineProps({
   formOptions: {
     type: Array as any,
@@ -65,7 +64,7 @@ const props = defineProps({
   },
 });
 const requestData = ref({
-  biddingContent: "",
+  contentDict: "",
   releaseTime: "",
   unit: [],
 });
@@ -80,7 +79,7 @@ watch(
       nextTick(() => {
         options.value.forEach((item) => {
           switch (item.model) {
-            case "biddingContent":
+            case "contentDict":
               item.bind.options = res[0].datas;
               break;
             case "releaseTime":
@@ -94,23 +93,25 @@ watch(
         res.forEach((item, index) => {
           switch (index) {
             case 0:
-              requestData.value.biddingContent = get(
+              requestData.value.contentDict = get(
                 item.datas.find((item) => item.defaultValue),
-                "paramDesc",
+                "id",
                 "2",
               );
               break;
             case 5:
-              requestData.value.releaseTime = get(
-                item.datas.find((item) => item.defaultValue),
-                "paramDesc",
-                "5",
-              );
+              item.datas.forEach((item: any) => {
+                if (item.defaultValue) {
+                  requestData.value.releaseTime = item.paramValue;
+                }
+              });
               break;
             case 6:
-              requestData.value.unit.push(
-                item.datas.filter((_item) => _item.defaultValue)[0],
-              );
+              item.datas.forEach((item: any) => {
+                if (item.defaultValue) {
+                  requestData.value.unit.push(item.paramValue);
+                }
+              });
               break;
           }
         });
@@ -124,8 +125,33 @@ watch(
   },
 );
 const getData = async () => {
+  eChartsOption.value.series = [];
   loading.value = true;
   try {
+    const _filter: any = cloneDeep(requestData.value);
+    _filter.unit = _filter.unit.join(",");
+    const { datas } = await getWinningScenariosApi(_filter);
+    datas.forEach((item) => {
+      item.data.forEach((item2) => {
+        item2.unit = item.unit === "数量" ? "个" : item.unit;
+      });
+    });
+    const _releaseTime = _filter.releaseTime;
+    eChartsOption.value.title.text = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}储能系统招标应用场景分布`;
+    eChartsOption.value.color = ["#244BF1", "#FF892E", "#FFAF0B", "#01B82B"];
+    requestData.value.unit.forEach((item, index) => {
+      eChartsOption.value.series.push({
+        type: "pie",
+        radius: [154 - index * 30, 180 - index * 30],
+        label: {
+          show: true,
+          formatter: (params) => {
+            return `${params.value}${params.data.unit}`;
+          },
+        },
+        data: datas[index].data,
+      });
+    });
     loading.value = false;
     initECharts();
   } catch (e) {
@@ -135,9 +161,10 @@ const getData = async () => {
 
 const initECharts = () => {
   const myChart = echarts.init(
-    document.getElementById("eChart-winningBidPrice"),
+    document.getElementById("eChart-winningBidScenes"),
   );
-  myChart.setOption(EChartOptions.value);
+  myChart.clear();
+  myChart.setOption(eChartsOption.value);
 };
 // 导出图片
 function exportResult() {
@@ -183,7 +210,7 @@ const selectChange = (row, index, val) => {
 }
 .es-winningBidScenes-eCharts-box {
   width: 100%;
-
+  margin-top: 80px;
   #eChart-winningBidScenes {
     width: 100%;
     height: 642px;

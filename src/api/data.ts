@@ -214,3 +214,14 @@ export const getTenderScenariosApi = (params: any) => {
     },
   );
 };
+
+// 获取中标应用场景分析
+export const getWinningScenariosApi = (params: any) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/priceTracking/openApi/v1.0/getBidderApplicationScenarioAnalysis",
+    {
+      params,
+    },
+  );
+};

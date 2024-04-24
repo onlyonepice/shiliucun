@@ -127,7 +127,7 @@ export const enterScenesFormOptions = () => {
     {
       type: "select",
       label: "中标内容",
-      model: "biddingContent",
+      model: "contentDict",
       multiple: false,
       bind: {
         placeholder: "请选择",
