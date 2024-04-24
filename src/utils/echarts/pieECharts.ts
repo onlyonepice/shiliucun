@@ -18,21 +18,6 @@ export function pieEChartsOption() {
         fontWeight: "bolder",
       },
     },
-    xAxis: {
-      type: "category",
-      axisLabel: { interval: 0 }, // 不显示x轴的标签
-      axisLine: {
-        show: false,
-      },
-      // 坐标轴刻度
-      axisTick: { show: false },
-    },
-    // grid: {
-    //   top: "20%",
-    //   left: "50",
-    //   right: "3%",
-    //   bottom: "10%",
-    // },
     // 图例设置
     legend: [
       {

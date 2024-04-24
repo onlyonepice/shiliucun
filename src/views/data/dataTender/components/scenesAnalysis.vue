@@ -48,11 +48,11 @@ import { ref, Ref, watch } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getTenderScenariosApi } from "@/api/data";
-import { eChartsOptionCommon, textStyleObject } from "@/utils/echarts/eCharts";
+import { pieEChartsOption } from "@/utils/echarts/pieECharts";
 import { cloneDeep } from "lodash";
 import { useUserStore } from "@/store/modules/user";
 // import { nextTick } from "process";
-const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
+const eChartsOption: Ref<any> = ref(pieEChartsOption());
 // 获取eCharts节点
 const eChartsDom = ref(null);
 // 导出图片相关
@@ -96,6 +96,7 @@ watch(
 // 获取eCharts数据
 async function getElectricityTypeOneName() {
   loading.value = true;
+  eChartsOption.value.series = [];
   const _filter = cloneDeep(filter.value);
   _filter.unit = _filter.unit.join(",");
   const { datas }: any = await getTenderScenariosApi(_filter);
@@ -120,13 +121,6 @@ async function getElectricityTypeOneName() {
       data: datas[index].data,
     });
   });
-  eChartsOption.value.legend = [
-    {
-      x: "center",
-      y: "95%",
-      textStyle: textStyleObject,
-    },
-  ];
 
   loading.value = false;
   createECharts();
@@ -136,6 +130,7 @@ function createECharts() {
   const myChart = echarts.init(
     document.getElementById("eChart_dataScenesAnalysis"),
   );
+  myChart.clear();
   myChart.setOption(eChartsOption.value);
 }
 
