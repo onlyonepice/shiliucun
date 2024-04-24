@@ -67,7 +67,7 @@ const props = defineProps({
 const requestData = ref({
   biddingContent: "",
   releaseTime: "",
-  unit: "",
+  unit: [],
 });
 const options = ref(enterScenesFormOptions());
 interface response {
@@ -76,7 +76,6 @@ interface response {
 watch(
   () => props.formOptions,
   (res: response[]) => {
-    console.log("1231311231", res);
     if (res.length > 0) {
       nextTick(() => {
         options.value.forEach((item) => {
@@ -109,10 +108,8 @@ watch(
               );
               break;
             case 6:
-              requestData.value.unit = get(
-                item.datas.find((item) => item.defaultValue),
-                "paramDesc",
-                "1",
+              requestData.value.unit.push(
+                item.datas.filter((_item) => _item.defaultValue)[0],
               );
               break;
           }

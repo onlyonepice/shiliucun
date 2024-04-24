@@ -128,6 +128,7 @@ export const enterScenesFormOptions = () => {
       type: "select",
       label: "中标内容",
       model: "biddingContent",
+      multiple: false,
       bind: {
         placeholder: "请选择",
         options: [],
@@ -142,6 +143,7 @@ export const enterScenesFormOptions = () => {
       type: "select",
       label: "发布日期",
       model: "releaseTime",
+      multiple: false,
       bind: {
         ref: "year-cascade",
         placeholder: "请选择",
@@ -157,13 +159,14 @@ export const enterScenesFormOptions = () => {
       type: "select",
       label: "统计单位",
       model: "unit",
+      multiple: true,
       bind: {
         ref: "unit-cascade",
         placeholder: "请选择",
         options: [],
         cascaderOption: {
-          label: "paramName",
-          value: "paramDesc",
+          label: "paramDesc",
+          value: "paramValue",
           emitPath: false,
         },
       },
