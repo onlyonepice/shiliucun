@@ -213,14 +213,19 @@ export const getBiddingAreaApi = () => {
 };
 
 // 获取招标储能时长分析
-export const getEnergyStorageDurationAnalysis = (params: {
-  contentDict: string;
-  partition: string;
-  releaseTime: string;
-}) => {
+export const getEnergyStorageDurationAnalysis = (params) => {
   return http.request<responseType>(
     "get",
     "/eesa-report/Policy/openApi/v1.0/getEnergyStorageDurationAnalysis",
+    { params },
+  );
+};
+
+// 获取中标储能时长分析
+export const getWinningEnergyStorageDurationAnalysis = (params) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/priceTracking/openApi/v1.0/getBidderEnergyStorageDurationAnalysis",
     { params },
   );
 };

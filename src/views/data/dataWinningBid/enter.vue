@@ -82,7 +82,7 @@ const tabList = ref([
   },
 ]);
 
-const currentTab = ref("duration");
+const currentTab = ref("price");
 const handleTabChange = (value: string) => {
   currentTab.value = value;
 };

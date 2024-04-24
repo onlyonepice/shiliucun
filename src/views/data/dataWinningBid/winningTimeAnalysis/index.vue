@@ -56,7 +56,7 @@ import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
 import Select from "@/components/Common/Select.vue";
 import { useUserStoreHook } from "@/store/modules/user";
-import { getEnergyStorageDurationAnalysis } from "@/api/data";
+import { getWinningEnergyStorageDurationAnalysis } from "@/api/data";
 import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
 const ns = useNamespace("durationAnalysis");
 const props = defineProps({
@@ -125,7 +125,7 @@ watch(
 async function getData() {
   loading.value = true;
   try {
-    const { datas, resp_code } = await getEnergyStorageDurationAnalysis(
+    const { datas, resp_code } = await getWinningEnergyStorageDurationAnalysis(
       searchParams.value,
     );
     if (resp_code === 0) {
