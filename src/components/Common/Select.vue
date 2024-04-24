@@ -14,6 +14,7 @@
       @change="handleChange"
       @visible-change="handleVerifyLogin"
       :disabled="props.disabled"
+      :multiple="multiple"
     >
       <el-option
         v-for="item in options"
@@ -112,7 +113,7 @@ const props = defineProps({
     default: "label",
   },
   defaultValue: {
-    type: [Number, String],
+    type: [Number, String, Array],
     default: "",
   },
   disabled: {
@@ -127,13 +128,16 @@ const props = defineProps({
     type: Number,
     default: 999999,
   },
+  multiple: {
+    type: Boolean,
+    default: false,
+  },
 });
-const value: any = ref(""); // 选中值
+const value: any = ref("" || []); // 选中值
 const model = defineModel();
 watch(
   () => props.defaultValue,
   (val) => {
-    console.log(val);
     value.value = val;
   },
   { immediate: true, deep: true },

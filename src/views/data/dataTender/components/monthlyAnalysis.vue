@@ -32,7 +32,7 @@ import { onMounted, ref, Ref, watch } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getBiddingDynamicsListApi } from "@/api/data";
-import { eChartsOptionCommon, textStyleObject } from "@/utils/eCharts";
+import { eChartsOptionCommon, textStyleObject } from "@/utils/echarts/eCharts";
 import { cloneDeep } from "lodash";
 import { useUserStore } from "@/store/modules/user";
 import { nextTick } from "process";

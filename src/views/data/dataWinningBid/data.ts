@@ -122,3 +122,51 @@ export const enterpriseFormOptions = () => {
     },
   ];
 };
+export const enterScenesFormOptions = () => {
+  return [
+    {
+      type: "select",
+      label: "中标内容",
+      model: "biddingContent",
+      bind: {
+        placeholder: "请选择",
+        options: [],
+        cascaderOption: {
+          label: "paramDesc",
+          value: "paramName",
+          emitPath: false,
+        },
+      },
+    },
+    {
+      type: "select",
+      label: "发布日期",
+      model: "releaseTime",
+      bind: {
+        ref: "year-cascade",
+        placeholder: "请选择",
+        options: [],
+        cascaderOption: {
+          label: "paramName",
+          value: "paramDesc",
+          emitPath: false,
+        },
+      },
+    },
+    {
+      type: "select",
+      label: "统计单位",
+      model: "unit",
+      bind: {
+        ref: "unit-cascade",
+        placeholder: "请选择",
+        options: [],
+        cascaderOption: {
+          label: "paramName",
+          value: "paramDesc",
+          emitPath: false,
+        },
+      },
+    },
+  ];
+};

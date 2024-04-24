@@ -49,7 +49,7 @@ import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("winningBidPrice");
 import { capacityAnalysis_V2 } from "@/api/data";
 import { get } from "lodash";
-import { priceFormOptions } from "../data.js";
+import { priceFormOptions } from "../data";
 import lament_icon from "@/assets/img/common/lament_icon.png";
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";

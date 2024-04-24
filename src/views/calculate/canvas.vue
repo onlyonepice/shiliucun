@@ -46,7 +46,7 @@ import {
   titleStyle,
   textStyle,
   flexStyle,
-} from "@/utils/eCharts";
+} from "@/utils/echarts/eCharts";
 import TipsIcon from "@/assets/img/common/lament_icon.png";
 import { apiCanvasData, apiSliderConfig } from "@/api/investment";
 const emit = defineEmits(["onSearch"]);

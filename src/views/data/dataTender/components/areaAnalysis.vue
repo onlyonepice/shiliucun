@@ -52,7 +52,7 @@ import { onMounted, ref, Ref, nextTick } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getRegionDynamicsListApi, getRegionColorApi } from "@/api/data";
-import { EChartOptions, charsToRemove } from "@/utils/mapECharts";
+import { EChartOptions, charsToRemove } from "@/utils/echarts/mapECharts";
 import { cloneDeep } from "lodash";
 import chinaMap from "@/assets/map/china.json";
 import { useUserStore } from "@/store/modules/user";

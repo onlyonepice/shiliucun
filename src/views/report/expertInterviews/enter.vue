@@ -10,9 +10,12 @@
           :class="ns.be('content', 'records_item')"
         >
           <div :class="ns.be('content', 'records_item-title')">
-            <a :href="item.link" target="_blank" onclick="return false;">{{
-              item.reportName
-            }}</a>
+            <a
+              :href="reportLink(item)"
+              target="_blank"
+              onclick="return false;"
+              >{{ item.reportName }}</a
+            >
           </div>
           <div :class="ns.be('content', 'records_item-content')">
             <div :class="ns.be('content', 'records_item-content-left')">
@@ -49,15 +52,28 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
+import { useUserStore } from "@/store/modules/user";
 import { getExpertInterviewList } from "@/api/data";
 const router = useRouter();
 const paginationTotal = ref<number>(0);
 const ns = useNamespace("expertInterviews");
 const pagination = ref({ limit: 10, page: 1 });
 const interviewRecordsData = ref<Array<any>>([]);
+
+const reportLink = computed(() => {
+  return (item: any) => {
+    if (!getToken()) {
+      // 没有token则返回一个没有的路劲这样链接就不会置灰
+      return `/#/undefined?id=${item.id}&moduleName=${item.moduleName}`;
+    }
+    // 有token则把详情的链接返回出去如果看过这份报告<a>链接会自动置灰
+    return `${window.location.origin}/#/reportDetail?id=${item.id}&moduleName=${item.moduleName}`;
+  };
+});
 // 分页
 function handleCurrentChange(val: number) {
   pagination.value.page = val;
@@ -76,6 +92,10 @@ async function getExpertInterviews() {
   }
 }
 function handleOpenReport(item: any) {
+  // 用户未登录则打开登录弹窗
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
   router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 }
 getExpertInterviews();
