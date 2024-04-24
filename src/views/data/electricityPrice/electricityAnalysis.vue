@@ -311,8 +311,6 @@ function changeVoltageLevel(val) {
 // 月份change
 function changeMonth(val) {
   searchParams.value.years = val;
-  console.log("change", searchParams.value.years);
-
   if (!getToken()) {
     return handleOpenLogin();
   }

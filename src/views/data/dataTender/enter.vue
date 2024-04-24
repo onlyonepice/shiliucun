@@ -29,7 +29,10 @@
         :timeFilter="timeFilter"
         :unitFilter="unitFilter"
       />
-      <DurationAnalysis v-if="choseTabs === 6" />
+      <DurationAnalysis
+        :formOptions="[contentFilter, timeFilter, regionFilter]"
+        v-if="choseTabs === 6"
+      />
     </template>
   </div>
 </template>
@@ -52,6 +55,7 @@ import {
   getTenderTimeFilterApi,
   getBiddingContentApi,
   getUnitListApi,
+  getBiddingAreaApi,
 } from "@/api/data";
 import { NOOP } from "@vue/shared";
 import { windowScrollStore } from "@/store/modules/windowScroll";
@@ -61,6 +65,7 @@ const choseTabs: Ref<number> = ref(6); // 选中的标签栏
 const timeFilter: Ref<Array<any>> = ref([]); // 招标时间筛选项
 const contentFilter: Ref<Array<any>> = ref([]); // 招标内容筛选项
 const unitFilter: Ref<Array<any>> = ref([]); // 统计单位筛选项
+const regionFilter: Ref<Array<any>> = ref([]); // 招标地区筛选项
 windowScroll.SET_SCROLL_TOP(0);
 
 const biddingContentFilter: Ref<Array<any>> = ref([
@@ -122,13 +127,26 @@ const getTenderUnitFilter = async () => {
     NOOP();
   }
 };
-getTenderUnitFilter();
-getTenderFilter();
-getTenderTimeFilter();
+// 获取招标地区
+async function getTenderArea() {
+  try {
+    const { resp_code, datas }: any = await getBiddingAreaApi();
+    resp_code === 0 && (regionFilter.value = datas);
+  } catch (error) {
+    NOOP();
+  }
+}
+Promise.all([
+  getTenderUnitFilter(),
+  getTenderFilter(),
+  getTenderTimeFilter(),
+  getTenderArea(),
+]);
 </script>
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+
 .es-dataTender {
   padding: 80px 0;
 }

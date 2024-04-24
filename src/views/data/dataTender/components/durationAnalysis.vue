@@ -30,7 +30,7 @@
       />
     </div>
     <div :class="ns.b('btns')">
-      <el-button type="primary" @click="exportResult"> 下载图片 </el-button>
+      <el-button type="primary" @click="exportResult">下载图片</el-button>
     </div>
     <div :class="ns.b('content')">
       <div
@@ -55,6 +55,7 @@ import { ref, Ref, watch } from "vue";
 import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
 import Select from "@/components/Common/Select.vue";
+import { useUserStoreHook } from "@/store/modules/user";
 import { getEnergyStorageDurationAnalysis } from "@/api/data";
 import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
 const ns = useNamespace("durationAnalysis");
@@ -67,16 +68,10 @@ const props = defineProps({
 const EChartOptions: Ref<any> = ref({
   ...pieEChartsOption(),
   color: ["#244BF1", "#FF892E", "#FFAF0B"],
-  legend: {
-    x: "center",
-    y: "95%",
-    show: true,
-    bottom: "0",
-  },
   series: {
     type: "pie",
     startAngle: 0,
-    radius: ["60%", "78%"],
+    radius: ["52%", "68%"],
     avoidLabelOverlap: true,
     label: {
       color: "rgba(0, 0, 0, 0.6)",
@@ -107,13 +102,19 @@ watch(
   () => props.formOptions,
   (val) => {
     if (val.length) {
-      contentList.value = val[0].datas;
-      searchParams.value.contentDict = val[0].datas[0].id;
-      dateList.value = val[5].datas;
-      searchParams.value.releaseTime = val[5].datas[0].paramValue;
-      regionList.value = val[7].datas;
-      searchParams.value.partition = val[7].datas[0].paramValue;
-      year.value = val[5].datas[0].paramDesc;
+      contentList.value = val[0];
+      searchParams.value.contentDict = val[0].find(
+        (item) => item.defaultValue,
+      ).id;
+      dateList.value = val[1];
+      searchParams.value.releaseTime = val[1].find(
+        (item) => item.defaultValue,
+      ).paramValue;
+      regionList.value = val[2];
+      searchParams.value.partition = val[2].find(
+        (item) => item.defaultValue,
+      ).paramValue;
+      year.value = dateList.value.find((item) => item.defaultValue).paramDesc;
       getData();
     }
   },
@@ -137,7 +138,9 @@ async function getData() {
       loading.value = false;
       initECharts();
     } else if (resp_code === 10030) {
-      searchParams.value = searchParams_deep.value;
+      setTimeout(() => {
+        searchParams.value = searchParams_deep.value;
+      });
       loading.value = false;
     }
   } catch (e) {
@@ -174,9 +177,18 @@ function handleTriggerForm() {
 function handleChange(val, key) {
   searchParams.value[key] = val;
   if (!getToken()) {
-    searchParams.value = searchParams_deep.value;
+    setTimeout(() => {
+      searchParams.value = searchParams_deep.value;
+    });
+    useUserStoreHook().openLogin(true);
+  } else {
+    if (key === "releaseTime") {
+      year.value = dateList.value.find(
+        (item) => item.paramValue === val,
+      ).paramDesc;
+    }
+    getData();
   }
-  getData();
 }
 </script>
 
@@ -198,8 +210,7 @@ function handleChange(val, key) {
 
   .es-durationAnalysis-content {
     #eChart-duration-analysis {
-      width: 100%;
-      height: 610px;
+      @include widthAndHeight(100%, 500px);
     }
   }
 }
