@@ -232,6 +232,12 @@
   .el-table th.el-table__cell {
     background-color: #F2F3F5;
   }
+  .el-tag.is-closable{
+    background-color: #ffffff;
+    color: rgba(0,0,0,0.9);
+    font-size: 12px;
+    font-weight: 400;
+  }
 }
 
 .el-table__row {
@@ -291,3 +297,4 @@
 .el-table .el-table__cell {
   padding: 0;
 }
+

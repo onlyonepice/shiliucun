@@ -113,7 +113,7 @@ const props = defineProps({
     default: "label",
   },
   defaultValue: {
-    type: [Number, String],
+    type: [Number, String, Array],
     default: "",
   },
   disabled: {
@@ -133,7 +133,7 @@ const props = defineProps({
     default: false,
   },
 });
-const value: any = ref(""); // 选中值
+const value: any = ref("" || []); // 选中值
 const model = defineModel();
 watch(
   () => props.defaultValue,

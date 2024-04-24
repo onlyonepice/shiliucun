@@ -203,3 +203,14 @@ export const getUnitListApi = () => {
     "/eesa-report/Policy/openApi/v1.0/getUnitsStatistics",
   );
 };
+
+// 获取招标应用场景分析
+export const getTenderScenariosApi = (params: any) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/Policy/openApi/v1.0/getApplicationScenarioAnalysis",
+    {
+      params,
+    },
+  );
+};

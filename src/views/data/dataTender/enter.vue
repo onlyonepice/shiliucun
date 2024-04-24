@@ -23,6 +23,12 @@
         :contentFilter="contentFilter"
         :timeFilter="timeFilter"
       />
+      <scenesAnalysis
+        v-if="choseTabs === 5"
+        :contentFilter="contentFilter"
+        :timeFilter="timeFilter"
+        :unitFilter="unitFilter"
+      />
     </template>
   </div>
 </template>
@@ -38,10 +44,12 @@ import TenderSearch from "./components/tenderSearch.vue";
 import MonthlyAnalysis from "./components/monthlyAnalysis.vue";
 import BusinessAnalysis from "./components/businessAnalysis.vue";
 import AreaAnalysis from "./components/areaAnalysis.vue";
+import scenesAnalysis from "./components/scenesAnalysis.vue";
 import {
   getTenderFilterApi,
   getTenderTimeFilterApi,
   getBiddingContentApi,
+  getUnitListApi,
 } from "@/api/data";
 import { NOOP } from "@vue/shared";
 import { windowScrollStore } from "@/store/modules/windowScroll";
@@ -50,6 +58,7 @@ const ns = useNamespace("dataTender");
 const choseTabs: Ref<number> = ref(1); // 选中的标签栏
 const contentFilter: Ref<Array<any>> = ref([]); // 招标内容筛选项
 const timeFilter: Ref<Array<any>> = ref([]); // 招标时间筛选项
+const unitFilter: Ref<Array<any>> = ref([]); // 统计单位筛选项
 windowScroll.SET_SCROLL_TOP(0);
 
 const biddingContentFilter: Ref<Array<any>> = ref([
@@ -68,6 +77,7 @@ const tabsList: Ref<Array<TabsList>> = ref([
   { id: 2, name: "招标月度分析" },
   { id: 3, name: "招标企业分析" },
   { id: 4, name: "招标地区分析" },
+  { id: 5, name: "应用场景分析" },
 ]);
 // 选择标签栏
 const onHandleClick = (id: number) => {
@@ -100,6 +110,16 @@ const getTenderTimeFilter = async () => {
     NOOP();
   }
 };
+// 获取统计单位筛选项
+const getTenderUnitFilter = async () => {
+  try {
+    const { resp_code, datas }: any = await getUnitListApi();
+    resp_code === 0 && (unitFilter.value = datas);
+  } catch (error) {
+    NOOP();
+  }
+};
+getTenderUnitFilter();
 getTenderFilter();
 getTenderTimeFilter();
 </script>
