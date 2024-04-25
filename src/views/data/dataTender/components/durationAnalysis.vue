@@ -54,9 +54,10 @@
 <script setup lang="ts">
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
-import { computed, ref, Ref, watch } from "vue";
 import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
+import { computed, ref, Ref, watch } from "vue";
+import { useUserStore } from "@/store/modules/user";
 import Select from "@/components/Common/Select.vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getEnergyStorageDurationAnalysis } from "@/api/data";
@@ -134,6 +135,13 @@ watch(
 
 // 获取数据
 async function getData() {
+  if (
+    !useUserStore().checkPermission(
+      "ANALYSIS_OF_BIDDING_ENERGY_STORAGE_DURATION",
+    )
+  ) {
+    return (loading.value = false);
+  }
   loading.value = true;
   isEmptyData.value = false;
   try {
