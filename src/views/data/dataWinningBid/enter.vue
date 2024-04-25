@@ -66,11 +66,6 @@ const tabList = ref([
     code: "bidwin_company_click",
   },
   {
-    name: "中标分析报告",
-    value: "report",
-    code: "bidwin_region_click",
-  },
-  {
     name: "应用场景分析",
     value: "scenes",
     code: "bidwin_scenes_click",
@@ -79,6 +74,11 @@ const tabList = ref([
     name: "储能时长分析",
     value: "duration",
     code: "bidwin_scenes_click",
+  },
+  {
+    name: "中标分析报告",
+    value: "report",
+    code: "bidwin_region_click",
   },
 ]);
 

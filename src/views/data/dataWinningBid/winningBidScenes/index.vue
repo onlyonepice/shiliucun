@@ -24,6 +24,7 @@
       </div>
     </div>
     <el-button
+      v-if="!showEmpty"
       style="float: right; margin-top: 32px"
       type="primary"
       @click="exportResult"

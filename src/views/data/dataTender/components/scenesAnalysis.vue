@@ -46,11 +46,16 @@
         "
       />
     </div>
-    <div :class="ns.be('top', 'right')" v-if="resultData.length > 0">
+    <div :class="ns.be('top', 'right')" v-if="!showEmpty">
       <el-button type="primary" @click="exportResult">下载图片</el-button>
     </div>
-    <EmptyData v-else />
-    <div v-loading="loading" id="eChart_dataScenesAnalysis" ref="eChartsDom" />
+    <div
+      v-if="!showEmpty"
+      v-loading="loading"
+      id="eChart_dataScenesAnalysis"
+      ref="eChartsDom"
+    />
+    <EmptyData style="margin-top: 120px" v-else />
     <ExportCanvasDialog
       :visible="exportVisible"
       :img-url="exportImgUrl"
@@ -92,11 +97,11 @@ const props = defineProps({
     default: () => [],
   },
 });
-const resultData = ref(); // 请求结果
 // 筛选项结果
 const contentDict = ref(712);
 const releaseTime = ref("2024");
 const unit: any = ref([]);
+const showEmpty: Ref<boolean> = ref(false);
 const canvasTitle = ref("");
 const onChangeFilter = (id: any, type: string) => {
   type === "contentDict" && (contentDict.value = id);
@@ -133,6 +138,7 @@ onMounted(() => {
 // 获取eCharts数据
 async function getElectricityTypeOneName() {
   loading.value = true;
+  showEmpty.value = false;
   eChartsOption.value.series = [];
   let _unit = cloneDeep(unit.value);
   const { datas }: any = await getTenderScenariosApi({
@@ -140,7 +146,9 @@ async function getElectricityTypeOneName() {
     releaseTime: releaseTime.value,
     unit: _unit.join(","),
   });
-  resultData.value = datas;
+  if (datas.length === 0) {
+    return (showEmpty.value = true);
+  }
   datas.forEach((item) => {
     item.data.forEach((item2) => {
       item2.unit = item.unit === "数量" ? "个" : item.unit;
