@@ -82,7 +82,7 @@ import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
 import PersonalAvatar from "@/assets/img/common/personal-avatar.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
-const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
+const { VITE_INDUSTRIALMAP_URL, VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
 const router = useRouter();
 const route = useRoute();
@@ -151,7 +151,12 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 5,
         text: "行业数据库",
-        path: "/dataBase",
+        path: `${VITE_DATABASE_URL}/#/home`,
+      },
+      {
+        id: 6,
+        text: "电价API",
+        path: `${VITE_DATABASE_URL}/#/ApiPage`,
       },
     ],
   },

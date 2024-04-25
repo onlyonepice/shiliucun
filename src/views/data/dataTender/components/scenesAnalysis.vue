@@ -31,6 +31,7 @@
       />
       <span :class="ns.be('top', 'title')">统计单位</span>
       <Select
+        ref="unitDom"
         v-model="unit"
         width="296px"
         :options="unitFilter"
@@ -67,6 +68,7 @@ import { pieEChartsOption } from "@/utils/echarts/pieECharts";
 import { cloneDeep } from "lodash";
 import { useUserStore } from "@/store/modules/user";
 // import { nextTick } from "process";
+const unitDom = ref(); // 获取单位下拉框
 const eChartsOption: Ref<any> = ref(pieEChartsOption());
 // 获取eCharts节点
 const eChartsDom = ref(null);
@@ -99,15 +101,19 @@ const onChangeFilter = (id: any, type: string) => {
   type === "contentDict" && (contentDict.value = id);
   type === "releaseTime" && (releaseTime.value = id);
   type === "unit" && (unit.value = id);
-  if (useUserStore().checkPermission("ANALYSIS_BIDDING_ENTERPRISES")) {
+  if (
+    useUserStore().checkPermission("ANALYSIS_OF_BIDDING_APPLICATION_SCENARIOS")
+  ) {
     getElectricityTypeOneName();
   } else {
+    unitDom.value.onBlur();
     nextTick(() => {
+      unit.value = [];
       contentDict.value = 712;
       releaseTime.value = "2024";
-      props.unitFilter.forEach(item => {
-        if( item.defaultValue ){
-          unit.value = unit.value.push(item.paramValue);
+      props.unitFilter.forEach((item) => {
+        if (item.defaultValue) {
+          unit.value.push(item.paramValue);
         }
       });
     });
@@ -115,9 +121,9 @@ const onChangeFilter = (id: any, type: string) => {
 };
 
 onMounted(() => {
-  props.unitFilter.forEach(item => {
-    if( item.defaultValue ){
-      unit.value = unit.value.push(item.paramValue);
+  props.unitFilter.forEach((item) => {
+    if (item.defaultValue) {
+      unit.value.push(item.paramValue);
     }
   });
   getElectricityTypeOneName();

@@ -10,6 +10,7 @@
           {{ item.label }}
         </span>
         <Select
+          :ref="item.model"
           v-model="requestData[item.model]"
           :options="item.bind.options"
           :type="item.type"
@@ -54,6 +55,7 @@ import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const unit = ref(); // 单位选择dom
 // 获取eCharts节点
 const eChartsDom: Ref<any> = ref(null);
 const eChartsOption: Ref<any> = ref(pieEChartsOption());
@@ -63,7 +65,7 @@ const props = defineProps({
     default: () => [],
   },
 });
-const requestData = ref({
+const requestData: Ref<any> = ref({
   contentDict: "",
   releaseTime: "",
   unit: [],
@@ -180,15 +182,23 @@ function exportResult() {
 }
 
 const selectChange = (row, index, val) => {
-  if (useUserStore().checkPermission("BID_PRICE_ANALYSIS")) {
+  if (
+    useUserStore().checkPermission("APPLICATION_SCENARIOS_FOR_WINNING_BIDS")
+  ) {
     requestData.value[row.model] = val;
     getData();
   } else {
+    unit.value[0].onBlur();
     nextTick(() => {
-      requestData.value[row.model] =
-        options[index].bind.options[0][
-          options[index].bind.cascaderOption.value
-        ];
+      const _unit = [];
+      props.formOptions[6].datas.forEach((item) => {
+        item.defaultValue && _unit.push(item.paramValue);
+      });
+      requestData.value = {
+        contentDict: 712,
+        releaseTime: "2024",
+        unit: _unit,
+      };
     });
   }
 };
