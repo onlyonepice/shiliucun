@@ -9,15 +9,14 @@
         >
           <template v-if="value.paramValue !== 'yearRange'">
             <el-tree
-              @check="() => changeTag(value, key)"
+              @check="() => changeTag(value[0], key)"
               ref="treeRefFilter"
-              :data="[value]"
+              :data="value"
               default-expand-all
               highlight-current
               :props="defaultProps"
               node-key="paramValue"
               show-checkbox
-              :default-checked-keys="filterParams[value.paramValue]"
             >
               <template #default="{ node, data }">
                 <span class="custom-tree_item">
@@ -62,8 +61,8 @@
           </template>
           <template v-else>
             <el-tree
-              @node-click="(val) => changeYearRangeTag(val, value)"
-              :data="[value]"
+              @node-click="(val) => changeYearRangeTag(val, value[0])"
+              :data="value"
               default-expand-all
               highlight-current
               :props="defaultProps"
@@ -74,7 +73,7 @@
                     class="radio"
                     v-if="data.policyQuantity"
                     :src="
-                      data.paramValue === filterParams[value.paramValue]
+                      data.paramValue === filterParams[value[0].paramValue]
                         ? radio_true
                         : radio_false
                     "
@@ -120,7 +119,7 @@
         @onSearch="onSearch"
       />
       <div class="content" v-loading="loading">
-        <div class="item" v-for="item in pageData" :key="item.id">
+        <div class="item" v-for="item in pageData" :key="item.id + '7'">
           <BiddingDynamicsList :pageData="item" />
         </div>
         <el-empty
@@ -202,7 +201,7 @@ const getData = async () => {
 const filterOptions = ref([]);
 const filterOptionsData = computed(() => {
   const arr = cloneDeep(filterOptions.value);
-  const newArr = arr.map((item) => {
+  let newArr = arr.map((item) => {
     if (!multistage.value.includes(item.paramValue)) {
       if ("parentShowAll" in item) {
         item.dropDownBoxResp = item.dropDownBoxResp.filter(
@@ -230,6 +229,10 @@ const filterOptionsData = computed(() => {
     }
     return item;
   });
+
+  for (let i in newArr) {
+    newArr[i] = [newArr[i]];
+  }
   return newArr;
 });
 
