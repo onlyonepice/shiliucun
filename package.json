@@ -20,7 +20,7 @@
     "core-js": "^3.8.3",
     "dayjs": "1.11.6",
     "docx": "7.4.1",
-    "echarts": "5.3.3",
+    "echarts": "5.5.0",
     "element-plus": "2.4.3",
     "html2canvas": "1.4.1",
     "js-cookie": "3.0.1",
