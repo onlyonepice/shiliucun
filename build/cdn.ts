@@ -31,6 +31,12 @@ export const cdn = importToCDN({
       path: "pinia.iife.min.js",
     },
     {
+      name: "element-plus",
+      var: "ElementPlus",
+      path: "index.full.min.js",
+      css: "index.min.css",
+    },
+    {
       name: "axios",
       var: "axios",
       path: "axios.min.js",
