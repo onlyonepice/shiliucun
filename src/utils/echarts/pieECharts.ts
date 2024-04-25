@@ -22,7 +22,7 @@ export function pieEChartsOption() {
     legend: [
       {
         x: "center",
-        y: "95%",
+        bottom: "10",
         textStyle: textStyleObject,
       },
     ],
