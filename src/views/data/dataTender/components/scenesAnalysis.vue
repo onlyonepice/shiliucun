@@ -3,31 +3,46 @@
     <div :class="ns.b('top')">
       <span :class="ns.be('top', 'title')">招标内容</span>
       <Select
-        v-model="filter.contentDict"
+        v-model="contentDict"
         width="296px"
         :options="contentFilter"
         labelKey="paramDesc"
         valueKey="id"
-        :defaultValue="filter.contentDict"
+        :defaultValue="contentDict"
+        @onChange="
+          (val) => {
+            return onChangeFilter(val, 'contentDict');
+          }
+        "
       />
       <span :class="ns.be('top', 'title')">发布日期</span>
       <Select
-        v-model="filter.releaseTime"
+        v-model="releaseTime"
         width="296px"
         :options="timeFilter"
         labelKey="paramDesc"
         valueKey="paramValue"
-        :defaultValue="filter.releaseTime"
+        :defaultValue="releaseTime"
+        @onChange="
+          (val) => {
+            return onChangeFilter(val, 'releaseTime');
+          }
+        "
       />
       <span :class="ns.be('top', 'title')">统计单位</span>
       <Select
-        v-model="filter.unit"
+        v-model="unit"
         width="296px"
         :options="unitFilter"
         labelKey="paramDesc"
         valueKey="paramValue"
         :multiple="true"
-        :defaultValue="filter.unit"
+        :defaultValue="unit"
+        @onChange="
+          (val) => {
+            return onChangeFilter(val, 'unit');
+          }
+        "
       />
     </div>
     <div :class="ns.be('top', 'right')">
@@ -44,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref, watch } from "vue";
+import { ref, Ref, onMounted, nextTick } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getTenderScenariosApi } from "@/api/data";
@@ -76,46 +91,56 @@ defineProps({
   },
 });
 // 筛选项结果
-const filter: Ref<any> = ref({
-  contentDict: 712,
-  releaseTime: "2024",
-  unit: ["1", "2", "3"],
+const contentDict = ref(712);
+const releaseTime = ref("2024");
+const unit = ref(["1"]);
+
+const onChangeFilter = (id: any, type: string) => {
+  type === "contentDict" && (contentDict.value = id);
+  type === "releaseTime" && (releaseTime.value = id);
+  type === "unit" && (unit.value = id);
+  if (useUserStore().checkPermission("ANALYSIS_BIDDING_ENTERPRISES")) {
+    getElectricityTypeOneName();
+  } else {
+    nextTick(() => {
+      contentDict.value = 712;
+      releaseTime.value = "2024";
+      unit.value = ["1"];
+    });
+  }
+};
+
+onMounted(() => {
+  getElectricityTypeOneName();
 });
-watch(
-  () => filter.value,
-  (val) => {
-    if (useUserStore().checkPermission("MONTHLY_ANALYSIS_BIDDING")) {
-      getElectricityTypeOneName();
-    } else {
-      console.log("=======", val);
-    }
-  },
-  { deep: true, immediate: true },
-);
 
 // 获取eCharts数据
 async function getElectricityTypeOneName() {
   loading.value = true;
   eChartsOption.value.series = [];
-  const _filter = cloneDeep(filter.value);
-  _filter.unit = _filter.unit.join(",");
-  const { datas }: any = await getTenderScenariosApi(_filter);
+  let _unit = cloneDeep(unit.value);
+  const { datas }: any = await getTenderScenariosApi({
+    contentDict: contentDict.value,
+    releaseTime: releaseTime.value,
+    unit: _unit.join(","),
+  });
   datas.forEach((item) => {
     item.data.forEach((item2) => {
       item2.unit = item.unit === "数量" ? "个" : item.unit;
     });
   });
-  const _releaseTime = _filter.releaseTime;
+  const _releaseTime = releaseTime.value;
   eChartsOption.value.title.text = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}储能系统招标应用场景分布`;
   eChartsOption.value.color = ["#244BF1", "#FF892E", "#FFAF0B", "#01B82B"];
-  filter.value.unit.forEach((item, index) => {
+  unit.value.forEach((item, index) => {
     eChartsOption.value.series.push({
       type: "pie",
-      radius: [154 - index * 30, 180 - index * 30],
+      radius: [204 - index * 50, 250 - index * 50],
       label: {
         show: true,
+        position: "inside",
         formatter: (params) => {
-          return `${params.value}${params.data.unit}`;
+          return `${params.value}${params.data.unit === "MWH" ? "\n" : ""}${params.data.unit}`;
         },
       },
       data: datas[index].data,
@@ -150,7 +175,7 @@ function exportResult() {
 <style lang="scss">
 @import "@/style/mixin.scss";
 #eChart_dataScenesAnalysis {
-  @include widthAndHeight(1152px, 505px);
+  @include widthAndHeight(100%, 642px);
   margin-top: 80px;
 }
 .es-dataScenesAnalysis-top {

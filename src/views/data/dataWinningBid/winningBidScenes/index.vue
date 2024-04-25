@@ -143,11 +143,12 @@ const getData = async () => {
     requestData.value.unit.forEach((item, index) => {
       eChartsOption.value.series.push({
         type: "pie",
-        radius: [154 - index * 30, 180 - index * 30],
+        radius: [204 - index * 50, 250 - index * 50],
         label: {
           show: true,
+          position: "inside",
           formatter: (params) => {
-            return `${params.value}${params.data.unit}`;
+            return `${params.value}${params.data.unit === "MWH" ? "\n" : ""}${params.data.unit}`;
           },
         },
         data: datas[index].data,
