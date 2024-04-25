@@ -30,11 +30,10 @@ export function EChartOptions() {
 
     series: [
       {
-        name: "left",
+        name: "china",
         type: "map",
-        map: "china", // 中国地图
-        // width: "50%", // 地图宽度
-        // left: "15%", // 地图位置
+        map: "china",
+        left: "15%", // 地图位置
         top: "25%", // 地图位置
         itemStyle: {
           borderColor: "#fff",
@@ -48,6 +47,7 @@ export function EChartOptions() {
             formatter: "{b}\n{c}",
           },
         },
+        // zoom: 1.2,
         label: {
           show: false,
           fontSize: 14,
@@ -63,6 +63,9 @@ export function EChartOptions() {
               return `${param.name}\n${param.value}GW`;
             else return "";
           },
+        },
+        select: {
+          disabled: false, //可以被选中
         },
         emphasis: {
           itemStyle: {
@@ -84,24 +87,28 @@ export function EChartOptions() {
             },
           },
         },
+        scaleLimit: {
+          min: 1,
+          max: 6,
+        },
         selectedMode: false,
         data: [],
       },
-      // {
-      //   name: "right",
-      //   type: "pie",
-      //   radius: ["40%", "55%"],
-      //   center: ["75%", "54%"],
-      //   avoidLabelOverlap: false,
-      //   label: {
-      //     color: "rgba(0,0,0,0.6)",
-      //     fontSize: 12,
-      //     formatter: (param) => {
-      //       return `${param.name}${param.percent.toFixed(1)}%`;
-      //     },
-      //   },
-      //   data: [],
-      // },
+      {
+        name: "right",
+        type: "pie",
+        radius: ["40%", "55%"],
+        center: ["75%", "54%"],
+        avoidLabelOverlap: false,
+        label: {
+          color: "rgba(0,0,0,0.6)",
+          fontSize: 12,
+          formatter: (param) => {
+            return `${param.name}${param.percent.toFixed(1)}%`;
+          },
+        },
+        data: [],
+      },
     ],
   };
 }
