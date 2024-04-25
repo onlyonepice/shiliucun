@@ -258,6 +258,7 @@ const biddingContentTwoRef = ref(null);
 const provincialLevelRef = ref(null);
 const changeTag = (value) => {
   let checked = [];
+  console.log(biddingContentTwoRef.value);
   switch (value.paramValue) {
     case "itemCategory":
       checked = itemCategoryRef.value[0].getCheckedNodes();
