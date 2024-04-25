@@ -1,5 +1,6 @@
 <template>
   <div v-loading="loading" :class="ns.b()">
+    <!-- 中标 -->
     <div :class="ns.b('filter')">
       <Select
         title="招标内容"
@@ -34,10 +35,12 @@
     </div>
     <div :class="ns.b('content')">
       <div
+        v-if="!isEmptyData"
         :class="ns.b('chart')"
         id="eChart-duration-analysis"
         ref="eChartsDomDurationAnalysis"
       />
+      <EmptyData v-else />
       <ExportCanvasDialog
         :visible="exportVisible"
         :img-url="exportImgUrl"
@@ -81,6 +84,7 @@ const EChartOptions: Ref<any> = ref({
     data: [],
   },
 });
+const isEmptyData = ref(false);
 const loading = ref(true);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
@@ -127,24 +131,24 @@ const eChartName = computed(() => {
 });
 // 获取数据
 async function getData() {
+  isEmptyData.value = false;
   loading.value = true;
   try {
-    const { datas, resp_code } = await getWinningEnergyStorageDurationAnalysis(
-      searchParams.value,
-    );
-    if (resp_code === 0) {
+    const {
+      datas: { data },
+      resp_code,
+    } = await getWinningEnergyStorageDurationAnalysis(searchParams.value);
+    if (resp_code === 0 && data) {
       // 添加title
-      EChartOptions.value.title.text = eChartName.value;
+      EChartOptions.value.title.text = eChartName;
       // 添加series
-      EChartOptions.value.series.data = datas.data.map((item) => {
+      EChartOptions.value.series.data = data.map((item) => {
         return { ...item, value: Number(item.value) };
       });
       loading.value = false;
       initECharts();
-    } else if (resp_code === 10030) {
-      setTimeout(() => {
-        searchParams.value = searchParams_deep.value;
-      });
+    } else if (resp_code === 10030 || !data) {
+      isEmptyData.value = true;
       loading.value = false;
     }
   } catch (e) {
@@ -208,6 +212,9 @@ function handleChange(val, key) {
   }
 
   .es-durationAnalysis-content {
+    @include flex();
+    min-height: 320px;
+
     #eChart-duration-analysis {
       @include widthAndHeight(100%, 500px);
     }
