@@ -89,12 +89,6 @@ const powerScale = computed(() => {
     return data.find((item) => name.includes(item.name)).data.powerScale;
   };
 });
-const itemStyleColor = computed(() => {
-  return (name: string) => {
-    name;
-    return "#EAEEFE";
-  };
-});
 onMounted(() => {
   getRegionColor();
 });
