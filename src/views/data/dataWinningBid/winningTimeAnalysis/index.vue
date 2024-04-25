@@ -13,8 +13,8 @@
       <Select
         title="发布日期"
         :options="dateList"
-        valueKey="paramValue"
-        labelKey="paramDesc"
+        valueKey="paramName"
+        labelKey="paramName"
         :defaultValue="searchParams.releaseTime"
         @triggerForm="handleTriggerForm"
         @on-change="(val) => handleChange(val, 'releaseTime')"
@@ -104,10 +104,12 @@ watch(
       searchParams.value.contentDict = val[0].datas.find(
         (item) => item.defaultValue,
       ).id;
-      dateList.value = val[5].datas;
-      searchParams.value.releaseTime = val[5].datas.find(
+      // 时间
+      dateList.value = val[4].datas;
+      searchParams.value.releaseTime = val[4].datas.find(
         (item) => item.defaultValue,
-      ).paramValue;
+      ).paramName;
+      // 地区
       regionList.value = val[7].datas;
       searchParams.value.partition = val[7].datas.find(
         (item) => item.defaultValue,
@@ -118,13 +120,10 @@ watch(
   { immediate: true, deep: true },
 );
 const eChartName = computed(() => {
-  const year = dateList.value.find(
-    (item) => item.paramValue === searchParams.value.releaseTime,
-  ).paramDesc;
   const content = contentList.value.find(
     (item) => item.id === searchParams.value.contentDict,
   ).paramDesc;
-  return `${year}${searchParams.value.partition}${content}招标不同储能时长能量规模占比`;
+  return `${searchParams.value.releaseTime}${searchParams.value.partition}${content}招标不同储能时长能量规模占比`;
 });
 // 获取数据
 async function getData() {
