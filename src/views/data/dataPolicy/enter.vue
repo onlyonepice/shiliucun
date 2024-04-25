@@ -14,7 +14,6 @@
           class="tree-item"
           v-for="(value, key) in filterOptionsData"
           :key="key"
-          v-once
         >
           <el-tree
             @node-click="(val) => changeTag(val, value)"
