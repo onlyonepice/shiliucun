@@ -41,7 +41,7 @@
       <ExportCanvasDialog
         :visible="exportVisible"
         :img-url="exportImgUrl"
-        :img-title="`${year}${searchParams.partition}（${searchParams.releaseTime}）`"
+        :img-title="eChartName"
         @close="exportVisible = false"
       />
     </div>
@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
-import { ref, Ref, watch } from "vue";
+import { ref, Ref, watch, computed } from "vue";
 import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
 import Select from "@/components/Common/Select.vue";
@@ -96,8 +96,6 @@ const searchParams = ref({
   partition: "",
 });
 
-const year = ref("");
-
 watch(
   () => props.formOptions,
   (val) => {
@@ -114,13 +112,20 @@ watch(
       searchParams.value.partition = val[7].datas.find(
         (item) => item.defaultValue,
       ).paramValue;
-      year.value = val[5].datas[0].paramDesc;
       getData();
     }
   },
   { immediate: true, deep: true },
 );
-
+const eChartName = computed(() => {
+  const year = dateList.value.find(
+    (item) => item.paramValue === searchParams.value.releaseTime,
+  ).paramDesc;
+  const content = contentList.value.find(
+    (item) => item.id === searchParams.value.contentDict,
+  ).paramDesc;
+  return `${year}${searchParams.value.partition}${content}招标不同储能时长能量规模占比`;
+});
 // 获取数据
 async function getData() {
   loading.value = true;
@@ -130,7 +135,7 @@ async function getData() {
     );
     if (resp_code === 0) {
       // 添加title
-      EChartOptions.value.title.text = `${year.value}华东地区储能系统招标不同储能时长能量规模占比`;
+      EChartOptions.value.title.text = eChartName.value;
       // 添加series
       EChartOptions.value.series.data = datas.data.map((item) => {
         return { ...item, value: Number(item.value) };
@@ -182,11 +187,6 @@ function handleChange(val, key) {
     });
     useUserStoreHook().openLogin(true);
   } else {
-    if (key === "releaseTime") {
-      year.value = dateList.value.find(
-        (item) => item.paramValue === val,
-      ).paramDesc;
-    }
     getData();
   }
 }

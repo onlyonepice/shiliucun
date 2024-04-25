@@ -103,7 +103,7 @@ const eChartName = computed(() => {
   const content = contentList.value.find(
     (item) => item.id === searchParams.value.contentDict,
   ).paramDesc;
-  return `${year}${searchParams.value.partition}${content}华东地区储能系统招标不同储能时长能量规模占比`;
+  return `${year}${searchParams.value.partition}${content}招标不同储能时长能量规模占比`;
 });
 
 watch(
