@@ -48,6 +48,7 @@
 </template>
 
 <script lang="ts" setup>
+import "echarts-liquidfill";
 import { onMounted, ref, Ref, nextTick } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
