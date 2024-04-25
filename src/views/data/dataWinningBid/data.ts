@@ -150,7 +150,7 @@ export const enterScenesFormOptions = () => {
         options: [],
         cascaderOption: {
           label: "paramDesc",
-          value: "paramValue",
+          value: "paramName",
           emitPath: false,
         },
       },

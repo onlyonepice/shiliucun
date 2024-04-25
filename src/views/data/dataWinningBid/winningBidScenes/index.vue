@@ -30,12 +30,18 @@
       >下载图片</el-button
     >
     <div :class="ns.b('eCharts-box')">
-      <div v-loading="loading" id="eChart-winningBidScenes" ref="eChartsDom" />
+      <div
+        v-if="!showEmpty"
+        v-loading="loading"
+        id="eChart-winningBidScenes"
+        ref="eChartsDom"
+      />
+      <EmptyData v-else />
     </div>
     <ExportCanvasDialog
       :visible="exportVisible"
       :img-url="exportImgUrl"
-      :img-title="`储能月度中标单价/容量分析-${requestData.contentDict}（${requestData.technologyType}）`"
+      :img-title="canvasTitle"
       @close="exportVisible = false"
     />
   </div>
@@ -54,7 +60,9 @@ import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const canvasTitle = ref(""); // 弹窗标题
 const unit = ref(); // 单位选择dom
+const showEmpty: Ref<boolean> = ref(false);
 // 获取eCharts节点
 const eChartsDom: Ref<any> = ref(null);
 const eChartsOption: Ref<any> = ref(pieEChartsOption());
@@ -84,7 +92,7 @@ watch(
               item.bind.options = res[0].datas;
               break;
             case "releaseTime":
-              item.bind.options = res[5].datas;
+              item.bind.options = res[4].datas;
               break;
             case "unit":
               item.bind.options = res[6].datas;
@@ -100,10 +108,10 @@ watch(
                 }
               });
               break;
-            case 5:
+            case 4:
               item.datas.forEach((item: any) => {
                 if (item.defaultValue) {
-                  requestData.value.releaseTime = item.paramValue;
+                  requestData.value.releaseTime = item.paramName;
                 }
               });
               break;
@@ -129,10 +137,14 @@ watch(
 const getData = async () => {
   eChartsOption.value.series = [];
   loading.value = true;
+  showEmpty.value = false;
   try {
     const _filter: any = cloneDeep(requestData.value);
     _filter.unit = _filter.unit.join(",");
     const { datas } = await getWinningScenariosApi(_filter);
+    if (datas.length === 0) {
+      return (showEmpty.value = true);
+    }
     datas.forEach((item) => {
       item.data.forEach((item2) => {
         item2.unit = item.unit === "数量" ? "个" : item.unit;
@@ -145,7 +157,8 @@ const getData = async () => {
         _title = item.paramName;
       }
     });
-    eChartsOption.value.title.text = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}招标应用场景分布`;
+    canvasTitle.value = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}招标应用场景分布`;
+    eChartsOption.value.title.text = canvasTitle.value;
     eChartsOption.value.color = ["#244BF1", "#FF892E", "#FFAF0B", "#01B82B"];
     requestData.value.unit.forEach((item, index) => {
       eChartsOption.value.series.push({

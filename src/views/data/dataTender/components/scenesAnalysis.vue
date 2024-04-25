@@ -46,14 +46,15 @@
         "
       />
     </div>
-    <div :class="ns.be('top', 'right')">
+    <div :class="ns.be('top', 'right')" v-if="resultData.length > 0">
       <el-button type="primary" @click="exportResult">下载图片</el-button>
     </div>
+    <EmptyData v-else />
     <div v-loading="loading" id="eChart_dataScenesAnalysis" ref="eChartsDom" />
     <ExportCanvasDialog
       :visible="exportVisible"
       :img-url="exportImgUrl"
-      :img-title="exportImgTitle"
+      :img-title="canvasTitle"
       @close="exportVisible = false"
     />
   </div>
@@ -74,7 +75,6 @@ const eChartsOption: Ref<any> = ref(pieEChartsOption());
 const eChartsDom = ref(null);
 // 导出图片相关
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
-const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const ns = useNamespace("dataScenesAnalysis");
 const loading: Ref<boolean> = ref(false);
@@ -92,11 +92,12 @@ const props = defineProps({
     default: () => [],
   },
 });
+const resultData = ref(); // 请求结果
 // 筛选项结果
 const contentDict = ref(712);
 const releaseTime = ref("2024");
 const unit: any = ref([]);
-
+const canvasTitle = ref("");
 const onChangeFilter = (id: any, type: string) => {
   type === "contentDict" && (contentDict.value = id);
   type === "releaseTime" && (releaseTime.value = id);
@@ -139,6 +140,7 @@ async function getElectricityTypeOneName() {
     releaseTime: releaseTime.value,
     unit: _unit.join(","),
   });
+  resultData.value = datas;
   datas.forEach((item) => {
     item.data.forEach((item2) => {
       item2.unit = item.unit === "数量" ? "个" : item.unit;
@@ -151,7 +153,8 @@ async function getElectricityTypeOneName() {
       _title = item.paramDesc;
     }
   });
-  eChartsOption.value.title.text = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}招标应用场景分布`;
+  canvasTitle.value = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}招标应用场景分布`;
+  eChartsOption.value.title.text = canvasTitle.value;
   eChartsOption.value.color = ["#244BF1", "#FF892E", "#FFAF0B", "#01B82B"];
   unit.value.forEach((item, index) => {
     eChartsOption.value.series.push({
@@ -188,7 +191,6 @@ function exportResult() {
     type: "jpeg",
     backgroundColor: "#fff",
   });
-  exportImgTitle.value = "储能月度招标分析";
   exportVisible.value = true;
 }
 </script>
