@@ -66,6 +66,11 @@ export function EChartOptions() {
         },
         select: {
           disabled: false, //可以被选中
+          // itemStyle: {
+          //   areaColor: "#FFF2E5",
+          //   borderColor: "#FF7D00",
+          //   borderWidth: 1,
+          // },
         },
         emphasis: {
           itemStyle: {
