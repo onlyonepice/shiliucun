@@ -447,7 +447,6 @@ export default {
   computed: {
     getConditionLabel() {
       const { condition } = this;
-      console.log("=======", condition);
       return [
         { label: "地区：", unit: condition.regionName },
         { label: "用电类型I：", unit: condition.electricityTypeOneName },
