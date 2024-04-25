@@ -4,7 +4,6 @@
       <div class="filter-box" v-if="filterOptionsData.length > 0">
         <div
           class="tree-item"
-          v-once
           v-for="(value, key) in filterOptionsData"
           :key="key"
         >
