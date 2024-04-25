@@ -145,7 +145,13 @@ async function getElectricityTypeOneName() {
     });
   });
   const _releaseTime = releaseTime.value;
-  eChartsOption.value.title.text = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}储能系统招标应用场景分布`;
+  let _title = "";
+  props.contentFilter.forEach((item) => {
+    if (item.id === contentDict.value) {
+      _title = item.paramDesc;
+    }
+  });
+  eChartsOption.value.title.text = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}招标应用场景分布`;
   eChartsOption.value.color = ["#244BF1", "#FF892E", "#FFAF0B", "#01B82B"];
   unit.value.forEach((item, index) => {
     eChartsOption.value.series.push({

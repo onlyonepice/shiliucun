@@ -46,7 +46,6 @@ import { useUserStore } from "@/store/modules/user";
 import { ref, watch, Ref, nextTick } from "vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("winningBidScenes");
-import { get } from "lodash";
 import { getWinningScenariosApi } from "@/api/data";
 import { enterScenesFormOptions } from "../data.js";
 import { cloneDeep } from "lodash";
@@ -95,11 +94,11 @@ watch(
         res.forEach((item, index) => {
           switch (index) {
             case 0:
-              requestData.value.contentDict = get(
-                item.datas.find((item) => item.defaultValue),
-                "id",
-                "2",
-              );
+              item.datas.forEach((item: any) => {
+                if (item.defaultValue) {
+                  requestData.value.contentDict = item.id;
+                }
+              });
               break;
             case 5:
               item.datas.forEach((item: any) => {
@@ -140,7 +139,13 @@ const getData = async () => {
       });
     });
     const _releaseTime = _filter.releaseTime;
-    eChartsOption.value.title.text = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}储能系统招标应用场景分布`;
+    let _title = "123";
+    props.formOptions[0].datas.forEach((item) => {
+      if (item.id === _filter.contentDict) {
+        _title = item.paramName;
+      }
+    });
+    eChartsOption.value.title.text = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}招标应用场景分布`;
     eChartsOption.value.color = ["#244BF1", "#FF892E", "#FFAF0B", "#01B82B"];
     requestData.value.unit.forEach((item, index) => {
       eChartsOption.value.series.push({
