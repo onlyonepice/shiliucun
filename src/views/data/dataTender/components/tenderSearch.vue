@@ -253,9 +253,9 @@ const getTenderLookupFn = async () => {
   }
 };
 
-const itemCategoryRef = ref([]);
-const biddingContentTwoRef = ref([]);
-const provincialLevelRef = ref([]);
+const itemCategoryRef = ref(null);
+const biddingContentTwoRef = ref(null);
+const provincialLevelRef = ref(null);
 const changeTag = (value) => {
   let checked = [];
   switch (value.paramValue) {
