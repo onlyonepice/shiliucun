@@ -34,7 +34,7 @@ export function EChartOptions() {
         type: "map",
         map: "china",
         left: "15%", // 地图位置
-        top: "25%", // 地图位置
+        top: "35%", // 地图位置
         itemStyle: {
           borderColor: "#fff",
           borderBox: true,
@@ -47,7 +47,7 @@ export function EChartOptions() {
             formatter: "{b}\n{c}",
           },
         },
-        // zoom: 1.2,
+        zoom: 1.5,
         label: {
           show: false,
           fontSize: 14,
@@ -102,7 +102,7 @@ export function EChartOptions() {
       {
         name: "right",
         type: "pie",
-        radius: ["40%", "55%"],
+        radius: ["25%", "35%"],
         center: ["75%", "54%"],
         avoidLabelOverlap: false,
         label: {
