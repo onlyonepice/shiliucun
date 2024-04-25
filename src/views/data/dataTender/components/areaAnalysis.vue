@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, Ref, nextTick, computed } from "vue";
+import { onMounted, ref, Ref, nextTick } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getRegionDynamicsListApi, getRegionColorApi } from "@/api/data";
@@ -77,18 +77,7 @@ const props = defineProps({
 });
 const contentDict: Ref<string | number> = ref(props.contentFilter[0].id); // 筛选项结果
 const releaseTime: Ref<string | number> = ref("");
-const energyScale = computed(() => {
-  return (name: string) => {
-    const { data } = eChartsOption.value.series[0];
-    return data.find((item) => name.includes(item.name)).data.energyScale;
-  };
-});
-const powerScale = computed(() => {
-  return (name: string) => {
-    const { data } = eChartsOption.value.series[0];
-    return data.find((item) => name.includes(item.name)).data.powerScale;
-  };
-});
+
 onMounted(() => {
   getRegionColor();
 });
@@ -139,7 +128,12 @@ async function getElectricityTypeOneName() {
     },
   };
   // 设置省份数据，chinaMap 省份名字需要与后端反的省份一致才展示
-  eChartsOption.value.series[1].data = donutChart;
+  eChartsOption.value.series[1].data = donutChart.map((item) => {
+    return {
+      ...item,
+      value: item.energyScale,
+    };
+  });
   eChartsOption.value.series[0].data = data
     .map((item) => {
       return {
@@ -163,7 +157,8 @@ async function getElectricityTypeOneName() {
     show: true,
     borderColor: "#fff",
     formatter: (params) => {
-      if (params.value && params.value > 0 && params.name !== "其他") {
+      if (params.value && params.value > 0) {
+        const { data } = params;
         const contentTitle = `font-size: 16px; font-weight: 600; color: #1C232F; margin-bottom:8px; line-height: 24px;`;
         const pStyle = `width: 208px; height: 32px; background: #F4F5F7; display:flex; justify-content:space-between; align-item:center; padding:5px 8px; border-radius: 4px 4px 0 0;`;
         const spanTitle = `font-size: 14px; font-weight: 400; color: #5B6985; ine-height: 22px;`;
@@ -172,11 +167,11 @@ async function getElectricityTypeOneName() {
         <p style='${contentTitle}'>${params.name}</p>
           <p style='${pStyle}'>
             <span style='${spanTitle}'>能量</span>
-            <span style='${spanValue}'>${energyScale.value(params.name)}MWh</span>
+            <span style='${spanValue}'>${data.energyScale || data.data.energyScale}MWh</span>
           </p>
           <p style='=${pStyle}'>
             <span style='style='${spanTitle}''>功率</span>
-            <span style='${spanValue}'>${powerScale.value(params.name)}MW</span>
+            <span style='${spanValue}'>${data.powerScale || data.data.powerScale}MW</span>
           </p>`;
       } else {
         return "";
