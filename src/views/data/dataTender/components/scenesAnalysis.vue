@@ -76,7 +76,7 @@ const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const ns = useNamespace("dataScenesAnalysis");
 const loading: Ref<boolean> = ref(false);
-defineProps({
+const props = defineProps({
   contentFilter: {
     type: Array as () => any[],
     default: () => [],
@@ -93,7 +93,7 @@ defineProps({
 // 筛选项结果
 const contentDict = ref(712);
 const releaseTime = ref("2024");
-const unit = ref(["1"]);
+const unit: any = ref([]);
 
 const onChangeFilter = (id: any, type: string) => {
   type === "contentDict" && (contentDict.value = id);
@@ -105,12 +105,21 @@ const onChangeFilter = (id: any, type: string) => {
     nextTick(() => {
       contentDict.value = 712;
       releaseTime.value = "2024";
-      unit.value = ["1"];
+      props.unitFilter.forEach(item => {
+        if( item.defaultValue ){
+          unit.value = unit.value.push(item.paramValue);
+        }
+      });
     });
   }
 };
 
 onMounted(() => {
+  props.unitFilter.forEach(item => {
+    if( item.defaultValue ){
+      unit.value = unit.value.push(item.paramValue);
+    }
+  });
   getElectricityTypeOneName();
 });
 
