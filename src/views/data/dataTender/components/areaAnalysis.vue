@@ -108,8 +108,8 @@ const onChangeFilter = (id: string | number, type: string) => {
 async function getElectricityTypeOneName() {
   loading.value = true;
   const {
-    // datas: { data, donutChart },
-    datas: { data },
+    datas: { data, donutChart },
+    // datas: { data },
   }: any = await getRegionDynamicsListApi({
     contentDict: contentDict.value,
     releaseTime: releaseTime.value,
@@ -129,16 +129,16 @@ async function getElectricityTypeOneName() {
     },
   };
   // 设置省份数据，chinaMap 省份名字需要与后端反的省份一致才展示
-  // eChartsOption.value.series[1].data = donutChart.map((item) => {
-  //   return {
-  //     name: item.name,
-  //     value: item.energyScale,
-  //     data: {
-  //       powerScale: item.powerScale,
-  //       energyScale: item.energyScale,
-  //     },
-  //   };
-  // });
+  eChartsOption.value.series[1].data = donutChart.map((item) => {
+    return {
+      name: item.name,
+      value: item.energyScale,
+      data: {
+        powerScale: item.powerScale,
+        energyScale: item.energyScale,
+      },
+    };
+  });
   eChartsOption.value.series[0].data = data
     .map((item) => {
       return {
