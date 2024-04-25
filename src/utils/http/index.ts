@@ -131,6 +131,9 @@ class PureHttp {
             case 1001:
               onErrorHandling();
               break;
+            case 1:
+              onErrorHandling();
+              break;
             // token过期
             case 1002:
               onErrorHandling();

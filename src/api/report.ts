@@ -63,7 +63,7 @@ export const getReportTagList = () => {
   );
 };
 
-// 获取季报月报列表
+// 获取周/月/季报列表
 export const reportList = (data) => {
   return http.request<{ resp_code: number; datas: any; resp_msg: string }>(
     "get",
@@ -72,7 +72,7 @@ export const reportList = (data) => {
   );
 };
 
-// 获取是否可以查看季报月报详情
+// 获取是否可以查看周/月/季报详情
 export const quarterlyMonthlyLimits = () => {
   return http.request<{ resp_code: number; datas: any; resp_msg: string }>(
     "get",
