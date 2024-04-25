@@ -61,7 +61,7 @@ import { NOOP } from "@vue/shared";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 const ns = useNamespace("dataTender");
 const windowScroll = windowScrollStore();
-const choseTabs: Ref<number> = ref(6); // 选中的标签栏
+const choseTabs: Ref<number> = ref(1); // 选中的标签栏
 const timeFilter: Ref<Array<any>> = ref([]); // 招标时间筛选项
 const contentFilter: Ref<Array<any>> = ref([]); // 招标内容筛选项
 const unitFilter: Ref<Array<any>> = ref([]); // 统计单位筛选项
