@@ -33,9 +33,9 @@ export function EChartOptions() {
         name: "left",
         type: "map",
         map: "china", // 中国地图
-        width: "50%", // 地图宽度
-        left: "0", // 地图位置
-        top: "10%", // 地图位置
+        // width: "50%", // 地图宽度
+        left: "15%", // 地图位置
+        top: "25%", // 地图位置
         itemStyle: {
           borderColor: "#fff",
           borderBox: true,
