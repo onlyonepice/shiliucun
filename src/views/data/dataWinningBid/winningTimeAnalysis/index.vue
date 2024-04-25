@@ -54,13 +54,14 @@
 <script setup lang="ts">
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
-import { ref, Ref, watch, computed } from "vue";
 import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
+import { ref, Ref, watch, computed } from "vue";
+import { useUserStore } from "@/store/modules/user";
 import Select from "@/components/Common/Select.vue";
 import { useUserStoreHook } from "@/store/modules/user";
-import { getWinningEnergyStorageDurationAnalysis } from "@/api/data";
 import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
+import { getWinningEnergyStorageDurationAnalysis } from "@/api/data";
 const ns = useNamespace("durationAnalysis");
 const props = defineProps({
   formOptions: {
@@ -131,6 +132,9 @@ const eChartName = computed(() => {
 });
 // 获取数据
 async function getData() {
+  if (!useUserStore().checkPermission("BID_WINNING_ENERGY_STORAGE_DURATION")) {
+    return (loading.value = false);
+  }
   isEmptyData.value = false;
   loading.value = true;
   try {
