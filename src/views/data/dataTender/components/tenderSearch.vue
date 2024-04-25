@@ -4,20 +4,21 @@
       <div class="filter-box" v-if="filterOptionsData.length > 0">
         <div
           class="tree-item"
+          v-once
           v-for="(value, key) in filterOptionsData"
           :key="key"
-          v-once
         >
-          <div v-if="value.paramValue !== 'yearRange'">
+          <template v-if="value.paramValue !== 'yearRange'">
             <el-tree
               @check="() => changeTag(value, key)"
-              :ref="`${value.paramValue}Ref`"
+              ref="treeRefFilter"
               :data="[value]"
               default-expand-all
               highlight-current
               :props="defaultProps"
               node-key="paramValue"
               show-checkbox
+              :default-checked-keys="filterParams[value.paramValue]"
             >
               <template #default="{ node, data }">
                 <span class="custom-tree_item">
@@ -59,8 +60,8 @@
                 </span>
               </template>
             </el-tree>
-          </div>
-          <div v-else>
+          </template>
+          <template v-else>
             <el-tree
               @node-click="(val) => changeYearRangeTag(val, value)"
               :data="[value]"
@@ -109,7 +110,7 @@
             >
               收起更多
             </p>
-          </div>
+          </template>
         </div>
       </div>
     </div>
@@ -253,34 +254,16 @@ const getTenderLookupFn = async () => {
   }
 };
 
-const itemCategoryRef = ref(null);
-const biddingContentTwoRef = ref(null);
-const provincialLevelRef = ref(null);
-const changeTag = (value) => {
-  let checked = [];
-  console.log(biddingContentTwoRef.value);
-  switch (value.paramValue) {
-    case "itemCategory":
-      checked = itemCategoryRef.value[0].getCheckedNodes();
-      break;
-    case "provincialLevel":
-      checked = provincialLevelRef.value[0].getCheckedNodes();
-      break;
-    default:
-    case "biddingContentTwo":
-      checked = biddingContentTwoRef.value[0].getCheckedNodes();
-      break;
-  }
-
+const treeRefFilter = ref(null);
+const changeTag = (value, index) => {
+  const checked = treeRefFilter.value[index].getCheckedNodes();
   filterParams.value[value.paramValue] = [];
   checked.forEach((item) => {
     if (!item.dropDownBoxResp || item.dropDownBoxResp.length === 0) {
       filterParams.value[value.paramValue].push(item.paramValue);
     }
   });
-
   page.value = 1;
-
   getData();
 };
 const handleShowAllClick = (key, _data) => {
@@ -382,7 +365,6 @@ onMounted(() => {
     width: 100%;
     margin-top: 24px;
     min-height: 200px;
-    height: 1964px;
     .item {
       width: 100%;
     }
