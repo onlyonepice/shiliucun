@@ -97,7 +97,7 @@ export function EChartOptions() {
           color: "rgba(0,0,0,0.6)",
           fontSize: 12,
           formatter: (param) => {
-            return `${param.name}${param.percent}%`;
+            return `${param.name}${param.percent.toFixed(1)}%`;
           },
         },
         data: [],
