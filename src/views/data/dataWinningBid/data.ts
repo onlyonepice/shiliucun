@@ -134,7 +134,7 @@ export const enterScenesFormOptions = () => {
         options: [],
         cascaderOption: {
           label: "paramDesc",
-          value: "paramName",
+          value: "id",
           emitPath: false,
         },
       },
@@ -149,8 +149,8 @@ export const enterScenesFormOptions = () => {
         placeholder: "请选择",
         options: [],
         cascaderOption: {
-          label: "paramName",
-          value: "paramDesc",
+          label: "paramDesc",
+          value: "paramName",
           emitPath: false,
         },
       },

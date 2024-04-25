@@ -69,7 +69,7 @@ export default {
           import("@/views/report/quarterlyMonthlyReports/index.vue"),
       },
       meta: {
-        title: "季报月报",
+        title: "周/月/季报",
         backgroundColor: "",
       },
     },

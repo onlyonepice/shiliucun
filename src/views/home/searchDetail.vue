@@ -92,7 +92,7 @@
                   />
                 </div>
               </template>
-              <!-- 季报月报 -->
+              <!-- 周/月/季报 -->
               <template v-if="key === 'QUARTERLY_AND_MONTHLY_REPORTS'">
                 <div
                   class="text-item"
@@ -175,7 +175,7 @@ const pageOptions = ref<any>({
   All: { name: "搜索结果", data: {}, show: true },
   Energy_Storage_Frontier: { name: "储能前沿", show: false },
   REAL_TIME_INFORMATION: { name: "行业洞察", show: false },
-  QUARTERLY_AND_MONTHLY_REPORTS: { name: "季报月报", show: false },
+  QUARTERLY_AND_MONTHLY_REPORTS: { name: "周/月/季报", show: false },
   WHITE_PAPER: { name: "白皮书", show: false },
   ONLINE_REPORT: { name: "在线报告", show: false },
 }) as any;
@@ -297,7 +297,7 @@ const handleClearTap = () => {
 // 跳转报告详情
 const onDetailReport = async (item) => {
   window.open(
-    `${VITE_I_REPORT_URL}#/report-detail-pdf_V2?id=${item.id}&type=${item.type}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/quarterly-monthly`,
+    `${VITE_I_REPORT_URL}#/report-detail-pdf_V2?id=${item.id}&type=${item.type}&parent=周/月/季报&moduleName=${item.moduleName}&from=/alliance-insight/quarterly-monthly`,
     "_blank",
   );
 };

@@ -80,7 +80,7 @@ const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("reportDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
-  { text: "季报月报", path: "/quarterlyMonthlyReports" },
+  { text: "周/月/季报", path: "/quarterlyMonthlyReports" },
   { text: "", path: "" },
 ]);
 const payTimer = ref(null); // 支付定时器
