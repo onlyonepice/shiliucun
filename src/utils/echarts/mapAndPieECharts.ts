@@ -34,7 +34,7 @@ export function EChartOptions() {
         type: "map",
         map: "china", // 中国地图
         // width: "50%", // 地图宽度
-        left: "15%", // 地图位置
+        // left: "15%", // 地图位置
         top: "25%", // 地图位置
         itemStyle: {
           borderColor: "#fff",
@@ -87,21 +87,21 @@ export function EChartOptions() {
         selectedMode: false,
         data: [],
       },
-      {
-        name: "right",
-        type: "pie",
-        radius: ["40%", "55%"],
-        center: ["75%", "54%"],
-        avoidLabelOverlap: false,
-        label: {
-          color: "rgba(0,0,0,0.6)",
-          fontSize: 12,
-          formatter: (param) => {
-            return `${param.name}${param.percent.toFixed(1)}%`;
-          },
-        },
-        data: [],
-      },
+      // {
+      //   name: "right",
+      //   type: "pie",
+      //   radius: ["40%", "55%"],
+      //   center: ["75%", "54%"],
+      //   avoidLabelOverlap: false,
+      //   label: {
+      //     color: "rgba(0,0,0,0.6)",
+      //     fontSize: 12,
+      //     formatter: (param) => {
+      //       return `${param.name}${param.percent.toFixed(1)}%`;
+      //     },
+      //   },
+      //   data: [],
+      // },
     ],
   };
 }
