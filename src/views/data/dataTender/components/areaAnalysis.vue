@@ -130,8 +130,12 @@ async function getElectricityTypeOneName() {
   // 设置省份数据，chinaMap 省份名字需要与后端反的省份一致才展示
   eChartsOption.value.series[1].data = donutChart.map((item) => {
     return {
-      ...item,
+      name: item.name,
       value: item.energyScale,
+      data: {
+        powerScale: item.powerScale,
+        energyScale: item.energyScale,
+      },
     };
   });
   eChartsOption.value.series[0].data = data
@@ -167,11 +171,11 @@ async function getElectricityTypeOneName() {
         <p style='${contentTitle}'>${params.name}</p>
           <p style='${pStyle}'>
             <span style='${spanTitle}'>能量</span>
-            <span style='${spanValue}'>${data.energyScale || data.data.energyScale}MWh</span>
+            <span style='${spanValue}'>${data.data.energyScale}MWh</span>
           </p>
           <p style='=${pStyle}'>
             <span style='style='${spanTitle}''>功率</span>
-            <span style='${spanValue}'>${data.powerScale || data.data.powerScale}MW</span>
+            <span style='${spanValue}'>${data.data.powerScale}MW</span>
           </p>`;
       } else {
         return "";
