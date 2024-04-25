@@ -41,7 +41,7 @@
       <ExportCanvasDialog
         :visible="exportVisible"
         :img-url="exportImgUrl"
-        :img-title="`${year}（${searchParams.releaseTime}）`"
+        :img-title="eChartName"
         @close="exportVisible = false"
       />
     </div>
@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
-import { ref, Ref, watch } from "vue";
+import { computed, ref, Ref, watch } from "vue";
 import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
 import Select from "@/components/Common/Select.vue";
@@ -96,7 +96,15 @@ const searchParams = ref({
   partition: "",
 });
 
-const year = ref("");
+const eChartName = computed(() => {
+  const year = dateList.value.find(
+    (item) => item.paramValue === searchParams.value.releaseTime,
+  ).paramDesc;
+  const content = contentList.value.find(
+    (item) => item.id === searchParams.value.contentDict,
+  ).paramDesc;
+  return `${year}${searchParams.value.partition}${content}华东地区储能系统招标不同储能时长能量规模占比`;
+});
 
 watch(
   () => props.formOptions,
@@ -114,7 +122,6 @@ watch(
       searchParams.value.partition = val[2].find(
         (item) => item.defaultValue,
       ).paramValue;
-      year.value = dateList.value.find((item) => item.defaultValue).paramDesc;
       getData();
     }
   },
@@ -130,7 +137,7 @@ async function getData() {
     );
     if (resp_code === 0) {
       // 添加title
-      EChartOptions.value.title.text = `${year.value}华东地区储能系统招标不同储能时长能量规模占比`;
+      EChartOptions.value.title.text = eChartName;
       // 添加series
       EChartOptions.value.series.data = datas.data.map((item) => {
         return { ...item, value: Number(item.value) };
@@ -182,11 +189,6 @@ function handleChange(val, key) {
     });
     useUserStoreHook().openLogin(true);
   } else {
-    if (key === "releaseTime") {
-      year.value = dateList.value.find(
-        (item) => item.paramValue === val,
-      ).paramDesc;
-    }
     getData();
   }
 }
