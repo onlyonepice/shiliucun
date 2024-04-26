@@ -173,6 +173,7 @@ const searchContent = ref<any>("");
 const currentTab = ref("All") as any;
 const pageOptions = ref<any>({
   All: { name: "搜索结果", data: {}, show: true },
+  INTERVIEW_EXPERT: { name: "专家访谈", show: false },
   Energy_Storage_Frontier: { name: "储能前沿", show: false },
   REAL_TIME_INFORMATION: { name: "行业洞察", show: false },
   QUARTERLY_AND_MONTHLY_REPORTS: { name: "周/月/季报", show: false },
