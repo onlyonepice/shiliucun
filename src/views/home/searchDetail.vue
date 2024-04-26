@@ -147,7 +147,6 @@
 
 <script lang="ts" setup>
 import search_null from "@/assets/img/common/search_null.png";
-const { VITE_I_REPORT_URL } = import.meta.env;
 import { ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import icon_clear from "@/assets/img/common/icon_clear.png";
@@ -160,6 +159,8 @@ import policy_tracking from "@/assets/img/common/policy_tracking.png";
 import financing_plan from "@/assets/img/common/financing_plan.png";
 import { useRouter } from "vue-router";
 import { windowScrollStore } from "@/store/modules/windowScroll";
+import { getToken } from "@/utils/auth";
+import { useUserStoreHook } from "@/store/modules/user";
 windowScrollStore().SET_SCROLL_TOP(0);
 const router = useRouter();
 const loading = ref(false);
@@ -297,10 +298,10 @@ const handleClearTap = () => {
 };
 // 跳转报告详情
 const onDetailReport = async (item) => {
-  window.open(
-    `${VITE_I_REPORT_URL}#/report-detail-pdf_V2?id=${item.id}&type=${item.type}&parent=周/月/季报&moduleName=${item.moduleName}&from=/alliance-insight/quarterly-monthly`,
-    "_blank",
-  );
+  if (!getToken()) {
+    return useUserStoreHook().openLogin(true);
+  }
+  router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 };
 const handleLinkClick = (link) => {
   window.open(link);
