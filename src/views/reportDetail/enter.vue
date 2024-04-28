@@ -103,8 +103,8 @@ const getReportDetail = async () => {
     // 取前三个标签
     datas.reportTag = datas.reportTag.slice(0, 3);
     reportDetail.value = datas;
-    loading.value = false;
   }
+  loading.value = false;
 };
 // 购买报告
 const onBuy = (type: boolean) => {
