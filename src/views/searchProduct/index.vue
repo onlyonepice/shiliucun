@@ -39,24 +39,34 @@
         @onCompared="onCompared"
       />
     </div>
-    <template v-if="comparedList.length > 0">
+    <template v-if="showComparedDelay">
       <div
         :class="[
           ns.b('compared'),
           'animate__animated',
-          comparedList.length > 0 ? 'animate__fadeInUp' : 'animate__fadeInDown',
+          showCompared ? 'animate__fadeInUp' : 'animate__fadeOutDown',
         ]"
       >
         <div :class="ns.be('compared', 'head')">
           <h3>产品对比</h3>
-          <h5>取消对比</h5>
+          <h5 @click="onCloseCompared()">取消对比</h5>
         </div>
         <div :class="ns.be('compared', 'content')">
-          <div :class="ns.be('compared', 'item')" v-for="item in 4" :key="item">
-            <img :src="useUserStoreHook().$state.fileUrl + item.img" alt="" />
-            <div>
-              <h5>Aqua-E系列工商储能产品 233</h5>
-              <span>¥ 1200/kWh起</span>
+          <div
+            :class="ns.be('compared', 'item')"
+            v-for="(item, index) in 4"
+            :key="item"
+          >
+            <div :class="ns.be('compared-item', 'box')" v-if="item.id">
+              <img :src="useUserStoreHook().$state.fileUrl + item.img" alt="" />
+              <div>
+                <h5>Aqua-E系列工商储能产品 233</h5>
+                <span>¥ 1200/kWh起</span>
+              </div>
+            </div>
+            <div :class="ns.be('compared-item', 'empty')" v-else>
+              <div>{{ index + 1 }}</div>
+              <p>可继续添加产品</p>
             </div>
           </div>
           <div :class="ns.be('compared', 'btn')">
@@ -91,6 +101,9 @@ const tabsList: Ref<Array<TabsList>> = ref([
   { id: 3, name: "储能变流器" },
   { id: 4, name: "大型储能柜" },
 ]);
+const showCompared: Ref<boolean> = ref(false); // 是否显示对比
+const showComparedDelay: Ref<boolean> = ref(false); // 是否显示对比
+
 const comparedList: Ref<any> = ref([]); // 已对比列表
 // 筛选项数组
 const filterList: Ref<Array<any>> = ref([
@@ -113,7 +126,17 @@ const getCoolDown = async () => {
 };
 // 添加产品
 const onCompared = () => {
+  showCompared.value = true;
+  showComparedDelay.value = true;
   comparedList.value = [1];
+};
+// 关闭对比
+const onCloseCompared = () => {
+  showCompared.value = false;
+  comparedList.value = [];
+  setTimeout(() => {
+    showComparedDelay.value = false;
+  }, 300);
 };
 // 查产品筛选项
 const getProductFilter = async () => {
@@ -220,6 +243,26 @@ const onchangeCurrent = (page: number) => {
     border-right: 1px solid #dbdce2;
     margin-right: 16px;
     box-sizing: content-box;
+    .es-searchProduct-compared-item__box {
+      width: 100%;
+      @include flex(flex-start, space-between, nowrap);
+    }
+    .es-searchProduct-compared-item__empty {
+      width: 100%;
+      @include flex(center, flex-start, nowrap);
+      div {
+        @include widthAndHeight(80px, 80px);
+        margin-right: 8px;
+        @include font();
+        background: #f2f3f5;
+        border-radius: 4px;
+        @include font(40px, 600, rgba(0, 0, 0, 0.26), 48px);
+        @include flex(center, center);
+      }
+      p {
+        @include font(14px, 400, rgba(0, 0, 0, 0.4), 22px);
+      }
+    }
     img {
       @include widthAndHeight(80px, 80px);
     }
