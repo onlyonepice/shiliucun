@@ -33,9 +33,44 @@
       </div>
     </div>
     <div :class="ns.b('content')">
-      <SearchProductCard v-for="item in 16" :key="item" />
+      <SearchProductCard
+        v-for="item in 16"
+        :key="item"
+        @onCompared="onCompared"
+      />
     </div>
-    <Pagination :total="100" :pageSize="16" />
+    <template v-if="comparedList.length > 0">
+      <div
+        :class="[
+          ns.b('compared'),
+          'animate__animated',
+          comparedList.length > 0 ? 'animate__fadeInUp' : 'animate__fadeInDown',
+        ]"
+      >
+        <div :class="ns.be('compared', 'head')">
+          <h3>产品对比</h3>
+          <h5>取消对比</h5>
+        </div>
+        <div :class="ns.be('compared', 'content')">
+          <div :class="ns.be('compared', 'item')" v-for="item in 4" :key="item">
+            <img :src="useUserStoreHook().$state.fileUrl + item.img" alt="" />
+            <div>
+              <h5>Aqua-E系列工商储能产品 233</h5>
+              <span>¥ 1200/kWh起</span>
+            </div>
+          </div>
+          <div :class="ns.be('compared', 'btn')">
+            <el-button type="primary">对比</el-button>
+            <h5>清空产品</h5>
+          </div>
+        </div>
+      </div>
+    </template>
+    <Pagination
+      :total="100"
+      :pageSize="16"
+      @onchangeCurrent="onchangeCurrent"
+    />
   </div>
 </template>
 
@@ -56,6 +91,7 @@ const tabsList: Ref<Array<TabsList>> = ref([
   { id: 3, name: "储能变流器" },
   { id: 4, name: "大型储能柜" },
 ]);
+const comparedList: Ref<any> = ref([]); // 已对比列表
 // 筛选项数组
 const filterList: Ref<Array<any>> = ref([
   { id: 1, type: "txt", title: "冷却方式", data: [] },
@@ -75,6 +111,10 @@ const getCoolDown = async () => {
   });
   filterList.value[0].data = datas;
 };
+// 添加产品
+const onCompared = () => {
+  comparedList.value = [1];
+};
 // 查产品筛选项
 const getProductFilter = async () => {
   const _data = tabsList.value.filter((item) => {
@@ -91,6 +131,10 @@ const getProductFilter = async () => {
 };
 getCoolDown();
 getProductFilter();
+// 页码改变
+const onchangeCurrent = (page: number) => {
+  console.log(page);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -146,5 +190,61 @@ getProductFilter();
 }
 .es-searchProduct-content {
   @include flex(flex-start, space-between, wrap);
+}
+.es-searchProduct-compared {
+  @include widthAndHeight(1152px, 180px);
+  background: #ffffff;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: 2px solid #ff892e;
+  @include fixed(1, none, none, 24px, 50%);
+  margin-left: -576px;
+  padding: 24px 24px 32px;
+  &__head {
+    @include flex(center, space-between, nowrap);
+    cursor: pointer;
+    margin-bottom: 16px;
+    h5 {
+      font-weight: 400;
+    }
+  }
+  &__content {
+    @include flex(center, flex-start, nowrap);
+    @include relative();
+    height: 80px;
+  }
+  &__item {
+    @include widthAndHeight(220px, 80px);
+    @include flex(flex-start, space-between, nowrap);
+    padding-right: 15px;
+    border-right: 1px solid #dbdce2;
+    margin-right: 16px;
+    box-sizing: content-box;
+    img {
+      @include widthAndHeight(80px, 80px);
+    }
+    div {
+      width: 132px;
+    }
+    h5 {
+      font-weight: 400;
+      margin-bottom: 8px;
+      line-height: 22px;
+    }
+    span {
+      @include font(12px, 600, #f75964, 20px);
+    }
+  }
+  &__btn {
+    @include widthAndHeight(88px, 100%);
+    @include absolute(1, 0, 0, none, none);
+    text-align: center;
+    @include flex(center, center, wrap);
+    h5 {
+      width: 100%;
+      font-weight: 400;
+      cursor: pointer;
+    }
+  }
 }
 </style>

@@ -6,7 +6,7 @@
     <p :class="ns.b('company')">深圳陆科电子科技股份有限公司</p>
     <div :class="ns.b('btn')">
       <el-button type="primary">联系厂商</el-button>
-      <el-button>
+      <el-button @click="onCompared()">
         <img :src="ComparedIcon" alt="" />
         <span>产品对比</span>
       </el-button>
@@ -18,6 +18,10 @@
 import ComparedIcon from "@/assets/img/common/compared-icon.png";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("searchProduct-card");
+const emits = defineEmits(["onCompared"]);
+const onCompared = () => {
+  emits("onCompared", true);
+};
 </script>
 
 <style lang="scss" scoped>
