@@ -1,27 +1,56 @@
 <template>
   <div :class="ns.b()">
-    <img :class="ns.b('img')" src="" alt="" />
-    <p :class="ns.b('price')">参考价<span>1200/kWh起</span></p>
-    <h4 :class="ns.b('name')">Aqua-E系列工商储能产品 233</h4>
-    <p :class="ns.b('company')">深圳陆科电子科技股份有限公司</p>
+    <img
+      :class="ns.b('logo')"
+      :src="useUserStoreHook().$state.fileUrl + product.logoUrl"
+      alt=""
+      v-if="product.logoUrl"
+    />
+    <img
+      :class="ns.b('img')"
+      :src="useUserStoreHook().$state.fileUrl + product.image"
+      alt=""
+    />
+    <p :class="ns.b('price')">
+      参考价<span>{{ product.price }}/kWh起</span>
+    </p>
+    <h4 :class="ns.b('name')">{{ product.name }}</h4>
+    <p :class="ns.b('company')">{{ product.enterprise }}</p>
     <div :class="ns.b('btn')">
       <el-button type="primary">联系厂商</el-button>
       <el-button @click="onCompared()">
         <img :src="ComparedIcon" alt="" />
-        <span>产品对比</span>
+        <span>{{ !getType ? "产品对比" : "取消对比" }}</span>
       </el-button>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
 import ComparedIcon from "@/assets/img/common/compared-icon.png";
 import useNamespace from "@/utils/nameSpace";
+import { useUserStoreHook } from "@/store/modules/user";
 const ns = useNamespace("searchProduct-card");
 const emits = defineEmits(["onCompared"]);
+const props = defineProps({
+  product: {
+    type: Object,
+    default: () => {},
+  },
+  comparedList: {
+    type: Array,
+    default: () => [],
+  },
+});
 const onCompared = () => {
-  emits("onCompared", true);
+  emits("onCompared", props.product);
 };
+const getType = computed(() => {
+  return props.comparedList.some((item: any) => item.id === props.product.id)
+    ? true
+    : false;
+});
 </script>
 
 <style lang="scss" scoped>
@@ -37,9 +66,14 @@ const onCompared = () => {
   cursor: pointer;
   padding: 16px 16px 24px 16px;
   text-align: center;
+  @include relative();
   &:hover {
     box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
   }
+}
+.es-searchProduct-card-logo {
+  @include widthAndHeight(96px, 40px);
+  @include absolute(1, 0, none, none, 0);
 }
 .es-searchProduct-card-img {
   @include widthAndHeight(238px, 238px);
@@ -59,9 +93,11 @@ const onCompared = () => {
 }
 .es-searchProduct-card-name {
   margin: 16px 0 4px 0;
+  @include one-ellipsis();
 }
 .es-searchProduct-card-company {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+  @include one-ellipsis();
 }
 .es-searchProduct-card-btn {
   margin-top: 24px;
