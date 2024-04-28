@@ -7,7 +7,7 @@
           v-for="(value, key) in filterOptionsData"
           :key="key"
         >
-          <template v-if="value.paramValue !== 'yearRange'">
+          <template v-if="value[0].paramValue !== 'yearRange'">
             <el-tree
               @check="() => changeTag(value[0], key)"
               ref="treeRefFilter"
