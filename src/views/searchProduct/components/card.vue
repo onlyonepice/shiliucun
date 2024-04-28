@@ -17,7 +17,9 @@
     <h4 :class="ns.b('name')">{{ product.name }}</h4>
     <p :class="ns.b('company')">{{ product.enterprise }}</p>
     <div :class="ns.b('btn')">
-      <el-button type="primary">联系厂商</el-button>
+      <el-button type="primary" @click="onOpenWindow(product.enterpriseId)"
+        >联系厂商</el-button
+      >
       <el-button @click="onCompared()">
         <img :src="ComparedIcon" alt="" />
         <span>{{ !getType ? "产品对比" : "取消对比" }}</span>
@@ -31,6 +33,7 @@ import { computed } from "vue";
 import ComparedIcon from "@/assets/img/common/compared-icon.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
+const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const ns = useNamespace("searchProduct-card");
 const emits = defineEmits(["onCompared"]);
 const props = defineProps({
@@ -51,6 +54,12 @@ const getType = computed(() => {
     ? true
     : false;
 });
+const onOpenWindow = (id: number) => {
+  window.open(
+    `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
+    "externalWindow",
+  );
+};
 </script>
 
 <style lang="scss" scoped>
