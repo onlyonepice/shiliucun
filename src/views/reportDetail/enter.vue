@@ -1,7 +1,7 @@
 <template>
   <div :class="ns.b()">
     <breadcrumb :breadcrumbList="breadcrumbList" />
-    <Loading :loading="loading" />
+    <Loading v-if="loading" />
     <template v-if="!loading">
       <div :class="[ns.b('content'), 'es-commonPage']" v-if="reportDetail.id">
         <div :class="ns.be('content', 'left')">
@@ -93,18 +93,22 @@ const loading: Ref<boolean> = ref(false); // 加载状态
 // 获取报告详情
 const getReportDetail = async () => {
   loading.value = true;
-  const { datas, resp_code }: any = await getReportDetailApi({
-    id: Number(route.query.id),
-    moduleName: route.query.moduleName,
-  });
-  if (resp_code === 0) {
-    breadcrumbList.value[breadcrumbList.value.length - 1].text =
-      datas.reportName;
-    // 取前三个标签
-    datas.reportTag = datas.reportTag.slice(0, 3);
-    reportDetail.value = datas;
+  try {
+    const { datas, resp_code }: any = await getReportDetailApi({
+      id: Number(route.query.id),
+      moduleName: route.query.moduleName,
+    });
+    if (resp_code === 0) {
+      breadcrumbList.value[breadcrumbList.value.length - 1].text =
+        datas.reportName;
+      // 取前三个标签
+      datas.reportTag = datas.reportTag.slice(0, 3);
+      reportDetail.value = datas;
+    }
+    loading.value = false;
+  } catch (error) {
+    loading.value = false;
   }
-  loading.value = false;
 };
 // 购买报告
 const onBuy = (type: boolean) => {
