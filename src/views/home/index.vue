@@ -2,7 +2,7 @@
   <div :class="[ns.b()]">
     <img
       :class="ns.b('homeBg')"
-      src="https://share.eesaexpo.com/report/3.0/home-head-bg.png"
+      src="https://share.eesaenergy.com/report/3.0/home-head-bg.png"
       alt=""
       @load="headerBgLoad"
     />
