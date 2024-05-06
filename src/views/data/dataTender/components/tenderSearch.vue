@@ -196,7 +196,7 @@ const getData = async () => {
       if (route.query.id === item.id) {
         setTimeout(() => {
           windowScrollStore().SET_SCROLL_TOP((index + 1) * 80 + 160);
-        }, 500);
+        });
       }
       item.showDetail = route.query.id === item.id;
       return item;
