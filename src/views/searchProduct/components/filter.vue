@@ -10,7 +10,14 @@
       :key="item.id"
     >
       <h5>{{ item.title }}</h5>
-      <div :class="ns.be('filter', 'box')">
+      <div
+        :class="[
+          ns.be('filter', 'box'),
+          item.type === 'img' && !showMore
+            ? ns.bem('filter', 'box', 'img')
+            : '',
+        ]"
+      >
         <template v-if="item.type === 'txt'">
           <p
             v-for="_item in item.data"
@@ -26,7 +33,7 @@
         </template>
         <template v-else-if="item.type === 'img'">
           <div
-            v-for="_item in item.data"
+            v-for="_item in !showMore ? item.data.slice(0, 16) : item.data"
             :key="_item.id"
             @click="onChoseFilter(_item, item.title)"
             :class="[
@@ -41,6 +48,14 @@
               v-if="_item.id === filterInfo.enterpriseId"
             />
           </div>
+          <img
+            :class="[
+              ns.be('filter', 'more'),
+              showMore ? ns.bem('filter', 'more', 'show') : '',
+            ]"
+            :src="MoreData"
+            @click="showMore = !showMore"
+          />
         </template>
       </div>
     </div>
@@ -48,11 +63,14 @@
 </template>
 
 <script lang="ts" setup>
+import { Ref, ref } from "vue";
 import SearchProductIcon from "@/assets/img/common/search-product-icon.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
+import MoreData from "@/assets/img/reportDetail/icon_expand_nor.png";
 const ns = useNamespace("searchProduct-filter");
 const emits = defineEmits(["onChoseFilter"]);
+const showMore: Ref<boolean> = ref(false); // 是否展开更多
 defineProps({
   total: {
     type: Number,
@@ -90,6 +108,8 @@ const onChoseFilter = (item: any, type: string) => {
 .es-searchProduct-filter-filter__item {
   margin-bottom: 16px;
   @include flex(flex-start, flex-start, wrap);
+  @include relative();
+
   h5 {
     margin-right: 16px;
     width: 56px;
@@ -102,6 +122,30 @@ const onChoseFilter = (item: any, type: string) => {
 }
 .es-searchProduct-filter-filter__box {
   @include flex(flex-start, flex-start, wrap);
+  height: auto;
+}
+.es-searchProduct-filter-filter__box--img {
+  height: 144px;
+  &::after {
+    content: "";
+    display: inline-block;
+    @include widthAndHeight(100%, 64px);
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 13%,
+      #ffffff 100%
+    );
+    @include absolute(1, none, 0, 0, none);
+  }
+}
+.es-searchProduct-filter-filter__more {
+  @include widthAndHeight(16px, 16px);
+  @include absolute(1, 0, 0, none, none);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.es-searchProduct-filter-filter__more--show {
+  transform: rotate(180deg);
 }
 .es-searchProduct-filter-filter__txt {
   padding: 2px 8px;

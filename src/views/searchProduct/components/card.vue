@@ -1,5 +1,5 @@
 <template>
-  <div :class="ns.b()">
+  <div :class="ns.b()" @click="onDetail()">
     <img
       :class="ns.b('logo')"
       :src="useUserStoreHook().$state.fileUrl + product.logoUrl"
@@ -17,10 +17,10 @@
     <h4 :class="ns.b('name')">{{ product.name }}</h4>
     <p :class="ns.b('company')">{{ product.enterprise }}</p>
     <div :class="ns.b('btn')">
-      <el-button type="primary" @click="onOpenWindow(product.enterpriseId)"
+      <el-button type="primary" @click.stop="onOpenWindow(product.enterpriseId)"
         >联系厂商</el-button
       >
-      <el-button @click="onCompared()">
+      <el-button @click.stop="onCompared()">
         <img :src="ComparedIcon" alt="" />
         <span>{{ !getType ? "产品对比" : "取消对比" }}</span>
       </el-button>
@@ -33,6 +33,8 @@ import { computed } from "vue";
 import ComparedIcon from "@/assets/img/common/compared-icon.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const ns = useNamespace("searchProduct-card");
 const emits = defineEmits(["onCompared"]);
@@ -59,6 +61,9 @@ const onOpenWindow = (id: number) => {
     `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
     "externalWindow",
   );
+};
+const onDetail = () => {
+  router.push(`/searchProductDetail?id=${props.product.id}`);
 };
 </script>
 

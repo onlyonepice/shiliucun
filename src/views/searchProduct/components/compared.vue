@@ -43,7 +43,7 @@
         </div>
       </div>
       <div :class="ns.be('compared', 'btn')">
-        <el-button type="primary">对比</el-button>
+        <el-button type="primary" @click="onCompared()">对比</el-button>
         <h5 @click="onEmptyCompared()">清空产品</h5>
       </div>
     </div>
@@ -54,13 +54,15 @@
 import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const ns = useNamespace("searchProduct-compared");
 const emits = defineEmits([
   "onDelComputed",
   "onCloseCompared",
   "onEmptyCompared",
 ]);
-defineProps({
+const props = defineProps({
   showCompared: {
     type: Boolean,
     default: false,
@@ -82,6 +84,14 @@ const onEmptyCompared = () => {
   emits("onEmptyCompared");
 };
 const choseComputed: Ref<String> = ref("");
+// 进行对比
+const onCompared = () => {
+  let _data: any[] = [];
+  props.comparedList.forEach((item: any) => {
+    _data.push(item.id);
+  });
+  router.push(`/searchProductCompared?ids=${_data.join(",")}`);
+};
 </script>
 
 <style lang="scss" scoped>

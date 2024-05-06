@@ -42,13 +42,14 @@ interface TabsList {
   id: number;
   name: string;
 }
-import { ref, Ref } from "vue";
+import { ref, Ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import {
   getCoolDownApi,
   getProductFilterApi,
   getProductListApi,
 } from "@/api/searchProduct.ts";
+import { useUserStoreHook } from "@/store/modules/user";
 import SearchProductCard from "./components/card.vue";
 import SearchProductFilter from "./components/filter.vue";
 import SearchProductCompared from "./components/compared.vue";
@@ -78,6 +79,13 @@ const filterList: Ref<Array<any>> = ref([
   { id: 2, type: "img", title: "品牌选择", data: [] },
 ]);
 const choseTabs: Ref<number> = ref(1); // 选中的tabs
+watch(
+  () => comparedList.value,
+  (val) => {
+    useUserStoreHook().setComparedList(val);
+  },
+  { deep: true },
+);
 // 选择标签栏
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
