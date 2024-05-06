@@ -196,7 +196,12 @@ const getData = async () => {
   loading.value = false;
   if (data.resp_code === 0) {
     total.value = data.datas.total;
-    pageData.value = data.datas.records.map((item) => {
+    pageData.value = data.datas.records.map((item, index) => {
+      if (route.query.id === item.id) {
+        setTimeout(() => {
+          windowScrollStore().SET_SCROLL_TOP((index + 1) * 80 + 160);
+        }, 500);
+      }
       item.showDetail = route.query.id === item.id;
       return item;
     });
