@@ -1,7 +1,7 @@
 <template>
   <div :class="['es-commonPage', ns.b()]">
     <div :class="ns.b('top')">
-      <h1>行业数据库。</h1>
+      <h1>行业数据库</h1>
       <el-button type="primary" @click="visibleApply = true"
         >立即申请</el-button
       >

@@ -170,9 +170,10 @@ const props = defineProps({
 const isVip = ref(false);
 interface dataType {
   id?: number;
+  status: boolean;
+  isNew?: boolean;
   showDetail?: boolean;
   tenderName?: string | null;
-  isNew?: boolean;
   categoryName?: string | null;
   contentName?: string | null;
   countdown?: string | null;
@@ -214,17 +215,20 @@ const handleSetDetailShowClick = async () => {
         isVip.value = item.permission;
       }
     });
-
-    const data = await getBidFinderDetail({ id: currentData.value.id });
-    if (data.resp_code === 0) {
-      detailData.value = data.datas;
-      currentData.value.showDetail = true;
-    } else if (data.resp_code === 10027) {
-      //观看次数到达上限
-      useUserStore().openVipTitle =
-        "当日的查看次数已达到上限，请开通VIP继续查看。";
-      useUserStore().openVip(true);
-      currentData.value.showDetail = false;
+    if (!currentData.value.status) {
+      window.open("https://database.eesaenergy.com/#/winningBidLibraryManage");
+    } else {
+      const data = await getBidFinderDetail({ id: currentData.value.id });
+      if (data.resp_code === 0) {
+        detailData.value = data.datas;
+        currentData.value.showDetail = true;
+      } else if (data.resp_code === 10027) {
+        //观看次数到达上限
+        useUserStore().openVipTitle =
+          "当日的查看次数已达到上限，请开通VIP继续查看。";
+        useUserStore().openVip(true);
+        currentData.value.showDetail = false;
+      }
     }
   }
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="filter__top">
-    <h1>工商业测算。</h1>
+    <h1>工商业测算</h1>
     <div class="filter__right">
       <el-button @click="onReset">重置</el-button>
       <el-button type="primary" @click="onAnalysis">开始分析</el-button>
