@@ -2,7 +2,7 @@
   <div :class="[ns.b()]">
     <breadcrumb :breadcrumbList="breadcrumbList" />
     <div :class="['es-commonPage', ns.b('content')]">
-      <h1>个人中心。</h1>
+      <h1>个人中心</h1>
       <div :class="ns.b('box')">
         <div :class="ns.be('box', 'left')">
           <div :class="ns.be('left', 'tab')">
