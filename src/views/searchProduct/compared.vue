@@ -11,7 +11,7 @@
         <el-table-column prop="info1" label="" width="246">
           <template #default="scope">
             <compardTable
-              v-if="scope.row.info[0]"
+              v-if="scope.row.info[0] && scope.row.info[0].show"
               :index="scope.$index"
               :info="scope.row.info[0] || {}"
               :choseIndex="choseIndexList[0]"
@@ -24,7 +24,7 @@
         <el-table-column prop="info2" label="" width="246">
           <template #default="scope">
             <compardTable
-              v-if="scope.row.info[1]"
+              v-if="scope.row.info[1] && scope.row.info[1].show"
               :index="scope.$index"
               :info="scope.row.info[1] || {}"
               :choseIndex="choseIndexList[1]"
@@ -37,7 +37,7 @@
         <el-table-column prop="info3" label="" width="246">
           <template #default="scope">
             <compardTable
-              v-if="scope.row.info[2]"
+              v-if="scope.row.info[2] && scope.row.info[2].show"
               :index="scope.$index"
               :info="scope.row.info[2] || {}"
               :choseIndex="choseIndexList[2]"
@@ -50,7 +50,7 @@
         <el-table-column prop="info4" label="" width="246">
           <template #default="scope">
             <compardTable
-              v-if="scope.row.info[3]"
+              v-if="scope.row.info[3] && scope.row.info[3].show"
               :index="scope.$index"
               :info="scope.row.info[3] || {}"
               :choseIndex="choseIndexList[3]"
@@ -68,15 +68,15 @@
 <script lang="ts" setup>
 import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import { useRoute } from "vue-router";
 import { getProductComparedApi } from "@/api/searchProduct";
 import compardTable from "./components/compardTable.vue";
+import { useUserStoreHook } from "@/store/modules/user";
+import { cloneDeep } from "lodash";
 const ns = useNamespace("searchProductCompared");
 const breadcrumbList: Ref<Array<any>> = ref([
   { text: "查产品", path: "/searchProduct" },
   { text: "产品对比", path: "" },
 ]);
-const route = useRoute();
 const tableData: Ref<Array<any>> = ref([]); // 表格数据
 const tabNameList = ref([
   "",
@@ -96,21 +96,34 @@ const tabNameList = ref([
 const choseIndexList = ref([0, 0, 0, 0]);
 // 获取对比列表数据
 const getComparedList = async () => {
-  if (!route.query.ids) {
+  if (useUserStoreHook().comparedList.length === 0) {
     return;
   }
-  const _data = route.query.ids.split(",");
+  tableData.value = [];
+  const _data: any = [];
+  useUserStoreHook().comparedList.forEach((item) => {
+    _data.push(item.id);
+  });
   const { resp_code, datas }: any = await getProductComparedApi(_data);
   if (resp_code === 0) {
+    datas.forEach((item: any) => {
+      item.show = true;
+    });
     for (let index = 0; index < 13; index++) {
-      tableData.value.push({ name: tabNameList.value[index], info: datas });
+      tableData.value.push({
+        name: tabNameList.value[index],
+        info: cloneDeep(datas),
+      });
     }
-    console.log("=========", tableData.value);
   }
 };
 getComparedList();
 const onDeleteCompared = (index: number) => {
-  console.log("index", index);
+  // 将vuex中的数据删除
+  useUserStoreHook().deleteComparedList(index);
+  tableData.value.forEach((item) => {
+    item.info.splice(index, 1);
+  });
 };
 </script>
 

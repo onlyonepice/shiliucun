@@ -55,6 +55,7 @@ import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
 import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 const router = useRouter();
 const ns = useNamespace("searchProduct-compared");
 const emits = defineEmits([
@@ -90,6 +91,9 @@ const onCompared = () => {
   props.comparedList.forEach((item: any) => {
     _data.push(item.id);
   });
+  if (_data.length < 2) {
+    return ElMessage.warning("请选择两个产品进行对比");
+  }
   router.push(`/searchProductCompared?ids=${_data.join(",")}`);
 };
 </script>

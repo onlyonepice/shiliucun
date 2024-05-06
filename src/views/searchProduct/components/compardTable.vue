@@ -9,6 +9,7 @@
           alt=""
         />
         <img
+          v-if="useUserStoreHook().comparedList.length > 2"
           :class="ns.be('info', 'close')"
           :src="CloseCircle"
           alt=""
