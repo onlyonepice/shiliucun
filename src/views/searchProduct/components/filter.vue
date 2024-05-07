@@ -3,7 +3,7 @@
     共找到<span>{{ total }}</span
     >款产品
   </p>
-  <div :class="ns.b('filter')">
+  <div :class="[ns.b('filter'), 'animate__animated animate__fadeIn']">
     <div
       :class="ns.be('filter', 'item')"
       v-for="item in filterList"

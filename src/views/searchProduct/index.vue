@@ -12,13 +12,16 @@
       @onChoseFilter="onChoseFilter"
     />
     <div :class="ns.b('content')">
-      <SearchProductCard
-        v-for="item in productList"
-        :key="item.id"
-        @onCompared="onCompared"
-        :product="item"
-        :comparedList="comparedList"
-      />
+      <template v-if="productList.length !== 0">
+        <SearchProductCard
+          v-for="item in productList"
+          :key="item.id"
+          @onCompared="onCompared"
+          :product="item"
+          :comparedList="comparedList"
+        />
+      </template>
+      <EmptyData v-else :class="ns.be('content', 'empty')" />
     </div>
     <template v-if="showComparedDelay">
       <SearchProductCompared
@@ -185,6 +188,9 @@ getProductList();
   padding-top: 80px;
 }
 .es-searchProduct-content {
-  @include flex(flex-start, space-between, wrap);
+  @include flex(flex-start, flex-start, wrap);
+}
+.es-searchProduct-content__empty {
+  margin: 0 auto;
 }
 </style>
