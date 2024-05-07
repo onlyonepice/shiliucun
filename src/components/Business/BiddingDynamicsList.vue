@@ -173,6 +173,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { cloneDeep } from "lodash";
+const { VITE_ENV } = import.meta.env;
 import { useRouter } from "vue-router";
 import { getToken } from "@/utils/auth";
 import { ElMessage } from "element-plus";
@@ -237,10 +238,12 @@ function handleClose(val) {
     );
   dialogVisible.value = false;
   if (val) {
-    window.open("https://database.eesaenergy.com/#/winningBidLibraryManage");
+    window.open(
+      `https://${VITE_ENV === "prod" ? "" : VITE_ENV + "."}database.eesaenergy.com/#/winningBidLibraryManage`,
+    );
   }
 }
-const currentData = ref<dataType>({});
+const currentData = ref<dataType>(null);
 
 const detailData = ref(null);
 
@@ -272,12 +275,11 @@ const handleSetDetailShowClick = async () => {
     if (!currentData.value.status) {
       if (window.localStorage.getItem("historical-data-viewing-prompt")) {
         window.open(
-          "https://database.eesaenergy.com/#/winningBidLibraryManage",
+          `https://${VITE_ENV === "prod" ? "" : VITE_ENV + "."}database.eesaenergy.com/#/winningBidLibraryManage`,
         );
       } else {
         dialogVisible.value = true;
       }
-      // window.open("https://database.eesaenergy.com/#/winningBidLibraryManage");
     } else {
       const data = await getBidFinderDetail({ id: currentData.value.id });
       if (data.resp_code === 0) {
