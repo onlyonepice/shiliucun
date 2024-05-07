@@ -35,6 +35,14 @@ export const getProductDetailApi = (params: any) => {
     { params },
   );
 };
+// 获取产品详情其他关联产品列表
+export const getProductDetailListApi = (params: any) => {
+  return http.request<void>(
+    "get",
+    "/eesa-report/energyStorageProduct/productIndustrialEnergyStorage/front/v1.0/queryIndustrialEnergyStorageOtherProduct",
+    { params },
+  );
+};
 
 // 获取产品对比
 export const getProductComparedApi = (ids: any) => {

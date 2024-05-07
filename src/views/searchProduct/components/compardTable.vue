@@ -48,7 +48,7 @@
     {{ showData.productFormName || "-" }}
   </div>
   <div v-if="index === 5" :class="ns.b('common')" name="额定功率">
-    {{ showData.ratedPower || "-" }}
+    {{ showData.ratedPower + "kW" || "-" }}
   </div>
   <div v-if="index === 6" :class="ns.b('common')" name="电池系统能量">
     {{ showData.batterySystemEnergy + "kWh" || "-" }}
