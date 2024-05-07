@@ -1,5 +1,5 @@
 <template>
-  <div :class="ns.b()">
+  <div :class="[ns.b(), 'animate__animated animate__fadeIn']">
     <img :class="ns.b('icon')" :src="EmptyIcon" alt="" />
     <p :class="ns.b('title')">暂无数据</p>
     <p :class="ns.b('desc')">数据快马加鞭补全中～</p>
