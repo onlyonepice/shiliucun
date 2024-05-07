@@ -135,13 +135,6 @@ watch(
 
 // 获取数据
 async function getData() {
-  if (
-    !useUserStore().checkPermission(
-      "ANALYSIS_OF_BIDDING_ENERGY_STORAGE_DURATION",
-    )
-  ) {
-    return (loading.value = false);
-  }
   loading.value = true;
   isEmptyData.value = false;
   try {
@@ -201,6 +194,13 @@ function handleChange(val, key) {
     });
     useUserStoreHook().openLogin(true);
   } else {
+    if (
+      !useUserStore().checkPermission(
+        "ANALYSIS_OF_BIDDING_ENERGY_STORAGE_DURATION",
+      )
+    ) {
+      return (loading.value = false);
+    }
     getData();
   }
 }

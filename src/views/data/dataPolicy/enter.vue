@@ -489,15 +489,9 @@ policyFilterSearchFn();
             }
           }
           .policy-name {
-            width: 682px;
-            height: 28px;
-            font-weight: 400;
-            font-size: 20px;
-            color: rgba(0, 0, 0, 0.9);
-            line-height: 28px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            @include widthAndHeight(682px, 24px);
+            @include font(16px, 400, rgba(0, 0, 0, 0.9), 24px);
+            @include textOverflow();
           }
           .tag-box {
             display: flex;

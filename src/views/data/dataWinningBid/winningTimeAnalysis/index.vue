@@ -132,9 +132,6 @@ const eChartName = computed(() => {
 });
 // 获取数据
 async function getData() {
-  if (!useUserStore().checkPermission("BID_WINNING_ENERGY_STORAGE_DURATION")) {
-    return (loading.value = false);
-  }
   isEmptyData.value = false;
   loading.value = true;
   try {
@@ -194,6 +191,11 @@ function handleChange(val, key) {
     });
     useUserStoreHook().openLogin(true);
   } else {
+    if (
+      !useUserStore().checkPermission("BID_WINNING_ENERGY_STORAGE_DURATION")
+    ) {
+      return (loading.value = false);
+    }
     getData();
   }
 }

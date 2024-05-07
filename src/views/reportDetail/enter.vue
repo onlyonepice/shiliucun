@@ -168,9 +168,11 @@ const getPayResultFn = async (orderNo: string) => {
 getReportDetail();
 onMounted(() => {
   const _router = router.options.history.state.back as string;
+  console.log(router);
   if (
-    _router.split("?").indexOf("/homePersonal") !== -1 ||
-    _router.split("?").indexOf("/dataWinningBid") !== -1
+    _router &&
+    (_router.split("?").indexOf("/homePersonal") !== -1 ||
+      _router.split("?").indexOf("/dataWinningBid") !== -1)
   ) {
     const _data = reportStore().getReportMapList(
       _router.split("?")[0] as string,
