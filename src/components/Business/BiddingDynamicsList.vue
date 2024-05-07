@@ -21,7 +21,7 @@
         <span class="right">{{ currentData.countdown }}</span>
       </div>
     </div>
-    <div class="detail-data" v-if="currentData.showDetail && detailData">
+    <div :class="setClass()">
       <div class="detail_content">
         <div class="detail_content_item">
           <p class="detail_content_item_label">基本信息</p>
@@ -29,19 +29,29 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">发布时间</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.releaseTime }}
+                {{
+                  detailData && detailData.releaseTime
+                    ? detailData.releaseTime
+                    : ""
+                }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">招标企业</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.tenderer ? detailData.tenderer : "" }}
+                {{
+                  detailData && detailData.tenderer ? detailData.tenderer : ""
+                }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">地区</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.regionName }}
+                {{
+                  detailData && detailData.regionName
+                    ? detailData.regionName
+                    : ""
+                }}
               </p>
             </div>
 
@@ -63,31 +73,51 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">项目类别</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.contentName }}
+                {{
+                  detailData && detailData.contentName
+                    ? detailData.contentName
+                    : ""
+                }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">招标内容</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.categoryName }}
+                {{
+                  detailData && detailData.categoryName
+                    ? detailData.categoryName
+                    : ""
+                }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">功率</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.powerScale }}MW
+                {{
+                  detailData && detailData.powerScale
+                    ? detailData.powerScale
+                    : ""
+                }}MW
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">能量</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.energyScale }}MWh
+                {{
+                  detailData && detailData.energyScale
+                    ? detailData.energyScale
+                    : ""
+                }}MWh
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">技术类型</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.technologyTypeName }}
+                {{
+                  detailData && detailData.technologyTypeName
+                    ? detailData.technologyTypeName
+                    : ""
+                }}
               </p>
             </div>
           </div>
@@ -98,20 +128,32 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">联系人</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.tenderingAgencyContactPerson }}
+                {{
+                  detailData && detailData.tenderingAgencyContactPerson
+                    ? detailData.tenderingAgencyContactPerson
+                    : ""
+                }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">联系电话</p>
               <p class="detail_content_item_value_item_value">
-                <span>{{ detailData.tenderingAgencyContactNumber }}</span>
+                <span>{{
+                  detailData && detailData.tenderingAgencyContactNumber
+                    ? detailData.tenderingAgencyContactNumber
+                    : ""
+                }}</span>
                 <img
                   v-if="
                     detailData.tenderingAgencyContactNumber &&
                     detailData.tenderingAgencyContactNumber !== ''
                   "
                   @click="
-                    copyToClipboard(detailData.tenderingAgencyContactNumber)
+                    copyToClipboard(
+                      detailData && detailData.tenderingAgencyContactNumber
+                        ? detailData.tenderingAgencyContactNumber
+                        : '',
+                    )
                   "
                   class="copy_icon"
                   :src="copy_icon"
@@ -238,7 +280,17 @@ function handleClose(val) {
 const currentData = ref<dataType>({});
 
 const detailData = ref(null);
-
+const setClass = () => {
+  if (!detailData.value) {
+    return "detail-data";
+  } else {
+    if (currentData.value.showDetail) {
+      return "detail-data open-detail";
+    } else {
+      return "detail-data close-detail";
+    }
+  }
+};
 const handleSetDetailShowClick = async () => {
   if ("showDetail" in props.pageData === false) {
     router.push({
@@ -313,6 +365,7 @@ watch(
 
   .es-biddingDynamicsList-item_info {
     width: 100%;
+    margin-bottom: 16px;
   }
 
   &:hover {
@@ -360,111 +413,123 @@ watch(
     }
   }
 
-  .detail-data {
-    margin-top: 16px;
+  .open-detail {
+    animation: open 0.3s linear !important;
+    height: 580px;
+  }
+  .close-detail {
+    height: 0;
+    animation: close 0.3s linear !important;
+  }
 
-    .hidden-detail {
-      width: 100%;
-      height: 32px;
-      align-items: center;
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 13px;
-      @include font(14px, 400, #244bf1, 22px);
-      cursor: pointer;
+  @keyframes open {
+    0% {
+      height: 0;
     }
+    100% {
+      height: 580px;
+    }
+  }
+  @keyframes close {
+    0% {
+      height: 580px;
+    }
+    100% {
+      height: 0;
+    }
+  }
+}
+.detail-data {
+  height: 0;
+  overflow: hidden;
+  .hidden-detail {
+    width: 100%;
+    height: 32px;
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 13px;
+    @include font(14px, 400, #244bf1, 22px);
+    cursor: pointer;
+  }
+  .detail_content {
+    width: 100%;
+    padding: 16px;
+    background-color: #f2f3f5;
 
-    .detail_content {
+    .detail_content_item {
       width: 100%;
-      padding: 16px;
-      background-color: #f2f3f5;
+      display: flex;
+      margin-bottom: 16px;
 
-      .detail_content_item {
-        width: 100%;
-        display: flex;
-        margin-bottom: 16px;
-
-        .detail_content_item_label {
-          margin-right: 16px;
-          width: 96px;
-          @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
-        }
-
-        .detail_content_item_value {
-          flex: 1;
-          border: 1px solid #dbdce2;
-          border-bottom: 0;
-          position: relative;
-
-          .role-permission {
-            position: absolute;
-            left: 0;
-            top: 0;
-            @include widthAndHeight(100%, 100%);
-            background: rgba(0, 0, 0, 0.1);
-            /* 半透明黑色背景 */
-            backdrop-filter: blur(3px);
+      .detail_content_item_label {
+        margin-right: 16px;
+        width: 96px;
+        @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
+      }
+      .detail_content_item_value {
+        flex: 1;
+        border: 1px solid #dbdce2;
+        border-bottom: 0;
+        position: relative;
+        .role-permission {
+          position: absolute;
+          left: 0;
+          top: 0;
+          @include widthAndHeight(100%, 100%);
+          background: rgba(0, 0, 0, 0.1); /* 半透明黑色背景 */
+          backdrop-filter: blur(3px);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          justify-content: center;
+          .role-permission_one,
+          .role-permission_two {
+            width: 100%;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
             justify-content: center;
-
-            .role-permission_one,
-            .role-permission_two {
-              width: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
+          }
+          .role-permission_one {
+            img {
+              @include widthAndHeight(18px, 18px);
+              margin-right: 2px;
             }
-
-            .role-permission_one {
-              img {
-                @include widthAndHeight(18px, 18px);
-                margin-right: 2px;
-              }
-
-              span {
-                @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
-              }
-            }
-
-            .role-permission_two {
-              img {
-                @include widthAndHeight(18px, 18px);
-                margin-right: 2px;
-              }
-
-              span {
-                @include font(16px, 600, #244bf1, 24px);
-              }
+            span {
+              @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
             }
           }
-
-          .detail_content_item_value_item {
-            width: 100%;
-            border-bottom: 1px solid #dbdce2;
-            display: flex;
-
-            .detail_content_item_value_item_label {
-              @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
-              width: 96px;
-              border-right: 1px solid #dbdce2;
-              background-color: #e8eaef;
-              padding: 9px 16px;
+          .role-permission_two {
+            img {
+              @include widthAndHeight(18px, 18px);
+              margin-right: 2px;
             }
-
-            .detail_content_item_value_item_value {
-              @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
-              padding: 9px 16px;
-              flex: 1;
-              display: flex;
-              align-items: center;
-
-              .copy_icon {
-                @include widthAndHeight(20px, 20px);
-                margin-left: 4px;
-              }
+            span {
+              @include font(16px, 600, #244bf1, 24px);
+            }
+          }
+        }
+        .detail_content_item_value_item {
+          width: 100%;
+          border-bottom: 1px solid #dbdce2;
+          display: flex;
+          .detail_content_item_value_item_label {
+            @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+            width: 96px;
+            border-right: 1px solid #dbdce2;
+            background-color: #e8eaef;
+            padding: 9px 16px;
+          }
+          .detail_content_item_value_item_value {
+            @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+            padding: 9px 16px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            .copy_icon {
+              @include widthAndHeight(20px, 20px);
+              margin-left: 4px;
             }
           }
         }
