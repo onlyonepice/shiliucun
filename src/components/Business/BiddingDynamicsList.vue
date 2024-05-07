@@ -149,11 +149,7 @@
                     detailData.tenderingAgencyContactNumber !== ''
                   "
                   @click="
-                    copyToClipboard(
-                      detailData && detailData.tenderingAgencyContactNumber
-                        ? detailData.tenderingAgencyContactNumber
-                        : '',
-                    )
+                    copyToClipboard(detailData.tenderingAgencyContactNumber)
                   "
                   class="copy_icon"
                   :src="copy_icon"
