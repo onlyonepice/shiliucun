@@ -232,7 +232,7 @@ function handleClose(val) {
     );
   dialogVisible.value = false;
   if (val) {
-    window.localStorage.setItem("historical-data-viewing-prompt", val);
+    window.open("https://database.eesaenergy.com/#/winningBidLibraryManage");
   }
 }
 const currentData = ref<dataType>({});

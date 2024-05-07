@@ -138,10 +138,10 @@ async function getData() {
   loading.value = true;
   isEmptyData.value = false;
   try {
-    const {
-      datas: { data },
-      resp_code,
-    } = await getEnergyStorageDurationAnalysis(searchParams.value);
+    const { datas, resp_code } = await getEnergyStorageDurationAnalysis(
+      searchParams.value,
+    );
+    const data = datas?.data;
     if (resp_code === 0 && data) {
       // 添加title
       EChartOptions.value.title.text = eChartName;
