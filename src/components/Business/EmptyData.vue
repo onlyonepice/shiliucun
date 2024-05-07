@@ -15,7 +15,10 @@ const ns = useNamespace("emptyData");
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .es-emptyData {
+  min-height: 320px;
   text-align: center;
+  @include flex();
+  flex-direction: column;
 }
 .es-emptyData-icon {
   @include widthAndHeight(120px, 120px);

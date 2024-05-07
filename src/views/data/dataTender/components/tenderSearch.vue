@@ -126,7 +126,11 @@
           v-if="pageData.length === 0 && !loading"
           description="数据快马加鞭补全中~"
         />
-        <Pagination :total="total" @onchangeCurrent="onchangeCurrent" />
+        <Pagination
+          :pageSize="limit"
+          :total="total"
+          @onchangeCurrent="onchangeCurrent"
+        />
       </div>
     </div>
   </div>
@@ -201,6 +205,7 @@ const getData = async () => {
       item.showDetail = route.query.id === item.id;
       return item;
     });
+    console.log(pageData.value.map((item) => item.status));
   }
 };
 const filterOptions = ref([]);
