@@ -21,7 +21,11 @@
         <span class="right">{{ currentData.countdown }}</span>
       </div>
     </div>
-    <div class="detail-data" v-if="currentData.showDetail && detailData">
+    <div
+      class="detail-data"
+      :class="currentData.className"
+      v-if="currentData.showDetail && detailData"
+    >
       <div class="detail_content">
         <div class="detail_content_item">
           <p class="detail_content_item_label">基本信息</p>
@@ -207,6 +211,7 @@ interface dataType {
   id?: number;
   status: boolean;
   isNew?: boolean;
+  className: string;
   showDetail?: boolean;
   tenderName?: string | null;
   categoryName?: string | null;
@@ -250,7 +255,10 @@ const handleSetDetailShowClick = async () => {
     return;
   }
   if (currentData.value.showDetail) {
-    currentData.value.showDetail = false;
+    setTimeout(() => {
+      currentData.value.showDetail = false;
+    }, 450);
+    currentData.value.className = "hide";
   } else {
     if (!getToken()) {
       useUserStore().openLogin(true);
@@ -275,12 +283,16 @@ const handleSetDetailShowClick = async () => {
       if (data.resp_code === 0) {
         detailData.value = data.datas;
         currentData.value.showDetail = true;
+        currentData.value.className = "show";
       } else if (data.resp_code === 10027) {
         //观看次数到达上限
         useUserStore().openVipTitle =
           "当日的查看次数已达到上限，请开通VIP继续查看。";
         useUserStore().openVip(true);
-        currentData.value.showDetail = false;
+        setTimeout(() => {
+          currentData.value.showDetail = false;
+        }, 450);
+        currentData.value.className = "hide";
       }
     }
   }
@@ -291,9 +303,12 @@ const handleLinkClick = (link) => {
 watch(
   () => props.pageData,
   (newVal) => {
-    currentData.value = cloneDeep(newVal);
+    currentData.value = cloneDeep(newVal) as any;
     if (newVal?.showDetail === true) {
-      currentData.value.showDetail = false;
+      setTimeout(() => {
+        currentData.value.showDetail = false;
+      }, 450);
+      currentData.value.className = "hide";
       handleSetDetailShowClick();
     }
   },
@@ -324,7 +339,7 @@ watch(
   .name {
     @include textOverflow(1);
     width: 100%;
-    @include font(20px, 400, rgba(0, 0, 0, 0.9), 28px);
+    @include font(16px, 400, rgba(0, 0, 0, 0.9), 28px);
     margin-bottom: 8px;
   }
 
@@ -361,7 +376,8 @@ watch(
   }
 
   .detail-data {
-    margin-top: 16px;
+    transition: all 0.2s;
+    overflow: hidden;
 
     .hidden-detail {
       width: 100%;
@@ -375,6 +391,7 @@ watch(
     }
 
     .detail_content {
+      margin-top: 16px;
       width: 100%;
       padding: 16px;
       background-color: #f2f3f5;
@@ -383,7 +400,9 @@ watch(
         width: 100%;
         display: flex;
         margin-bottom: 16px;
-
+        &:last-child {
+          margin-bottom: 0;
+        }
         .detail_content_item_label {
           margin-right: 16px;
           width: 96px;
@@ -469,6 +488,35 @@ watch(
           }
         }
       }
+    }
+  }
+
+  $maxHeightVal: 800px;
+  .show {
+    animation: openDetail 0.5s linear;
+  }
+  .hide {
+    animation: closeDetail 0.5s linear;
+  }
+  @keyframes openDetail {
+    0% {
+      opacity: 0.5;
+      max-height: 0px;
+    }
+    25% {
+      opacity: 0.9;
+    }
+    100% {
+      max-height: $maxHeightVal;
+    }
+  }
+  @keyframes closeDetail {
+    0% {
+      max-height: $maxHeightVal;
+    }
+    100% {
+      max-height: 0;
+      display: none;
     }
   }
 }
