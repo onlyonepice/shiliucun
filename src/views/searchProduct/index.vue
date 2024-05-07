@@ -188,6 +188,7 @@ getProductList();
   padding-top: 80px;
 }
 .es-searchProduct-content {
+  width: 100%;
   @include flex(flex-start, flex-start, wrap);
 }
 .es-searchProduct-content__empty {
