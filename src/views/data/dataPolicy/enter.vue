@@ -95,8 +95,9 @@
                     </div>
                   </div>
                   <div
+                    v-if="row.showDetail"
                     class="detail-data"
-                    v-if="row.showDetail && row.detailData"
+                    :class="row.className"
                   >
                     <div class="detail_content">
                       <div class="detail_content_item">
@@ -107,7 +108,7 @@
                               发布时间
                             </p>
                             <p class="detail_content_item_value_item_value">
-                              {{ row.detailData.releaseTime }}
+                              {{ row.detailData?.releaseTime }}
                             </p>
                           </div>
                           <div class="detail_content_item_value_item">
@@ -115,18 +116,18 @@
                               发布地区
                             </p>
                             <p class="detail_content_item_value_item_value">
-                              {{ getRegion(row.detailData.regionName) }}
+                              {{ getRegion(row.detailData?.regionName) }}
                             </p>
                           </div>
                           <div
                             class="detail_content_item_value_item"
-                            v-if="row.detailData.allocationStorageRatio"
+                            v-if="row.detailData?.allocationStorageRatio"
                           >
                             <p class="detail_content_item_value_item_label">
                               配储比例
                             </p>
                             <p class="detail_content_item_value_item_value">
-                              {{ row.detailData.allocationStorageRatio }}
+                              {{ row.detailData?.allocationStorageRatio }}
                             </p>
                           </div>
                           <div class="detail_content_item_value_item">
@@ -135,7 +136,7 @@
                             </p>
                             <p
                               @click="
-                                handleLinkClick(row.detailData.originalLink)
+                                handleLinkClick(row.detailData?.originalLink)
                               "
                               style="color: #244bf1; cursor: pointer"
                               class="detail_content_item_value_item_value"
@@ -153,7 +154,7 @@
                               摘要内容
                             </p>
                             <p class="detail_content_item_value_item_value">
-                              {{ row.detailData.summary }}
+                              {{ row.detailData?.summary }}
                             </p>
                           </div>
                         </div>
@@ -241,10 +242,13 @@ const handleMonthClick = (row) => {
   getData();
 };
 const getRegion = (regionName) => {
-  return regionName.join("-");
+  return !regionName ? "" : regionName.join("-");
 };
 const handleHiddenDetailClick = (index, rowIndex) => {
-  pageData.value[index].data[rowIndex].showDetail = false;
+  pageData.value[index].data[rowIndex].className = "hide";
+  setTimeout(() => {
+    pageData.value[index].data[rowIndex].showDetail = false;
+  }, 450);
 };
 const handleItemClick = async (index, rowIndex) => {
   if (!pageData.value[index].data[rowIndex].showDetail) {
@@ -258,6 +262,7 @@ const handleItemClick = async (index, rowIndex) => {
     if (data.resp_code === 0) {
       pageData.value[index].data[rowIndex].detailData = data.datas;
       pageData.value[index].data[rowIndex].showDetail = true;
+      pageData.value[index].data[rowIndex].className = "show";
     } else if (data.resp_code === 10027) {
       //观看次数到达上限
       useUserStore().openVipTitle =
@@ -265,7 +270,10 @@ const handleItemClick = async (index, rowIndex) => {
       useUserStore().openVip(true);
     }
   } else {
-    pageData.value[index].data[rowIndex].showDetail = false;
+    pageData.value[index].data[rowIndex].className = "hide";
+    setTimeout(() => {
+      pageData.value[index].data[rowIndex].showDetail = false;
+    }, 450);
   }
 };
 const handleLinkClick = (link) => {
@@ -312,6 +320,7 @@ const getData = async () => {
           });
         } else {
           row.showDetail = false;
+          row.className = "";
         }
       });
     });
@@ -424,7 +433,7 @@ policyFilterSearchFn();
           border-bottom: 1px solid #dbdce2;
           margin-bottom: 16px;
           .detail-data {
-            margin-top: 16px;
+            overflow: hidden;
             .hidden-detail {
               width: 100%;
               height: 32px;
@@ -436,6 +445,7 @@ policyFilterSearchFn();
               cursor: pointer;
             }
             .detail_content {
+              margin-top: 16px;
               width: 100%;
               padding: 16px;
               background-color: #f2f3f5;
@@ -526,6 +536,34 @@ policyFilterSearchFn();
         color: #244bf1;
       }
     }
+  }
+}
+$maxHeightVal: 800px;
+.show {
+  animation: openDetail 0.5s linear;
+}
+.hide {
+  animation: closeDetail 0.5s linear;
+}
+@keyframes openDetail {
+  0% {
+    opacity: 0.5;
+    max-height: 0px;
+  }
+  25% {
+    opacity: 0.9;
+  }
+  100% {
+    max-height: $maxHeightVal;
+  }
+}
+@keyframes closeDetail {
+  0% {
+    max-height: $maxHeightVal;
+  }
+  100% {
+    max-height: 0;
+    display: none;
   }
 }
 </style>

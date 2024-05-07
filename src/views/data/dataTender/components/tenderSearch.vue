@@ -185,6 +185,7 @@ const getData = async () => {
     datas: {
       records?: {
         showDetail: boolean;
+        className: undefined | string;
         id: any;
         isPermissions: boolean;
       }[];
@@ -203,6 +204,7 @@ const getData = async () => {
         });
       }
       item.showDetail = route.query.id === item.id;
+      item.className = "";
       return item;
     });
     console.log(pageData.value.map((item) => item.status));

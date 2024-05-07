@@ -21,7 +21,11 @@
         <span class="right">{{ currentData.countdown }}</span>
       </div>
     </div>
-    <div :class="setClass()" v-if="detailData">
+    <div
+      class="detail-data"
+      :class="currentData.className"
+      v-if="currentData.showDetail && detailData"
+    >
       <div class="detail_content">
         <div class="detail_content_item">
           <p class="detail_content_item_label">基本信息</p>
@@ -29,29 +33,19 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">发布时间</p>
               <p class="detail_content_item_value_item_value">
-                {{
-                  detailData && detailData.releaseTime
-                    ? detailData.releaseTime
-                    : ""
-                }}
+                {{ detailData.releaseTime }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">招标企业</p>
               <p class="detail_content_item_value_item_value">
-                {{
-                  detailData && detailData.tenderer ? detailData.tenderer : ""
-                }}
+                {{ detailData.tenderer ? detailData.tenderer : "" }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">地区</p>
               <p class="detail_content_item_value_item_value">
-                {{
-                  detailData && detailData.regionName
-                    ? detailData.regionName
-                    : ""
-                }}
+                {{ detailData.regionName }}
               </p>
             </div>
 
@@ -73,51 +67,31 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">项目类别</p>
               <p class="detail_content_item_value_item_value">
-                {{
-                  detailData && detailData.contentName
-                    ? detailData.contentName
-                    : ""
-                }}
+                {{ detailData.contentName }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">招标内容</p>
               <p class="detail_content_item_value_item_value">
-                {{
-                  detailData && detailData.categoryName
-                    ? detailData.categoryName
-                    : ""
-                }}
+                {{ detailData.categoryName }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">功率</p>
               <p class="detail_content_item_value_item_value">
-                {{
-                  detailData && detailData.powerScale
-                    ? detailData.powerScale
-                    : ""
-                }}MW
+                {{ detailData.powerScale }}MW
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">能量</p>
               <p class="detail_content_item_value_item_value">
-                {{
-                  detailData && detailData.energyScale
-                    ? detailData.energyScale
-                    : ""
-                }}MWh
+                {{ detailData.energyScale }}MWh
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">技术类型</p>
               <p class="detail_content_item_value_item_value">
-                {{
-                  detailData && detailData.technologyTypeName
-                    ? detailData.technologyTypeName
-                    : ""
-                }}
+                {{ detailData.technologyTypeName }}
               </p>
             </div>
           </div>
@@ -128,21 +102,13 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">联系人</p>
               <p class="detail_content_item_value_item_value">
-                {{
-                  detailData && detailData.tenderingAgencyContactPerson
-                    ? detailData.tenderingAgencyContactPerson
-                    : ""
-                }}
+                {{ detailData.tenderingAgencyContactPerson }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">联系电话</p>
               <p class="detail_content_item_value_item_value">
-                <span>{{
-                  detailData && detailData.tenderingAgencyContactNumber
-                    ? detailData.tenderingAgencyContactNumber
-                    : ""
-                }}</span>
+                <span>{{ detailData.tenderingAgencyContactNumber }}</span>
                 <img
                   v-if="
                     detailData.tenderingAgencyContactNumber &&
@@ -245,6 +211,7 @@ interface dataType {
   id?: number;
   status: boolean;
   isNew?: boolean;
+  className: string;
   showDetail?: boolean;
   tenderName?: string | null;
   categoryName?: string | null;
@@ -276,17 +243,7 @@ function handleClose(val) {
 const currentData = ref<dataType>({});
 
 const detailData = ref(null);
-const setClass = () => {
-  if (!detailData.value) {
-    return "detail-data";
-  } else {
-    if (currentData.value.showDetail) {
-      return "detail-data open-detail";
-    } else {
-      return "detail-data close-detail";
-    }
-  }
-};
+
 const handleSetDetailShowClick = async () => {
   if ("showDetail" in props.pageData === false) {
     router.push({
@@ -298,7 +255,10 @@ const handleSetDetailShowClick = async () => {
     return;
   }
   if (currentData.value.showDetail) {
-    currentData.value.showDetail = false;
+    setTimeout(() => {
+      currentData.value.showDetail = false;
+    }, 450);
+    currentData.value.className = "hide";
   } else {
     if (!getToken()) {
       useUserStore().openLogin(true);
@@ -309,19 +269,31 @@ const handleSetDetailShowClick = async () => {
         isVip.value = item.permission;
       }
     });
-
-    const data = await getBidFinderDetail({ id: currentData.value.id });
-    if (data.resp_code === 0) {
-      setTimeout(() => {
+    if (!currentData.value.status) {
+      if (window.localStorage.getItem("historical-data-viewing-prompt")) {
+        window.open(
+          "https://database.eesaenergy.com/#/winningBidLibraryManage",
+        );
+      } else {
+        dialogVisible.value = true;
+      }
+      // window.open("https://database.eesaenergy.com/#/winningBidLibraryManage");
+    } else {
+      const data = await getBidFinderDetail({ id: currentData.value.id });
+      if (data.resp_code === 0) {
+        detailData.value = data.datas;
         currentData.value.showDetail = true;
-      });
-      detailData.value = data.datas;
-    } else if (data.resp_code === 10027) {
-      //观看次数到达上限
-      useUserStore().openVipTitle =
-        "当日的查看次数已达到上限，请开通VIP继续查看。";
-      useUserStore().openVip(true);
-      currentData.value.showDetail = false;
+        currentData.value.className = "show";
+      } else if (data.resp_code === 10027) {
+        //观看次数到达上限
+        useUserStore().openVipTitle =
+          "当日的查看次数已达到上限，请开通VIP继续查看。";
+        useUserStore().openVip(true);
+        setTimeout(() => {
+          currentData.value.showDetail = false;
+        }, 450);
+        currentData.value.className = "hide";
+      }
     }
   }
 };
@@ -331,9 +303,12 @@ const handleLinkClick = (link) => {
 watch(
   () => props.pageData,
   (newVal) => {
-    currentData.value = cloneDeep(newVal);
+    currentData.value = cloneDeep(newVal) as any;
     if (newVal?.showDetail === true) {
-      currentData.value.showDetail = false;
+      setTimeout(() => {
+        currentData.value.showDetail = false;
+      }, 450);
+      currentData.value.className = "hide";
       handleSetDetailShowClick();
     }
   },
@@ -353,7 +328,6 @@ watch(
 
   .es-biddingDynamicsList-item_info {
     width: 100%;
-    margin-bottom: 16px;
   }
 
   &:hover {
@@ -365,7 +339,7 @@ watch(
   .name {
     @include textOverflow(1);
     width: 100%;
-    @include font(20px, 400, rgba(0, 0, 0, 0.9), 28px);
+    @include font(16px, 400, rgba(0, 0, 0, 0.9), 28px);
     margin-bottom: 8px;
   }
 
@@ -401,127 +375,148 @@ watch(
     }
   }
 
-  .open-detail {
-    animation: open 0.3s linear !important;
-    height: 580px;
-  }
-  .close-detail {
-    height: 0;
-    animation: close 0.3s linear !important;
-  }
+  .detail-data {
+    transition: all 0.2s;
+    overflow: hidden;
 
-  @keyframes open {
-    0% {
-      height: 0;
-    }
-    100% {
-      height: 580px;
-    }
-  }
-  @keyframes close {
-    0% {
-      height: 580px;
-    }
-    100% {
-      height: 0;
-    }
-  }
-}
-.detail-data {
-  height: 0;
-  overflow: hidden;
-  .hidden-detail {
-    width: 100%;
-    height: 32px;
-    align-items: center;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 13px;
-    @include font(14px, 400, #244bf1, 22px);
-    cursor: pointer;
-  }
-  .detail_content {
-    width: 100%;
-    padding: 16px;
-    background-color: #f2f3f5;
-
-    .detail_content_item {
+    .hidden-detail {
       width: 100%;
+      height: 32px;
+      align-items: center;
       display: flex;
-      margin-bottom: 16px;
+      justify-content: flex-end;
+      margin-top: 13px;
+      @include font(14px, 400, #244bf1, 22px);
+      cursor: pointer;
+    }
 
-      .detail_content_item_label {
-        margin-right: 16px;
-        width: 96px;
-        @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
-      }
-      .detail_content_item_value {
-        flex: 1;
-        border: 1px solid #dbdce2;
-        border-bottom: 0;
-        position: relative;
-        .role-permission {
-          position: absolute;
-          left: 0;
-          top: 0;
-          @include widthAndHeight(100%, 100%);
-          background: rgba(0, 0, 0, 0.1); /* 半透明黑色背景 */
-          backdrop-filter: blur(3px);
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          justify-content: center;
-          .role-permission_one,
-          .role-permission_two {
-            width: 100%;
+    .detail_content {
+      margin-top: 16px;
+      width: 100%;
+      padding: 16px;
+      background-color: #f2f3f5;
+
+      .detail_content_item {
+        width: 100%;
+        display: flex;
+        margin-bottom: 16px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        .detail_content_item_label {
+          margin-right: 16px;
+          width: 96px;
+          @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
+        }
+
+        .detail_content_item_value {
+          flex: 1;
+          border: 1px solid #dbdce2;
+          border-bottom: 0;
+          position: relative;
+
+          .role-permission {
+            position: absolute;
+            left: 0;
+            top: 0;
+            @include widthAndHeight(100%, 100%);
+            background: rgba(0, 0, 0, 0.1);
+            /* 半透明黑色背景 */
+            backdrop-filter: blur(3px);
             display: flex;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
             justify-content: center;
-          }
-          .role-permission_one {
-            img {
-              @include widthAndHeight(18px, 18px);
-              margin-right: 2px;
+
+            .role-permission_one,
+            .role-permission_two {
+              width: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
             }
-            span {
-              @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
+
+            .role-permission_one {
+              img {
+                @include widthAndHeight(18px, 18px);
+                margin-right: 2px;
+              }
+
+              span {
+                @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
+              }
+            }
+
+            .role-permission_two {
+              img {
+                @include widthAndHeight(18px, 18px);
+                margin-right: 2px;
+              }
+
+              span {
+                @include font(16px, 600, #244bf1, 24px);
+              }
             }
           }
-          .role-permission_two {
-            img {
-              @include widthAndHeight(18px, 18px);
-              margin-right: 2px;
-            }
-            span {
-              @include font(16px, 600, #244bf1, 24px);
-            }
-          }
-        }
-        .detail_content_item_value_item {
-          width: 100%;
-          border-bottom: 1px solid #dbdce2;
-          display: flex;
-          .detail_content_item_value_item_label {
-            @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
-            width: 96px;
-            border-right: 1px solid #dbdce2;
-            background-color: #e8eaef;
-            padding: 9px 16px;
-          }
-          .detail_content_item_value_item_value {
-            @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
-            padding: 9px 16px;
-            flex: 1;
+
+          .detail_content_item_value_item {
+            width: 100%;
+            border-bottom: 1px solid #dbdce2;
             display: flex;
-            align-items: center;
-            .copy_icon {
-              @include widthAndHeight(20px, 20px);
-              margin-left: 4px;
+
+            .detail_content_item_value_item_label {
+              @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+              width: 96px;
+              border-right: 1px solid #dbdce2;
+              background-color: #e8eaef;
+              padding: 9px 16px;
+            }
+
+            .detail_content_item_value_item_value {
+              @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+              padding: 9px 16px;
+              flex: 1;
+              display: flex;
+              align-items: center;
+
+              .copy_icon {
+                @include widthAndHeight(20px, 20px);
+                margin-left: 4px;
+              }
             }
           }
         }
       }
+    }
+  }
+
+  $maxHeightVal: 800px;
+  .show {
+    animation: openDetail 0.5s linear;
+  }
+  .hide {
+    animation: closeDetail 0.5s linear;
+  }
+  @keyframes openDetail {
+    0% {
+      opacity: 0.5;
+      max-height: 0px;
+    }
+    25% {
+      opacity: 0.9;
+    }
+    100% {
+      max-height: $maxHeightVal;
+    }
+  }
+  @keyframes closeDetail {
+    0% {
+      max-height: $maxHeightVal;
+    }
+    100% {
+      max-height: 0;
+      display: none;
     }
   }
 }
