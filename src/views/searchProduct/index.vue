@@ -1,10 +1,10 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
-    <Tabs
+    <!-- <Tabs
       :tabsList="tabsList"
       @onHandleClick="onHandleClick"
       :defaultId="choseTabs"
-    />
+    /> -->
     <SearchProductFilter
       :total="total"
       :filterList="filterList"
@@ -87,9 +87,9 @@ watch(
   { deep: true },
 );
 // 选择标签栏
-const onHandleClick = (id: number) => {
-  choseTabs.value = id;
-};
+// const onHandleClick = (id: number) => {
+//   choseTabs.value = id;
+// };
 // 查询冷却方式
 const getCoolDown = async () => {
   const { datas } = await getCoolDownApi({
