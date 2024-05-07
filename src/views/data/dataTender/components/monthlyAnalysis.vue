@@ -68,7 +68,7 @@ onMounted(() => {
   getElectricityTypeOneName();
 });
 
-// 获取eCharts数据
+// 获取 eCharts 数据
 async function getElectricityTypeOneName() {
   loading.value = true;
   const { datas }: any = await getBiddingDynamicsListApi(contentDict.value);
