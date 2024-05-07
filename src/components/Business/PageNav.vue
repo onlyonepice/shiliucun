@@ -175,7 +175,10 @@ const navList: Ref<Array<NavList>> = ref([
     id: 5,
     text: "企业",
     path: ["/enterprise"],
-    children: [{ id: 1, text: "产业链地图", path: VITE_INDUSTRIALMAP_URL }],
+    children: [
+      { id: 1, text: "产业链地图", path: VITE_INDUSTRIALMAP_URL },
+      { id: 2, text: "查产品", path: "/searchProduct" },
+    ],
   },
   {
     id: 6,
