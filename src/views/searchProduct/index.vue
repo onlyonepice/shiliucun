@@ -13,13 +13,17 @@
     />
     <div :class="ns.b('content')">
       <template v-if="productList.length !== 0">
-        <SearchProductCard
+        <div
+          :class="ns.be('content', 'list')"
           v-for="item in productList"
           :key="item.id"
-          @onCompared="onCompared"
-          :product="item"
-          :comparedList="comparedList"
-        />
+        >
+          <SearchProductCard
+            @onCompared="onCompared"
+            :product="item"
+            :comparedList="comparedList"
+          />
+        </div>
       </template>
       <EmptyData v-else :class="ns.be('content', 'empty')" />
     </div>
@@ -157,6 +161,7 @@ getProductFilter();
 // 页码改变
 const onchangeCurrent = (page: number) => {
   filterInfo.value.page = page;
+  getProductList();
 };
 // 筛选项改变
 const onChoseFilter = (item: any, type: string) => {
@@ -190,6 +195,12 @@ getProductList();
 .es-searchProduct-content {
   width: 100%;
   @include flex(flex-start, flex-start, wrap);
+}
+.es-searchProduct-content__list {
+  margin-right: 24px;
+  &:nth-child(4n) {
+    margin-right: 0;
+  }
 }
 .es-searchProduct-content__empty {
   margin: 0 auto;

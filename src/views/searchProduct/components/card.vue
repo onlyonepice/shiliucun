@@ -81,12 +81,8 @@ const onDetail = () => {
   padding: 16px 16px 24px 16px;
   text-align: center;
   @include relative();
-  margin-right: 24px;
   &:hover {
     box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
-  }
-  &:nth-child(4n) {
-    margin-right: 0;
   }
 }
 .es-searchProduct-card-logo {
