@@ -1,6 +1,6 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
-    <p class="title">会员中心。</p>
+    <p class="title">会员中心</p>
     <div class="wrapper">
       <div class="item" v-for="item in accountList" :key="item.name">
         <img :src="item.bgImg" alt="" />
@@ -29,9 +29,9 @@
 import { ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import cancel_icon from "@/assets/img/common/icon_clear.png";
-import account_business_bg from "@/assets/img/vip/account-business-bg.png";
-import account_ordinary_bg from "@/assets/img/vip/account-ordinary-bg.png";
-import account_standard_bg from "@/assets/img/vip/account-standard-bg.png";
+import account_business_bg from "@/assets/img/vip/account-business-bg.png"; // 企业会员
+import account_ordinary_bg from "@/assets/img/vip/account-ordinary-bg.png"; // 普通会员
+import account_standard_bg from "@/assets/img/vip/account-standard-bg.png"; // 个人会员
 import PayQR from "@/assets/img/vip/pay-member-qr.png";
 import { getToken } from "@/utils/auth";
 import { useRouter } from "vue-router";
@@ -75,14 +75,14 @@ const handleClick = (item) => {
     display: flex;
     justify-content: space-between;
     .item {
-      @include widthAndHeight(368px, 1528px);
+      @include widthAndHeight(368px, 1802px);
       position: relative;
       img {
         @include widthAndHeight(100%, 100%);
       }
       .item_btn {
-        @include widthAndHeight(304px, 40px);
-        @include absolute(2, 200px, 0, 0, 20px);
+        @include widthAndHeight(324px, 40px);
+        @include absolute(2, 200px, 0, 0, 22px);
         cursor: pointer;
       }
     }

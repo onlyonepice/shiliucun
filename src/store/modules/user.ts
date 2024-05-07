@@ -20,6 +20,7 @@ export const useUserStore = defineStore({
     openVipTitle: "开通VIP会员，继续使用该功能。",
     permissionList: [], // 用户权限
     showMembersBuy: false, //订阅会员弹框
+    comparedList: [], // 产品对比列表
   }),
   getters: {
     getFileUrl(): string {
@@ -36,6 +37,14 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
+    // 设置产品对比列表
+    setComparedList(list: any) {
+      this.comparedList = list;
+    },
+    // 删除对比列表中一项
+    deleteComparedList(index: any) {
+      this.comparedList.splice(index, 1);
+    },
     // 获取加密密钥
     async getPublicKey() {
       return new Promise((resolve, reject) => {

@@ -30,10 +30,12 @@
     </div>
     <div :class="ns.b('eCharts-box')">
       <div
+        v-if="!isEmptyData"
         v-loading="loading"
         id="eChart-winningBidEnterprise"
         ref="eChartsDom"
       />
+      <EmptyData v-else />
       <ExportCanvasDialog
         :visible="exportVisible"
         :img-url="exportImgUrl"
@@ -54,6 +56,7 @@ import { enterpriseFormOptions } from "../data";
 import lament_icon from "@/assets/img/common/lament_icon.png";
 import * as echarts from "echarts";
 import { useUserStore } from "@/store/modules/user";
+const isEmptyData = ref(false);
 const echartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
@@ -171,9 +174,10 @@ watch(
 );
 const getData = async () => {
   loading.value = true;
+  isEmptyData.value = false;
   try {
     const res = (await enterpriseAnalysis(requestData.value)) as any;
-    if (res.resp_code === 0) {
+    if (res.resp_code === 0 && res.datas) {
       echartOptions.value.series[0].data = [];
       echartOptions.value.series[1].data = [];
       echartOptions.value.series[2].data = [];
@@ -212,6 +216,8 @@ const getData = async () => {
         echartOptions.value.grid.bottom = "35%";
       }
       initECharts();
+    } else if (!res.datas) {
+      isEmptyData.value = true;
     }
     loading.value = false;
   } catch (e) {

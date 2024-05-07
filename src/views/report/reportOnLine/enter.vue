@@ -1,6 +1,6 @@
 <template>
   <div :class="[ns.b(''), 'es-commonPage']">
-    <p class="page-title">在线报告。</p>
+    <p class="page-title">在线报告</p>
     <div class="filter-box">
       <div class="year-box filter_item">
         <p class="filter_title">年份</p>
