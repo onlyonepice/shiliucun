@@ -21,7 +21,7 @@
         <span class="right">{{ currentData.countdown }}</span>
       </div>
     </div>
-    <div :class="setClass()">
+    <div :class="setClass()" v-if="detailData">
       <div class="detail_content">
         <div class="detail_content_item">
           <p class="detail_content_item_label">基本信息</p>
@@ -309,27 +309,19 @@ const handleSetDetailShowClick = async () => {
         isVip.value = item.permission;
       }
     });
-    if (!currentData.value.status) {
-      if (window.localStorage.getItem("historical-data-viewing-prompt")) {
-        window.open(
-          "https://database.eesaenergy.com/#/winningBidLibraryManage",
-        );
-      } else {
-        dialogVisible.value = true;
-      }
-      // window.open("https://database.eesaenergy.com/#/winningBidLibraryManage");
-    } else {
-      const data = await getBidFinderDetail({ id: currentData.value.id });
-      if (data.resp_code === 0) {
-        detailData.value = data.datas;
+
+    const data = await getBidFinderDetail({ id: currentData.value.id });
+    if (data.resp_code === 0) {
+      setTimeout(() => {
         currentData.value.showDetail = true;
-      } else if (data.resp_code === 10027) {
-        //观看次数到达上限
-        useUserStore().openVipTitle =
-          "当日的查看次数已达到上限，请开通VIP继续查看。";
-        useUserStore().openVip(true);
-        currentData.value.showDetail = false;
-      }
+      });
+      detailData.value = data.datas;
+    } else if (data.resp_code === 10027) {
+      //观看次数到达上限
+      useUserStore().openVipTitle =
+        "当日的查看次数已达到上限，请开通VIP继续查看。";
+      useUserStore().openVip(true);
+      currentData.value.showDetail = false;
     }
   }
 };
