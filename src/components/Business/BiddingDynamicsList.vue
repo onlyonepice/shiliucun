@@ -21,7 +21,7 @@
         <span class="right">{{ currentData.countdown }}</span>
       </div>
     </div>
-    <div :class="setClass()">
+    <div :class="setClass()" v-if="detailData">
       <div class="detail_content">
         <div class="detail_content_item">
           <p class="detail_content_item_label">基本信息</p>
@@ -265,8 +265,10 @@ const handleSetDetailShowClick = async () => {
 
     const data = await getBidFinderDetail({ id: currentData.value.id });
     if (data.resp_code === 0) {
+      setTimeout(() => {
+        currentData.value.showDetail = true;
+      });
       detailData.value = data.datas;
-      currentData.value.showDetail = true;
     } else if (data.resp_code === 10027) {
       //观看次数到达上限
       useUserStore().openVipTitle =
