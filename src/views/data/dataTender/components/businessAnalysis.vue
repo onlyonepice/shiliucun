@@ -38,7 +38,13 @@
         <el-button type="primary" @click="exportResult">下载图片</el-button>
       </div>
     </div>
-    <div v-loading="loading" id="eChart_businessAnalysis" ref="eChartsDom" />
+    <div
+      v-if="!isEmptyData"
+      v-loading="loading"
+      id="eChart_businessAnalysis"
+      ref="eChartsDom"
+    />
+    <EmptyData v-else />
     <ExportCanvasDialog
       :visible="exportVisible"
       :img-url="exportImgUrl"
@@ -59,6 +65,7 @@ import { useUserStore } from "@/store/modules/user";
 const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 获取eCharts节点
 const eChartsDom = ref(null);
+const isEmptyData = ref(false);
 // 导出图片相关
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportImgTitle: Ref<string> = ref("");
@@ -106,55 +113,57 @@ const onChangeFilter = (id: string | number, type: string) => {
 // 获取eCharts数据
 async function getElectricityTypeOneName() {
   loading.value = true;
-  const { datas }: any = await getBusinessDynamicsListApi({
+  isEmptyData.value = false;
+  const { datas, resp_code }: any = await getBusinessDynamicsListApi({
     contentDict: contentDict.value,
     releaseTime: releaseTime.value,
   });
-  const _data = datas.slice(0, 20);
-  eChartsOption.value.title.text = releaseTime.value + "储能招标企业分析";
-  eChartsOption.value.title.subtext = `储能系统`;
-  eChartsOption.value.color = ["#165DFF", "#FF7D00"];
-  eChartsOption.value.grid = {
-    top: "15%",
-    left: "50",
-    right: "3%",
-    bottom: "20%",
-  };
-  const _y1 = [];
-  const _y2 = [];
-  _data.map((item) => {
-    _y1.push(item.data.powerScale);
-    _y2.push(item.data.energyScale);
-  });
-  const _series = { type: "bar", barWidth: 14 };
-  eChartsOption.value.series = [
-    Object.assign(cloneDeep(_series), { name: "功率", data: _y1 }),
-    Object.assign(cloneDeep(_series), { name: "能量", data: _y2 }),
-  ];
-  eChartsOption.value.yAxis.name = "MWh";
-  eChartsOption.value.xAxis.axisLabel.rotate = -90;
-  eChartsOption.value.xAxis.axisLabel.formatter = (params) => {
-    return params.length > 6 ? params.substr(0, 6) + "..." : params;
-  };
-  eChartsOption.value.xAxis.data = _data.map((item) =>
-    item.abbreviation !== null ? item.abbreviation : item.company,
-  );
-  const flexStyle = `display: flex; justify-content: space-between; align-items: center;`;
-  (eChartsOption.value.tooltip = {
-    trigger: "axis",
-    axisPointer: {
-      lineStyle: {
-        shadowColor: "rgba(0, 0, 0, 0.5)",
+  if (datas.length && resp_code === 0) {
+    const _data = datas.slice(0, 20);
+    eChartsOption.value.title.text = releaseTime.value + "储能招标企业分析";
+    eChartsOption.value.title.subtext = `储能系统`;
+    eChartsOption.value.color = ["#165DFF", "#FF7D00"];
+    eChartsOption.value.grid = {
+      top: "15%",
+      left: "50",
+      right: "3%",
+      bottom: "20%",
+    };
+    const _y1 = [];
+    const _y2 = [];
+    _data.map((item) => {
+      _y1.push(item.data.powerScale);
+      _y2.push(item.data.energyScale);
+    });
+    const _series = { type: "bar", barWidth: 14 };
+    eChartsOption.value.series = [
+      Object.assign(cloneDeep(_series), { name: "功率", data: _y1 }),
+      Object.assign(cloneDeep(_series), { name: "能量", data: _y2 }),
+    ];
+    eChartsOption.value.yAxis.name = "MWh";
+    eChartsOption.value.xAxis.axisLabel.rotate = -90;
+    eChartsOption.value.xAxis.axisLabel.formatter = (params) => {
+      return params.length > 6 ? params.substr(0, 6) + "..." : params;
+    };
+    eChartsOption.value.xAxis.data = _data.map((item) =>
+      item.abbreviation !== null ? item.abbreviation : item.company,
+    );
+    const flexStyle = `display: flex; justify-content: space-between; align-items: center;`;
+    (eChartsOption.value.tooltip = {
+      trigger: "axis",
+      axisPointer: {
+        lineStyle: {
+          shadowColor: "rgba(0, 0, 0, 0.5)",
+        },
       },
-    },
-    formatter: (params) => {
-      var htmlStr = `<div >
+      formatter: (params) => {
+        var htmlStr = `<div >
         <div style="line-height:24px; font-width: 400; ${flexStyle}">
           <span style="font-weight: 600; font-size: 16px; color:#000;">${params[0].name}</span>
         </div>
       `;
-      params.forEach((item, index) => {
-        htmlStr += `
+        params.forEach((item, index) => {
+          htmlStr += `
         <div style=" width: 100%; height: 32px; margin-top: 8px; background: #F4F5F7; border-radius: 4px; padding: 0 8px 0 10px; font-weight: 400; ${flexStyle}" >
           <div style="${flexStyle}" >
             <div style=" width: 12px; height: 12px; margin-right: 10px; background-color: ${index === 0 ? "#165DFF" : "#FF7D00"}; border-radius: 2px; " ></div>
@@ -164,20 +173,23 @@ async function getElectricityTypeOneName() {
             ${item.value}${item.seriesName === "功率" ? "MW" : "MWh"}
           </span>
         </div>`;
-      });
-      htmlStr += "</div>";
-      return htmlStr;
-    },
-  }),
-    (eChartsOption.value.legend = [
-      {
-        x: "center",
-        y: "95%",
-        textStyle: textStyleObject,
+        });
+        htmlStr += "</div>";
+        return htmlStr;
       },
-    ]);
+    }),
+      (eChartsOption.value.legend = [
+        {
+          x: "center",
+          y: "95%",
+          textStyle: textStyleObject,
+        },
+      ]);
+    createECharts();
+  } else if (datas.length === 0 || resp_code !== 0) {
+    isEmptyData.value = true;
+  }
   loading.value = false;
-  createECharts();
 }
 // 创建图表
 function createECharts() {
