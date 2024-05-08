@@ -8,7 +8,7 @@
             <p>{{ scope.row.name }}</p>
           </template>
         </el-table-column>
-        <el-table-column prop="info1" label="" width="246">
+        <el-table-column prop="info1" label="" width="244">
           <template #default="scope">
             <compardTable
               v-if="scope.row.info[0] && scope.row.info[0].show"
@@ -21,7 +21,7 @@
             <div v-else />
           </template>
         </el-table-column>
-        <el-table-column prop="info2" label="" width="246">
+        <el-table-column prop="info2" label="" width="244">
           <template #default="scope">
             <compardTable
               v-if="scope.row.info[1] && scope.row.info[1].show"
@@ -34,7 +34,7 @@
             <div v-else />
           </template>
         </el-table-column>
-        <el-table-column prop="info3" label="" width="246">
+        <el-table-column prop="info3" label="" width="244">
           <template #default="scope">
             <compardTable
               v-if="scope.row.info[2] && scope.row.info[2].show"
@@ -47,7 +47,7 @@
             <div v-else />
           </template>
         </el-table-column>
-        <el-table-column prop="info4" label="" width="246">
+        <el-table-column prop="info4" label="" width="244">
           <template #default="scope">
             <compardTable
               v-if="scope.row.info[3] && scope.row.info[3].show"
@@ -133,7 +133,7 @@ const onDeleteCompared = (index: number) => {
   padding-bottom: 80px;
 }
 .es-searchProductCompared-content {
-  @include widthAndHeight(1152px);
+  @include widthAndHeight(1148px);
   padding: 24px;
   background: #ffffff;
   border-radius: 8px;
