@@ -1,10 +1,10 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
-    <!-- <Tabs
+    <Tabs
       :tabsList="tabsList"
       @onHandleClick="onHandleClick"
       :defaultId="choseTabs"
-    /> -->
+    />
     <SearchProductFilter
       :total="total"
       :filterList="filterList"
@@ -64,9 +64,9 @@ import { ElMessage } from "element-plus";
 const ns = useNamespace("searchProduct");
 const tabsList: Ref<Array<TabsList>> = ref([
   { id: 1, name: "工商业一体机", code: "INDUSTRY_ENERGY_STORAGE" },
-  { id: 2, name: "电芯" },
-  { id: 3, name: "储能变流器" },
-  { id: 4, name: "大型储能柜" },
+  // { id: 2, name: "电芯" },
+  // { id: 3, name: "储能变流器" },
+  // { id: 4, name: "大型储能柜" },
 ]);
 const filterInfo: Ref<any> = ref({
   page: 1,
@@ -94,9 +94,9 @@ watch(
   { deep: true },
 );
 // 选择标签栏
-// const onHandleClick = (id: number) => {
-//   choseTabs.value = id;
-// };
+const onHandleClick = (id: number) => {
+  choseTabs.value = id;
+};
 // 查询冷却方式
 const getCoolDown = async () => {
   const { datas } = await getCoolDownApi({
