@@ -116,7 +116,9 @@ export const useUserStore = defineStore({
           .then((response) => {
             const data = response["datas"];
             this.userInfo = data;
-            this.getPermissionList();
+            if (response.resp_code === 0) {
+              this.getPermissionList();
+            }
             resolve(data);
           })
           .catch((error) => {

@@ -31,7 +31,9 @@
               }}%
             </p>
             <p :class="[ns.b('info-right-common')]">
-              冷却方式：{{ productDetail.models[0].coolingMethodName }}
+              冷却方式：{{
+                productDetail.models[0].coolingMethodName.join("，")
+              }}
             </p>
           </template>
           <el-button
