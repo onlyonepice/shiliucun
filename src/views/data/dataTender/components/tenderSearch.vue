@@ -207,7 +207,6 @@ const getData = async () => {
       item.className = "";
       return item;
     });
-    console.log(pageData.value.map((item) => item.status));
   }
 };
 const filterOptions = ref([]);

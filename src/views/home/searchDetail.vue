@@ -279,7 +279,6 @@ const searchFn = async () => {
                     searchContent.value,
                     `<span style='color: #FF8D32;' class='search-match'>${searchContent.value}</span>`,
                   );
-                  console.log(item[children]);
                 } else if (Array.isArray(item[children])) {
                   item[children] = item[children].map((arrItem) => {
                     return arrItem.replace(
@@ -287,7 +286,6 @@ const searchFn = async () => {
                       `<span style='color: #FF8D32;' class='search-match'>${searchContent.value}</span>`,
                     );
                   });
-                  console.log(item[children]);
                 }
               }
             });

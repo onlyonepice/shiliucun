@@ -168,7 +168,6 @@ const getPayResultFn = async (orderNo: string) => {
 getReportDetail();
 onMounted(() => {
   const _router = router.options.history.state.back as string;
-  console.log(router);
   if (
     _router &&
     (_router.split("?").indexOf("/homePersonal") !== -1 ||

@@ -239,7 +239,9 @@ function handleClose(val) {
     );
   dialogVisible.value = false;
   if (val) {
-    window.open(VITE_DATABASE_URL + "/#/policyLibraryManage");
+    window.open(
+      `${VITE_DATABASE_URL}/#/winningBidLibraryManage?tenderName=${currentData.value.tenderName}`,
+    );
   }
 }
 const currentData = ref<dataType>(null);
@@ -273,7 +275,9 @@ const handleSetDetailShowClick = async () => {
     });
     if (!currentData.value.status) {
       if (window.localStorage.getItem("historical-data-viewing-prompt")) {
-        window.open(VITE_DATABASE_URL + "/#/policyLibraryManage");
+        window.open(
+          `${VITE_DATABASE_URL}/#/winningBidLibraryManage?tenderName=${currentData.value.tenderName}`,
+        );
       } else {
         dialogVisible.value = true;
       }
