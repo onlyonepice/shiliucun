@@ -12,20 +12,23 @@
       @onChoseFilter="onChoseFilter"
     />
     <div :class="ns.b('content')">
-      <template v-if="productList.length !== 0">
-        <div
-          :class="ns.be('content', 'list')"
-          v-for="item in productList"
-          :key="item.id"
-        >
-          <SearchProductCard
-            @onCompared="onCompared"
-            :product="item"
-            :comparedList="comparedList"
-          />
-        </div>
+      <Loading v-if="loading" />
+      <template v-else>
+        <template v-if="productList.length !== 0">
+          <div
+            :class="ns.be('content', 'list')"
+            v-for="item in productList"
+            :key="item.id"
+          >
+            <SearchProductCard
+              @onCompared="onCompared"
+              :product="item"
+              :comparedList="comparedList"
+            />
+          </div>
+        </template>
+        <EmptyData v-else :class="ns.be('content', 'empty')" />
       </template>
-      <EmptyData v-else :class="ns.be('content', 'empty')" />
     </div>
     <template v-if="showComparedDelay">
       <SearchProductCompared
@@ -81,6 +84,7 @@ const showComparedDelay: Ref<boolean> = ref(false); // 是否显示对比
 const productList: Ref<any> = ref([]); // 产品列表
 const comparedList: Ref<any> = ref([]); // 已对比列表
 const total: Ref<number> = ref(0);
+const loading: Ref<boolean> = ref(false); // 加载状态
 // 筛选项数组
 const filterList: Ref<Array<any>> = ref([
   { id: 1, type: "txt", title: "冷却方式", data: [] },
@@ -179,6 +183,7 @@ const onChoseFilter = (item: any, type: string) => {
 };
 // 查询产品
 const getProductList = async () => {
+  loading.value = true;
   const _data = cloneDeep(filterInfo.value);
   _data.coolingMethodIds.length === 0
     ? (_data.coolingMethodIds = null)
@@ -191,6 +196,7 @@ const getProductList = async () => {
     productList.value = datas.content;
     total.value = datas.totalElements;
   }
+  loading.value = false;
 };
 getProductList();
 </script>
