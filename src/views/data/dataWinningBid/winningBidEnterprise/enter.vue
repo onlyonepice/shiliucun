@@ -176,8 +176,8 @@ const getData = async () => {
   loading.value = true;
   isEmptyData.value = false;
   try {
-    const res = (await enterpriseAnalysis(requestData.value)) as any;
-    if (res.resp_code === 0 && res.datas) {
+    const res = await enterpriseAnalysis(requestData.value);
+    if (res.resp_code === 0 && res.datas.length) {
       echartOptions.value.series[0].data = [];
       echartOptions.value.series[1].data = [];
       echartOptions.value.series[2].data = [];
@@ -216,7 +216,7 @@ const getData = async () => {
         echartOptions.value.grid.bottom = "35%";
       }
       initECharts();
-    } else if (!res.datas) {
+    } else if (!res.datas.length) {
       isEmptyData.value = true;
     }
     loading.value = false;

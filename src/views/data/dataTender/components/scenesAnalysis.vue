@@ -141,7 +141,7 @@ async function getElectricityTypeOneName() {
   showEmpty.value = false;
   eChartsOption.value.series = [];
   let _unit = cloneDeep(unit.value);
-  const { datas }: any = await getTenderScenariosApi({
+  const { datas } = await getTenderScenariosApi({
     contentDict: contentDict.value,
     releaseTime: releaseTime.value,
     unit: _unit.join(","),
@@ -205,25 +205,31 @@ function exportResult() {
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+
 #eChart_dataScenesAnalysis {
   @include widthAndHeight(100%, 642px);
   margin-top: 80px;
 }
+
 .es-dataScenesAnalysis-top {
   @include flex(center, space-between, nowrap);
 }
+
 .es-dataScenesAnalysis-top__left {
   width: 328px;
   @include flex(center, flex-start, nowrap);
+
   .es-dataScenesAnalysis-top__title {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     margin-right: 16px;
     flex: 1;
   }
 }
+
 .es-dataScenesAnalysis-top__right {
   float: right;
   margin: 32px 0 16px;
+
   .es-dataScenesAnalysis-top__line {
     @include widthAndHeight(1px, 24px);
     display: inline-block;
