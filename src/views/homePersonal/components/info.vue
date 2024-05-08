@@ -261,6 +261,7 @@
               }
             "
           />
+          <div class="edit-phone-number">修改</div>
         </div>
         <div :class="ns.be('content', 'infoDialog')">
           <span>微信号码</span>

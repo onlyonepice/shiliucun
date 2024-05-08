@@ -206,6 +206,7 @@ const props = defineProps({
     default: () => ({}),
   },
 });
+
 const isVip = ref(false);
 const dialogVisible = ref(false);
 interface dataType {

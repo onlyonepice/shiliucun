@@ -31,7 +31,13 @@
       >
     </div>
     <div :class="ns.b('eCharts-box')">
-      <div v-loading="loading" id="eChart-winningBidPrice" ref="eChartsDom" />
+      <div
+        v-if="!isEmptyData"
+        v-loading="loading"
+        id="eChart-winningBidPrice"
+        ref="eChartsDom"
+      />
+      <EmptyData v-else />
       <ExportCanvasDialog
         :visible="exportVisible"
         :img-url="exportImgUrl"
@@ -70,6 +76,7 @@ const requestData = ref({
   technologyType: "",
   applicationScenarios: "",
 });
+const isEmptyData = ref(false);
 const options = ref(priceFormOptions());
 interface response {
   datas: any;
@@ -129,8 +136,9 @@ watch(
 );
 const getData = async () => {
   loading.value = true;
+  isEmptyData.value = false;
   try {
-    const data = (await capacityAnalysis_V2(requestData.value)) as any;
+    const data = await capacityAnalysis_V2(requestData.value);
     const { datas, resp_code } = data;
     const textStyle = {
       fontSize: 14,
@@ -138,42 +146,38 @@ const getData = async () => {
       fontWeight: 400,
       color: "#5B6985",
     };
-    if (resp_code === 0) {
+    if (resp_code === 0 && datas.length) {
       let barSeries = [];
       let lineSeries = [];
-
-      if (datas.length) {
-        barSeries = datas[0].data.map((item) => {
-          return {
-            type: "bar",
-            name: item.hour,
-            value: item.hour,
-            yAxisIndex: 0,
-            barWidth: 16,
-            stack: "total",
-            itemStyle: {
-              color: colorEnum[item.hour],
-            },
-            data: [],
-          };
-        });
-        lineSeries = cloneDeep(barSeries).map((item) => {
-          const result = {
-            ...item,
-            type: "line",
-            name: `${item.name}中标均价`,
-            yAxisIndex: 1,
-            lineStyle: {
-              width: 2,
-            },
-            symbolSize: 6,
-            connectNulls: true,
-          };
-          delete result.stack;
-          return result;
-        });
-      }
-
+      barSeries = datas[0].data.map((item) => {
+        return {
+          type: "bar",
+          name: item.hour,
+          value: item.hour,
+          yAxisIndex: 0,
+          barWidth: 16,
+          stack: "total",
+          itemStyle: {
+            color: colorEnum[item.hour],
+          },
+          data: [],
+        };
+      });
+      lineSeries = cloneDeep(barSeries).map((item) => {
+        const result = {
+          ...item,
+          type: "line",
+          name: `${item.name}中标均价`,
+          yAxisIndex: 1,
+          lineStyle: {
+            width: 2,
+          },
+          symbolSize: 6,
+          connectNulls: true,
+        };
+        delete result.stack;
+        return result;
+      });
       EChartOptions.value.xAxis.data = [];
       datas.forEach((item) => {
         EChartOptions.value.xAxis.data.push(item.month);
@@ -206,7 +210,6 @@ const getData = async () => {
           });
         });
       });
-
       const legend = [
         {
           x: "center",
@@ -235,6 +238,8 @@ const getData = async () => {
       EChartOptions.value.legend = legend;
 
       initECharts();
+    } else if (!datas.length) {
+      isEmptyData.value = true;
     }
     loading.value = false;
   } catch (e) {
