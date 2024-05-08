@@ -37,7 +37,7 @@
           <el-button
             :class="[ns.b('info-right-connect')]"
             type="primary"
-            @click="onConnectCompany(productDetail.id)"
+            @click="onConnectCompany(productDetail.enterpriseId)"
             >联系厂商</el-button
           >
         </div>
