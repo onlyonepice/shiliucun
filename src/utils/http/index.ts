@@ -129,6 +129,7 @@ class PureHttp {
           switch (code) {
             // 无登录
             case 1001:
+              ElMessage.error(data?.resp_msg);
               onErrorHandling();
               break;
             // token过期
