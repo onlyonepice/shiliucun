@@ -155,7 +155,7 @@ class PureHttp {
       (error: PureHttpError) => {
         const $error = error;
         ElMessage.error($error);
-        onErrorHandling();
+        // onErrorHandling();
         $error.isCancelRequest = Axios.isCancel($error);
         // 所有的响应异常 区分来源为取消请求/非取消请求
         return Promise.reject($error);

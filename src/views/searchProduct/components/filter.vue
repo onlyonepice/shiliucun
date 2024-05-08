@@ -25,7 +25,7 @@
             :key="_item.id"
             :class="[
               ns.be('filter', 'txt'),
-              _item.id === filterInfo.coolingMethod ? ns.is('active') : '',
+              getCoolingMethodIds(_item.id) ? ns.is('active') : '',
             ]"
           >
             {{ _item.label }}
@@ -38,14 +38,14 @@
             @click="onChoseFilter(_item, item.title)"
             :class="[
               ns.be('filter', 'img'),
-              _item.id === filterInfo.enterpriseId ? ns.is('active') : '',
+              getEnterpriseId(_item.id) ? ns.is('active') : '',
             ]"
           >
             <img :src="useUserStoreHook().$state.fileUrl + _item.data" alt="" />
             <img
               :class="ns.be('filter', 'img-active')"
               :src="SearchProductIcon"
-              v-if="_item.id === filterInfo.enterpriseId"
+              v-if="getEnterpriseId(_item.id)"
             />
           </div>
           <img
@@ -71,7 +71,7 @@ import MoreData from "@/assets/img/reportDetail/icon_expand_nor.png";
 const ns = useNamespace("searchProduct-filter");
 const emits = defineEmits(["onChoseFilter"]);
 const showMore: Ref<boolean> = ref(false); // 是否展开更多
-defineProps({
+const props = defineProps({
   total: {
     type: Number,
     default: 0,
@@ -87,6 +87,14 @@ defineProps({
 });
 const onChoseFilter = (item: any, type: string) => {
   emits("onChoseFilter", item, type);
+};
+// 获取多选状态
+const getCoolingMethodIds = (id: string) => {
+  return props.filterInfo.coolingMethodIds.indexOf(id) !== -1;
+};
+// 获取品牌选择
+const getEnterpriseId = (id: string) => {
+  return props.filterInfo.enterpriseIds.indexOf(id) !== -1;
 };
 </script>
 
@@ -164,13 +172,15 @@ const onChoseFilter = (item: any, type: string) => {
   border: 1px solid #dbdce2;
   background: #ffffff;
   border-radius: 4px;
-  @include flex(center, center);
-  padding: 20px 21px;
+  display: flex;
+  align-items: center !important;
+  padding: 0 20px;
   cursor: pointer;
   @include relative();
   flex: 0 0 122px;
   img {
-    @include widthAndHeight(80px, 23px);
+    width: 82px;
+    object-fit: cover;
   }
   &:nth-of-type(8n) {
     margin-right: 0;

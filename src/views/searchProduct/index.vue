@@ -61,6 +61,7 @@ import SearchProductCard from "./components/card.vue";
 import SearchProductFilter from "./components/filter.vue";
 import SearchProductCompared from "./components/compared.vue";
 import { ElMessage } from "element-plus";
+import { cloneDeep } from "lodash";
 const ns = useNamespace("searchProduct");
 const tabsList: Ref<Array<TabsList>> = ref([
   { id: 1, name: "工商业一体机", code: "INDUSTRY_ENERGY_STORAGE" },
@@ -71,8 +72,8 @@ const tabsList: Ref<Array<TabsList>> = ref([
 const filterInfo: Ref<any> = ref({
   page: 1,
   limit: 16,
-  coolingMethod: null,
-  enterpriseId: null,
+  coolingMethodIds: [],
+  enterpriseIds: [],
   productType: "", // 产品类型
 });
 const showCompared: Ref<boolean> = ref(false); // 是否显示对比
@@ -165,20 +166,27 @@ const onchangeCurrent = (page: number) => {
 };
 // 筛选项改变
 const onChoseFilter = (item: any, type: string) => {
-  if (type === "冷却方式") {
-    filterInfo.value.coolingMethod =
-      filterInfo.value.coolingMethod === item.id ? null : item.id;
+  const _type =
+    type === "冷却方式"
+      ? filterInfo.value.coolingMethodIds
+      : filterInfo.value.enterpriseIds;
+  if (_type.indexOf(item.id) === -1) {
+    _type.push(item.id);
   } else {
-    filterInfo.value.enterpriseId =
-      filterInfo.value.enterpriseId === item.id ? null : item.id;
+    _type.splice(_type.indexOf(item.id), 1);
   }
   getProductList();
 };
 // 查询产品
 const getProductList = async () => {
-  const { datas, resp_code } = await getProductListApi(
-    Object.assign(filterInfo.value),
-  );
+  const _data = cloneDeep(filterInfo.value);
+  _data.coolingMethodIds.length === 0
+    ? (_data.coolingMethodIds = null)
+    : _data.coolingMethodIds;
+  _data.enterpriseIds.length === 0
+    ? (_data.enterpriseIds = null)
+    : _data.enterpriseIds;
+  const { datas, resp_code } = await getProductListApi(Object.assign(_data));
   if (resp_code === 0) {
     productList.value = datas.content;
     total.value = datas.totalElements;
