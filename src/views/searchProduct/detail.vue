@@ -34,12 +34,18 @@
               冷却方式：{{ productDetail.models[0].coolingMethodName }}
             </p>
           </template>
-          <el-button :class="[ns.b('info-right-connect')]" type="primary"
+          <el-button
+            :class="[ns.b('info-right-connect')]"
+            type="primary"
+            @click="onConnectCompany(productDetail.id)"
             >联系厂商</el-button
           >
         </div>
       </div>
-      <div :class="[ns.b('content-list')]">
+      <div
+        :class="[ns.b('content-list')]"
+        v-if="productDetailList.length !== 0"
+      >
         <h3>公司其他产品</h3>
         <div style="display: flex">
           <div
@@ -79,6 +85,7 @@ import {
 } from "@/api/searchProduct";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStoreHook } from "@/store/modules/user";
+const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const router = useRouter();
 const ns = useNamespace("searchProductDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
@@ -121,6 +128,13 @@ const goProductDetail = (id: string) => {
 };
 getProductDetail();
 getProductDetailList();
+// 联系厂商
+const onConnectCompany = (id: string) => {
+  window.open(
+    `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
+    "externalWindow",
+  );
+};
 </script>
 
 <style lang="scss" scoped>
