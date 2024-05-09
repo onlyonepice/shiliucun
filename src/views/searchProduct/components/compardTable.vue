@@ -21,7 +21,12 @@
       </div>
     </template>
   </div>
-  <div v-if="index === 1" :class="ns.b('enterprise')" name="生产公司">
+  <div
+    v-if="index === 1"
+    :class="ns.b('enterprise')"
+    name="生产公司"
+    @click="onClickEnterprise(info.enterpriseId)"
+  >
     {{ info.enterprise ? info.enterprise : "-" }}
   </div>
   <div v-if="index === 2" :class="ns.b('common')" name="产品名称">
@@ -90,6 +95,7 @@ import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
 import CloseCircle from "@/assets/img/common/close-icon-circle.png";
+const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const ns = useNamespace("searchProduct-comparedTable");
 const emits = defineEmits(["onChoseProduct", "onDeleteCompared"]);
 const props = defineProps({
@@ -123,6 +129,13 @@ const onChoseProduct = (data: any) => {
 // 删除对比
 const onDeleteCompared = () => {
   emits("onDeleteCompared");
+};
+// 跳转企业
+const onClickEnterprise = (id: string) => {
+  window.open(
+    `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
+    "externalWindow",
+  );
 };
 </script>
 
