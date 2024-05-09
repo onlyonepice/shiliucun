@@ -11,7 +11,6 @@
 
 .el-checkbox__inner:hover {
   border-color: #244bf1 !important;
-
 }
 
 // 多选框tag样式
@@ -45,7 +44,7 @@
   background-color: #244bf1 !important;
 }
 
-.el-radio__input.is-checked+.el-radio__label {
+.el-radio__input.is-checked + .el-radio__label {
   color: #244bf1 !important;
 }
 
@@ -63,7 +62,7 @@
   box-shadow: 0 0 0 1px #165dff inset !important;
   background-color: #ffffff !important;
 }
-.el-input__wrapper.is-focus{
+.el-input__wrapper.is-focus {
   box-shadow: 0 0 0 1px #165dff inset !important;
   background-color: #ffffff !important;
 }
@@ -81,12 +80,9 @@
   box-shadow: none !important;
 }
 
-
 .el-table thead {
   @include font(14px, 400, #1c232f, 22px);
 }
-
-
 
 .el-table__header-wrapper {
   background-color: #f2f3f5;
@@ -119,7 +115,9 @@
   color: #5b6985;
 }
 
-.el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path{
+.el-cascader-node.in-active-path,
+.el-cascader-node.is-active,
+.el-cascader-node.is-selectable.in-checked-path {
   color: #1c232f !important;
   font-weight: 600 !important;
 }
@@ -230,11 +228,11 @@
   }
 
   .el-table th.el-table__cell {
-    background-color: #F2F3F5;
+    background-color: #f2f3f5;
   }
-  .el-tag.is-closable{
+  .el-tag.is-closable {
     background-color: #ffffff;
-    color: rgba(0,0,0,0.9);
+    color: rgba(0, 0, 0, 0.9);
     font-size: 12px;
     font-weight: 400;
   }
@@ -289,7 +287,6 @@
   font-size: 30px;
 }
 
-
 .el-table__cell {
   overflow: hidden;
 }
@@ -297,4 +294,3 @@
 .el-table .el-table__cell {
   padding: 0;
 }
-
