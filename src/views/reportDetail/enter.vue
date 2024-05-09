@@ -2,25 +2,28 @@
   <div :class="ns.b()">
     <breadcrumb :breadcrumbList="breadcrumbList" />
     <Loading v-if="loading" />
-    <template v-if="!loading">
-      <div :class="[ns.b('content'), 'es-commonPage']" v-if="reportDetail.id">
-        <div :class="ns.be('content', 'left')">
-          <reportInfo
-            :detail="reportDetail"
-            @onBuy="onBuy(true)"
-            :is-need-buy="reportDetail.needToBuy"
-          />
+    <div class="es-commonPage" v-if="!loading">
+      <Skeleton v-if="skeletonShow" />
+      <template v-else>
+        <div :class="[ns.b('content')]" v-if="reportDetail.id">
+          <div :class="ns.be('content', 'left')">
+            <ReportInfo
+              :detail="reportDetail"
+              @onBuy="onBuy(true)"
+              :is-need-buy="reportDetail.needToBuy"
+            />
+          </div>
+          <div :class="ns.be('content', 'right')">
+            <ReportOption
+              :detail="reportDetail"
+              @onBuy="onBuy(true)"
+              :is-need-buy="reportDetail.needToBuy"
+            />
+            <ReportRecommend @getInfo="getReportDetail()" />
+          </div>
         </div>
-        <div :class="ns.be('content', 'right')">
-          <reportOption
-            :detail="reportDetail"
-            @onBuy="onBuy(true)"
-            :is-need-buy="reportDetail.needToBuy"
-          />
-          <reportRecommend @getInfo="getReportDetail()" />
-        </div>
-      </div>
-    </template>
+      </template>
+    </div>
   </div>
   <Dialog
     title=""
@@ -58,38 +61,47 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  getPayResultApi,
+  getReportDetailApi,
+  getReportPayInfoListApi,
+} from "@/api/reportDetail";
+
 import QRCode from "qrcode";
+import Skeleton from "./components/skeleton.vue";
 import { ref, Ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useRoute, useRouter } from "vue-router";
 import { reportStore } from "@/store/modules/report";
-import {
-  getReportDetailApi,
-  getReportPayInfoListApi,
-  getPayResultApi,
-} from "@/api/reportDetail";
-import reportOption from "./components/option.vue";
-import reportRecommend from "./components/recommend.vue";
-import reportInfo from "./components/info.vue";
-import BuyDialogBg from "@/assets/img/common/buy-dialog-bg.png";
-import WeChatPay from "@/assets/img/common/weChat-pay.png";
+
+import ReportInfo from "./components/info.vue";
+import ReportOption from "./components/option.vue";
+import ReportRecommend from "./components/recommend.vue";
+
 import AliPay from "@/assets/img/common/ali-pay.png";
+import WeChatPay from "@/assets/img/common/weChat-pay.png";
+import BuyDialogBg from "@/assets/img/common/buy-dialog-bg.png";
 import { ElMessage } from "element-plus";
+
+const skeletonShow = ref(true);
 const buyDialogVisible: Ref<boolean> = ref(false); // 购买报告弹窗
 const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("reportDetail");
+const payTimer = ref(null); // 支付定时器
+
 const breadcrumbList: Ref<Array<any>> = ref([
   { text: "周/月/季报", path: "/quarterlyMonthlyReports" },
   { text: "", path: "" },
 ]);
-const payTimer = ref(null); // 支付定时器
 const payInfo: Ref<any> = ref([
   { id: 1, title: "微信支付", desc: "weChat", icon: WeChatPay, payImg: "" },
   { id: 2, title: "支付宝支付", desc: "ali", icon: AliPay, payImg: "" },
-]); // 支付信息
+]);
+// 支付信息
 const reportDetail: Ref<any> = ref({}); // 报告详情
 const loading: Ref<boolean> = ref(false); // 加载状态
+
 // 获取报告详情
 const getReportDetail = async () => {
   loading.value = true;
@@ -108,8 +120,11 @@ const getReportDetail = async () => {
     loading.value = false;
   } catch (error) {
     loading.value = false;
+  } finally {
+    skeletonShow.value = false;
   }
 };
+
 // 购买报告
 const onBuy = (type: boolean) => {
   buyDialogVisible.value = type;
@@ -119,6 +134,7 @@ const onBuy = (type: boolean) => {
     buyInfo();
   }
 };
+
 // 调用支付接口获取信息
 const buyInfo = async () => {
   const { resp_code, datas }: any = await getReportPayInfoListApi({
@@ -151,6 +167,7 @@ const buyInfo = async () => {
     }, 2000);
   }
 };
+
 // 获取支付结果
 const getPayResultFn = async (orderNo: string) => {
   try {
@@ -165,7 +182,9 @@ const getPayResultFn = async (orderNo: string) => {
     console.error(error);
   }
 };
+
 getReportDetail();
+
 onMounted(() => {
   const _router = router.options.history.state.back as string;
   if (
@@ -192,70 +211,89 @@ onMounted(() => {
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+
 .es-reportDetail {
   height: calc(100vh);
   background: #f2f3f5;
 }
+
 .es-reportDetail-content {
   @include flex(center, space-between, nowrap);
   padding-bottom: 80px !important;
 }
+
 .es-reportDetail-content__left {
   @include widthAndHeight(858px, calc(100vh - 56px - 50px));
   background: #ffffff;
   border-radius: 8px;
   margin-right: 24px;
 }
+
 .es-reportDetail-content__right {
   width: 270px;
 }
+
 .es-reportDetail-buyDialog {
   text-align: center;
 }
+
 .es-reportDetail-buyDialog__bg {
   @include widthAndHeight(400px, 120px);
   @include absolute(-1, 0, 0, none, none);
 }
+
 .es-reportDetail-buyDialog__desc {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+
   span {
     @include font(14px, 500, #f75964, 22px);
   }
 }
+
 .es-reportDetail-buyDialog__price {
   @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px);
   margin: 7px 0 9px 0;
+
   &::before {
     content: "￥";
     margin-right: 8px;
     @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
   }
 }
+
 .es-reportDetail-buyDialog__title {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
   margin-bottom: 24px;
 }
+
 .es-reportDetail-buyDialog__pay {
   @include flex(center, center, nowrap);
 }
+
 .es-reportDetail-pay__img {
   @include widthAndHeight(120px, 120px);
 }
+
 .es-reportDetail-pay__item {
   margin-right: 16px;
+
   &:last-child {
     margin-right: 0;
   }
 }
+
 .es-reportDetail-pay__title {
   @include flex(center, center, nowrap);
+
   img {
     @include widthAndHeight(20px, 20px);
     margin-right: 4px;
   }
+
   p[name="微信支付"] {
     @include font(12px, 600, #00c250, 20px);
   }
+
   p[name="支付宝支付"] {
     @include font(12px, 600, #1777ff, 20px);
   }
