@@ -10,9 +10,7 @@
     "build": "vite build",
     "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock,build}/**/*.{vue,js,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
-    "lint": "pnpm lint:eslint && pnpm lint:prettier",
-    "husky": "./.husky/pre-commit",
-    "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js"
+    "lint": "pnpm lint:eslint && pnpm lint:prettier"
   },
   "dependencies": {
     "@types/echarts": "^4.9.22",
@@ -98,5 +96,11 @@
   ],
   "gitHooks": {
     "pre-commit": "pnpm run husky"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "./.husky/pre-commit", 
+      "commit-msg": "./.husky/commit-msg" 
+    }
   }
 }
