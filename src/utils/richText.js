@@ -3,7 +3,7 @@ import { splicePicturePath, WORD_SETTING } from "./downReport";
 
 // 转换图片大小
 export const getImageInfo = (url) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     try {
       let src = "";
       const image = document.createElement("img");
@@ -315,17 +315,17 @@ export const specific = (data) => {
     .filter((item) => item !== "")
     .join("");
   str = str
-    .replaceAll(/\&lt\;/g, "<")
-    .replaceAll(/\&gt\;/g, ">")
-    .replaceAll(/\&amp\;/g, "&")
-    .replaceAll(/\&quo\;/g, '"')
-    .replaceAll(/\&amp\;/g, "&")
-    .replaceAll(/\&reg\;/g, "®")
-    .replaceAll(/\&copy\;/g, "©")
-    .replaceAll(/\&trade\;/g, "™")
-    .replaceAll(/\&ensp\;/g, " ")
-    .replaceAll(/\&emsp\;/g, " ")
-    .replaceAll(/\&nbsp\;/g, " ")
-    .replaceAll(/\&iquest\;/g, "¿");
+    .replaceAll(/lt/g, "<")
+    .replaceAll(/gt/g, ">")
+    .replaceAll(/amp/g, "&")
+    .replaceAll(/quo/g, '"')
+    .replaceAll(/amp/g, "&")
+    .replaceAll(/reg/g, "®")
+    .replaceAll(/copy/g, "©")
+    .replaceAll(/trade/g, "™")
+    .replaceAll(/ensp/g, " ")
+    .replaceAll(/emsp/g, " ")
+    .replaceAll(/nbsp/g, " ")
+    .replaceAll(/iquest/g, "¿");
   return str;
 };

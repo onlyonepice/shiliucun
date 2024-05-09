@@ -10,8 +10,7 @@
     "build": "vite build",
     "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock,build}/**/*.{vue,js,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
-    "lint:stylelint": "stylelint --cache --fix \"**/*.{html,vue,css,scss}\" --cache-location node_modules/.cache/stylelint/",
-    "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:stylelint",
+    "lint": "pnpm lint:eslint && pnpm lint:prettier",
     "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
     "husky": "./.husky/pre-commit",
     "prepare": "husky",
@@ -70,6 +69,12 @@
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^9.1.0",
     "@vue/shared": "3.2.37",
+    "stylelint": "^14.3.0",
+    "stylelint-config-html": "^1.0.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recommended": "^9.0.0",
+    "stylelint-config-standard": "^29.0.0",
+    "stylelint-order": "^5.0.0",
     "eslint": "7.32.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.3",
@@ -109,14 +114,5 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-  ],
-  "gitHooks": {
-    "pre-commit": "pnpm run husky"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "./.husky/pre-commit",
-      "commit-msg": "./.husky/commit-msg"
-    }
-  }
+  ]
 }
