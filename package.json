@@ -10,8 +10,9 @@
     "build": "vite build",
     "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock,build}/**/*.{vue,js,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
-    "lint": "pnpm lint:eslint && pnpm lint:prettier",
+    "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:styleLint",
     "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
+    "lint:styleLint": "stylelint --cache --fix \"**/*.{vue,css,scss,postcss,less}\"",
     "husky": "./.husky/pre-commit",
     "prepare": "husky",
     "preinstall": "npx only-allow pnpm"
