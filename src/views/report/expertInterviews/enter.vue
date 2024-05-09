@@ -1,54 +1,76 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
-    <div :class="ns.b('title')">专家访谈</div>
-    <div :class="ns.b('content')">
-      <div :class="ns.be('content', 'records')">
-        <div
-          v-for="item in interviewRecordsData"
-          :key="item.id"
-          @click="handleOpenReport(item)"
-          :class="ns.be('content', 'records_item')"
-        >
-          <div :class="ns.be('content', 'records_item-title')">
-            <a
-              :href="reportLink(item)"
-              target="_blank"
-              onclick="return false;"
-              >{{ item.reportName }}</a
-            >
-          </div>
-          <div :class="ns.be('content', 'records_item-content')">
-            <div :class="ns.be('content', 'records_item-content-left')">
-              <div
-                class="tag-item"
-                v-for="(tag, index) in item.reportTag"
-                :key="index"
-              >
-                {{ tag }}
-              </div>
-            </div>
-            <div :class="ns.be('content', 'records_item-content-right')">
-              <span v-for="author in item.author" :key="author" class="author">
-                {{ author }}
-              </span>
-              <span v-if="item.author?.length" class="line">|</span>
-              <span>{{ item.writingTime }}</span>
-            </div>
+    <div v-if="skeletonScreen" class="skeleton-screen">
+      <div class="title-box" />
+      <div class="list-box">
+        <div v-for="i in 10" :key="i" class="item-box">
+          <div class="item-top-box" />
+          <div class="item-bottom-box">
+            <div class="item-bottom-left-1-box" />
+            <div class="item-bottom-left-2-box" />
+            <div class="item-bottom-right-2-box" />
           </div>
         </div>
       </div>
-      <div v-if="paginationTotal > 10" :class="ns.be('content', 'pagination')">
-        <el-pagination
-          v-model:current-page="pagination.page"
-          :page-size="pagination.limit"
-          background
-          hide-on-single-page
-          layout="total, prev, pager, next"
-          :total="paginationTotal"
-          @current-change="handleCurrentChange"
-        />
-      </div>
     </div>
+    <template v-else>
+      <div :class="ns.b('title')">专家访谈</div>
+      <div :class="ns.b('content')">
+        <div v-loading="loading" :class="ns.be('content', 'records')">
+          <div
+            v-for="item in interviewRecordsData"
+            :key="item.id"
+            @click="handleOpenReport(item)"
+            :class="ns.be('content', 'records_item')"
+          >
+            <div :class="ns.be('content', 'records_item-title')">
+              <a
+                :href="reportLink(item)"
+                target="_blank"
+                onclick="return false;"
+                >{{ item.reportName }}</a
+              >
+            </div>
+            <div :class="ns.be('content', 'records_item-content')">
+              <div :class="ns.be('content', 'records_item-content-left')">
+                <div
+                  class="tag-item"
+                  v-for="(tag, index) in item.reportTag"
+                  :key="index"
+                >
+                  {{ tag }}
+                </div>
+              </div>
+              <div :class="ns.be('content', 'records_item-content-right')">
+                <span
+                  v-for="author in item.author"
+                  :key="author"
+                  class="author"
+                >
+                  {{ author }}
+                </span>
+                <span v-if="item.author?.length" class="line">|</span>
+                <span>{{ item.writingTime }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          v-if="paginationTotal > 10"
+          :class="ns.be('content', 'pagination')"
+        >
+          <el-pagination
+            v-model:current-page="pagination.page"
+            :page-size="pagination.limit"
+            background
+            hide-on-single-page
+            layout="total, prev, pager, next"
+            :total="paginationTotal"
+            @current-change="handleCurrentChange"
+          />
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 <script lang="ts" setup>
@@ -58,11 +80,15 @@ import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import { getExpertInterviewList } from "@/api/data";
+
 const router = useRouter();
 const paginationTotal = ref<number>(0);
 const ns = useNamespace("expertInterviews");
 const pagination = ref({ limit: 10, page: 1 });
 const interviewRecordsData = ref<Array<any>>([]);
+
+const loading = ref(false);
+const skeletonScreen = ref(true);
 
 const reportLink = computed(() => {
   return (item: any) => {
@@ -80,15 +106,21 @@ function handleCurrentChange(val: number) {
   getExpertInterviews();
 }
 async function getExpertInterviews() {
-  const {
-    datas: { total, records },
-    resp_code,
-  } = await getExpertInterviewList({
-    ...pagination.value,
-  });
-  if (resp_code === 0) {
-    paginationTotal.value = total;
-    interviewRecordsData.value = records;
+  loading.value = true;
+  try {
+    const {
+      datas: { total, records },
+      resp_code,
+    } = await getExpertInterviewList({
+      ...pagination.value,
+    });
+    if (resp_code === 0) {
+      paginationTotal.value = total;
+      interviewRecordsData.value = records;
+    }
+  } finally {
+    loading.value = false;
+    skeletonScreen.value = false;
   }
 }
 function handleOpenReport(item: any) {
@@ -105,6 +137,53 @@ getExpertInterviews();
 
 .es-expertInterviews {
   padding: 80px 24px;
+
+  .skeleton-screen {
+    .title-box {
+      @include widthAndHeight(160px, 44px);
+      @include box(0, 0, #f2f3f5, 8px);
+    }
+
+    .list-box {
+      margin-top: 32px;
+
+      .item-box {
+        margin-top: 40px;
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        .item-top-box {
+          @include widthAndHeight(100%, 24px);
+          @include box(0, 0, #f2f3f5, 4px);
+        }
+
+        .item-bottom-box {
+          margin-top: 12px;
+          @include flex(center, flex-start);
+          .item-bottom-right-2-box,
+          .item-bottom-left-1-box,
+          .item-bottom-left-2-box {
+            @include box(0, 0, #f2f3f5, 4px);
+          }
+          .item-bottom-left-1-box {
+            @include widthAndHeight(45px, 24px);
+          }
+
+          .item-bottom-left-2-box {
+            @include widthAndHeight(48px, 24px);
+            margin-left: 8px;
+            margin-right: auto;
+          }
+
+          .item-bottom-right-2-box {
+            @include widthAndHeight(131px, 24px);
+          }
+        }
+      }
+    }
+  }
 
   .es-expertInterviews-title {
     @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px);
