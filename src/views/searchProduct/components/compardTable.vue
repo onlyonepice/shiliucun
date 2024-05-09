@@ -54,7 +54,9 @@
     {{ showData.batterySystemEnergy + "kWh" || "-" }}
   </div>
   <div v-if="index === 7" :class="ns.b('common')" name="标称电压">
-    {{ showData.nominalVoltage ? showData.nominalVoltage[0] || "-" : "-" }}
+    {{
+      showData.nominalVoltage ? showData.nominalVoltage.join("-") || "-" : "-"
+    }}
   </div>
   <div v-if="index === 8" :class="ns.b('common')" name="系统综合效率">
     {{ showData.systemOverallEfficiency + "%" || "-" }}
@@ -66,7 +68,7 @@
     {{ showData.annualDecayRate + "%" || "-" }}
   </div>
   <div v-if="index === 11" :class="ns.b('common')" name="冷却方式">
-    {{ showData.coolingMethodName || "-" }}
+    {{ showData.coolingMethodName.join("，") || "-" }}
   </div>
   <div v-if="index === 12" :class="ns.b('common')" name="尺寸">
     {{ showData.size || "-" }}
