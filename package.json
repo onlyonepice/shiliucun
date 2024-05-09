@@ -11,6 +11,7 @@
     "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock,build}/**/*.{vue,js,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
     "lint": "pnpm lint:eslint && pnpm lint:prettier",
+    "husky": "./.husky/pre-commit",
     "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js"
   },
   "dependencies": {
@@ -96,9 +97,6 @@
     "not ie 11"
   ],
   "gitHooks": {
-    "pre-commit": "pnpm run lint:lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,vue,ts,tsx}": "vue-cli-service lint"
+    "pre-commit": "pnpm run husky"
   }
 }
