@@ -1,86 +1,95 @@
 <template>
   <div :class="[ns.b(''), 'es-commonPage']">
-    <p class="page-title">在线报告</p>
-    <div class="filter-box">
-      <div class="year-box filter_item">
-        <p class="filter_title">年份</p>
-        <div class="filter_value">
-          <p
-            :class="
-              checkedYearIds.includes(item.value)
-                ? 'filter_value_item active_item'
-                : 'filter_value_item'
-            "
-            v-for="item in filterData.years"
-            :key="item.value"
-            @click="handleFilterChange(item, 'checkedYearIds')"
-          >
-            {{ item.label }}
-          </p>
+    <Skeleton v-if="skeletonScreen" />
+    <template v-else>
+      <p class="page-title">在线报告</p>
+      <div class="filter-box">
+        <div class="year-box filter_item">
+          <p class="filter_title">年份</p>
+          <div class="filter_value">
+            <p
+              :class="
+                checkedYearIds.includes(item.value)
+                  ? 'filter_value_item active_item'
+                  : 'filter_value_item'
+              "
+              v-for="item in filterData.years"
+              :key="item.value"
+              @click="handleFilterChange(item, 'checkedYearIds')"
+            >
+              {{ item.label }}
+            </p>
+          </div>
+        </div>
+        <div class="tags-box filter_item">
+          <p class="filter_title">标签</p>
+          <div class="filter_value">
+            <p
+              :class="
+                checkedTagIds.includes(item.value)
+                  ? 'filter_value_item active_item'
+                  : 'filter_value_item'
+              "
+              v-for="item in filterData.tags"
+              :key="item.value"
+              @click="handleFilterChange(item, 'checkedTagIds')"
+            >
+              {{ item.label }}
+            </p>
+          </div>
         </div>
       </div>
-      <div class="tags-box filter_item">
-        <p class="filter_title">标签</p>
-        <div class="filter_value">
-          <p
-            :class="
-              checkedTagIds.includes(item.value)
-                ? 'filter_value_item active_item'
-                : 'filter_value_item'
-            "
-            v-for="item in filterData.tags"
-            :key="item.value"
-            @click="handleFilterChange(item, 'checkedTagIds')"
-          >
-            {{ item.label }}
-          </p>
+      <div class="content" v-loading="loading">
+        <div class="report-wrapper">
+          <p class="title" v-if="topReportList.length > 0">付费专区</p>
+          <div class="report-box">
+            <onLineReportList
+              width="198px"
+              v-for="(item, index) in topReportList"
+              :page-data="item"
+              :key="`topReport${index}`"
+            />
+          </div>
+          <p class="title">会员专区</p>
+          <div class="report-box">
+            <onLineReportList
+              width="198px"
+              v-for="item in freeReportList"
+              :page-data="item"
+              :key="`freeReport${item.id}`"
+            />
+          </div>
         </div>
       </div>
-    </div>
-    <div class="content" v-loading="loading">
-      <div class="report-wrapper">
-        <p class="title" v-if="topReportList.length > 0">付费专区</p>
-        <div class="report-box">
-          <onLineReportList
-            width="198px"
-            v-for="(item, index) in topReportList"
-            :page-data="item"
-            :key="`topReport${index}`"
-          />
-        </div>
-        <p class="title">会员专区</p>
-        <div class="report-box">
-          <onLineReportList
-            width="198px"
-            v-for="item in freeReportList"
-            :page-data="item"
-            :key="`freeReport${item.id}`"
-          />
-        </div>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import useNamespace from "@/utils/nameSpace";
-const ns = useNamespace("report-onLine");
-import { ref } from "vue";
-import { windowScrollStore } from "@/store/modules/windowScroll";
-const windowScroll = windowScrollStore();
-windowScroll.SET_SCROLL_TOP(0);
 import {
+  getOnlineReportFilters,
   getOnlineReportSelected,
   getTopOnlineReportSelected,
   getFreeOnlineReportSelected,
-  getOnlineReportFilters,
 } from "@/api/report";
+import { ref } from "vue";
+import Skeleton from "./skeleton.vue";
+import useNamespace from "@/utils/nameSpace";
+import { windowScrollStore } from "@/store/modules/windowScroll";
+
+const windowScroll = windowScrollStore();
+const ns = useNamespace("report-onLine");
+windowScroll.SET_SCROLL_TOP(0);
+
 const loading = ref(false);
 const topReportList = ref([]);
 const freeReportList = ref([]);
 const checkedTagIds = ref(["all"]);
 const checkedYearIds = ref(["all"]);
 const filterData: any = ref({});
+
+const skeletonScreen = ref(true);
+
 const getReportTagListFn = async () => {
   const data = await getOnlineReportFilters();
   if (data.resp_code === 0) {
@@ -122,6 +131,7 @@ const getTopOnlineReportSelectedFn = async () => {
     topReportList.value = data.datas.records;
   }
 };
+
 const getFreeOnlineReportSelectedFn = async () => {
   try {
     const data = await getFreeOnlineReportSelected({
@@ -147,6 +157,7 @@ const getFreeOnlineReportSelectedFn = async () => {
     loading.value = false;
   }
 };
+
 const handleFilterChange = (row, current) => {
   if (current === "checkedTagIds") {
     checkedTagIds.value = computedFilter(row, checkedTagIds.value);
@@ -155,6 +166,7 @@ const handleFilterChange = (row, current) => {
   }
   getPageData();
 };
+
 const computedFilter = (row, current) => {
   if (row.value === "all") {
     current = ["all"];
@@ -174,10 +186,15 @@ const computedFilter = (row, current) => {
   }
   return current;
 };
+
 const getPageData = () => {
   loading.value = true;
-  getFreeOnlineReportSelectedFn();
-  getTopOnlineReportSelectedFn();
+  Promise.all([
+    getFreeOnlineReportSelectedFn(),
+    getTopOnlineReportSelectedFn(),
+  ]).finally(() => {
+    skeletonScreen.value = false;
+  });
 };
 getReportTagListFn();
 getPageData();
@@ -223,21 +240,26 @@ getPageData();
       }
     }
   }
+
   .filter-box {
     width: 100%;
     padding-bottom: 10px;
     margin-bottom: 24px;
     border-bottom: 1px solid #e8eaef;
+
     .filter_item {
       width: 100%;
       display: flex;
+
       .filter_title {
         @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
       }
+
       .filter_value {
         flex: 1;
         display: flex;
         align-items: center;
+
         .filter_value_item {
           margin-left: 16px;
           margin-bottom: 16px;
@@ -257,6 +279,7 @@ getPageData();
             color: #244bf1;
           }
         }
+
         .active_item {
           background: #dee8ff;
           border-radius: 4px;
