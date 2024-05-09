@@ -12,8 +12,9 @@
     "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
     "lint:stylelint": "stylelint --cache --fix \"**/*.{html,vue,css,scss}\" --cache-location node_modules/.cache/stylelint/",
     "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:stylelint",
+    "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
     "husky": "./.husky/pre-commit",
-    "prepare": "husky install",
+    "prepare": "husky",
     "preinstall": "npx only-allow pnpm"
   },
   "keywords": [
@@ -50,6 +51,8 @@
     "vuex": "4.0.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "19.2.2",
+    "@commitlint/config-conventional": "19.2.2",
     "@EESA/components": "1.1.32",
     "@types/node": "^18.15.3",
     "@types/vue": "^2.0.0",
@@ -106,18 +109,14 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-<<<<<<< HEAD
   ],
   "gitHooks": {
     "pre-commit": "pnpm run husky"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "./.husky/pre-commit", 
-      "commit-msg": "./.husky/commit-msg" 
+      "pre-commit": "./.husky/pre-commit",
+      "commit-msg": "./.husky/commit-msg"
     }
   }
-=======
-  ]
->>>>>>> test
 }
