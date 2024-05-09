@@ -22,10 +22,10 @@
     </template>
   </div>
   <div v-if="index === 1" :class="ns.b('enterprise')" name="生产公司">
-    {{ info.enterprise || "-" }}
+    {{ info.enterprise ? info.enterprise : "-" }}
   </div>
   <div v-if="index === 2" :class="ns.b('common')" name="产品名称">
-    {{ info.name || "-" }}
+    {{ info.name ? info.name : "-" }}
   </div>
   <div v-if="index === 3" :class="ns.b('common')" name="产品型号">
     <Select
@@ -42,36 +42,46 @@
         }
       "
     />
-    <p v-else>{{ showData.modelName || "-" }}</p>
+    <p v-else>{{ showData.modelName ? showData.modelName : "-" }}</p>
   </div>
   <div v-if="index === 4" :class="ns.b('common')" name="产品形态">
-    {{ showData.productFormName || "-" }}
+    {{ showData.productFormName ? showData.productFormName : "-" }}
   </div>
   <div v-if="index === 5" :class="ns.b('common')" name="额定功率">
-    {{ showData.ratedPower + "kW" || "-" }}
+    {{ showData.ratedPower ? showData.ratedPower + "kW" : "-" }}
   </div>
   <div v-if="index === 6" :class="ns.b('common')" name="电池系统能量">
-    {{ showData.batterySystemEnergy + "kWh" || "-" }}
+    {{
+      showData.batterySystemEnergy ? showData.batterySystemEnergy + "kWh" : "-"
+    }}
   </div>
   <div v-if="index === 7" :class="ns.b('common')" name="标称电压">
     {{
-      showData.nominalVoltage ? showData.nominalVoltage.join("-") || "-" : "-"
+      showData.nominalVoltage && showData.nominalVoltage.length !== 0
+        ? showData.nominalVoltage.join("-")
+        : "-"
     }}
   </div>
   <div v-if="index === 8" :class="ns.b('common')" name="系统综合效率">
-    {{ showData.systemOverallEfficiency + "%" || "-" }}
+    {{
+      showData.systemOverallEfficiency
+        ? showData.systemOverallEfficiency + "%"
+        : "-"
+    }}
   </div>
   <div v-if="index === 9" :class="ns.b('common')" name="放电深度">
-    {{ showData.dischargeDepth + "%" || "-" }}
+    {{ showData.dischargeDepth ? showData.dischargeDepth + "%" : "-" }}
   </div>
   <div v-if="index === 10" :class="ns.b('common')" name="年衰减率">
-    {{ showData.annualDecayRate + "%" || "-" }}
+    {{ showData.annualDecayRate ? showData.annualDecayRate + "%" : "-" }}
   </div>
   <div v-if="index === 11" :class="ns.b('common')" name="冷却方式">
-    {{ showData.coolingMethodName.join("，") || "-" }}
+    {{
+      showData.coolingMethodName ? showData.coolingMethodName.join("，") : "-"
+    }}
   </div>
   <div v-if="index === 12" :class="ns.b('common')" name="尺寸">
-    {{ showData.size || "-" }}
+    {{ showData.size ? showData.size : "-" }}
   </div>
 </template>
 

@@ -66,12 +66,14 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref } from "vue";
+import { Ref, ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { getProductComparedApi } from "@/api/searchProduct";
 import compardTable from "./components/compardTable.vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { cloneDeep } from "lodash";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const ns = useNamespace("searchProductCompared");
 const breadcrumbList: Ref<Array<any>> = ref([
   { text: "查产品", path: "/searchProduct" },
@@ -125,6 +127,10 @@ const onDeleteCompared = (index: number) => {
     item.info.splice(index, 1);
   });
 };
+onMounted(() => {
+  useUserStoreHook().comparedList.length === 0 &&
+    router.replace({ name: "SearchProduct" });
+});
 </script>
 
 <style lang="scss" scoped>
