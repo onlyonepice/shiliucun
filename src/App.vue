@@ -69,7 +69,6 @@ onMounted(() => {
     getToken() &&
     (useUserStore().$state.token = getToken());
 });
-console.log("11111");
 // 监听路由改变
 const windowScroll = windowScrollStore();
 watch(
