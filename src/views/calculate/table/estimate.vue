@@ -61,7 +61,7 @@
                       searchResult.revenueEstimationResps.futureIncome.length -
                         1
                     ]
-                  }}</span
+                  }}/元</span
                 >
               </div>
             </div>
@@ -75,7 +75,7 @@
                 <span
                   >¥{{
                     searchResult.revenueEstimationResps.futureIncome[item - 1]
-                  }}</span
+                  }}/元</span
                 >
               </div>
             </div>
@@ -106,7 +106,7 @@
             :class="{
               'color-red': scope.row.financialCost.indexOf('-') > -1,
             }"
-            >¥{{ scope.row.financialCost }}</span
+            >¥{{ scope.row.financialCost }}/元</span
           >
         </template>
       </el-table-column>
@@ -116,7 +116,7 @@
             :class="{
               'color-red': scope.row.ownersAccumulatedIncome.indexOf('-') > -1,
             }"
-            >¥{{ scope.row.ownersAccumulatedIncome }}</span
+            >¥{{ scope.row.ownersAccumulatedIncome }}/元</span
           >
         </template>
       </el-table-column>
@@ -127,7 +127,7 @@
               'color-red':
                 scope.row.cumulativeReturnInvestors.indexOf('-') > -1,
             }"
-            >¥{{ scope.row.cumulativeReturnInvestors }}</span
+            >¥{{ scope.row.cumulativeReturnInvestors }}/元</span
           >
         </template>
       </el-table-column>
@@ -137,7 +137,7 @@
             :class="{
               'color-red': scope.row.investorNetPresentValue.indexOf('-') > -1,
             }"
-            >¥{{ scope.row.investorNetPresentValue }}</span
+            >¥{{ scope.row.investorNetPresentValue }}/元</span
           >
         </template>
       </el-table-column>
