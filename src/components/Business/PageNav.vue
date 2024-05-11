@@ -283,6 +283,15 @@ watch(
   },
   { immediate: true },
 );
+// 监听用户信息
+watch(
+  () => useUserStoreHook().$state.userInfo.roles,
+  (val) => {
+    console.log("userInfo", val);
+    val !== undefined && (navList.value[6].text = val[0].name);
+  },
+  { immediate: true },
+);
 // 判断是否要选中某个导航
 computed(() => {
   return (list: any) => {
@@ -417,14 +426,15 @@ const onLogin = () => {
   transition: all 0.2s ease-out;
 
   .es-pageNav-list--item {
-    @include widthAndHeight(88px, 56px);
+    height: 56px;
+    width: 88px;
     @include flex(flex-start, center, wrap);
     @include padding(0, 16px, 0, 0);
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease-out;
     &:nth-of-type(7) {
-      @include padding(0, 0, 0, 0);
+      width: auto;
     }
     .es-pageNav-underline {
       @include widthAndHeight(0, 2px);
@@ -461,7 +471,7 @@ const onLogin = () => {
   }
 }
 .es-pageNav-item--title {
-  @include widthAndHeight(88px, 56px);
+  @include widthAndHeight(auto, 56px);
   line-height: 56px;
   @include relative();
 }
