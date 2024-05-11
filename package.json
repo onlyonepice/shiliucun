@@ -110,4 +110,10 @@
     },
     "rules": {}
   },
-  "browsersli
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}
