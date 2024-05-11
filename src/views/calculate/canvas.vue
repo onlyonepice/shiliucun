@@ -265,7 +265,7 @@ async function getSliderConfig() {
 onMounted(() => {
   window.addEventListener("resize", onHandleResize);
   const _defaultData = echartsConfig.value;
-  eChartsOption.value.title.text = `代理工商业购电分月电价图`;
+  eChartsOption.value.title.text = `代理工商业代理购电分月价差图`;
   let _color = [];
   let _data = [];
   _defaultData.forEach((item) => {

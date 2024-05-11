@@ -248,7 +248,7 @@ async function onGetPeakAndValley() {
   try {
     const { datas } = await getPeakAndValley();
     priceDifferenceData.value = datas;
-    searchParams.value.differencePrice = datas[0].paramName;
+    searchParams.value.differencePrice = datas[2].paramName;
   } catch (error) {
     console.error(error);
     loading.value = false;
