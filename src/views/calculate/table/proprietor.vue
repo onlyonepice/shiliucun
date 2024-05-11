@@ -60,7 +60,7 @@
                       searchResult.revenueEstimationResps.futureIncome.length -
                         1
                     ]
-                  }}</span
+                  }}/元</span
                 >
               </div>
             </div>
@@ -74,7 +74,7 @@
                 <span
                   >¥{{
                     searchResult.revenueEstimationResps.futureIncome[item - 1]
-                  }}</span
+                  }}/元</span
                 >
               </div>
             </div>
@@ -105,7 +105,7 @@
             :class="{
               'color-red': scope.row.financialCost.indexOf('-') > -1,
             }"
-            >¥{{ scope.row.financialCost }}</span
+            >¥{{ scope.row.financialCost }}/元</span
           >
         </template>
       </el-table-column>
@@ -115,7 +115,7 @@
             :class="{
               'color-red': scope.row.innerReturnRate.indexOf('-') > -1,
             }"
-            >¥{{ scope.row.innerReturnRate }}</span
+            >¥{{ scope.row.innerReturnRate }}/元</span
           >
         </template>
       </el-table-column>
