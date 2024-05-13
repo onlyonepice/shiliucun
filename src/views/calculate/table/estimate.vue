@@ -61,7 +61,7 @@
                       searchResult.revenueEstimationResps.futureIncome.length -
                         1
                     ]
-                  }}/元</span
+                  }}</span
                 >
               </div>
             </div>
@@ -75,7 +75,7 @@
                 <span
                   >¥{{
                     searchResult.revenueEstimationResps.futureIncome[item - 1]
-                  }}/元</span
+                  }}</span
                 >
               </div>
             </div>
@@ -100,44 +100,47 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="financialCost" label="现金流">
+      <el-table-column prop="financialCost" label="现金流/元">
         <template #default="scope">
           <span
             :class="{
               'color-red': scope.row.financialCost.indexOf('-') > -1,
             }"
-            >¥{{ scope.row.financialCost }}/元</span
+            >¥{{ scope.row.financialCost }}</span
           >
         </template>
       </el-table-column>
-      <el-table-column prop="ownersAccumulatedIncome" label="业主累计收益">
+      <el-table-column prop="ownersAccumulatedIncome" label="业主累计收益/元">
         <template #default="scope">
           <span
             :class="{
               'color-red': scope.row.ownersAccumulatedIncome.indexOf('-') > -1,
             }"
-            >¥{{ scope.row.ownersAccumulatedIncome }}/元</span
+            >¥{{ scope.row.ownersAccumulatedIncome }}</span
           >
         </template>
       </el-table-column>
-      <el-table-column prop="cumulativeReturnInvestors" label="投资方分享收益">
+      <el-table-column
+        prop="cumulativeReturnInvestors"
+        label="投资方分享收益/元"
+      >
         <template #default="scope">
           <span
             :class="{
               'color-red':
                 scope.row.cumulativeReturnInvestors.indexOf('-') > -1,
             }"
-            >¥{{ scope.row.cumulativeReturnInvestors }}/元</span
+            >¥{{ scope.row.cumulativeReturnInvestors }}</span
           >
         </template>
       </el-table-column>
-      <el-table-column prop="investorNetPresentValue" label="投资方净现值">
+      <el-table-column prop="investorNetPresentValue" label="投资方净现值/元">
         <template #default="scope">
           <span
             :class="{
               'color-red': scope.row.investorNetPresentValue.indexOf('-') > -1,
             }"
-            >¥{{ scope.row.investorNetPresentValue }}/元</span
+            >¥{{ scope.row.investorNetPresentValue }}</span
           >
         </template>
       </el-table-column>
