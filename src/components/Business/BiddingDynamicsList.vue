@@ -2,11 +2,19 @@
   <div :class="[ns.b()]">
     <div :class="ns.b('item_info')" @click="handleSetDetailShowClick">
       <p class="name">
-        {{ currentData.tenderName }}
+        {{ currentData.tenderName || currentData.policyName }}
       </p>
       <div class="tag-box">
         <div class="left">
-          <img v-if="currentData.isNew" class="new" :src="redNew" alt="" />
+          <img
+            v-if="currentData.isNew && source !== 'policy'"
+            class="new"
+            :src="redNew"
+            alt=""
+          />
+          <template v-if="source === 'policy'">
+            <div class="tag">{{ currentData.typeName }}</div>
+          </template>
           <p
             :class="['tag', currentData.status ? '' : 'tagDisable']"
             v-if="currentData.categoryName || currentData.contentName"
@@ -18,7 +26,9 @@
             <span>{{ currentData.contentName }}</span>
           </p>
         </div>
-        <span class="right">{{ currentData.countdown }}</span>
+        <span class="right">{{
+          currentData.countdown || currentData.releaseTime.split(" ")[0]
+        }}</span>
       </div>
     </div>
     <div
@@ -205,6 +215,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  source: {
+    type: String,
+    default: "",
+  },
 });
 
 const isVip = ref(false);
@@ -216,6 +230,7 @@ interface dataType {
   className: string;
   showDetail?: boolean;
   tenderName?: string | null;
+  policyName?: string | null;
   categoryName?: string | null;
   contentName?: string | null;
   countdown?: string | null;
