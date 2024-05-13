@@ -6,19 +6,22 @@
       </el-button>
     </div>
     <div class="content">
-      <el-table :data="elTableData" style="width: 100%" height="600">
+      <el-table :data="elTableData" style="width: 100%" height="100%">
         <el-table-column width="150" fixed prop="regionName" label="地区" />
         <el-table-column width="140" fixed prop="month" label="月份" />
         <el-table-column width="35" prop="" label="" />
         <el-table-column
-          v-for="item in tableKeys"
+          v-for="(item, index) in tableKeys"
           :key="item"
           width="64"
           :prop="item"
           :label="item"
         >
           <template #default="scope">
-            <div class="electricity-price-status">
+            <div
+              v-if="index !== tableKeys.length"
+              class="electricity-price-status"
+            >
               <div
                 v-for="status in scope.row[item]"
                 :key="status"
@@ -30,7 +33,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column width="64" prop="" label="0:00" />
+        <!-- <el-table-column width="64" prop="" label="1:00" /> -->
       </el-table>
       <div ref="faultTree" class="box">
         <div v-if="showLoading">
@@ -206,6 +209,7 @@ const setColor = computed(() => {
     return `color:${color};background-color:${backgroundColor};`;
   };
 });
+
 function setStyle(item) {
   let width = 64;
   switch (item) {
@@ -218,6 +222,7 @@ function setStyle(item) {
   }
   return `width:${width}px;`;
 }
+
 getData();
 </script>
 <style lang="scss" scoped>
@@ -363,9 +368,16 @@ getData();
             padding-left: 24px;
           }
 
+          &:last-child {
+            .cell {
+              .electricity-price-status {
+                border: 0px;
+              }
+            }
+          }
+
           .cell {
             padding: 0;
-            // text-align: center;
 
             .electricity-price-status {
               border-right: 1px solid #d0d6e2;
