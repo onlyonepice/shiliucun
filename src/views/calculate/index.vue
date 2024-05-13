@@ -51,6 +51,7 @@
           ref="searchCanvas"
           :searchCanvas="searchCanvas"
           :searchParams="searchParamsA"
+          :searchParamsShow="searchParamsShow"
           @onSearch="onSearchData"
         />
         <template v-if="showInfoList[0][0].value === 'EMC合同能源'">

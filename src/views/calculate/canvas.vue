@@ -59,6 +59,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  searchParamsShow: {
+    type: Object,
+    default: () => {},
+  },
 });
 const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 滑块配置
@@ -265,7 +269,13 @@ async function getSliderConfig() {
 onMounted(() => {
   window.addEventListener("resize", onHandleResize);
   const _defaultData = echartsConfig.value;
-  eChartsOption.value.title.text = `代理工商业代理购电分月价差图`;
+  const {
+    regionName,
+    electricityTypeOneName,
+    tariffLevelId,
+    electricityTypeTwoName,
+  } = props.searchParamsShow;
+  eChartsOption.value.title.text = `${regionName}·${electricityTypeOneName}·${tariffLevelId}·${electricityTypeTwoName}·代理工商业代理购电分月价差图`;
   let _color = [];
   let _data = [];
   _defaultData.forEach((item) => {
