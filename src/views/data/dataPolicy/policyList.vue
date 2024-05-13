@@ -1,5 +1,5 @@
 <template>
-  <div :class="[ns.b(), 'es-commonPage']">
+  <div :class="[ns.b()]">
     <div class="header">
       <p class="title">政策查找</p>
       <Search
@@ -213,7 +213,7 @@ const route = useRoute();
 const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
 
-const ns = useNamespace("policy");
+const ns = useNamespace("policyList");
 const policyReleased = ref(""); //政策发布时间
 const treeRefFilter = ref(null);
 const defaultProps = {
@@ -360,18 +360,15 @@ policyFilterSearchFn();
 @import "@/style/mixin.scss";
 
 .es-policy {
-  padding: 80px 0;
+  margin-top: 9px;
+  padding-bottom: 55px;
 
   .header {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 36px;
-
-    .title {
-      @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px);
-    }
+    margin-bottom: 24px;
   }
 
   .content {
@@ -605,7 +602,7 @@ $maxHeightVal: 800px;
 }
 </style>
 <style lang="scss">
-.es-policy {
+.es-policyList {
   .el-tree-node__content {
     padding-left: 0 !important;
   }

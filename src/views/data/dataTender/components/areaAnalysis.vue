@@ -78,16 +78,13 @@ const props = defineProps({
 const contentDict: Ref<string | number> = ref(props.contentFilter[0].id); // 筛选项结果
 const releaseTime: Ref<string | number> = ref("");
 
-onMounted(() => {
-  getRegionColor();
-});
 const getReleaseTime = () => {
   const _data = props.timeFilter.filter((item) => {
     return item.defaultValue;
   });
   releaseTime.value = _data[0].paramValue;
 };
-getReleaseTime();
+
 // 招标内容筛选项改变
 const onChangeFilter = (id: string | number, type: string) => {
   type === "contentDict" ? (contentDict.value = id) : (releaseTime.value = id);
@@ -109,7 +106,6 @@ async function getElectricityTypeOneName() {
   loading.value = true;
   const {
     datas: { data, donutChart },
-    // datas: { data },
   }: any = await getRegionDynamicsListApi({
     contentDict: contentDict.value,
     releaseTime: releaseTime.value,
@@ -233,6 +229,7 @@ const getRegionColor = async () => {
     getElectricityTypeOneName();
   }
 };
+
 // 导出图片
 function exportResult() {
   const _echarts = echarts.getInstanceByDom(eChartsDom.value);
@@ -244,6 +241,11 @@ function exportResult() {
   exportImgTitle.value = "储能月度招标分析";
   exportVisible.value = true;
 }
+
+onMounted(() => {
+  getRegionColor();
+});
+getReleaseTime();
 </script>
 
 <style lang="scss">

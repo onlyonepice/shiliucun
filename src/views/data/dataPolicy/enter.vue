@@ -5,11 +5,17 @@
       @onHandleClick="onHandleClick"
       :defaultId="choseTabs"
     />
+    <PolicyList v-if="choseTabs === 1" />
+    <PolicyAnalysis v-if="choseTabs === 2" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, Ref } from "vue";
+
+import PolicyList from "./policyList.vue";
+import PolicyAnalysis from "./policyAnalysis.vue";
+
 import useNamespace from "@/utils/nameSpace";
 
 interface TabsList {
@@ -18,16 +24,17 @@ interface TabsList {
 }
 
 const ns = useNamespace("policy");
-const choseTabs = ref(1);
+const choseTabs = ref(2);
 const tabsList: Ref<Array<TabsList>> = ref([
-  { id: 1, name: "招标查找" },
-  { id: 2, name: "招标月度分析" },
-  { id: 3, name: "招标企业分析" },
-  // { id: 4, name: "招标地区分析" },
-  { id: 5, name: "应用场景分析" },
-  { id: 6, name: "储能时长分析" },
+  { id: 1, name: "政策查找" },
+  { id: 2, name: "政策分析" },
 ]);
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
 };
 </script>
+<style lang="scss" scoped>
+.es-policy {
+  padding: 80px 0;
+}
+</style>

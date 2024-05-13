@@ -14,7 +14,7 @@ export function EChartOptions() {
       },
     },
     grid: {
-      bottom: "40%",
+      bottom: "10%",
       containLabel: true,
     },
     dataRange: {
@@ -99,7 +99,16 @@ export function EChartOptions() {
           max: 6,
         },
         selectedMode: false,
-        data: [],
+        data: [
+          { name: "湖北", value: 10 },
+          {
+            name: "南海诸岛",
+            value: 0,
+            itemStyle: { borderColor: "#f3f3f3" },
+            emphasis: { disabled: true },
+            select: { disabled: true },
+          },
+        ],
       },
     ],
   };
