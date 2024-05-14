@@ -104,7 +104,7 @@ defineExpose({
 @import "@/style/mixin.scss";
 
 #eChart_policyLevel {
-  opacity: 0.9;
   @include widthAndHeight(100%, 400px);
+  background-size: 60% auto;
 }
 </style>

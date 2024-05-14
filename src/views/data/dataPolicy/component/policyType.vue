@@ -94,5 +94,6 @@ defineExpose({
 
 #eChart_policyType {
   @include widthAndHeight(100%, 400px);
+  background-size: 60% auto;
 }
 </style>

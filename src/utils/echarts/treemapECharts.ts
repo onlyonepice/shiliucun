@@ -33,15 +33,14 @@ export function treemapEChartsOption() {
         bottom: "center",
         style: {
           image: back, // 图片的 URL
-          width: 113, // 图片宽度
-          height: 93, // 图片高度
+          width: 345, // 图片宽度
+          height: 286, // 图片高度
         },
         z: 999,
       },
     ],
     series: [
       {
-        z: 1,
         type: "treemap",
         top: "60",
         bottom: "40",
