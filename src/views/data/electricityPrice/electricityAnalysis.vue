@@ -68,7 +68,6 @@
     </div>
     <div
       v-loading="loading"
-      class="ECharts-el"
       ref="myeCharts1"
       id="my-chart_electricity-price-analysis"
     />

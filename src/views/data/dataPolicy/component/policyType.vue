@@ -1,10 +1,5 @@
 <template>
-  <div
-    v-loading="loading"
-    class="ECharts-el"
-    id="eChart_policyType"
-    ref="eChartsDom"
-  />
+  <div v-loading="loading" id="eChart_policyType" ref="eChartsDom" />
 </template>
 
 <script lang="ts" setup>
@@ -39,6 +34,10 @@ watch(
       eChartsOption.value.xAxis.data = cloneDeep(
         prop.data.map((item: any) => item.name),
       );
+      eChartsOption.value.graphic[0].style.width =
+        eChartsOption.value.graphic[0].style.width * 0.6;
+      eChartsOption.value.graphic[0].style.height =
+        eChartsOption.value.graphic[0].style.height * 0.6;
       eChartsOption.value.title.text = prop.year + "储能政策类型";
       const match = prop.year.match(/(\d+)年(\d+)月/);
       const month = match ? parseInt(match[2]) : null;
@@ -82,6 +81,7 @@ function exportImg() {
       type: "jpeg",
       backgroundColor: "#fff",
     }),
+    title: eChartsOption.value.title.text,
   };
 }
 defineExpose({
