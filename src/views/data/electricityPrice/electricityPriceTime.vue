@@ -80,7 +80,12 @@
         @visible-change="handleTriggerForm"
       />
     </div>
-    <div v-loading="loading" id="my-chart_electricity-price" ref="myeCharts" />
+    <div
+      v-loading="loading"
+      id="my-chart_electricity-price"
+      class="ECharts-el"
+      ref="myeCharts"
+    />
     <ExportCanvasDialog
       :visible="exportVisible"
       :img-url="exportImgUrl"

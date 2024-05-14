@@ -1,93 +1,183 @@
 <template>
   <div :class="ns.b()">
-    <div :class="ns.b('content')">
-      <div id="policyAnalysis" />
+    <div :class="ns.b('top')">
+      <div :class="ns.be('top', 'left')">
+        <div>
+          <span :class="ns.be('top', 'title')">时间</span>
+          <Select
+            width="256px"
+            :options="contentFilter"
+            labelKey="paramDesc"
+            valueKey="paramValue"
+            @onChange="onChangeFilter"
+            :defaultValue="policyReleased"
+          />
+        </div>
+      </div>
+      <div :class="ns.be('top', 'right')">
+        <el-button type="primary" @click="exportResult">下载图片</el-button>
+      </div>
     </div>
+    <div v-loading="loading" :class="ns.b('content')">
+      <PolicyRegionAnalysis
+        ref="policyRegionAnalysisImg"
+        :year="year"
+        :data="echartVal.mapAnalysis"
+      />
+      <div :class="ns.b('footer')">
+        <PolicyLevel
+          :year="year"
+          ref="policyLevelImg"
+          :data="echartVal.publishLevel"
+        />
+        <PolicyType
+          :year="year"
+          ref="policyTypeImg"
+          :data="echartVal.policyType"
+        />
+      </div>
+    </div>
+    <ExportCanvasDialog
+      :visible="exportVisible"
+      :img-url="exportImgUrl"
+      @close="exportVisible = false"
+    />
   </div>
 </template>
-<script setup lang="ts">
-import * as echarts from "echarts";
-import { cloneDeep } from "lodash";
-import { onMounted, ref } from "vue";
+
+<script lang="ts" setup>
+import { ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import chinaMap from "@/assets/map/china.json";
-import { EChartOptions, charsToRemove } from "@/utils/echarts/mapECharts";
-const myChart = ref(null);
+
+import { policyAnalysis, getPolicyReleased } from "@/api/data";
+
+import PolicyType from "./component/policyType.vue";
+import PolicyLevel from "./component/policyLevel.vue";
+import PolicyRegionAnalysis from "./component/policyRegionAnalysis.vue";
+
+const echartVal = ref<any>({
+  mapAnalysis: null,
+  policyType: null,
+  publishLevel: null,
+});
+const policyReleased = ref("");
+const policyLevelImg = ref(null);
+const policyTypeImg = ref(null);
+const policyRegionAnalysisImg = ref(null);
+
+const contentFilter = ref([]);
+
+const loading = ref(true);
+// 导出图片相关
+const exportImgUrl = ref<Array<{ png: any; jpg: any }>>([]); // 导出图片地址
+const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const ns = useNamespace("policyAnalysis");
-const eChartsOption: any = ref({ ...EChartOptions() });
 
-function getData() {
-  const _chinaMap = cloneDeep(chinaMap);
-  // 处理json的省份数据名字去除一些省市等字符
-  _chinaMap.features.forEach((item) => {
-    item.properties.name = item.properties.name.replace(
-      new RegExp(`[${charsToRemove}]`, "g"),
-      "",
-    );
-  });
+const year = ref("");
 
-  echarts.registerMap("china", { geoJSON: _chinaMap });
-
-  myChart.value = echarts.init(document.getElementById("policyAnalysis"));
-
-  eChartsOption.value.series[0].zoom = 1.2;
-  eChartsOption.value.grid = null;
-  myChart.value.on("mouseover", (params): any => {
-    if (params.data === undefined) {
-      myChart.value.dispatchAction({
-        type: "downplay",
-      });
-    }
-  });
-  eChartsOption.value.series[0].label = {
-    show: true,
-    emphasis: { show: true },
-    formatter: (params): any => {
-      return isNaN(params.value) ? "" : params.name;
-    },
-  };
-  eChartsOption.value.tooltip = {
-    borderColor: "#fff",
-    formatter: (params) => {
-      if (params.value && params.value > 0) {
-        const contentTitle = `font-size: 16px; font-weight: 600; color: #1C232F; margin-bottom:8px; line-height: 24px;`;
-        const pStyle = `width: 208px; height: 32px; background: #F4F5F7; display:flex; justify-content:space-between; align-item:center; padding:5px 8px; border-radius: 4px 4px 0 0;`;
-        const spanTitle = `font-size: 14px; font-weight: 400; color: #5B6985; ine-height: 22px;`;
-        const spanValue = `font-size: 14px; font-weight: 600; color: #1C232F; line-height: 22px;`;
-        return `
-        <p style='${contentTitle}'>${params.name}</p>
-          <p style='${pStyle}'>
-            <span style='${spanTitle}'>能量</span>
-            <span style='${spanValue}'>***</span>
-          </p>
-          <p style='=${pStyle}'>
-            <span style='style='${spanTitle}''>功率</span>
-            <span style='${spanValue}'>***</span>
-          </p>`;
-      } else {
-        return "";
-      }
-    },
-  };
-  console.log(eChartsOption.value);
-  myChart.value.setOption(eChartsOption.value);
+function onChangeFilter(val: any) {
+  year.value = contentFilter.value.find(
+    (item) => item.paramValue === val,
+  ).paramDesc;
+  policyReleased.value = val;
+  getPolicyAnalysisData();
 }
 
-onMounted(() => {
-  getData();
-});
-</script>
-<style lang="scss" scoped>
-.es-policyAnalysis {
-  .es-policyAnalysis-content {
-    margin-top: 9px;
+// 导出图片
+function exportResult() {
+  exportImgUrl.value = [
+    policyRegionAnalysisImg.value.exportImg(),
+    policyLevelImg.value.exportImg(),
+    policyTypeImg.value.exportImg(),
+  ];
+  exportVisible.value = true;
+}
 
-    #policyAnalysis {
-      width: 100%;
-      height: 800px;
-      background: #000;
-      border: 1px solid rgb(255, 0, 0);
+async function getPolicyAnalysisData() {
+  loading.value = true;
+  try {
+    const {
+      datas: { mapAnalysis, policyType, publishLevel },
+    } = await policyAnalysis({ policyReleased: policyReleased.value });
+    echartVal.value = {
+      mapAnalysis: mapAnalysis.map((item) => {
+        return {
+          name: item.name,
+          value: isNaN(Number(item.quantity)) ? 0 : Number(item.quantity),
+        };
+      }),
+      policyType: policyType
+        .sort((a, b) => {
+          return Number(b.quantity) - Number(a.quantity);
+        })
+        .map((item) => {
+          return {
+            name: item.name,
+            value: isNaN(Number(item.quantity)) ? 0 : Number(item.quantity),
+          };
+        }),
+      publishLevel: publishLevel
+        .sort((a, b) => {
+          return Number(b.quantity) - Number(a.quantity);
+        })
+        .map((item) => {
+          return {
+            name: item.name,
+            value: isNaN(Number(item.quantity)) ? 0 : Number(item.quantity),
+          };
+        }),
+    };
+  } catch (err) {
+    return err;
+  } finally {
+    loading.value = false;
+  }
+}
+async function getYear() {
+  const { datas } = await getPolicyReleased();
+  contentFilter.value = datas;
+  year.value = datas[0].paramDesc;
+  policyReleased.value = datas[0].paramValue;
+  getPolicyAnalysisData();
+}
+getYear();
+</script>
+
+<style lang="scss">
+@import "@/style/mixin.scss";
+
+.es-policyAnalysis-top {
+  @include flex(center, space-between, nowrap);
+
+  .es-policyAnalysis-top__left {
+    @include flex(center, flex-start, nowrap);
+
+    & > div {
+      @include flex(center, flex-start, nowrap);
+      margin-right: 24px;
+    }
+
+    .es-policyAnalysis-top__title {
+      @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+      margin-right: 16px;
+      flex: 1;
     }
   }
+
+  .es-policyAnalysis-top__right {
+    @include flex(center, flex-start, nowrap);
+
+    .es-policyAnalysis-top__line {
+      @include widthAndHeight(1px, 24px);
+      display: inline-block;
+      background: #dbdce2;
+      margin-right: 24px;
+    }
+  }
+}
+
+.es-policyAnalysis-footer {
+  margin-top: 24px;
+  display: flex;
 }
 </style>

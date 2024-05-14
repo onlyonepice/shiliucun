@@ -27,7 +27,11 @@
       </div>
     </div>
     <div class="export-type__content">
-      <img :src="getCanvasImg" />
+      <img
+        v-for="item in getCanvasImg"
+        :key="item.png"
+        :src="item[exportTypeValue]"
+      />
     </div>
     <template #footer>
       <span class="dialog-footer">
@@ -76,7 +80,12 @@ export default {
       };
     },
     getCanvasImg() {
-      return this.imgUrl[this.exportTypeValue];
+      if (Array.isArray(this.imgUrl)) {
+        return this.imgUrl;
+      } else {
+        return [this.imgUrl];
+      }
+      // return this.imgUrl[this.exportTypeValue];
     },
   },
   methods: {
@@ -91,11 +100,22 @@ export default {
     // 导出图片
     onExport() {
       this.showDialog = true;
-      const { imgTitle, exportTypeValue, imgUrl } = this;
-      const _title = imgTitle + "." + exportTypeValue;
-      exportImg(exportTypeValue, _title, imgUrl["png"]).then(() => {
-        this.onCancel();
-      });
+      const { imgTitle, exportTypeValue } = this;
+      const imgUrl = this.getCanvasImg;
+
+      let count = 0;
+      for (let i = 0; i < imgUrl.length; i++) {
+        let _title;
+        if (imgTitle !== "") {
+          _title = imgTitle + "." + exportTypeValue;
+        } else {
+          _title = imgUrl[i]["title"] + "." + exportTypeValue;
+        }
+        exportImg(exportTypeValue, _title, imgUrl[i]["png"]).then(() => {
+          count++;
+          if (count === imgUrl.length) this.onCancel();
+        });
+      }
     },
   },
 };
@@ -125,17 +145,24 @@ export default {
 
 .export-type__content {
   @include widthAndHeight(512px);
+  max-height: 380px;
+  overflow: auto;
   @include flex(center, center);
-  @include padding(8px, 0, 8px, 0);
+  padding: 8px;
   background: rgba(248, 249, 251, 0);
   border-radius: 4px;
   border: 1px solid #f1f2f6;
 
   img {
-    @include widthAndHeight(496px);
+    margin-top: 8px;
+    @include widthAndHeight(100%);
     background-image: url("@/assets/img/common/canvas-img-bg.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }
 </style>

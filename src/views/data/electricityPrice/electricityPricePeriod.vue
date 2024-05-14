@@ -158,8 +158,6 @@ async function getData() {
       }
       return tableTrObj;
     });
-    console.log(elTableData.value);
-
     tableData.value = datas
       .map((item) => {
         let row = Object.values(item);
