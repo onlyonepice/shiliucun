@@ -275,7 +275,7 @@ onMounted(() => {
     tariffLevelId,
     electricityTypeTwoName,
   } = props.searchParamsShow;
-  eChartsOption.value.title.text = `${regionName}·${electricityTypeOneName}·${tariffLevelId}·${electricityTypeTwoName}·代理工商业代理购电分月价差图`;
+  eChartsOption.value.title.text = `${regionName}·${electricityTypeOneName}·${tariffLevelId}·${electricityTypeTwoName}·代理购电分月价差图`;
   let _color = [];
   let _data = [];
   _defaultData.forEach((item) => {
