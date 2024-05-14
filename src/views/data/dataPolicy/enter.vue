@@ -24,7 +24,7 @@ interface TabsList {
 }
 
 const ns = useNamespace("policy");
-const choseTabs = ref(2);
+const choseTabs = ref(1);
 const tabsList: Ref<Array<TabsList>> = ref([
   { id: 1, name: "政策查找" },
   { id: 2, name: "政策分析" },
