@@ -1,5 +1,5 @@
 import { textStyleObject } from "./pieECharts";
-import back from "@/assets/img/Echarts-bgc-two.png";
+import downloadBg from "@/assets/img/common/ECharts-bgc-two.png";
 export const EChartColor = [
   "rgba(36, 75, 241, 1)",
   "rgba(36, 75, 241, 0.8)",
@@ -32,9 +32,9 @@ export function treemapEChartsOption() {
         left: "center",
         bottom: "center",
         style: {
-          image: back, // 图片的 URL
-          width: 345, // 图片宽度
-          height: 286, // 图片高度
+          image: downloadBg, // 图片的 URL
+          width: 415, // 图片宽度
+          height: 342, // 图片高度
         },
         z: 999,
       },

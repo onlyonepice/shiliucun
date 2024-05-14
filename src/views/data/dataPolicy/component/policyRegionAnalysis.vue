@@ -1,5 +1,5 @@
 <template>
-  <div id="eChart_regionAnalysis" class="ECharts-el" ref="eChartsDom" />
+  <div id="eChart_regionAnalysis" ref="eChartsDom" />
 </template>
 
 <script lang="ts" setup>
@@ -137,6 +137,7 @@ function exportImg() {
       type: "jpeg",
       backgroundColor: "#fff",
     }),
+    title: eChartsOption.value.title.text,
   };
 }
 defineExpose({

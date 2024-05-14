@@ -1,7 +1,7 @@
 <template>
   <div class="common-title common-title-margin">峰谷价差</div>
   <div class="investment-eCharts">
-    <div id="my-chart" class="ECharts-el" ref="eCharts" />
+    <div id="my-chart" ref="eCharts" />
     <div class="slider-wrapper">
       <div class="slider-wrapper__desc">
         <img :src="TipsIcon" alt="" />

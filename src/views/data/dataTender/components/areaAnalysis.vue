@@ -37,12 +37,7 @@
         <el-button type="primary" @click="exportResult">下载图片</el-button>
       </div>
     </div>
-    <div
-      v-loading="loading"
-      class="ECharts-el"
-      id="eChart_areaAnalysis"
-      ref="eChartsDom"
-    />
+    <div v-loading="loading" id="eChart_areaAnalysis" ref="eChartsDom" />
     <ExportCanvasDialog
       :visible="exportVisible"
       :img-url="exportImgUrl"

@@ -1,5 +1,5 @@
 <template>
-  <div id="eChart_policyLevel" class="ECharts-el" ref="eChartsDom" />
+  <div id="eChart_policyLevel" ref="eChartsDom" />
 </template>
 
 <script lang="ts" setup>
@@ -35,6 +35,10 @@ watch(
         item.itemStyle = { color: EChartColor[index] };
       });
       eChartsOption.value.title.text = prop.year + "储能政策发布级别";
+      eChartsOption.value.graphic[0].style.width =
+        eChartsOption.value.graphic[0].style.width * 0.6;
+      eChartsOption.value.graphic[0].style.height =
+        eChartsOption.value.graphic[0].style.height * 0.6;
       const match = prop.year.match(/(\d+)年(\d+)月/);
       const month = match ? parseInt(match[2]) : null;
       eChartsOption.value.title.subtext = month + "月储能政策发布级别";
@@ -93,6 +97,7 @@ function exportImg() {
       type: "jpeg",
       backgroundColor: "#fff",
     }),
+    title: eChartsOption.value.title.text,
   };
 }
 defineExpose({

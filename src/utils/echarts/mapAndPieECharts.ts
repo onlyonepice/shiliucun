@@ -1,3 +1,4 @@
+import downloadBg from "@/assets/img/common/ECharts-bgc.png";
 /*
  * 地图Canvas
  */
@@ -27,7 +28,19 @@ export function EChartOptions() {
       show: false,
       borderColor: "#fff",
     },
-
+    graphic: [
+      {
+        type: "image",
+        left: "center",
+        bottom: "center",
+        style: {
+          image: downloadBg, // 图片的 URL
+          width: 415, // 图片宽度
+          height: 342, // 图片高度
+        },
+        z: 999,
+      },
+    ],
     series: [
       {
         name: "china",

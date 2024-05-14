@@ -34,7 +34,6 @@
       <div
         v-if="!isEmptyData"
         v-loading="loading"
-        class="ECharts-el"
         id="eChart-winningBidPrice"
         ref="eChartsDom"
       />

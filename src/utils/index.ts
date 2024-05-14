@@ -1,4 +1,4 @@
-import downloadBg from "@/assets/img/common/eesa-waterMark.png";
+// import downloadBg from "@/assets/img/common/eesa-waterMark.png";
 
 // 自定义判断元素类型JS
 export function toType(obj) {
@@ -54,38 +54,19 @@ function loadImage(src: string) {
  * watermarkWidth 水印图片的宽度
  * watermarkHeight 水印图片的高度
  * **/
-export const exportImg = (
-  type = "png",
-  downLoadName: string,
-  picInfo,
-  incomingBg = null,
-  watermarkWidth = 489,
-  watermarkHeight = 319,
-) => {
+export const exportImg = (type = "png", downLoadName: string, picInfo) => {
   const contentImagePromise = loadImage(picInfo);
-  const watermarkImagePromise = loadImage(incomingBg || downloadBg);
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   return new Promise((resolve, reject) => {
-    Promise.all([contentImagePromise, watermarkImagePromise])
-      .then(([contentImage, watermarkImage]) => {
+    Promise.all([contentImagePromise])
+      .then(([contentImage]) => {
         canvas.width = contentImage.width; // canvas宽度取决于传入的picInfo的宽度
         canvas.height = contentImage.height; // canvas宽度取决于传入的picInfo的高度
         if (type !== "png") {
           ctx.fillStyle = "#ffffff";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
-        const watermarkImageWidth = watermarkWidth; // 水印宽度
-        const watermarkImageHeight = watermarkHeight; // 水印高度
-        // 绘制内容图片，先绘制的图片在下方,将水印绘制在 canvas 中央
-        ctx.drawImage(
-          watermarkImage,
-          contentImage.width / 2 - watermarkImageWidth / 2,
-          contentImage.height / 2 - watermarkImageHeight / 2,
-          watermarkImageWidth,
-          watermarkImageHeight,
-        );
-        // 绘制图表 eCharts 图表
         ctx.drawImage(
           contentImage,
           0,
