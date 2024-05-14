@@ -249,7 +249,7 @@ async function onGetPeakAndValley() {
   try {
     const { datas } = await getPeakAndValley();
     priceDifferenceData.value = datas;
-    searchParams.value.differencePrice = datas[0].paramName;
+    searchParams.value.differencePrice = datas[2].paramName;
   } catch (error) {
     console.error(error);
     loading.value = false;
@@ -351,7 +351,7 @@ async function getElectricityTypeOneName() {
     years,
   });
   eChartsOption.value.title.text =
-    titleText.value.years + "月各省市代理购电价峰谷价差排名";
+    titleText.value.years + "各省市代理购电价峰谷价差排名";
   eChartsOption.value.title.subtext = `·${titleText.value.electricityTypeOneName}·${titleText.value.tariffLevelId}·${titleText.value.differencePrice}`;
   eChartsOption.value.series[0].data = datas.map(
     (item) => item.electrovalenceDifference,
@@ -360,6 +360,10 @@ async function getElectricityTypeOneName() {
   eChartsOption.value.legend.data[0].name = seriesName;
   eChartsOption.value.series[1].data = datas.map((item) => item.sameRatio);
   eChartsOption.value.xAxis.data = datas.map((item) => item.regionName);
+  eChartsOption.value.xAxis.axisLabel.rotate = -90;
+  eChartsOption.value.xAxis.axisLabel.formatter = (params) => {
+    return params;
+  };
   loading.value = false;
   createEcharts();
 }

@@ -51,6 +51,7 @@
           ref="searchCanvas"
           :searchCanvas="searchCanvas"
           :searchParams="searchParamsA"
+          :searchParamsShow="searchParamsShow"
           @onSearch="onSearchData"
         />
         <template v-if="showInfoList[0][0].value === 'EMC合同能源'">
@@ -140,6 +141,7 @@
     :condition="searchParamsShow"
   />
   <Loading v-if="downloadLoading" bg="rgba(0,0,0,0.2)" />
+  <SkipMask v-bind="titleSkip" @onClose="onClose" />
 </template>
 
 <script lang="ts" setup>
@@ -188,6 +190,14 @@ const downloadReportShow: Ref<boolean> = ref(false); // 下载报告弹窗
 const showInvestment = ref(false);
 const formatDom = ref(null); // dom结构
 const downloadLoading: Ref<boolean> = ref(false); // 下载loading
+const titleSkip = ref({
+  title: "配置数量、系统单价、系统容量等均为默认值，可根据情况自行修改",
+  showTips: true,
+  cancel: "",
+  confirm: "确定",
+  showIcon: false,
+  show: false,
+});
 // 查询参数
 const searchParamsA: Ref<any> = ref({});
 const searchParamsB: Ref<any> = ref({});
@@ -246,6 +256,14 @@ const onAddArea = (type: boolean) => {
 // tab切换
 const onHandleClick = (id: number) => {
   choseTab.value !== id && (choseTab.value = id);
+};
+// 关闭弹窗
+const onClose = (type: boolean, tips: boolean) => {
+  window.localStorage.setItem(
+    "showCalculateTips",
+    JSON.stringify(type && tips),
+  );
+  titleSkip.value.show = false;
 };
 // 评论
 const onEvaluate = async (text: string) => {
@@ -517,6 +535,16 @@ function updateScrollTop() {
 }
 onMounted(() => {
   window.addEventListener("scroll", updateScrollTop);
+  window.localStorage.getItem("showCalculateTips") !== null &&
+    (titleSkip.value.show = JSON.parse(
+      window.localStorage.getItem("showCalculateTips"),
+    ));
+  const _showCalculateTips = window.localStorage.getItem("showCalculateTips");
+  if (_showCalculateTips === null || _showCalculateTips === "false") {
+    titleSkip.value.show = true;
+  } else {
+    titleSkip.value.show = false;
+  }
 });
 </script>
 

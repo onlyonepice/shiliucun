@@ -118,6 +118,7 @@ export const useUserStore = defineStore({
             this.userInfo = data;
             if (response.resp_code === 0) {
               this.getPermissionList();
+              window.localStorage.setItem("VIP", data.roles[0].code);
             }
             resolve(data);
           })

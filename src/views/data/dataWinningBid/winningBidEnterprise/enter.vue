@@ -183,6 +183,7 @@ const getData = async () => {
       echartOptions.value.series[1].data = [];
       echartOptions.value.series[2].data = [];
       echartOptions.value.xAxis.data = [];
+      echartOptions.value.xAxis.axisLabel.rotate = -90;
       const structure_encode_data = [];
       res.datas.forEach((item, index) => {
         if (index < 20) {

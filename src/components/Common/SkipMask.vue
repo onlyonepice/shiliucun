@@ -3,15 +3,21 @@
     <div class="mask_operation">
       <div class="header">
         <div class="header_left">
-          <img class="icon_title" :src="WarningIcon" />
+          <img class="icon_title" :src="WarningIcon" v-if="showIcon" />
           <div class="title">{{ title }}</div>
         </div>
         <div v-if="iconClosure" class="header_right">
           <img class="icon_clear" :src="CancelIcon" @click="onClose(false)" />
         </div>
       </div>
+      <div class="option_left" v-if="showTips" @click="checkType = !checkType">
+        <img :src="checkType ? IconChecked : IconCheck" alt="" />
+        <span>不再提示</span>
+      </div>
       <div class="option">
-        <el-button @click="onClose(false)">{{ cancel }}</el-button>
+        <el-button @click="onClose(false)" v-if="cancel !== ''">{{
+          cancel
+        }}</el-button>
         <el-button @click="onClose(true)" type="primary">{{
           confirm
         }}</el-button>
@@ -22,6 +28,8 @@
 <script>
 import WarningIcon from "@/assets/img/common/icon_success_nor.png";
 import CancelIcon from "@/assets/img/common/cancel.png";
+import IconCheck from "@/assets/img/common/icon_check.png";
+import IconChecked from "@/assets/img/common/icon_checked.png";
 export default {
   name: "ExitPrompt",
   props: {
@@ -33,6 +41,11 @@ export default {
     title: {
       type: String,
       default: "标题title",
+    },
+    // 展示icon
+    showIcon: {
+      type: Boolean,
+      default: true,
     },
     // 提示内容
     text: {
@@ -62,11 +75,18 @@ export default {
       type: Boolean,
       default: true,
     },
+    showTips: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       WarningIcon: WarningIcon,
       CancelIcon: CancelIcon,
+      IconCheck: IconCheck,
+      IconChecked: IconChecked,
+      checkType: false,
     };
   },
   mounted() {
@@ -79,7 +99,8 @@ export default {
   },
   methods: {
     onClose(type) {
-      this.$emit("onClose", type);
+      this.showTips && this.$emit("onClose", type, this.checkType);
+      !this.showTips && this.$emit("onClose", type);
     },
   },
 };
@@ -151,6 +172,24 @@ export default {
         height: 32px;
       }
     }
+  }
+}
+.option_left {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: absolute;
+  bottom: 28px;
+  left: 24px;
+  img {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+  span {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+    line-height: 22px;
   }
 }
 </style>

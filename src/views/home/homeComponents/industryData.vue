@@ -27,10 +27,16 @@
             />
           </div>
           <div v-show="currentTab === 'newPolicy'">
-            <policyList
+            <!-- <policyList
               v-for="(item, index) in policyData"
               :key="index"
               :pageData="item"
+            /> -->
+            <biddingDynamicsList
+              v-for="(item, index) in policyData"
+              :key="index"
+              :pageData="item"
+              source="policy"
             />
           </div>
         </div>

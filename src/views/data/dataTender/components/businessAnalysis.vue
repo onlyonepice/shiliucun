@@ -128,7 +128,8 @@ async function getElectricityTypeOneName() {
       top: "15%",
       left: "50",
       right: "3%",
-      bottom: "20%",
+      bottom: "10%",
+      containLabel: true,
     };
     const _y1 = [];
     const _y2 = [];
@@ -144,7 +145,7 @@ async function getElectricityTypeOneName() {
     eChartsOption.value.yAxis.name = "MWh";
     eChartsOption.value.xAxis.axisLabel.rotate = -90;
     eChartsOption.value.xAxis.axisLabel.formatter = (params) => {
-      return params.length > 6 ? params.substr(0, 6) + "..." : params;
+      return params;
     };
     eChartsOption.value.xAxis.data = _data.map((item) =>
       item.abbreviation !== null ? item.abbreviation : item.company,
@@ -216,7 +217,7 @@ function exportResult() {
 <style lang="scss">
 @import "@/style/mixin.scss";
 #eChart_businessAnalysis {
-  @include widthAndHeight(1152px, 581px);
+  @include widthAndHeight(1152px, 681px);
   margin-top: 32px;
 }
 .es-dataBusinessAnalysis-top {
