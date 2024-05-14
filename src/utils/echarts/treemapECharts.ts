@@ -1,4 +1,5 @@
 import { textStyleObject } from "./pieECharts";
+import back from "@/assets/img/Echarts-bgc-two.png";
 export const EChartColor = [
   "rgba(36, 75, 241, 1)",
   "rgba(36, 75, 241, 0.8)",
@@ -25,8 +26,22 @@ export function treemapEChartsOption() {
       textStyle: textStyleObject,
     },
     color: EChartColor,
+    graphic: [
+      {
+        type: "image",
+        left: "center",
+        bottom: "center",
+        style: {
+          image: back, // 图片的 URL
+          width: 113, // 图片宽度
+          height: 93, // 图片高度
+        },
+        z: 999,
+      },
+    ],
     series: [
       {
+        z: 1,
         type: "treemap",
         top: "60",
         bottom: "40",
@@ -38,18 +53,12 @@ export function treemapEChartsOption() {
         label: {
           position: "insideBottomLeft",
         },
-        data: [
-          { name: "nodeA", value: 10 },
-          { name: "nodeB", value: 20 },
-        ],
+        data: [],
       },
       {
         type: "pie",
         left: "2000%",
-        data: [
-          { name: "nodeA", value: 10 },
-          { name: "nodeB", value: 20 },
-        ],
+        data: [],
       },
     ],
   };
