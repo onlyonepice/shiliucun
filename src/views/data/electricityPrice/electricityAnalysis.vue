@@ -68,8 +68,9 @@
     </div>
     <div
       v-loading="loading"
-      id="my-chart_electricity-price-analysis"
+      class="ECharts-el"
       ref="myeCharts1"
+      id="my-chart_electricity-price-analysis"
     />
     <ExportCanvasDialog
       :visible="exportVisible"

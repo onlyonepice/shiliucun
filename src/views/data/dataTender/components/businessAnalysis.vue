@@ -41,6 +41,7 @@
     <div
       v-if="!isEmptyData"
       v-loading="loading"
+      class="ECharts-el"
       id="eChart_businessAnalysis"
       ref="eChartsDom"
     />

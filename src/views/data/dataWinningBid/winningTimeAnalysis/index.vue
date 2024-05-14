@@ -37,6 +37,7 @@
       <div
         v-if="!isEmptyData"
         :class="ns.b('chart')"
+        class="ECharts-el"
         id="eChart-duration-analysis"
         ref="eChartsDomDurationAnalysis"
       />

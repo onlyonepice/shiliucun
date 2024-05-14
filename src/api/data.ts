@@ -250,3 +250,20 @@ export const getWinningScenariosApi = (params: any) => {
     },
   );
 };
+
+// 政策_政策分析 echart
+export const policyAnalysis = (params) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/Policy/front/openApi/v1.0/policyAnalysis",
+    { params },
+  );
+};
+
+// 政策_政策发布年月下拉框
+export const getPolicyReleased = () => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/Policy/front/openApi/v1.0/getPolicyReleased",
+  );
+};

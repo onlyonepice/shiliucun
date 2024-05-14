@@ -52,6 +52,7 @@
     <div
       v-if="!showEmpty"
       v-loading="loading"
+      class="ECharts-el"
       id="eChart_dataScenesAnalysis"
       ref="eChartsDom"
     />
