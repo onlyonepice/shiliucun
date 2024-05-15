@@ -195,3 +195,75 @@ export const getExpertInterviewList = (params) => {
     { params },
   );
 };
+
+// 获取统计单位
+export const getUnitListApi = () => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/Policy/openApi/v1.0/getUnitsStatistics",
+  );
+};
+
+// 获取招标地区
+export const getBiddingAreaApi = () => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/Policy/openApi/v1.0/getProvincialDivisions",
+  );
+};
+
+// 获取招标储能时长分析
+export const getEnergyStorageDurationAnalysis = (params) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/Policy/openApi/v1.0/getEnergyStorageDurationAnalysis",
+    { params },
+  );
+};
+
+// 获取中标储能时长分析
+export const getWinningEnergyStorageDurationAnalysis = (params) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/priceTracking/openApi/v1.0/getBidderEnergyStorageDurationAnalysis",
+    { params },
+  );
+};
+// 获取招标应用场景分析
+export const getTenderScenariosApi = (params: any) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/Policy/openApi/v1.0/getApplicationScenarioAnalysis",
+    {
+      params,
+    },
+  );
+};
+
+// 获取中标应用场景分析
+export const getWinningScenariosApi = (params: any) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/priceTracking/openApi/v1.0/getBidderApplicationScenarioAnalysis",
+    {
+      params,
+    },
+  );
+};
+
+// 政策_政策分析 echart
+export const policyAnalysis = (params) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/Policy/front/openApi/v1.0/policyAnalysis",
+    { params },
+  );
+};
+
+// 政策_政策发布年月下拉框
+export const getPolicyReleased = () => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/Policy/front/openApi/v1.0/getPolicyReleased",
+  );
+};

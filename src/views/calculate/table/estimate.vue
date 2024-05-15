@@ -100,7 +100,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="financialCost" label="现金流">
+      <el-table-column prop="financialCost" label="现金流/元">
         <template #default="scope">
           <span
             :class="{
@@ -110,7 +110,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="ownersAccumulatedIncome" label="业主累计收益">
+      <el-table-column prop="ownersAccumulatedIncome" label="业主累计收益/元">
         <template #default="scope">
           <span
             :class="{
@@ -120,7 +120,10 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="cumulativeReturnInvestors" label="投资方分享收益">
+      <el-table-column
+        prop="cumulativeReturnInvestors"
+        label="投资方分享收益/元"
+      >
         <template #default="scope">
           <span
             :class="{
@@ -131,7 +134,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="investorNetPresentValue" label="投资方净现值">
+      <el-table-column prop="investorNetPresentValue" label="投资方净现值/元">
         <template #default="scope">
           <span
             :class="{

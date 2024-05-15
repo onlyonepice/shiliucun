@@ -51,6 +51,7 @@
           ref="searchCanvas"
           :searchCanvas="searchCanvas"
           :searchParams="searchParamsA"
+          :searchParamsShow="searchParamsShow"
           @onSearch="onSearchData"
         />
         <template v-if="showInfoList[0][0].value === 'EMC合同能源'">
@@ -140,6 +141,7 @@
     :condition="searchParamsShow"
   />
   <Loading v-if="downloadLoading" bg="rgba(0,0,0,0.2)" />
+  <SkipMask v-bind="titleSkip" @onClose="onClose" />
 </template>
 
 <script lang="ts" setup>
@@ -188,6 +190,14 @@ const downloadReportShow: Ref<boolean> = ref(false); // 下载报告弹窗
 const showInvestment = ref(false);
 const formatDom = ref(null); // dom结构
 const downloadLoading: Ref<boolean> = ref(false); // 下载loading
+const titleSkip = ref({
+  title: "配置数量、系统单价、系统容量等均为默认值，可根据情况自行修改",
+  showTips: true,
+  cancel: "",
+  confirm: "确定",
+  showIcon: false,
+  show: false,
+});
 // 查询参数
 const searchParamsA: Ref<any> = ref({});
 const searchParamsB: Ref<any> = ref({});
@@ -246,6 +256,14 @@ const onAddArea = (type: boolean) => {
 // tab切换
 const onHandleClick = (id: number) => {
   choseTab.value !== id && (choseTab.value = id);
+};
+// 关闭弹窗
+const onClose = (type: boolean, tips: boolean) => {
+  window.localStorage.setItem(
+    "showCalculateTips",
+    JSON.stringify(type && tips),
+  );
+  titleSkip.value.show = false;
 };
 // 评论
 const onEvaluate = async (text: string) => {
@@ -332,7 +350,6 @@ const onExportAll = async (type, value) => {
   }
 };
 const filterTable = async () => {
-  console.log(formatDom.value.getDom());
   const arr = [];
   const financialReportsData = formatDom.value.getDom();
   for (const item of financialReportsData) {
@@ -518,19 +535,33 @@ function updateScrollTop() {
 }
 onMounted(() => {
   window.addEventListener("scroll", updateScrollTop);
+  window.localStorage.getItem("showCalculateTips") !== null &&
+    (titleSkip.value.show = JSON.parse(
+      window.localStorage.getItem("showCalculateTips"),
+    ));
+  const _showCalculateTips = window.localStorage.getItem("showCalculateTips");
+  if (_showCalculateTips === null || _showCalculateTips === "false") {
+    titleSkip.value.show = true;
+  } else {
+    titleSkip.value.show = false;
+  }
 });
 </script>
 
 <style scoped lang="scss">
 @import "@/style/mixin.scss";
+
 #investment-return {
   padding: 80px 0;
 }
+
 .es-calculate-evaluate {
   @include flex(center, space-between, nowrap);
+
   .es-calculate-evaluate__title {
     @include flex(center, flex-start, nowrap);
   }
+
   .es-calculate-evaluate__title-item {
     @include widthAndHeight(96px, 32px);
     @include flex(center, center);
@@ -539,39 +570,48 @@ onMounted(() => {
     margin-right: 8px;
     cursor: pointer;
     background: #f2f3f5;
+
     img {
       @include widthAndHeight(20px, 20px);
       margin-right: 4px;
     }
+
     span {
       @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
     }
+
     &:nth-of-type(1) {
       margin-left: 16px;
     }
   }
+
   div[type="不满意"] {
     background: #fde0e2;
     border: 1px solid #fbb4b9;
   }
+
   div[type="一般"] {
     background: #fff1d1;
     border: 1px solid #ffbd12;
   }
+
   div[type="满意"] {
     background: #fff1d1;
     border: 1px solid #ffbd12;
   }
 }
+
 .scrollbar-flex-content {
   overflow-x: auto;
 }
+
 .es-calculate-tabs {
   position: sticky;
   top: 0;
   background: #ffffff;
   z-index: 999;
 }
+
 .format-dom {
   position: absolute;
   z-index: -1;

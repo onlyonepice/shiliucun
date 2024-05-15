@@ -2,7 +2,7 @@
   <div :class="[ns.b()]">
     <template v-if="isLoading">
       <div class="title">
-        <p class="title_text">行业洞察。</p>
+        <p class="title_text">行业洞察</p>
         <img :src="rightArrow" alt="" @click="onEnterList" />
       </div>
       <div class="content">

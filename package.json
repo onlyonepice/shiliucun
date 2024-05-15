@@ -10,8 +10,22 @@
     "build": "vite build",
     "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock,build}/**/*.{vue,js,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
-    "lint": "pnpm lint:eslint && pnpm lint:prettier"
+    "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:styleLint",
+    "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
+    "lint:styleLint": "stylelint --cache --fix \"**/*.{vue,css,scss,postcss,less}\"",
+    "husky": "./.husky/pre-commit",
+    "prepare": "husky",
+    "preinstall": "npx only-allow pnpm"
   },
+  "keywords": [
+    "IReport",
+    "element-plus",
+    "typescript",
+    "pinia",
+    "vue3",
+    "vite",
+    "esm"
+  ],
   "dependencies": {
     "@types/echarts": "^4.9.22",
     "animate.css": "4.1.1",
@@ -20,7 +34,7 @@
     "core-js": "^3.8.3",
     "dayjs": "1.11.6",
     "docx": "7.4.1",
-    "echarts": "5.3.3",
+    "echarts": "5.4.3",
     "element-plus": "2.4.3",
     "html2canvas": "1.4.1",
     "js-cookie": "3.0.1",
@@ -29,16 +43,16 @@
     "pinia": "2.1.7",
     "qrcode": "^1.5.3",
     "qs": "^=6.11.0",
-    "register-service-worker": "^1.7.2",
     "swiper": "^11.0.7",
     "vue": "3.4.6",
-    "vue-class-component": "^8.0.0-0",
     "vue-clipboard3": "^2.0.0",
     "vue-qr": "4.0.9",
     "vue-router": "4.1.6",
     "vuex": "4.0.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "19.2.2",
+    "@commitlint/config-conventional": "19.2.2",
     "@EESA/components": "1.1.32",
     "@types/node": "^18.15.3",
     "@types/vue": "^2.0.0",
@@ -56,13 +70,18 @@
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^9.1.0",
     "@vue/shared": "3.2.37",
-    "crypto-js": "4.1.1",
+    "stylelint": "^14.3.0",
+    "stylelint-config-html": "^1.0.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recommended": "^9.0.0",
+    "stylelint-config-standard": "^29.0.0",
+    "stylelint-order": "^5.0.0",
     "eslint": "7.32.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.3",
     "eslint-plugin-vue": "^8.7.1",
     "husky": "9.0.11",
-    "lint-staged": "11.2.6",
+    "lint-staged": "15.2.2",
     "prettier": "3.2.5",
     "prettier-eslint": "16.3.0",
     "rollup-plugin-visualizer": "^5.12.0",
@@ -96,11 +115,5 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-  ],
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,vue,ts,tsx}": "vue-cli-service lint"
-  }
+  ]
 }

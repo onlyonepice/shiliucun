@@ -6,7 +6,7 @@
         <div :class="ns.b('banner')">
           <p :class="ns.bm('banner', 'title')">
             <span>{{
-              loginType === "password" ? "欢迎使用iReport" : "微信登录"
+              loginType === "password" ? "欢迎使用「掌上储能」" : "微信登录"
             }}</span>
             <img :src="LoginCancel" @click="onCloseDialog()" />
           </p>

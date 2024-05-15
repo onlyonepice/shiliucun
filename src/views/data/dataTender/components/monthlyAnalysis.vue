@@ -17,7 +17,13 @@
         <el-button type="primary" @click="exportResult">下载图片</el-button>
       </div>
     </div>
-    <div v-loading="loading" id="eChart_dataMonthlyAnalysis" ref="eChartsDom" />
+    <div
+      v-if="!isEmptyData"
+      v-loading="loading"
+      id="eChart_dataMonthlyAnalysis"
+      ref="eChartsDom"
+    />
+    <EmptyData v-else />
     <ExportCanvasDialog
       :visible="exportVisible"
       :img-url="exportImgUrl"
@@ -32,13 +38,14 @@ import { onMounted, ref, Ref, watch } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getBiddingDynamicsListApi } from "@/api/data";
-import { eChartsOptionCommon, textStyleObject } from "@/utils/eCharts";
+import { eChartsOptionCommon, textStyleObject } from "@/utils/echarts/eCharts";
 import { cloneDeep } from "lodash";
 import { useUserStore } from "@/store/modules/user";
 import { nextTick } from "process";
 const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 获取eCharts节点
 const eChartsDom = ref(null);
+const isEmptyData = ref(false);
 // 导出图片相关
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportImgTitle: Ref<string> = ref("");
@@ -68,10 +75,16 @@ onMounted(() => {
   getElectricityTypeOneName();
 });
 
-// 获取eCharts数据
+// 获取 eCharts 数据
 async function getElectricityTypeOneName() {
-  loading.value = true;
+  loading.value = false;
+  isEmptyData.value = false;
   const { datas }: any = await getBiddingDynamicsListApi(contentDict.value);
+  if (datas.length === 0) {
+    loading.value = false;
+    isEmptyData.value = true;
+    return;
+  }
   eChartsOption.value.title.text = "储能月度招标分析";
   eChartsOption.value.title.subtext = `储能系统`;
   eChartsOption.value.color = ["#165DFF", "#FF7D00"];

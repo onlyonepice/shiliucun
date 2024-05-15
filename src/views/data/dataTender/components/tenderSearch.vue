@@ -6,13 +6,12 @@
           class="tree-item"
           v-for="(value, key) in filterOptionsData"
           :key="key"
-          v-once
         >
-          <div v-if="value.paramValue !== 'yearRange'">
+          <template v-if="value[0].paramValue !== 'yearRange'">
             <el-tree
-              @check="() => changeTag(value, key)"
-              :ref="`${value.paramValue}Ref`"
-              :data="[value]"
+              @check="() => changeTag(value[0], key)"
+              ref="treeRefFilter"
+              :data="value"
               default-expand-all
               highlight-current
               :props="defaultProps"
@@ -59,11 +58,11 @@
                 </span>
               </template>
             </el-tree>
-          </div>
-          <div v-else>
+          </template>
+          <template v-else>
             <el-tree
-              @node-click="(val) => changeYearRangeTag(val, value)"
-              :data="[value]"
+              @node-click="(val) => changeYearRangeTag(val, value[0])"
+              :data="value"
               default-expand-all
               highlight-current
               :props="defaultProps"
@@ -74,7 +73,7 @@
                     class="radio"
                     v-if="data.policyQuantity"
                     :src="
-                      data.paramValue === filterParams[value.paramValue]
+                      data.paramValue === filterParams[value[0].paramValue]
                         ? radio_true
                         : radio_false
                     "
@@ -109,7 +108,7 @@
             >
               收起更多
             </p>
-          </div>
+          </template>
         </div>
       </div>
     </div>
@@ -120,14 +119,18 @@
         @onSearch="onSearch"
       />
       <div class="content" v-loading="loading">
-        <div class="item" v-for="item in pageData" :key="item.id">
+        <div class="item" v-for="item in pageData" :key="item.id + '7'">
           <BiddingDynamicsList :pageData="item" />
         </div>
         <el-empty
           v-if="pageData.length === 0 && !loading"
           description="数据快马加鞭补全中~"
         />
-        <Pagination :total="total" @onchangeCurrent="onchangeCurrent" />
+        <Pagination
+          :pageSize="limit"
+          :total="total"
+          @onchangeCurrent="onchangeCurrent"
+        />
       </div>
     </div>
   </div>
@@ -182,6 +185,7 @@ const getData = async () => {
     datas: {
       records?: {
         showDetail: boolean;
+        className: undefined | string;
         id: any;
         isPermissions: boolean;
       }[];
@@ -193,8 +197,14 @@ const getData = async () => {
   loading.value = false;
   if (data.resp_code === 0) {
     total.value = data.datas.total;
-    pageData.value = data.datas.records.map((item) => {
+    pageData.value = data.datas.records.map((item, index) => {
+      if (route.query.id === item.id) {
+        setTimeout(() => {
+          windowScrollStore().SET_SCROLL_TOP((index + 1) * 80 + 160);
+        });
+      }
       item.showDetail = route.query.id === item.id;
+      item.className = "";
       return item;
     });
   }
@@ -202,7 +212,7 @@ const getData = async () => {
 const filterOptions = ref([]);
 const filterOptionsData = computed(() => {
   const arr = cloneDeep(filterOptions.value);
-  const newArr = arr.map((item) => {
+  let newArr = arr.map((item) => {
     if (!multistage.value.includes(item.paramValue)) {
       if ("parentShowAll" in item) {
         item.dropDownBoxResp = item.dropDownBoxResp.filter(
@@ -230,6 +240,10 @@ const filterOptionsData = computed(() => {
     }
     return item;
   });
+
+  for (let i in newArr) {
+    newArr[i] = [newArr[i]];
+  }
   return newArr;
 });
 
@@ -253,33 +267,16 @@ const getTenderLookupFn = async () => {
   }
 };
 
-const itemCategoryRef = ref(null);
-const biddingContentTwoRef = ref(null);
-const provincialLevelRef = ref(null);
-const changeTag = (value) => {
-  let checked = [];
-  switch (value.paramValue) {
-    case "itemCategory":
-      checked = itemCategoryRef.value[0].getCheckedNodes();
-      break;
-    case "provincialLevel":
-      checked = provincialLevelRef.value[0].getCheckedNodes();
-      break;
-    default:
-    case "biddingContentTwo":
-      checked = biddingContentTwoRef.value[0].getCheckedNodes();
-      break;
-  }
-
+const treeRefFilter = ref(null);
+const changeTag = (value, index) => {
+  const checked = treeRefFilter.value[index].getCheckedNodes();
   filterParams.value[value.paramValue] = [];
   checked.forEach((item) => {
     if (!item.dropDownBoxResp || item.dropDownBoxResp.length === 0) {
       filterParams.value[value.paramValue].push(item.paramValue);
     }
   });
-
   page.value = 1;
-
   getData();
 };
 const handleShowAllClick = (key, _data) => {
@@ -381,7 +378,6 @@ onMounted(() => {
     width: 100%;
     margin-top: 24px;
     min-height: 200px;
-    height: 1964px;
     .item {
       width: 100%;
     }

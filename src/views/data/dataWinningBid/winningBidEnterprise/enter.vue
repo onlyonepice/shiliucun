@@ -30,10 +30,12 @@
     </div>
     <div :class="ns.b('eCharts-box')">
       <div
+        v-if="!isEmptyData"
         v-loading="loading"
         id="eChart-winningBidEnterprise"
         ref="eChartsDom"
       />
+      <EmptyData v-else />
       <ExportCanvasDialog
         :visible="exportVisible"
         :img-url="exportImgUrl"
@@ -50,10 +52,11 @@ import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("winningBidEnterprise");
 import { enterpriseAnalysis } from "@/api/data";
 import { get } from "lodash";
-import { enterpriseFormOptions } from "../data.js";
+import { enterpriseFormOptions } from "../data";
 import lament_icon from "@/assets/img/common/lament_icon.png";
 import * as echarts from "echarts";
 import { useUserStore } from "@/store/modules/user";
+const isEmptyData = ref(false);
 const echartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
@@ -171,13 +174,15 @@ watch(
 );
 const getData = async () => {
   loading.value = true;
+  isEmptyData.value = false;
   try {
-    const res = (await enterpriseAnalysis(requestData.value)) as any;
-    if (res.resp_code === 0) {
+    const res = await enterpriseAnalysis(requestData.value);
+    if (res.resp_code === 0 && res.datas.length) {
       echartOptions.value.series[0].data = [];
       echartOptions.value.series[1].data = [];
       echartOptions.value.series[2].data = [];
       echartOptions.value.xAxis.data = [];
+      echartOptions.value.xAxis.axisLabel.rotate = -90;
       const structure_encode_data = [];
       res.datas.forEach((item, index) => {
         if (index < 20) {
@@ -212,6 +217,8 @@ const getData = async () => {
         echartOptions.value.grid.bottom = "35%";
       }
       initECharts();
+    } else if (!res.datas.length) {
+      isEmptyData.value = true;
     }
     loading.value = false;
   } catch (e) {

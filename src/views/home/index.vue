@@ -2,7 +2,7 @@
   <div :class="[ns.b()]">
     <img
       :class="ns.b('homeBg')"
-      src="https://share.eesaexpo.com/report/3.0/home-head-bg.png"
+      src="https://share.eesaenergy.com/report/3.0/home-head-bg.png"
       alt=""
       @load="headerBgLoad"
     />
@@ -90,8 +90,7 @@ const onSearch = () => {
 
 .es-home-homeTopSearch {
   @include widthAndHeight(564px, 40px);
-  border-radius: 40px 40px 40px 40px;
-  background-color: red;
+  border-radius: 0 40px 40px 0;
   @include margin(0, auto, 0, auto);
   overflow: hidden;
   @include relative();
@@ -133,6 +132,7 @@ const onSearch = () => {
 
   .el-input__wrapper {
     padding: 8px 64px 8px 24px;
+    border-radius: 40px 0 0 40px;
   }
 }
 </style>

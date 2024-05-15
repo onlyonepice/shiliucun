@@ -98,7 +98,7 @@ import {
   titleStyle,
   computedColor,
   eChartsOptionCommon,
-} from "@/utils/eCharts";
+} from "@/utils/echarts/eCharts";
 import {
   getTimePrice,
   getMonthPrice,

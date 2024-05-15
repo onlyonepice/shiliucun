@@ -4,9 +4,8 @@
       <div class="select select-p">
         <span class="select__title">地区</span>
         <el-select
+          ref="regionSelect"
           :class="searchParams.regionName.length === 1 ? 'no-close-one' : ''"
-          @remove-tag="handelRemoveTag"
-          @visible-change="visibleChange"
           multiple
           collapse-tags
           collapse-tags-tooltip
@@ -15,6 +14,8 @@
           placeholder="请选择"
           class="select__content"
           @change="handleChange"
+          @remove-tag="handelRemoveTag"
+          @visible-change="visibleChange"
         >
           <el-option
             v-for="item in regionalData"
@@ -25,6 +26,7 @@
         </el-select>
       </div>
       <Select
+        @triggerForm="handleTriggerForm"
         :options="electricityTypes"
         :defaultValue="searchParams.electricityTypeOneName"
         value-key="paramName"
@@ -33,6 +35,7 @@
         @onChange="changeElectricityTypes"
       />
       <Select
+        @triggerForm="handleTriggerForm"
         :options="voltageLevelData"
         value-key="paramName"
         :label-key="'paramDesc'"
@@ -41,6 +44,7 @@
         title="电压等级"
       />
       <Select
+        @triggerForm="handleTriggerForm"
         :options="yearData"
         value-key="paramName"
         :label-key="'paramDesc'"
@@ -51,6 +55,7 @@
     </div>
     <div class="flex small-price-type">
       <Select
+        @triggerForm="handleTriggerForm"
         @onChange="changePriceDifference"
         :defaultValue="searchParams.differencePrice"
         :options="priceDifferenceData"
@@ -63,8 +68,8 @@
     </div>
     <div
       v-loading="loading"
-      id="my-chart_electricity-price-analysis"
       ref="myeCharts1"
+      id="my-chart_electricity-price-analysis"
     />
     <ExportCanvasDialog
       :visible="exportVisible"
@@ -84,11 +89,15 @@ import {
   getDifferentialRanking,
 } from "@/api/priceTracking";
 import { eChartsOptionCommon } from "./data";
-import { titleStyle, textStyle, flexStyle } from "@/utils/eCharts";
+import { titleStyle, textStyle, flexStyle } from "@/utils/echarts/eCharts";
 import * as echarts from "echarts";
+import { getToken } from "@/utils/auth";
 import { onMounted, computed, Ref, ref } from "vue";
 import Select from "@/components/Common/Select.vue";
 import ExportCanvasDialog from "@/components/Business/ExportCanvasDialog.vue";
+import { useUserStoreHook } from "@/store/modules/user";
+import { cloneDeep } from "lodash";
+const regionSelect = ref(null);
 const eChartsOption: Ref<any> = ref({
   ...eChartsOptionCommon(),
   tooltip: {
@@ -239,7 +248,7 @@ async function onGetPeakAndValley() {
   try {
     const { datas } = await getPeakAndValley();
     priceDifferenceData.value = datas;
-    searchParams.value.differencePrice = datas[0].paramName;
+    searchParams.value.differencePrice = datas[2].paramName;
   } catch (error) {
     console.error(error);
     loading.value = false;
@@ -273,43 +282,52 @@ function handleChange(val: Array<string>) {
   if (val.length === 0) {
     searchParams.value.regionName = ["全国"];
   }
+  if (!getToken()) {
+    regionSelect.value.blur();
+    return handleOpenLogin();
+  }
 }
 
 // 用电类型change
 function changeElectricityTypes(val: string) {
-  loading.value = true;
   searchParams.value.electricityTypeOneName = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   handelGetVoltageLevel();
 }
 
 // 电压等级change
 function changeVoltageLevel(val) {
-  loading.value = true;
   searchParams.value.tariffLevelId = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   onGetMonth();
 }
 
 // 月份change
 function changeMonth(val) {
-  loading.value = true;
   searchParams.value.years = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   getElectricityTypeOneName();
 }
 
 // 峰谷价差change
 function changePriceDifference(val) {
-  loading.value = true;
   searchParams.value.differencePrice = val;
+  if (!getToken()) {
+    return handleOpenLogin();
+  }
+  loading.value = true;
   getElectricityTypeOneName();
 }
 
-// 当地区选择框关闭时触发
-function visibleChange(val) {
-  if (!val) {
-    loading.value = true;
-    handelGetVoltageLevel();
-  }
-}
 // 删除tbg时触发
 function handelRemoveTag() {
   getElectricityTypeOneName();
@@ -332,7 +350,7 @@ async function getElectricityTypeOneName() {
     years,
   });
   eChartsOption.value.title.text =
-    titleText.value.years + "月各省市代理购电价峰谷价差排名";
+    titleText.value.years + "各省市代理购电价峰谷价差排名";
   eChartsOption.value.title.subtext = `·${titleText.value.electricityTypeOneName}·${titleText.value.tariffLevelId}·${titleText.value.differencePrice}`;
   eChartsOption.value.series[0].data = datas.map(
     (item) => item.electrovalenceDifference,
@@ -341,6 +359,10 @@ async function getElectricityTypeOneName() {
   eChartsOption.value.legend.data[0].name = seriesName;
   eChartsOption.value.series[1].data = datas.map((item) => item.sameRatio);
   eChartsOption.value.xAxis.data = datas.map((item) => item.regionName);
+  eChartsOption.value.xAxis.axisLabel.rotate = -90;
+  eChartsOption.value.xAxis.axisLabel.formatter = (params) => {
+    return params;
+  };
   loading.value = false;
   createEcharts();
 }
@@ -354,7 +376,27 @@ function createEcharts() {
     myChart.setOption(eChartsOption.value);
   }
 }
-
+// 当地区选择框关闭时触发
+function visibleChange(val) {
+  if (!val && getToken()) {
+    loading.value = true;
+    handelGetVoltageLevel();
+  } else if (val) {
+    handleTriggerForm();
+  }
+}
+const searchParams_deep = ref(null);
+// 用户触发表单
+function handleTriggerForm() {
+  searchParams_deep.value = cloneDeep(searchParams.value);
+}
+// 打开登录弹窗
+function handleOpenLogin() {
+  setTimeout(() => {
+    searchParams.value = { ...searchParams_deep.value };
+  });
+  useUserStoreHook().openLogin(true);
+}
 onMounted(() => {
   loading.value = true;
   // 获取所有数据
@@ -408,15 +450,6 @@ onMounted(() => {
 
       .select__content {
         flex: 1;
-        // ::v-deep(.el-select__wrapper) {
-        //   .el-select__selected-item {
-        //     .el-tag {
-        //       .el-tag__content {
-        //         max-width: 40px;
-        //       }
-        //     }
-        //   }
-        // }
       }
     }
 

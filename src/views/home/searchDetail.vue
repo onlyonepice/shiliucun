@@ -9,13 +9,15 @@
             placeholder="请输入关键字…"
             @keyup.enter="onSearch"
           />
-          <img
-            @click="handleClearTap"
-            v-show="searchContent"
-            :src="icon_clear"
-            class="icon_clear"
-            alt=""
-          />
+          <div class="icon_clear">
+            <img
+              @click="handleClearTap"
+              v-show="searchContent"
+              :src="icon_clear"
+              alt=""
+            />
+          </div>
+
           <div :class="ns.b('homeTopSearchIcon')" @click.stop="onSearch">
             <span>搜索</span>
             <img :src="searchIcon" alt="" />
@@ -92,8 +94,23 @@
                   />
                 </div>
               </template>
-              <!-- 季报月报 -->
+              <!-- 周/月/季报 -->
               <template v-if="key === 'QUARTERLY_AND_MONTHLY_REPORTS'">
+                <div
+                  class="text-item"
+                  @click="onDetailReport(row)"
+                  v-for="(row, rowKey) in pageOptions.All.data[key]"
+                  :key="rowKey"
+                >
+                  <p class="report-name" v-html="row.reportName" />
+                  <p
+                    class="report-introduction"
+                    v-html="row.contentOverview ?? '--'"
+                  />
+                </div>
+              </template>
+              <!-- 专家访谈 -->
+              <template v-if="key === 'INTERVIEW_EXPERT'">
                 <div
                   class="text-item"
                   @click="onDetailReport(row)"
@@ -146,20 +163,21 @@
 </template>
 
 <script lang="ts" setup>
-import search_null from "@/assets/img/common/search_null.png";
-const { VITE_I_REPORT_URL } = import.meta.env;
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
+import { useUserStoreHook } from "@/store/modules/user";
+import { globalSearch, getByKeyword } from "@/api/home";
+import { windowScrollStore } from "@/store/modules/windowScroll";
 import icon_clear from "@/assets/img/common/icon_clear.png";
 import searchIcon from "@/assets/img/common/search-icon.png";
-import { globalSearch, getByKeyword } from "@/api/home";
-import return_on_investment from "@/assets/img/common/return_on_investment.png";
-import price_tracking from "@/assets/img/common/price_tracking.png";
-import winning_bid_tracking from "@/assets/img/common/winning_bid_tracking.png";
-import policy_tracking from "@/assets/img/common/policy_tracking.png";
+import search_null from "@/assets/img/common/search_null.png";
 import financing_plan from "@/assets/img/common/financing_plan.png";
-import { useRouter } from "vue-router";
-import { windowScrollStore } from "@/store/modules/windowScroll";
+import price_tracking from "@/assets/img/common/price_tracking.png";
+import policy_tracking from "@/assets/img/common/policy_tracking.png";
+import return_on_investment from "@/assets/img/common/return_on_investment.png";
+import winning_bid_tracking from "@/assets/img/common/winning_bid_tracking.png";
 windowScrollStore().SET_SCROLL_TOP(0);
 const router = useRouter();
 const loading = ref(false);
@@ -173,9 +191,10 @@ const searchContent = ref<any>("");
 const currentTab = ref("All") as any;
 const pageOptions = ref<any>({
   All: { name: "搜索结果", data: {}, show: true },
+  INTERVIEW_EXPERT: { name: "专家访谈", show: false },
   Energy_Storage_Frontier: { name: "储能前沿", show: false },
   REAL_TIME_INFORMATION: { name: "行业洞察", show: false },
-  QUARTERLY_AND_MONTHLY_REPORTS: { name: "季报月报", show: false },
+  QUARTERLY_AND_MONTHLY_REPORTS: { name: "周/月/季报", show: false },
   WHITE_PAPER: { name: "白皮书", show: false },
   ONLINE_REPORT: { name: "在线报告", show: false },
 }) as any;
@@ -245,6 +264,7 @@ const searchFn = async () => {
         if (data.datas[key].length > 0) {
           isNull = false;
         }
+        // 根据搜索结果展示相对应的tab
         if (data.datas[key].length > 0 || key === "All") {
           pageOptions.value[key].show = true;
         } else {
@@ -253,7 +273,7 @@ const searchFn = async () => {
         if (searchContent.value !== "") {
           data.datas[key].forEach((item) => {
             Object.keys(item).forEach((children) => {
-              if (children !== "reportCover") {
+              if (children !== "reportCover" && children !== "writingTime") {
                 if (typeof item[children] === "string") {
                   item[children] = item[children].replace(
                     searchContent.value,
@@ -296,10 +316,10 @@ const handleClearTap = () => {
 };
 // 跳转报告详情
 const onDetailReport = async (item) => {
-  window.open(
-    `${VITE_I_REPORT_URL}#/report-detail-pdf_V2?id=${item.id}&type=${item.type}&parent=季报月报&moduleName=${item.moduleName}&from=/alliance-insight/quarterly-monthly`,
-    "_blank",
-  );
+  if (!getToken()) {
+    return useUserStoreHook().openLogin(true);
+  }
+  router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 };
 const handleLinkClick = (link) => {
   window.open(link);
@@ -326,13 +346,28 @@ onMounted(() => {
         @include margin(0, auto, 0, auto);
         @include relative();
 
+        ::v-deep(.el-input) {
+          .el-input__wrapper .el-input__inner {
+            padding-right: 88px;
+          }
+          .el-input__wrapper {
+            background-color: #ffffff !important;
+          }
+        }
+
         .icon_clear {
           @include widthAndHeight(20px, 20px);
+          border-radius: 50%;
           @include absolute(1, 14px, 112px, none, none);
-          cursor: pointer;
+          @include flex(center, center);
 
-          &:hover {
-            @include widthAndHeight(22px, 22px);
+          img {
+            cursor: pointer;
+            @include widthAndHeight(100%, 100%);
+            opacity: 0.8;
+            &:hover {
+              opacity: 1;
+            }
           }
         }
       }
@@ -391,6 +426,7 @@ onMounted(() => {
       width: 100%;
       padding-bottom: 80px;
       min-height: 316px;
+
       .search_null {
         width: 100%;
         height: 316px;
@@ -398,16 +434,19 @@ onMounted(() => {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
         img {
           width: 120px;
           height: 120px;
         }
+
         :nth-child(2) {
           font-weight: 600;
           font-size: 20px;
           color: rgba(0, 0, 0, 0.9);
           line-height: 28px;
         }
+
         :nth-child(3) {
           font-weight: 400;
           font-size: 14px;
@@ -415,6 +454,7 @@ onMounted(() => {
           line-height: 22px;
         }
       }
+
       .search-content_item {
         width: 100%;
         display: flex;
@@ -470,6 +510,7 @@ onMounted(() => {
           display: flex;
           cursor: pointer;
           margin-bottom: 24px;
+
           &:hover {
             box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
           }

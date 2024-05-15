@@ -14,6 +14,8 @@
       @change="handleChange"
       @visible-change="handleVerifyLogin"
       :disabled="props.disabled"
+      :multiple="multiple"
+      ref="selectDom"
     >
       <el-option
         v-for="item in options"
@@ -112,7 +114,7 @@ const props = defineProps({
     default: "label",
   },
   defaultValue: {
-    type: [Number, String],
+    type: [Number, String, Array],
     default: "",
   },
   disabled: {
@@ -127,9 +129,14 @@ const props = defineProps({
     type: Number,
     default: 999999,
   },
+  multiple: {
+    type: Boolean,
+    default: false,
+  },
 });
-const value: any = ref(""); // 选中值
+const value: any = ref("" || []); // 选中值
 const model = defineModel();
+const selectDom = ref(); // 获取select组件
 watch(
   () => props.defaultValue,
   (val) => {
@@ -150,6 +157,14 @@ function handleVerifyLogin(data: any) {
 function handleFocusVerifyLogin() {
   emit("triggerForm");
 }
+
+function onBlur() {
+  selectDom.value.blur();
+}
+
+defineExpose({
+  onBlur,
+});
 </script>
 
 <style scoped lang="scss">

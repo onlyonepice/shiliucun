@@ -2,7 +2,7 @@
   <div :class="[ns.b()]">
     <template v-if="isLoading">
       <div class="title">
-        <p class="title_text">行业数据。</p>
+        <p class="title_text">行业数据</p>
         <img @click="handleJump" :src="rightArrow" alt="" />
       </div>
       <div class="content">
@@ -27,10 +27,16 @@
             />
           </div>
           <div v-show="currentTab === 'newPolicy'">
-            <policyList
+            <!-- <policyList
               v-for="(item, index) in policyData"
               :key="index"
               :pageData="item"
+            /> -->
+            <biddingDynamicsList
+              v-for="(item, index) in policyData"
+              :key="index"
+              :pageData="item"
+              source="policy"
             />
           </div>
         </div>

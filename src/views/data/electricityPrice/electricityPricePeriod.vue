@@ -6,6 +6,35 @@
       </el-button>
     </div>
     <div class="content">
+      <el-table :data="elTableData" style="width: 100%" height="100%">
+        <el-table-column width="150" fixed prop="regionName" label="地区" />
+        <el-table-column width="140" fixed prop="month" label="月份" />
+        <el-table-column width="35" prop="" label="" />
+        <el-table-column
+          v-for="(item, index) in tableKeys"
+          :key="item"
+          width="64"
+          :prop="item"
+          :label="item"
+        >
+          <template #default="scope">
+            <div
+              v-if="index !== tableKeys.length"
+              class="electricity-price-status"
+            >
+              <div
+                v-for="status in scope.row[item]"
+                :key="status"
+                class="electricity-price-status-item"
+                :style="setColor(status)"
+              >
+                {{ status }}
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column width="64" prop="" label="1:00" /> -->
+      </el-table>
       <div ref="faultTree" class="box">
         <div v-if="showLoading">
           <img
@@ -75,15 +104,24 @@
   </div>
 </template>
 <script setup lang="ts">
+import { cloneDeep } from "lodash";
 import { timeLIstTr } from "./data";
-import { getNewTimeSharing } from "@/api/priceTracking";
 import html2canvas from "html2canvas";
-import { ref, nextTick } from "vue";
+import { ref, nextTick, computed } from "vue";
+import { getNewTimeSharing } from "@/api/priceTracking";
 const showLoading = ref(false);
 const tableData = ref([]);
+const elTableData = ref([]);
 const dataURL = ref("");
 const faultTree = ref(null);
 const thList = ref<Array<string>>(timeLIstTr);
+
+const tableKeys = computed(() => {
+  const keyArr = cloneDeep(timeLIstTr);
+  keyArr.splice(0, 2);
+  return keyArr;
+});
+
 function clickGeneratePicture() {
   showLoading.value = true;
   nextTick(() => {
@@ -106,9 +144,23 @@ function clickGeneratePicture() {
       });
   });
 }
+
 async function getData() {
   const { datas } = await getNewTimeSharing();
   if (datas.length > 0) {
+    elTableData.value = datas.map((item) => {
+      const tableTrObj = {};
+      for (const key in item) {
+        if (key.includes("-")) {
+          const str = key.split("-")[0];
+          tableTrObj[str.startsWith("0") ? str.substring(1) : str] =
+            item[key].split(",");
+        } else {
+          tableTrObj[key] = item[key];
+        }
+      }
+      return tableTrObj;
+    });
     tableData.value = datas
       .map((item) => {
         let row = Object.values(item);
@@ -126,32 +178,36 @@ async function getData() {
       });
   }
 }
-function setColor(item) {
-  let color, backgroundColor;
-  switch (item) {
-    case "低":
-      color = "#50B142";
-      backgroundColor = "#EDF7EC";
-      break;
-    case "平":
-      color = "#F1AD10";
-      backgroundColor = "#FFFAE8";
-      break;
-    case "高":
-      color = "#FF7D00";
-      backgroundColor = "#FFF2E5";
-      break;
-    case "尖":
-      color = "#F53F3F";
-      backgroundColor = "#FEEBEB";
-      break;
-    case "深":
-      color = "#C34FF1";
-      backgroundColor = "#F9EDFD";
-      break;
-  }
-  return `color:${color};background-color:${backgroundColor};`;
-}
+
+const setColor = computed(() => {
+  return (item) => {
+    let color, backgroundColor;
+    switch (item) {
+      case "低":
+        color = "rgba(1, 184, 43, 1)";
+        backgroundColor = "rgba(1, 184, 43, .1)";
+        break;
+      case "平":
+        color = "rgba(255, 175, 11, 1)";
+        backgroundColor = "rgba(255, 175, 11, .1)";
+        break;
+      case "高":
+        color = "#FF7D00";
+        backgroundColor = "#FFF2E5";
+        break;
+      case "尖":
+        color = "#F53F3F";
+        backgroundColor = "#FEEBEB";
+        break;
+      case "深":
+        color = "#C34FF1";
+        backgroundColor = "#F9EDFD";
+        break;
+    }
+    return `color:${color};background-color:${backgroundColor};`;
+  };
+});
+
 function setStyle(item) {
   let width = 64;
   switch (item) {
@@ -164,9 +220,12 @@ function setStyle(item) {
   }
   return `width:${width}px;`;
 }
+
 getData();
 </script>
 <style lang="scss" scoped>
+@import "@/style/mixin.scss";
+
 .province-peak-valley-time {
   width: 100%;
   padding-bottom: 80px;
@@ -176,12 +235,18 @@ getData();
     display: flex;
     flex-direction: row-reverse;
   }
+
   .content {
     width: 100%;
     height: 68vh;
-    overflow: auto;
+    overflow: hidden;
+    position: relative;
 
     .box {
+      transform: scale(1);
+      position: absolute;
+      left: 300%;
+      top: 0;
       background-color: white;
       position: relative;
       width: 1928px;
@@ -194,6 +259,7 @@ getData();
         width: 489px;
         height: 319px;
       }
+
       .th-box {
         height: 48px;
         background: #f2f3f5;
@@ -202,7 +268,6 @@ getData();
         align-items: center;
         padding: 16px 13px;
         box-sizing: border-box;
-        margin-bottom: 4px;
 
         .td {
           font-size: 14px;
@@ -256,6 +321,77 @@ getData();
         color: #1c232f;
         margin-top: 24px;
         padding-right: 32px;
+      }
+    }
+  }
+
+  ::v-deep(.el-table) {
+    .el-table__body-wrapper {
+      margin-top: 4px;
+    }
+
+    .el-table__header {
+      .el-table__cell {
+        transform: translate(-32px, 0);
+
+        .cell {
+          padding: 0;
+          text-align: center;
+        }
+
+        &:nth-child(1) {
+          padding-left: 24px;
+        }
+
+        &:nth-child(1),
+        &:nth-child(2) {
+          transform: translate(0, 0);
+
+          .cell {
+            text-align: left;
+          }
+        }
+      }
+    }
+
+    .el-table__body {
+      .el-table__row {
+        background-color: none !important;
+
+        .el-table__cell {
+          padding: 0;
+          border: none;
+
+          &:nth-child(1) {
+            padding-left: 24px;
+          }
+
+          &:last-child {
+            .cell {
+              .electricity-price-status {
+                border: 0px;
+              }
+            }
+          }
+
+          .cell {
+            padding: 0;
+
+            .electricity-price-status {
+              border-right: 1px solid #d0d6e2;
+              @include flex(flex-start, flex-start);
+              width: 64px;
+              height: 48px;
+              margin: 4px 0;
+
+              .electricity-price-status-item {
+                height: 100%;
+                @include flex();
+                flex: 1;
+              }
+            }
+          }
+        }
       }
     }
   }

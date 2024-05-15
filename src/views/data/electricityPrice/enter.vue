@@ -1,5 +1,6 @@
 <template>
   <div id="electricity-price" class="es-commonPage electricity-price page">
+    <ElectricityImage />
     <div class="price-type">
       <div
         class="price-type__item"

@@ -40,7 +40,7 @@
           ]"
         >
           <div>
-            <h5>手机号码 | <span @click="onModifyMobile">修改</span></h5>
+            <h5>手机号码</h5>
             <div :class="ns.be('item', 'value')">
               {{ modifyInfoFreeze.mobile }}
             </div>
@@ -261,6 +261,9 @@
               }
             "
           />
+          <div @click="onHandleModifyMobile" class="edit-phone-number_btn">
+            修改
+          </div>
         </div>
         <div :class="ns.be('content', 'infoDialog')">
           <span>微信号码</span>
@@ -443,6 +446,10 @@ const onGetArea = async () => {
 const onModifyMobile = () => {
   visibleMobile.value = !visibleMobile.value;
 };
+function onHandleModifyMobile() {
+  visibleMobile.value = true;
+  visibleInfoSet.value = false;
+}
 // 点击取消或确定按钮
 const onHandleClose = async (type: boolean) => {
   if (!type) {
@@ -593,10 +600,6 @@ const onSendCode = async () => {
   &:nth-last-child(1) {
     @include margin(0, 0, 0, 0);
   }
-  span {
-    color: #244bf1;
-    cursor: pointer;
-  }
 }
 .es-homePersonalInfo-content__item--special {
   @include flex(center, space-between, nowrap);
@@ -664,12 +667,23 @@ const onSendCode = async () => {
   }
 }
 .es-homePersonalInfo-content__infoDialog {
+  position: relative;
   @include margin(0, 0, 16px, 0);
   .select {
     flex: 1;
   }
   &:nth-last-child(1) {
     @include margin(0, 0, 0, 0);
+  }
+  .edit-phone-number_btn {
+    position: absolute;
+    top: 0;
+    right: 8px;
+    height: 100%;
+    z-index: 1;
+    cursor: pointer;
+    @include flex();
+    @include font(14px, 600, #244bf1, 22px);
   }
 }
 </style>

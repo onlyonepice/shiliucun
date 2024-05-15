@@ -60,7 +60,7 @@
                       searchResult.revenueEstimationResps.futureIncome.length -
                         1
                     ]
-                  }}</span
+                  }}/元</span
                 >
               </div>
             </div>

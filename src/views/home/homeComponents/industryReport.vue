@@ -3,7 +3,7 @@
     <template v-if="isLoading">
       <div class="content">
         <div class="title">
-          <p class="title_text">行业报告。</p>
+          <p class="title_text">行业报告</p>
           <img @click="handleListClick" :src="rightArrow" alt="" />
         </div>
         <div class="list-box">

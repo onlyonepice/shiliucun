@@ -1,3 +1,4 @@
+import downloadBg from "@/assets/img/common/ECharts-bgc.png";
 /*
  * 地图Canvas
  */
@@ -5,6 +6,7 @@ export function EChartOptions() {
   return {
     title: {
       text: "",
+      top: "20",
       x: "center",
       textStyle: {
         fontSize: 18,
@@ -14,8 +16,7 @@ export function EChartOptions() {
       },
     },
     grid: {
-      bottom: "40%",
-      containLabel: true,
+      top: "10%",
     },
     dataRange: {
       show: false,
@@ -30,14 +31,27 @@ export function EChartOptions() {
       show: false,
       borderColor: "#fff",
     },
-
+    graphic: [
+      {
+        type: "image",
+        left: "center",
+        bottom: "center",
+        style: {
+          image: downloadBg, // 图片的 URL
+          width: 415, // 图片宽度
+          height: 342, // 图片高度
+        },
+        z: 999,
+      },
+    ],
     series: [
       {
         name: "china",
         type: "map",
+        top: "30%",
         map: "china",
         itemStyle: {
-          borderColor: "#fff",
+          borderColor: "#eee",
           borderBox: true,
           borderWidth: 2,
           borderType: "solid",
@@ -48,8 +62,7 @@ export function EChartOptions() {
             formatter: "{b}\n{c}",
           },
         },
-
-        zoom: 1.2,
+        zoom: 1.6,
         label: {
           show: false,
           fontSize: 14,
@@ -68,11 +81,6 @@ export function EChartOptions() {
         },
         select: {
           disabled: false, //可以被选中
-          // itemStyle: {
-          //   areaColor: "#FFF2E5",
-          //   borderColor: "#FF7D00",
-          //   borderWidth: 1,
-          // },
         },
         emphasis: {
           itemStyle: {

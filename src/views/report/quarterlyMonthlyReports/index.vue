@@ -1,7 +1,7 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
     <div :class="ns.b('main')" v-if="!isSkeleton">
-      <div :class="ns.bm('main', 'title')">月报季报。</div>
+      <div :class="ns.bm('main', 'title')">周/月/季报</div>
       <div :class="ns.b('list')">
         <TimeList
           :list="listItem"

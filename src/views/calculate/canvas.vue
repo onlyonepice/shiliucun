@@ -46,7 +46,7 @@ import {
   titleStyle,
   textStyle,
   flexStyle,
-} from "@/utils/eCharts";
+} from "@/utils/echarts/eCharts";
 import TipsIcon from "@/assets/img/common/lament_icon.png";
 import { apiCanvasData, apiSliderConfig } from "@/api/investment";
 const emit = defineEmits(["onSearch"]);
@@ -58,6 +58,10 @@ const props = defineProps({
   searchCanvas: {
     type: Boolean,
     default: false,
+  },
+  searchParamsShow: {
+    type: Object,
+    default: () => {},
   },
 });
 const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
@@ -265,7 +269,13 @@ async function getSliderConfig() {
 onMounted(() => {
   window.addEventListener("resize", onHandleResize);
   const _defaultData = echartsConfig.value;
-  eChartsOption.value.title.text = `代理工商业购电分月电价图`;
+  const {
+    regionName,
+    electricityTypeOneName,
+    tariffLevelId,
+    electricityTypeTwoName,
+  } = props.searchParamsShow;
+  eChartsOption.value.title.text = `${regionName}·${electricityTypeOneName}·${tariffLevelId}·${electricityTypeTwoName}·代理购电分月价差图`;
   let _color = [];
   let _data = [];
   _defaultData.forEach((item) => {

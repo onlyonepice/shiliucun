@@ -3,7 +3,7 @@
     <template v-if="isLoading">
       <img :class="ns.b('header-bg')" :src="selected_articles_bg" alt="" />
       <div class="content">
-        <p :class="ns.b('title')">行业分析。</p>
+        <p :class="ns.b('title')">行业分析</p>
         <div :class="ns.b('tab-list')">
           <div
             class="tab-item"

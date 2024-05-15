@@ -129,6 +129,7 @@ class PureHttp {
           switch (code) {
             // 无登录
             case 1001:
+              ElMessage.error(data?.resp_msg);
               onErrorHandling();
               break;
             // token过期
@@ -154,6 +155,8 @@ class PureHttp {
       },
       (error: PureHttpError) => {
         const $error = error;
+        ElMessage.error($error);
+        // onErrorHandling();
         $error.isCancelRequest = Axios.isCancel($error);
         // 所有的响应异常 区分来源为取消请求/非取消请求
         return Promise.reject($error);

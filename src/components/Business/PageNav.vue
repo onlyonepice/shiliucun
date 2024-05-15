@@ -82,7 +82,7 @@ import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
 import PersonalAvatar from "@/assets/img/common/personal-avatar.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
-const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
+const { VITE_INDUSTRIALMAP_URL, VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
 const router = useRouter();
 const route = useRoute();
@@ -122,7 +122,7 @@ const navList: Ref<Array<NavList>> = ref([
     children: [
       { id: 1, text: "行业洞察", path: "/industryInsight" },
       { id: 1, text: "专家访谈", path: "/expertInterviews" },
-      { id: 2, text: "季报月报", path: "/quarterlyMonthlyReports" },
+      { id: 2, text: "周/月/季报", path: "/quarterlyMonthlyReports" },
       { id: 3, text: "在线报告", path: "/reportOnLine?source=在线报告" },
       { id: 4, text: "白皮书", path: "/reportWhitePaper" },
     ],
@@ -151,7 +151,12 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 5,
         text: "行业数据库",
-        path: "/dataBase",
+        path: `${VITE_DATABASE_URL}/#/home`,
+      },
+      {
+        id: 6,
+        text: "电价API",
+        path: `${VITE_DATABASE_URL}/#/ApiPage`,
       },
     ],
   },
@@ -170,7 +175,10 @@ const navList: Ref<Array<NavList>> = ref([
     id: 5,
     text: "企业",
     path: ["/enterprise"],
-    children: [{ id: 1, text: "产业链地图", path: VITE_INDUSTRIALMAP_URL }],
+    children: [
+      { id: 1, text: "产业链地图", path: VITE_INDUSTRIALMAP_URL },
+      { id: 2, text: "查产品", path: "/searchProduct" },
+    ],
   },
   {
     id: 6,
@@ -272,6 +280,21 @@ watch(
   () => useUserStoreHook().$state.token,
   (token) => {
     showLogin.value = token !== "";
+  },
+  { immediate: true },
+);
+// 监听用户信息
+watch(
+  () => useUserStoreHook().$state.userInfo.roles,
+  (val) => {
+    const _storageVIP = window.localStorage.getItem("VIP");
+    if (_storageVIP) {
+      navList.value[6].text =
+        _storageVIP === "PERSON_ORDINARY_USER" ? "开通VIP" : "升级VIP";
+    } else {
+      navList.value[6].text =
+        val === "PERSON_ORDINARY_USER" ? "开通VIP" : "升级VIP";
+    }
   },
   { immediate: true },
 );
@@ -409,15 +432,16 @@ const onLogin = () => {
   transition: all 0.2s ease-out;
 
   .es-pageNav-list--item {
-    @include widthAndHeight(88px, 56px);
+    height: 56px;
+    width: 88px;
     @include flex(flex-start, center, wrap);
     @include padding(0, 16px, 0, 0);
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease-out;
-    &:nth-of-type(7) {
-      @include padding(0, 0, 0, 0);
-    }
+    // &:nth-of-type(7) {
+    //   width: auto;
+    // }
     .es-pageNav-underline {
       @include widthAndHeight(0, 2px);
       background-color: #244bf1;
@@ -453,7 +477,7 @@ const onLogin = () => {
   }
 }
 .es-pageNav-item--title {
-  @include widthAndHeight(88px, 56px);
+  @include widthAndHeight(auto, 56px);
   line-height: 56px;
   @include relative();
 }

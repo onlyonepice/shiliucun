@@ -52,8 +52,8 @@ import { onMounted, ref, Ref, nextTick } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getRegionDynamicsListApi, getRegionColorApi } from "@/api/data";
-import { EChartOptions, charsToRemove } from "@/utils/mapECharts";
-import { cloneDeep } from "lodash";
+import { EChartOptions, charsToRemove } from "@/utils/echarts/mapAndPieECharts";
+import { cloneDeep, toNumber } from "lodash";
 import chinaMap from "@/assets/map/china.json";
 import { useUserStore } from "@/store/modules/user";
 const eChartsOption: Ref<any> = ref(EChartOptions());
@@ -77,16 +77,14 @@ const props = defineProps({
 });
 const contentDict: Ref<string | number> = ref(props.contentFilter[0].id); // 筛选项结果
 const releaseTime: Ref<string | number> = ref("");
-onMounted(() => {
-  getRegionColor();
-});
+
 const getReleaseTime = () => {
   const _data = props.timeFilter.filter((item) => {
     return item.defaultValue;
   });
   releaseTime.value = _data[0].paramValue;
 };
-getReleaseTime();
+
 // 招标内容筛选项改变
 const onChangeFilter = (id: string | number, type: string) => {
   type === "contentDict" ? (contentDict.value = id) : (releaseTime.value = id);
@@ -106,11 +104,13 @@ const onChangeFilter = (id: string | number, type: string) => {
 // 获取eCharts数据
 async function getElectricityTypeOneName() {
   loading.value = true;
-  const { datas }: any = await getRegionDynamicsListApi({
+  const {
+    datas: { data, donutChart },
+  }: any = await getRegionDynamicsListApi({
     contentDict: contentDict.value,
     releaseTime: releaseTime.value,
   });
-  datas.map((item) => {
+  data.map((item) => {
     item.regionName = item.province;
     item.value = item.data;
   });
@@ -125,8 +125,17 @@ async function getElectricityTypeOneName() {
     },
   };
   // 设置省份数据，chinaMap 省份名字需要与后端反的省份一致才展示
-  eChartsOption.value.series[0].zoom = 1.2;
-  eChartsOption.value.series[0].data = datas
+  eChartsOption.value.series[1].data = donutChart.map((item) => {
+    return {
+      name: item.name,
+      value: toNumber(item.energyScale),
+      data: {
+        powerScale: toNumber(item.powerScale),
+        energyScale: toNumber(item.energyScale),
+      },
+    };
+  });
+  eChartsOption.value.series[0].data = data
     .map((item) => {
       return {
         name: item.regionName.replace(
@@ -150,21 +159,21 @@ async function getElectricityTypeOneName() {
     borderColor: "#fff",
     formatter: (params) => {
       if (params.value && params.value > 0) {
+        const { data } = params;
         const contentTitle = `font-size: 16px; font-weight: 600; color: #1C232F; margin-bottom:8px; line-height: 24px;`;
         const pStyle = `width: 208px; height: 32px; background: #F4F5F7; display:flex; justify-content:space-between; align-item:center; padding:5px 8px; border-radius: 4px 4px 0 0;`;
         const spanTitle = `font-size: 14px; font-weight: 400; color: #5B6985; ine-height: 22px;`;
         const spanValue = `font-size: 14px; font-weight: 600; color: #1C232F; line-height: 22px;`;
         return `
-              <p style='${contentTitle}'>${params.name}</p>
-              <p style='${pStyle}'>
-                <span style='${spanTitle}'>能量</span>
-                <span style='${spanValue}'>${params.data.data.energyScale}MWh</span>
-              </p>
-              <p style='=${pStyle}'>
-                <span style='style='${spanTitle}''>功率</span>
-                <span style='${spanValue}'>${params.data.data.powerScale}MW</span>
-              </p>
-            `;
+        <p style='${contentTitle}'>${params.name}</p>
+          <p style='${pStyle}'>
+            <span style='${spanTitle}'>能量</span>
+            <span style='${spanValue}'>${data.data.energyScale}MWh</span>
+          </p>
+          <p style='=${pStyle}'>
+            <span style='style='${spanTitle}''>功率</span>
+            <span style='${spanValue}'>${data.data.powerScale}MW</span>
+          </p>`;
       } else {
         return "";
       }
@@ -173,6 +182,7 @@ async function getElectricityTypeOneName() {
   loading.value = false;
   createECharts();
 }
+
 // 创建图表
 function createECharts() {
   const _chinaMap = cloneDeep(chinaMap);
@@ -219,6 +229,7 @@ const getRegionColor = async () => {
     getElectricityTypeOneName();
   }
 };
+
 // 导出图片
 function exportResult() {
   const _echarts = echarts.getInstanceByDom(eChartsDom.value);
@@ -230,31 +241,43 @@ function exportResult() {
   exportImgTitle.value = "储能月度招标分析";
   exportVisible.value = true;
 }
+
+onMounted(() => {
+  getRegionColor();
+});
+getReleaseTime();
 </script>
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+
 #eChart_areaAnalysis {
-  @include widthAndHeight(1152px, 850px);
+  @include widthAndHeight(100%, 500px);
   margin-top: 32px;
 }
+
 .es-dataAreaAnalysis-top {
   @include flex(center, space-between, nowrap);
 }
+
 .es-dataAreaAnalysis-top__left {
   @include flex(center, flex-start, nowrap);
+
   & > div {
     @include flex(center, flex-start, nowrap);
     margin-right: 24px;
   }
+
   .es-dataAreaAnalysis-top__title {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     margin-right: 16px;
     flex: 1;
   }
 }
+
 .es-dataAreaAnalysis-top__right {
   @include flex(center, flex-start, nowrap);
+
   .es-dataAreaAnalysis-top__line {
     @include widthAndHeight(1px, 24px);
     display: inline-block;

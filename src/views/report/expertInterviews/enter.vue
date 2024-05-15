@@ -1,80 +1,123 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
-    <div :class="ns.b('title')">专家访谈</div>
-    <div :class="ns.b('content')">
-      <div :class="ns.be('content', 'records')">
-        <div
-          v-for="item in interviewRecordsData"
-          :key="item.id"
-          @click="handleOpenReport(item)"
-          :class="ns.be('content', 'records_item')"
-        >
-          <div :class="ns.be('content', 'records_item-title')">
-            <a :href="item.link" target="_blank" onclick="return false;">{{
-              item.reportName
-            }}</a>
-          </div>
-          <div :class="ns.be('content', 'records_item-content')">
-            <div :class="ns.be('content', 'records_item-content-left')">
-              <div
-                class="tag-item"
-                v-for="(tag, index) in item.reportTag"
-                :key="index"
+    <Skeleton v-if="skeletonScreen" />
+    <template v-else>
+      <div :class="ns.b('title')">专家访谈</div>
+      <div :class="ns.b('content')">
+        <div v-loading="loading" :class="ns.be('content', 'records')">
+          <div
+            v-for="item in interviewRecordsData"
+            :key="item.id"
+            @click="handleOpenReport(item)"
+            :class="ns.be('content', 'records_item')"
+          >
+            <div :class="ns.be('content', 'records_item-title')">
+              <a
+                :href="reportLink(item)"
+                target="_blank"
+                onclick="return false;"
+                >{{ item.reportName }}</a
               >
-                {{ tag }}
-              </div>
             </div>
-            <div :class="ns.be('content', 'records_item-content-right')">
-              <span v-for="author in item.author" :key="author" class="author">
-                {{ author }}
-              </span>
-              <span v-if="item.author?.length" class="line">|</span>
-              <span>{{ item.writingTime }}</span>
+            <div :class="ns.be('content', 'records_item-content')">
+              <div :class="ns.be('content', 'records_item-content-left')">
+                <div
+                  class="tag-item"
+                  v-for="(tag, index) in item.reportTag"
+                  :key="index"
+                >
+                  {{ tag }}
+                </div>
+              </div>
+              <div :class="ns.be('content', 'records_item-content-right')">
+                <span
+                  v-for="author in item.author"
+                  :key="author"
+                  class="author"
+                >
+                  {{ author }}
+                </span>
+                <span v-if="item.author?.length" class="line">|</span>
+                <span>{{ item.writingTime }}</span>
+              </div>
             </div>
           </div>
         </div>
+        <div
+          v-if="paginationTotal > 10"
+          :class="ns.be('content', 'pagination')"
+        >
+          <el-pagination
+            v-model:current-page="pagination.page"
+            :page-size="pagination.limit"
+            background
+            hide-on-single-page
+            layout="total, prev, pager, next"
+            :total="paginationTotal"
+            @current-change="handleCurrentChange"
+          />
+        </div>
       </div>
-      <div v-if="paginationTotal > 10" :class="ns.be('content', 'pagination')">
-        <el-pagination
-          v-model:current-page="pagination.page"
-          :page-size="pagination.limit"
-          background
-          hide-on-single-page
-          layout="total, prev, pager, next"
-          :total="paginationTotal"
-          @current-change="handleCurrentChange"
-        />
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
-import { getExpertInterviewList } from "@/api/data";
+import { ref, computed } from "vue";
+import Skeleton from "./skeleton.vue";
+import { useRouter } from "vue-router";
+import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
-const ns = useNamespace("expertInterviews");
+import { useUserStore } from "@/store/modules/user";
+import { getExpertInterviewList } from "@/api/data";
+
+const router = useRouter();
 const paginationTotal = ref<number>(0);
+const ns = useNamespace("expertInterviews");
 const pagination = ref({ limit: 10, page: 1 });
 const interviewRecordsData = ref<Array<any>>([]);
+
+const loading = ref(false);
+const skeletonScreen = ref(true);
+
+const reportLink = computed(() => {
+  return (item: any) => {
+    if (!getToken()) {
+      // 没有token则返回一个没有的路劲这样链接就不会置灰
+      return `/#/undefined?id=${item.id}&moduleName=${item.moduleName}`;
+    }
+    // 有token则把详情的链接返回出去如果看过这份报告<a>链接会自动置灰
+    return `${window.location.origin}/#/reportDetail?id=${item.id}&moduleName=${item.moduleName}`;
+  };
+});
 // 分页
 function handleCurrentChange(val: number) {
   pagination.value.page = val;
   getExpertInterviews();
 }
 async function getExpertInterviews() {
-  const {
-    datas: { total, records },
-    resp_code,
-  } = await getExpertInterviewList({
-    ...pagination.value,
-  });
-  if (resp_code === 0) {
-    paginationTotal.value = total;
-    interviewRecordsData.value = records;
+  loading.value = true;
+  try {
+    const {
+      datas: { total, records },
+      resp_code,
+    } = await getExpertInterviewList({
+      ...pagination.value,
+    });
+    if (resp_code === 0) {
+      paginationTotal.value = total;
+      interviewRecordsData.value = records;
+    }
+  } finally {
+    loading.value = false;
+    skeletonScreen.value = false;
   }
 }
 function handleOpenReport(item: any) {
-  window.open(item.link);
+  // 用户未登录则打开登录弹窗
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
+  router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 }
 getExpertInterviews();
 </script>

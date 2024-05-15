@@ -1,7 +1,7 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
     <div :class="ns.b('main')">
-      <div :class="ns.bm('main', 'title')">行业洞察。</div>
+      <div :class="ns.bm('main', 'title')">行业洞察</div>
       <div :class="ns.b('list')">
         <IndustryInsightList
           v-for="(item, index) in industryInsightList"
