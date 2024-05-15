@@ -108,6 +108,7 @@ watch(useUserStore().$state, (val: any) => {
 const onLogin = () => {
   useUserStore().openLogin(true);
 };
+
 const getBg = computed(() => {
   return route.meta.backgroundColor ? route.meta.backgroundColor : "#ffffff";
 });

@@ -190,6 +190,7 @@ import useNamespace from "@/utils/nameSpace";
 const { VITE_DATABASE_URL } = import.meta.env;
 import redNew from "@/assets/img/red_new.png";
 import { getBidFinderDetail } from "@/api/data";
+import { getTimesApi } from "@/api/user";
 import { useUserStore } from "@/store/modules/user";
 import CancelIcon from "@/assets/img/common/cancel.png";
 import copy_icon from "@/assets/img/common/copy_icon.png";
@@ -297,6 +298,19 @@ const handleSetDetailShowClick = async () => {
         dialogVisible.value = true;
       }
     } else {
+      if (props.source === "dataTenderSearch") {
+        const { datas } = await getTimesApi({
+          moduleName: "TENDER_DETAILS",
+        });
+        if (datas !== null && datas > 0) {
+          ElMessage({
+            message: `<div style="display: flex;align-items: center;"><img width="17.5" height="17.5" style="margin-right: 9px;" src="https://eesa-mini-app.oss-rg-china-mainland.aliyuncs.com/i-report/v1.0/iReport3_icon_comment.png" /><span>剩余使用次数：${datas}次</span></div>`,
+            type: "info",
+            dangerouslyUseHTMLString: true,
+            duration: 2000,
+          });
+        }
+      }
       const data = await getBidFinderDetail({ id: currentData.value.id });
       if (data.resp_code === 0) {
         detailData.value = data.datas;
