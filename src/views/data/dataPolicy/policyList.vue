@@ -28,11 +28,7 @@
                 <img
                   class="radio"
                   v-if="data.policyQuantity"
-                  :src="
-                    data.paramValue === filterParams[value.paramValue]
-                      ? radio_true
-                      : radio_false
-                  "
+                  :src="imageUrl(node, data)"
                   alt=""
                 />
                 <span :class="!data.policyQuantity ? 'name' : 'parent-name'">
@@ -195,20 +191,20 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-import useNamespace from "@/utils/nameSpace";
 import {
   policyFilterSearch,
   getPolicyByFiltrateNoPagination,
   getPolicyDetailsApi,
 } from "@/api/data";
-import radio_true from "@/assets/img/common/i-Report-radio-true.png";
-import radio_false from "@/assets/img/common/i-Report-radio-false.png";
 import { cloneDeep } from "lodash";
-import { windowScrollStore } from "@/store/modules/windowScroll";
+import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { getToken } from "@/utils/auth";
+import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
+import { windowScrollStore } from "@/store/modules/windowScroll";
+import radio_true from "@/assets/img/common/i-Report-radio-true.png";
+import radio_false from "@/assets/img/common/i-Report-radio-false.png";
 const route = useRoute();
 const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
@@ -224,10 +220,6 @@ const defaultProps = {
 const activeName = ref([0, 1]);
 const filterLoading = ref(true);
 const filterParams = ref({
-  municipalLevel: "",
-  policyType: "",
-  provincialLevel: "",
-  year: "",
   keyword: "",
 });
 interface ListType {
@@ -277,11 +269,13 @@ const handleItemClick = async (index, rowIndex) => {
 const handleLinkClick = (link) => {
   window.open(link);
 };
+
 const policyFilterSearchFn = async () => {
-  const data = await policyFilterSearch(filterParams.value);
+  const data = await policyFilterSearch();
   if (data.resp_code === 0) {
     filterOptions.value = [];
     data.datas.screen.forEach((item) => {
+      filterParams.value[item.paramValue] = [];
       item.showAll = item.dropDownBoxResp.length > 0 ? false : true;
     });
     data.datas.screen.forEach((item) => {
@@ -300,7 +294,13 @@ const getData = async () => {
 
   const requestData = Object.assign(
     {
-      policyReleased: policyReleased.value,
+      policyReleased: {
+        municipalLevel: "",
+        policyType: "",
+        provincialLevel: "",
+        year: "",
+        keyword: "",
+      },
       page: 1,
       limit: 0,
     },
@@ -329,16 +329,24 @@ const getData = async () => {
 const onSearch = () => {
   policyReleased.value = "";
   getData();
-  policyFilterSearchFn();
 };
 const changeTag = (e, row) => {
-  if (!e.policyQuantity) return;
-  filterParams.value[row.paramValue] =
-    e.paramValue === filterParams.value[row.paramValue] ? "" : e.paramValue;
-  policyFilterSearchFn();
-  policyReleased.value = "";
-  getData();
+  const index = filterParams.value[row.paramValue].findIndex(
+    (item) => item === e.paramValue,
+  );
+  if (index == -1) {
+    filterParams.value[row.paramValue].push(e.paramValue);
+  } else {
+    filterParams.value[row.paramValue].splice(index, 1);
+  }
+  console.log(filterParams.value);
+  // getData();
 };
+
+const handleShowAllClick = (index) => {
+  filterOptions.value[index].showAll = !filterOptions.value[index].showAll;
+};
+
 // 过滤后的筛选项
 const filterOptionsData = computed(() => {
   const _data = cloneDeep(filterOptions.value);
@@ -350,10 +358,24 @@ const filterOptionsData = computed(() => {
   });
   return newVal;
 });
-const handleShowAllClick = (index) => {
-  filterOptions.value[index].showAll = !filterOptions.value[index].showAll;
-};
-getData();
+
+// 根据选中状态返回对应的图片
+const imageUrl = computed(() => {
+  return (
+    {
+      parent: {
+        data: { paramValue },
+      },
+    },
+    item,
+  ) => {
+    const isSelect = filterParams.value[paramValue].some(
+      (_item) => _item === item.paramValue,
+    );
+    return isSelect ? radio_true : radio_false;
+  };
+});
+// getData();
 policyFilterSearchFn();
 </script>
 <style lang="scss" scoped>
