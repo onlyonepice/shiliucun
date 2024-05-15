@@ -164,11 +164,11 @@ export const getPolicyDetailsApi = (data) => {
   );
 };
 // 政策查找筛选类
-export const policyFilterSearch = (data) => {
+export const policyFilterSearch = (year) => {
   return http.request<responseType>(
     "post",
     "/eesa-report/Policy/front/openApi/V1.0/policySearch",
-    { data },
+    { data: { year } },
   );
 };
 //政策_根据筛选获取有政策的省份政策查找不分页

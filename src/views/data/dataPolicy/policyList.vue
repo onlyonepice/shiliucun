@@ -9,61 +9,50 @@
       />
     </div>
     <div class="content">
-      <div class="filter-box" v-if="filterOptionsData.length > 0">
+      <div class="filter-box">
         <div
           class="tree-item"
           v-for="(value, key) in filterOptionsData"
           :key="key"
         >
           <el-tree
-            @node-click="(val) => changeTag(val, value)"
+            @check="(data, keys) => handleCheckChange(keys, value)"
             ref="treeRefFilter"
             :data="[value]"
             default-expand-all
             highlight-current
             :props="defaultProps"
+            node-key="paramValue"
+            show-checkbox
+            :default-checked-keys="filterParams[value.paramValue].split(',')"
           >
             <template #default="{ node, data }">
-              <span class="custom-tree-node">
-                <img
-                  class="radio"
-                  v-if="data.policyQuantity"
-                  :src="
-                    data.paramValue === filterParams[value.paramValue]
-                      ? radio_true
-                      : radio_false
-                  "
-                  alt=""
-                />
-                <span :class="!data.policyQuantity ? 'name' : 'parent-name'">
-                  {{ node.label }}</span
+              <div class="custom-tree_item">
+                <div class="custom-tree-node">
+                  <span :class="!data.policyQuantity ? 'name' : 'parent-name'">
+                    {{ node.label }}
+                  </span>
+                  <span class="number" v-if="data.policyQuantity">
+                    {{ data.policyQuantity }}
+                  </span>
+                </div>
+                <div
+                  @click.stop
+                  v-if="showOpen(key)"
+                  style="{left:56px}"
+                  class="open-box"
                 >
-                <span class="number" v-if="data.policyQuantity">
-                  {{ data.policyQuantity }}
-                </span>
-              </span>
+                  <p
+                    @click.stop="handleShowAllClick(key, data)"
+                    class="showAll-btn"
+                    v-if="data.showAll !== undefined"
+                  >
+                    {{ !data.showAll ? "展开更多" : "收起更多" }}
+                  </p>
+                </div>
+              </div>
             </template>
           </el-tree>
-          <p
-            @click="handleShowAllClick(key)"
-            class="showAll-btn"
-            v-if="
-              filterOptions[key].dropDownBoxResp.length > 5 &&
-              !filterOptions[key].showAll
-            "
-          >
-            展开更多
-          </p>
-          <p
-            @click="handleShowAllClick(key)"
-            class="showAll-btn"
-            v-if="
-              filterOptions[key].dropDownBoxResp.length > 5 &&
-              filterOptions[key].showAll
-            "
-          >
-            收起更多
-          </p>
         </div>
       </div>
       <div class="policy-list" v-loading="filterLoading">
@@ -195,60 +184,59 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-import useNamespace from "@/utils/nameSpace";
+interface ListType {
+  dropDownBoxResp?: { paramValue: string }[];
+}
 import {
   policyFilterSearch,
   getPolicyByFiltrateNoPagination,
   getPolicyDetailsApi,
 } from "@/api/data";
-import radio_true from "@/assets/img/common/i-Report-radio-true.png";
-import radio_false from "@/assets/img/common/i-Report-radio-false.png";
 import { cloneDeep } from "lodash";
-import { windowScrollStore } from "@/store/modules/windowScroll";
+import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { getToken } from "@/utils/auth";
+import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
+import { windowScrollStore } from "@/store/modules/windowScroll";
 const route = useRoute();
 const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
-
 const ns = useNamespace("policyList");
+
+const pageData = ref([]);
 const policyReleased = ref(""); //政策发布时间
 const treeRefFilter = ref(null);
+const activeName = ref([0, 1]);
+const filterLoading = ref(true);
+const filterOptions = ref([]); //所有筛选项
+const monthList = ref<ListType>({}); // 右侧时间筛选
+
 const defaultProps = {
   children: "dropDownBoxResp",
   label: "paramDesc",
   value: "paramValue",
 };
-const activeName = ref([0, 1]);
-const filterLoading = ref(true);
+// 左侧啥选项选中的值
 const filterParams = ref({
-  municipalLevel: "",
-  policyType: "",
-  provincialLevel: "",
-  year: "",
   keyword: "",
 });
-interface ListType {
-  dropDownBoxResp?: { paramValue: string }[];
-}
-const filterOptions = ref([]); //所有筛选项
-const monthList = ref<ListType>({});
-const handleMonthClick = (row) => {
+
+function handleMonthClick(row) {
   policyReleased.value = row.paramValue;
   getData();
-};
-const getRegion = (regionName) => {
+}
+
+function getRegion(regionName) {
   return !regionName ? "" : regionName.join("-");
-};
-const handleHiddenDetailClick = (index, rowIndex) => {
+}
+function handleHiddenDetailClick(index, rowIndex) {
   pageData.value[index].data[rowIndex].className = "hide";
   setTimeout(() => {
     pageData.value[index].data[rowIndex].showDetail = false;
   }, 450);
-};
-const handleItemClick = async (index, rowIndex) => {
+}
+async function handleItemClick(index, rowIndex) {
   if (!pageData.value[index].data[rowIndex].showDetail) {
     if (!getToken()) {
       useUserStore().openLogin(true);
@@ -273,15 +261,16 @@ const handleItemClick = async (index, rowIndex) => {
       pageData.value[index].data[rowIndex].showDetail = false;
     }, 450);
   }
-};
-const handleLinkClick = (link) => {
+}
+function handleLinkClick(link) {
   window.open(link);
-};
-const policyFilterSearchFn = async () => {
-  const data = await policyFilterSearch(filterParams.value);
+}
+async function policyFilterSearchFn() {
+  const data = await policyFilterSearch(filterParams.value.year);
   if (data.resp_code === 0) {
     filterOptions.value = [];
     data.datas.screen.forEach((item) => {
+      filterParams.value[item.paramValue] = "";
       item.showAll = item.dropDownBoxResp.length > 0 ? false : true;
     });
     data.datas.screen.forEach((item) => {
@@ -292,21 +281,23 @@ const policyFilterSearchFn = async () => {
         filterOptions.value.push(item);
       }
     });
+    getData();
   }
-};
-const pageData = ref([]);
-const getData = async () => {
+}
+const showOpen = computed(() => {
+  return (key) => {
+    return filterOptions.value[key].dropDownBoxResp.length >= 6;
+  };
+});
+
+// 获取政策列表
+async function getData() {
   filterLoading.value = true;
 
-  const requestData = Object.assign(
-    {
-      policyReleased: policyReleased.value,
-      page: 1,
-      limit: 0,
-    },
-    filterParams.value,
-  );
-  const data = await getPolicyByFiltrateNoPagination(requestData);
+  const data = await getPolicyByFiltrateNoPagination({
+    ...filterParams.value,
+    policyReleased: policyReleased.value,
+  });
   const routeId = ref(route.query.id ? route.query.id : null);
 
   if (data.resp_code === 0) {
@@ -325,20 +316,22 @@ const getData = async () => {
     pageData.value = data.datas;
   }
   filterLoading.value = false;
-};
-const onSearch = () => {
+}
+function onSearch() {
   policyReleased.value = "";
   getData();
-  policyFilterSearchFn();
-};
-const changeTag = (e, row) => {
-  if (!e.policyQuantity) return;
-  filterParams.value[row.paramValue] =
-    e.paramValue === filterParams.value[row.paramValue] ? "" : e.paramValue;
-  policyFilterSearchFn();
-  policyReleased.value = "";
-  getData();
-};
+}
+async function handleCheckChange(select: any, row: any) {
+  const key = row.paramValue;
+  const { checkedKeys } = select;
+  if (isNaN(Number(checkedKeys[0]))) {
+    checkedKeys.splice(0, 1);
+  }
+  filterParams.value[key] = checkedKeys.join(",");
+  await policyFilterSearchFn();
+  await getData();
+}
+
 // 过滤后的筛选项
 const filterOptionsData = computed(() => {
   const _data = cloneDeep(filterOptions.value);
@@ -350,10 +343,9 @@ const filterOptionsData = computed(() => {
   });
   return newVal;
 });
-const handleShowAllClick = (index) => {
-  filterOptions.value[index].showAll = !filterOptions.value[index].showAll;
+const handleShowAllClick = (key, _data) => {
+  filterOptions.value[key].showAll = !filterOptions.value[key].showAll;
 };
-getData();
 policyFilterSearchFn();
 </script>
 <style lang="scss" scoped>
@@ -602,9 +594,28 @@ $maxHeightVal: 800px;
 }
 </style>
 <style lang="scss">
+@import "@/style/mixin.scss";
 .es-policyList {
   .el-tree-node__content {
-    padding-left: 0 !important;
+    width: 100%;
+    box-sizing: border-box;
+    .custom-tree_item {
+      width: auto;
+      flex: 1;
+      .custom-tree-node {
+        width: 100% !important;
+      }
+      .open-box {
+        position: absolute;
+        bottom: -24px;
+        left: 40px;
+        z-index: 999999999;
+        .showAll-btn {
+          @include font(14px, 400, #244bf1, 24px);
+          cursor: pointer;
+        }
+      }
+    }
   }
 
   .el-collapse {
@@ -616,10 +627,7 @@ $maxHeightVal: 800px;
 
     button {
       border: 0 !important;
-      font-weight: 600;
-      font-size: 20px;
-      color: rgba(0, 0, 0, 0.9);
-      line-height: 28px;
+      @include font(20px, 600, rgba(0, 0, 0, 0.9), 28px);
     }
   }
 }
