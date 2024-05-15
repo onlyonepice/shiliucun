@@ -266,7 +266,7 @@ function handleLinkClick(link) {
   window.open(link);
 }
 async function policyFilterSearchFn() {
-  const data = await policyFilterSearch();
+  const data = await policyFilterSearch(filterParams.value.year);
   if (data.resp_code === 0) {
     filterOptions.value = [];
     data.datas.screen.forEach((item) => {
@@ -328,6 +328,7 @@ async function handleCheckChange(select: any, row: any) {
     checkedKeys.splice(0, 1);
   }
   filterParams.value[key] = checkedKeys.join(",");
+  await policyFilterSearchFn();
   await getData();
 }
 
