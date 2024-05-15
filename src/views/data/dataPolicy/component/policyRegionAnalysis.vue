@@ -40,6 +40,7 @@ async function getElectricityTypeOneName() {
   };
   // 设置省份数据，chinaMap 省份名字需要与后端反的省份一致才展示
   eChartsOption.value.series[0].data = data
+    .filter((item) => item.value !== 0)
     .map((item) => {
       return {
         name: item.name.replace(new RegExp(`[${charsToRemove}]`, "g"), ""),
@@ -58,38 +59,35 @@ async function getElectricityTypeOneName() {
     show: true,
     borderColor: "#fff",
     formatter: (params) => {
-      if (params.value && params.value > 0) {
-        const {
-          data: { value },
-        } = params;
-        const contentTitle = `font-size: 16px; font-weight: 600; color: #1C232F; margin-bottom:8px; line-height: 24px;`;
-        const pStyle = `width: 208px; height: 32px; background: #F4F5F7; display:flex; justify-content:space-between; align-item:center; padding:5px 8px; border-radius: 4px 4px 0 0;`;
-        const spanTitle = `font-size: 14px; font-weight: 400; color: #5B6985; ine-height: 22px;`;
-        const spanValue = `font-size: 14px; font-weight: 600; color: #1C232F; line-height: 22px;`;
-        return `
+      const value = params.data?.value || 0;
+      const contentTitle = `font-size: 16px; font-weight: 600; color: #1C232F; margin-bottom:8px; line-height: 24px;`;
+      const pStyle = `width: 208px; height: 32px; background: #F4F5F7; display:flex; justify-content:space-between; align-item:center; padding:5px 8px; border-radius: 4px 4px 0 0;`;
+      const spanTitle = `font-size: 14px; font-weight: 400; color: #5B6985; ine-height: 22px;`;
+      const spanValue = `font-size: 14px; font-weight: 600; color: #1C232F; line-height: 22px;`;
+      return `
         <p style='${contentTitle}'>${params.name}</p>
           <p style='${pStyle}'>
             <span style='${spanTitle}'>数量：</span>
             <span style='${spanValue}'>${value}条</span>
           </p>`;
-      } else {
-        return "";
-      }
     },
   };
+  const color = [
+    "rgba(36, 75, 241, 0.2)",
+    "rgba(36, 75, 241, 0.4)",
+    "rgba(36, 75, 241, 0.6)",
+    "rgba(36, 75, 241, 0.8)",
+    "rgba(36, 75, 241, 1)",
+  ];
+  const max = Math.max(...data.map((item) => item.value));
   eChartsOption.value.visualMap = {
     type: "piecewise",
-    max: 24,
-    min: 0,
+    max,
+    min: 1,
+    splitNumber: max < 5 ? max : 5,
     show: true,
     inRange: {
-      color: [
-        "rgba(36, 75, 241, 0.2)",
-        "rgba(36, 75, 241, 0.4)",
-        "rgba(36, 75, 241, 0.6)",
-        "rgba(36, 75, 241, 0.8)",
-        "rgba(36, 75, 241, 1)",
-      ],
+      color: max < 5 ? color.slice(max - max * 2) : color,
     },
   };
   delete eChartsOption.value.dataRange;

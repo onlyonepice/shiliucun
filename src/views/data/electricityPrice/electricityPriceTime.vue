@@ -110,10 +110,12 @@ import {
 } from "@/api/priceTracking";
 import * as echarts from "echarts";
 import { onMounted, computed, Ref, ref, onBeforeUnmount } from "vue";
-import { cloneDeep } from "lodash";
+import { cloneDeep, toNumber } from "lodash";
 import { vLoading } from "element-plus";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
+
+import math from "@/utils/math";
 
 import image from "@/assets/img/electricityPrice/icon_hint_nor.png";
 import Select from "@/components/Common/Select.vue";
@@ -161,7 +163,7 @@ const myeCharts = ref<any>(null);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
-const choseSpecific: Ref<number> = ref(1);
+const choseSpecific: Ref<number> = ref(2);
 const monthData = ref<any>([]);
 const timeFrame = ref({ start: null, end: null });
 const regionalData = ref<any>([]); // 城市数据
@@ -624,6 +626,19 @@ function handleTOUData() {
 
 // 处理分月电价图表
 function handleMonthData() {
+  let averageElectricityPrice: Array<{
+    label: string;
+    value: number;
+    periodType?: string;
+    number?: number;
+  }> = [
+    { label: "平均尖峰电价：", periodType: "topTime", value: 0, number: 0 },
+    { label: "平均高峰电价：", periodType: "highTime", value: 0, number: 0 },
+    { label: "平均平时电价：", periodType: "flatTime", value: 0, number: 0 },
+    { label: "平均低谷电价：", periodType: "lowTime", value: 0, number: 0 },
+    { label: "平均深谷电价：", periodType: "deepTime", value: 0, number: 0 },
+  ];
+  averageElectricityPrice;
   const _defaultData: any = [
     {
       name: "尖峰时段",
@@ -656,10 +671,22 @@ function handleMonthData() {
       data: [],
     },
   ];
-  const arbitrageSpace: Array<number> = []; // 度电套利空间
+
+  let arbitrageSpace: Array<number> = []; // 度电套利空间
   const xAxisData: any = []; // x轴数据
   monthElectricityPriceData.value.forEach((item) => {
     xAxisData.push(item.month);
+
+    // 计算平均电价
+    averageElectricityPrice.forEach((_item) => {
+      if (!isNaN(toNumber(item.data[_item.periodType]))) {
+        _item.value = math.add(
+          toNumber(_item.value),
+          toNumber(item.data[_item.periodType]),
+        );
+        _item.number += 1;
+      }
+    });
     // 计算套利空间
     const numbers: Array<number> = Object.values(item.data)
       .map((num: string) => {
@@ -669,9 +696,11 @@ function handleMonthData() {
         return !isNaN(num);
       })
       .sort((a, b) => a - b);
-    const mtp = 100000;
     arbitrageSpace.push(
-      (numbers[numbers.length - 1] * mtp - numbers[0] * mtp) / mtp,
+      math.subtract(
+        toNumber(numbers[numbers.length - 1]),
+        toNumber(numbers[0]),
+      ),
     );
     for (const key in item.data) {
       _defaultData.forEach((_item) => {
@@ -681,6 +710,15 @@ function handleMonthData() {
       });
     }
   });
+  averageElectricityPrice = averageElectricityPrice
+    .filter((item) => item.value && item.number)
+    .map((item) => {
+      return {
+        label: item.label,
+        value: (item.value = math.divide(item.value, item.number)),
+      };
+    });
+
   let _series: any = [];
   let _data: any = [];
   let _color: any = [];
@@ -716,12 +754,51 @@ function handleMonthData() {
     },
     data: arbitrageSpace,
   });
+  // 添加矩形 平均尖峰电价
+
+  const graphicChildren = [];
+  const padding = 16;
+  const fontLineHeight = 24;
+  const fontSize = 14;
+  averageElectricityPrice.forEach((item, index) => {
+    graphicChildren.push({
+      type: "text",
+      left: padding,
+      top: padding + fontLineHeight * index,
+      style: {
+        text: `${item.label}${item.value.toFixed(2)}元/度`,
+        font: `${fontSize}px Arial`,
+        fill: "#000",
+      },
+    });
+  });
+  const box = {
+    type: "rect",
+    shape: {
+      width: 190,
+      height:
+        padding * 2 + (graphicChildren.length - 1) * fontLineHeight + fontSize,
+      r: 10,
+    },
+    style: {
+      fill: "#fff000",
+      stroke: "#eee",
+      lineWidth: 2,
+      radius: 10,
+    },
+  };
   const options = cloneDeep(eChartsOption.value);
+  options.graphic.push({
+    type: "group",
+    left: 0,
+    top: "20%",
+    children: [box, ...graphicChildren],
+  });
   options.title[0].text = title;
   options.title[0].subtext = subtitle;
   options.title[1] = titleTwo.value;
   options.legend = { ...options.legend, y: "78%", data: _data };
-  options.grid = { bottom: "150", top: "80" };
+  options.grid = { bottom: "150", top: "80", left: "250" };
   options.color = _color;
   options.xAxis = {
     ...options.xAxis,

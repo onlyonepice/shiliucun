@@ -49,16 +49,18 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/store/modules/user";
-import { ref, watch, Ref, nextTick } from "vue";
-import useNamespace from "@/utils/nameSpace";
-const ns = useNamespace("winningBidPrice");
-import { capacityAnalysis_V2 } from "@/api/data";
 import { get } from "lodash";
-import { priceFormOptions } from "../data";
-import lament_icon from "@/assets/img/common/lament_icon.png";
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
+import { priceFormOptions } from "../data";
+import useNamespace from "@/utils/nameSpace";
+import { ref, watch, Ref, nextTick } from "vue";
+import { capacityAnalysis_V2 } from "@/api/data";
+import { useUserStore } from "@/store/modules/user";
+import { chartWatermark } from "@/utils/echarts/eCharts";
+import lament_icon from "@/assets/img/common/lament_icon.png";
+
+const ns = useNamespace("winningBidPrice");
 const EChartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
@@ -81,6 +83,7 @@ const options = ref(priceFormOptions());
 interface response {
   datas: any;
 }
+
 watch(
   () => props.formOptions,
   (res: response[]) => {
@@ -274,6 +277,7 @@ const initData = () => {
       text: `储能月度中标单价/容量分析-${requestData.value.biddingContent}（${requestData.value.technologyType}）`,
       left: "center",
     },
+    graphic: [chartWatermark],
     legend: {},
     tooltip: {
       trigger: "axis",
