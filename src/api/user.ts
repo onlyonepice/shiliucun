@@ -196,3 +196,12 @@ export function getPermissionApi() {
     `/api-user/system/rolePermission/front/v1.0/getPermission`,
   );
 }
+
+// 获取次数提示
+export function getTimesApi(params: any) {
+  return http.request<responseType>(
+    "get",
+    `/eesa-report/homePage/reportNewDataCenter/back/v1.1/numberUses`,
+    { params },
+  );
+}

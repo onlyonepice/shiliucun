@@ -120,7 +120,7 @@
       />
       <div class="content" v-loading="loading">
         <div class="item" v-for="item in pageData" :key="item.id + '7'">
-          <BiddingDynamicsList :pageData="item" />
+          <BiddingDynamicsList source="dataTenderSearch" :pageData="item" />
         </div>
         <el-empty
           v-if="pageData.length === 0 && !loading"

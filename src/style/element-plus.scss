@@ -292,3 +292,17 @@
 .el-table .el-table__cell {
   padding: 0;
 }
+
+html .el-message--info {
+  background: #eaedfe;
+  border-radius: 4px;
+  border: 1px solid #244bf1;
+  font-weight: 400;
+  font-size: 14px;
+  // color: rgba(0, 0, 0, 0.9);
+  line-height: 22px;
+  --el-message-text-color: rgba(0, 0, 0, 0.9);
+  .el-message-icon--info {
+    display: none;
+  }
+}

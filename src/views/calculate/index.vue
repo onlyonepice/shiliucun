@@ -166,6 +166,7 @@ import {
   apiComment,
   apiFileConversion,
 } from "@/api/investment";
+import { getTimesApi } from "@/api/user";
 import { cloneDeep } from "lodash";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 import { stringifyData, getImageInfo } from "@/utils/richText";
@@ -502,7 +503,18 @@ function onReset() {
   filterFinish.value = false;
 }
 // 开始分析按钮
-function onAnalysis(data: any, type: string) {
+async function onAnalysis(data: any, type: string) {
+  const { datas } = await getTimesApi({
+    moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
+  });
+  if (datas !== null && datas > 0) {
+    ElMessage({
+      message: `<div style="display: flex;align-items: center;"><img width="17.5" height="17.5" style="margin-right: 9px;" src="https://eesa-mini-app.oss-rg-china-mainland.aliyuncs.com/i-report/v1.0/iReport3_icon_comment.png" /><span>剩余使用次数：${datas}次</span></div>`,
+      type: "info",
+      dangerouslyUseHTMLString: true,
+      duration: 2000,
+    });
+  }
   showInvestment.value = false;
   addAreaType.value = type === "searchB";
 
