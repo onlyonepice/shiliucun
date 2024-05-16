@@ -100,7 +100,7 @@ export function getPayInfoList() {
 export function getReportDetailApi(data: any) {
   return http.request<void>(
     "post",
-    "/eesa-report/onlineReportNew/front/v1.1/getAllReportDetails",
+    "/eesa-report/front/openApi/v1.2/getAllReportDetails",
     {
       data,
     },
@@ -111,7 +111,7 @@ export function getReportDetailApi(data: any) {
 export function getReportDetailRecommendApi(id: number, moduleName: string) {
   return http.request<void>(
     "get",
-    `/eesa-report/onlineReportNew/front/v1.1/allTagRecommendation?id=${id}&limit=10&moduleName=${moduleName}`,
+    `/eesa-report/front/openApi/v1.2/allTagRecommendation?id=${id}&limit=10&moduleName=${moduleName}`,
   );
 }
 
@@ -128,7 +128,7 @@ export function setReportScoreApi(data: any) {
 
 // 获取pdf链接
 export const getFilePathApi = (params: any) => {
-  return http.request<void>("get", "/eesa-report/PdfFile/v1.0/getURL", {
+  return http.request<void>("get", "/eesa-report/front/openApi/v1.1/getURL", {
     params,
   });
 };

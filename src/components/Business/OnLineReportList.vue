@@ -26,7 +26,6 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { useUserStoreHook } from "@/store/modules/user";
-import { getToken } from "@/utils/auth";
 import online_report_paid_bg from "@/assets/img/online_report_paid_bg.png";
 const router = useRouter();
 const props = defineProps({
@@ -41,9 +40,6 @@ const props = defineProps({
 });
 // 跳转报告详情
 const onDetailReport = (item) => {
-  if (!getToken()) {
-    return useUserStoreHook().openLogin(true);
-  }
   router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 };
 const useUserStore = useUserStoreHook();

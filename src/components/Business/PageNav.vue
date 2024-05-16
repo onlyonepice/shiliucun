@@ -290,10 +290,12 @@ watch(
     const _storageVIP = window.localStorage.getItem("VIP");
     if (_storageVIP) {
       navList.value[6].text =
-        _storageVIP === "PERSON_ORDINARY_USER" ? "开通VIP" : "升级VIP";
+        _storageVIP !== "PERSON_ORDINARY_USER" ? "升级VIP" : "开通VIP";
     } else {
       navList.value[6].text =
-        val === "PERSON_ORDINARY_USER" ? "开通VIP" : "升级VIP";
+        val === "PERSON_ORDINARY_USER" || val === undefined
+          ? "开通VIP"
+          : "升级VIP";
     }
   },
   { immediate: true },
