@@ -298,6 +298,7 @@ const handleSetDetailShowClick = async () => {
         dialogVisible.value = true;
       }
     } else {
+      const data = await getBidFinderDetail({ id: currentData.value.id });
       if (props.source === "dataTenderSearch") {
         const { datas } = await getTimesApi({
           moduleName: "TENDER_DETAILS",
@@ -311,7 +312,6 @@ const handleSetDetailShowClick = async () => {
           });
         }
       }
-      const data = await getBidFinderDetail({ id: currentData.value.id });
       if (data.resp_code === 0) {
         detailData.value = data.datas;
         currentData.value.showDetail = true;

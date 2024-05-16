@@ -333,16 +333,7 @@ watch(
 watch(
   () => useUserStoreHook().$state.userInfo.roles,
   (val) => {
-    const _storageVIP = window.localStorage.getItem("VIP");
-    if (_storageVIP) {
-      navList.value[6].text =
-        _storageVIP !== "PERSON_ORDINARY_USER" ? "升级VIP" : "开通VIP";
-    } else {
-      navList.value[6].text =
-        val === "PERSON_ORDINARY_USER" || val === undefined
-          ? "开通VIP"
-          : "升级VIP";
-    }
+    val && val[0].code === "PERSON_ORDINARY_USER" ? "升级VIP" : "开通VIP";
   },
   { immediate: true },
 );
@@ -561,9 +552,10 @@ const onLogin = () => {
   background: #ffffff;
 }
 .es-pageNav-content .es-pageNav-vip {
-  height: 20px;
+  height: 12px;
+  width: auto;
   object-fit: contain;
-  @include absolute(11, none, none, -3px, 50%);
+  @include absolute(11, none, none, 0, 50%);
   transform: translateX(-50%);
 }
 

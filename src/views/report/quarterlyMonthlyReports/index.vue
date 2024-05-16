@@ -56,7 +56,6 @@ import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
-import { getTimesApi } from "@/api/user";
 const router = useRouter();
 // const { VITE_I_REPORT_URL } = import.meta.env;
 const ns = useNamespace("quarterlyMonthly");
@@ -146,17 +145,6 @@ const dropdownLoading = async (type) => {
 const onDetailReport = async (item: any) => {
   if (!getToken()) {
     return useUserStoreHook().openLogin(true);
-  }
-  const { datas } = await getTimesApi({
-    moduleName: "QUARTERLY_AND_MONTHLY_REPORTS",
-  });
-  if (datas !== null && datas > 0) {
-    ElMessage({
-      message: `<div style="display: flex;align-items: center;"><img width="17.5" height="17.5" style="margin-right: 9px;" src="https://eesa-mini-app.oss-rg-china-mainland.aliyuncs.com/i-report/v1.0/iReport3_icon_comment.png" /><span>剩余使用次数：${datas}次</span></div>`,
-      type: "info",
-      dangerouslyUseHTMLString: true,
-      duration: 2000,
-    });
   }
   router.push(`/reportDetail?id=${item.id}&moduleName=${item.moduleName}`);
 };

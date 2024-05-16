@@ -261,10 +261,13 @@ async function handleItemClick(index, rowIndex) {
       useUserStore().openLogin(true);
       return;
     }
-    const { datas } = await getTimesApi({
+    const data = await getPolicyDetailsApi({
+      id: pageData.value[index].data[rowIndex].id,
+    });
+    const _datas: any = await getTimesApi({
       moduleName: "POLICY_DETAILS",
     });
-    if (datas !== null && datas > 0) {
+    if (_datas.datas !== null && _datas.datas > 0) {
       ElMessage({
         message: `<div style="display: flex;align-items: center;"><img width="17.5" height="17.5" style="margin-right: 9px;" src="https://eesa-mini-app.oss-rg-china-mainland.aliyuncs.com/i-report/v1.0/iReport3_icon_comment.png" /><span>剩余使用次数：${datas}次</span></div>`,
         type: "info",
@@ -272,9 +275,6 @@ async function handleItemClick(index, rowIndex) {
         duration: 2000,
       });
     }
-    const data = await getPolicyDetailsApi({
-      id: pageData.value[index].data[rowIndex].id,
-    });
     if (data.resp_code === 0) {
       pageData.value[index].data[rowIndex].detailData = data.datas;
       pageData.value[index].data[rowIndex].showDetail = true;
