@@ -302,8 +302,9 @@ async function policyFilterSearchFn() {
   if (data.resp_code === 0) {
     filterOptions.value = [];
     data.datas.screen.forEach((item) => {
-      filterParams.value[item.paramValue] = "";
-      item.showAll = item.dropDownBoxResp.length > 0 ? false : true;
+      !filterParams.value[item.paramValue] &&
+        (filterParams.value[item.paramValue] = "");
+      item.showAll = item.dropDownBoxResp?.length > 0 ? false : true;
     });
     data.datas.screen.forEach((item) => {
       if (item.paramValue === "policyReleased") {
@@ -450,7 +451,6 @@ async function handleCheckChange(select: any, row: any) {
   }
   filterParams.value[key] = checkedKeys.join(",");
   await policyFilterSearchFn();
-  await getData();
 }
 
 // 过滤后的筛选项
