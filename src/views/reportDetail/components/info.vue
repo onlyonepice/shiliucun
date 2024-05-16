@@ -42,15 +42,17 @@
 
 <script lang="ts" setup>
 import { ref, Ref } from "vue";
+import { toType } from "@/utils";
+import { getToken } from "@/utils/auth";
+import { ElMessage } from "element-plus";
 import useNamespace from "@/utils/nameSpace";
-import NumberDown from "@/assets/img/common/number-down.png";
+import { useUserStore } from "@/store/modules/user";
 import NumberUp from "@/assets/img/common/number-up.png";
 import RightMore from "@/assets/img/common/right-more.png";
 import BuyReport from "@/assets/img/common/buy-report.png";
+import NumberDown from "@/assets/img/common/number-down.png";
 import { getFilePathApi, getFileApi } from "@/api/reportDetail";
-import { useUserStore } from "@/store/modules/user";
-import { toType } from "@/utils";
-import { ElMessage } from "element-plus";
+
 const emit = defineEmits(["onBuy"]);
 const ns = useNamespace("reportDetailInfo");
 const previewPdfSrc: Ref<string> = ref(""); // 预览pdf地址
@@ -87,6 +89,9 @@ const onBuyReport = () => {
 };
 // 订阅会员
 const onOpenVip = () => {
+  if (getToken()) {
+    return useUserStore().openLogin(true);
+  }
   useUserStore().$state.showMembersBuy = true;
 };
 // 获取pdf地址

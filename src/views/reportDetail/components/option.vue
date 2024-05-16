@@ -128,16 +128,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, Ref, watch } from "vue";
-import useNamespace from "@/utils/nameSpace";
-import StarEmpty from "@/assets/img/reportDetail/i-Report-star.png";
-import StarFull from "@/assets/img/reportDetail/i-Report-star-fill.png";
-import UploadImg from "@/assets/img/common/upload-image.png";
-import { ElMessage } from "element-plus";
-import useClipboard from "vue-clipboard3";
-import { getToken } from "@/utils/auth";
-import type { UploadProps } from "element-plus";
-import { useUserStore } from "@/store/modules/user";
 import {
   getFilePathApi,
   getFileApi,
@@ -145,25 +135,21 @@ import {
   setReportFeedbackApi,
   setReportScoreApi,
 } from "@/api/reportDetail";
-import { reportStore } from "@/store/modules/report";
+
+import { getToken } from "@/utils/auth";
+import { ElMessage } from "element-plus";
 import { regMobile } from "@/utils/rule";
-const ns = useNamespace("reportDetailOption");
-const { toClipboard } = useClipboard();
-const emit = defineEmits(["onBuy"]);
-const scoreTextList = ref(["比较差", "较差", "一般", "较好", "比较好"]);
-const showDialog: Ref<boolean> = ref(false); // 报告纠错弹窗
-const dialogVisible = ref(false);
-const dialogImageUrl = ref("");
-const errorContent: Ref<any> = ref({
-  name: "",
-  contactInformation: "",
-  describe: "",
-}); // 纠错内容
-const fileList = ref([]); // 纠错内容照片墙中的图片
-const uploadToken: Ref<any> = ref({
-  Authorization: "Bearer " + getToken(),
-  Tenant: "iReport-front",
-});
+import useClipboard from "vue-clipboard3";
+import useNamespace from "@/utils/nameSpace";
+import type { UploadProps } from "element-plus";
+import { ref, defineProps, Ref, watch } from "vue";
+import { useUserStore } from "@/store/modules/user";
+import { reportStore } from "@/store/modules/report";
+
+import UploadImg from "@/assets/img/common/upload-image.png";
+import StarEmpty from "@/assets/img/reportDetail/i-Report-star.png";
+import StarFull from "@/assets/img/reportDetail/i-Report-star-fill.png";
+
 const props = defineProps({
   detail: {
     type: Object,
@@ -174,7 +160,30 @@ const props = defineProps({
     default: false,
   },
 });
+const ns = useNamespace("reportDetailOption");
+const { toClipboard } = useClipboard();
+const emit = defineEmits(["onBuy"]);
+
+const dialogImageUrl = ref("");
+const dialogVisible = ref(false);
+const fileList = ref([]); // 纠错内容照片墙中的图片
+const showDialog: Ref<boolean> = ref(false); // 报告纠错弹窗
+const scoreTextList = ref(["比较差", "较差", "一般", "较好", "比较好"]);
+const scoreSure: Ref<number> = ref(props.detail.reportScoring - 1); // 确定分数
 const storageDetail: Ref<any> = ref(null); // 缓存详情接口，用于修改收藏状态，无需重复调用详情接口
+const errorContent: Ref<any> = ref({
+  name: "",
+  contactInformation: "",
+  describe: "",
+}); // 纠错内容
+const uploadToken: Ref<any> = ref({
+  Authorization: "Bearer " + getToken(),
+  Tenant: "iReport-front",
+});
+const score: Ref<number> = ref(
+  props.detail.reportScoring === 0 ? -1 : props.detail.reportScoring - 1,
+);
+
 watch(
   () => props.detail,
   (val) => {
@@ -189,11 +198,13 @@ watch(
 const onChangeInfo = (val: string, type: string) => {
   errorContent.value[type] = val;
 };
+
 // 查看大图
 const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!;
   dialogVisible.value = true;
 };
+
 // 关闭弹窗
 const onHandleClose = async (type: boolean) => {
   if (!type) {
@@ -225,9 +236,7 @@ const onHandleClose = async (type: boolean) => {
   errorContent.value = {};
   fileList.value = [];
 };
-const score: Ref<number> = ref(
-  props.detail.reportScoring === 0 ? -1 : props.detail.reportScoring - 1,
-);
+
 // 购买报告
 const onBuyReport = async () => {
   if (props.isNeedBuy) {
@@ -241,6 +250,7 @@ const onBuyReport = async () => {
     }
   }
 };
+
 // 获取报告链接
 const getReportLink = async () => {
   const { fileId, reportName, moduleName } = props.detail;
@@ -253,6 +263,7 @@ const getReportLink = async () => {
     getFileDownloadPdf(datas.url, datas["x-oss-meta-token"], reportName);
   }
 };
+
 // 下载报告
 const getFileDownloadPdf = async (url: string, token: string, name: string) => {
   const { status, data }: any = await getFileApi(url, token);
@@ -265,10 +276,12 @@ const getFileDownloadPdf = async (url: string, token: string, name: string) => {
     _url.revokeObjectURL(a.href);
   }
 };
-// 确定分数
-const scoreSure: Ref<number> = ref(props.detail.reportScoring - 1);
+
 // 收藏按钮
 const onCollection = async () => {
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
   const { resp_code }: any = await setReportCollectApi({
     collectionType: "REPORT",
     reportId: props.detail.id,
@@ -282,19 +295,23 @@ const onCollection = async () => {
     storageDetail.value.isCollected = !storageDetail.value.isCollected;
   }
 };
+
 // 分享按钮
 const onShare = async () => {
   await toClipboard(window.location.href);
   ElMessage.success("分享成功");
 };
+
 // 鼠标移入选择
 const onMouseScore = (item: number) => {
   score.value = item - 1;
 };
+
 // 鼠标移出
 const onMouseleave = () => {
   score.value = scoreSure.value;
 };
+
 // 打分
 const onScore = async (item: number) => {
   score.value = item - 1;
@@ -313,16 +330,19 @@ const onScore = async (item: number) => {
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
+
 .es-reportDetailOption {
   @include widthAndHeight(100%, 440px);
   background: #ffffff;
   border-radius: 8px;
   padding: 24px;
+
   h4 {
     @include textOverflow(2);
     margin-bottom: 4px;
     line-height: 24px;
   }
+
   .es-reportDetailOption-author {
     width: 100%;
     margin: 16px 0 4px;
@@ -330,10 +350,12 @@ const onScore = async (item: number) => {
     display: block;
   }
 }
+
 .es-reportDetailOption-tab {
   @include flex(center, flex-start);
   padding-bottom: 15px;
   border-bottom: 1px solid #dbdce2;
+
   span {
     border-radius: 4px;
     @include font(12px, 400, #ff8d32, 20px);
@@ -349,52 +371,65 @@ const onScore = async (item: number) => {
 .es-reportDetailOption-write {
   @include font(12px, 400, rgba(0, 0, 0, 0.6), 20px);
 }
+
 .es-reportDetailOption-button__big {
   @include widthAndHeight(222px, 32px);
   margin-bottom: 8px;
   margin-top: 16px;
 }
+
 .es-reportDetailOption-button__list {
   @include flex(center, space-between, nowrap);
   margin-bottom: 32px;
 }
+
 .es-reportDetailOption-button__collection {
   @include widthAndHeight(107px, 32px);
 }
+
 .es-reportDetailOption-button__share {
   @include widthAndHeight(107px, 32px);
 }
+
 .es-reportDetailOption-score__head {
   height: 22px;
   @include flex(center, space-between, nowrap);
+
   span {
     @include font(14px, 400, #ff8d32, 22px);
   }
 }
+
 .es-reportDetailOption-score__content {
   @include flex(center, flex-start, nowrap);
   margin: 8px 0 8px;
+
   div {
     @include widthAndHeight(32px, 32px);
     cursor: pointer;
     @include relative();
     margin-right: 12px;
   }
+
   img {
     @include widthAndHeight(100%, 100%);
     @include absolute();
   }
+
   .es-reportDetailOption-score__chose {
     @include absolute(2);
   }
 }
+
 .es-reportDetailOption-content__dialog {
   @include flex(flex-start, flex-start, nowrap);
   margin-bottom: 16px;
+
   &:nth-last-child(1) {
     margin-top: 54px;
     margin-bottom: 0;
   }
+
   & > span {
     display: inline-block;
     line-height: 32px;
@@ -402,9 +437,12 @@ const onScore = async (item: number) => {
     text-align: right;
     margin-right: 8px;
   }
+
   span[required]::before {
-    content: "*"; /* 添加一个星号作为标识符 */
-    color: red; /* 可以根据需要设置颜色 */
+    content: "*";
+    /* 添加一个星号作为标识符 */
+    color: red;
+    /* 可以根据需要设置颜色 */
     display: inline-block;
     margin-right: 4px;
   }
@@ -412,30 +450,37 @@ const onScore = async (item: number) => {
 </style>
 <style lang="scss">
 @import "@/style/mixin.scss";
+
 .es-reportDetailOption-content__dialog {
   .el-upload--picture-card {
     @include widthAndHeight(112px, 112px);
   }
+
   .el-upload-list__item {
     @include widthAndHeight(112px, 112px);
   }
+
   .el-icon {
     @include widthAndHeight(100%, 100%);
+
     img {
       @include widthAndHeight(100%, 100%);
     }
   }
 }
+
 .es-reportDetailOption-dialog--content__error {
   .el-dialog__footer {
     padding-top: 4px;
   }
 }
+
 .es-reportDetailOption-content--hidden {
   .el-upload {
     display: none;
   }
 }
+
 .es-reportDetailOption-dialog--content__preview {
   .el-dialog__body {
     @include flex();
