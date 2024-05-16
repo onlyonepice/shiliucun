@@ -1,7 +1,6 @@
 <template>
   <div :class="[ns.b()]">
     <div class="header">
-      <p class="title">政策查找</p>
       <Search
         width="368px"
         @onSearch="onSearch"
@@ -64,10 +63,11 @@
           <el-collapse v-model="activeName">
             <el-collapse-item :title="item.policyReleased" :name="index">
               <el-scrollbar
-                :style="{
-                  height: item.data.length > 10 ? '500px' : 'auto',
-                }"
                 class="policy_item_box"
+                v-loading="item.loading"
+                ref="scrollbar"
+                @scroll="() => handleScroll(scrollbar[index], item)"
+                :style="{ height: item.data.length > 10 ? '500px' : 'auto' }"
               >
                 <div
                   class="policy_item_box_content"
@@ -185,7 +185,12 @@
 </template>
 <script lang="ts" setup>
 interface ListType {
-  dropDownBoxResp?: { paramValue: string }[];
+  dropDownBoxResp: {
+    page: number;
+    limit: number;
+    paramDesc: string;
+    paramValue: string;
+  }[];
 }
 import {
   policyFilterSearch,
@@ -206,6 +211,12 @@ const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
 const ns = useNamespace("policyList");
 
+const paging = ref({
+  limit: 15,
+  page: 1,
+});
+
+const scrollbar = ref<any>(null);
 const pageData = ref([]);
 const policyReleased = ref(""); //政策发布时间
 const treeRefFilter = ref(null);
@@ -219,25 +230,31 @@ const defaultProps = {
   label: "paramDesc",
   value: "paramValue",
 };
+
 // 左侧啥选项选中的值
-const filterParams = ref({
-  keyword: "",
-});
+const filterParams = ref<any>({ keyword: "" });
 
 function handleMonthClick(row) {
   policyReleased.value = row.paramValue;
+  monthList.value.dropDownBoxResp = monthList.value.dropDownBoxResp.map(
+    (item) => {
+      return { ...item, ...paging.value };
+    },
+  );
   getData();
 }
 
 function getRegion(regionName) {
   return !regionName ? "" : regionName.join("-");
 }
+
 function handleHiddenDetailClick(index, rowIndex) {
   pageData.value[index].data[rowIndex].className = "hide";
   setTimeout(() => {
     pageData.value[index].data[rowIndex].showDetail = false;
   }, 450);
 }
+
 async function handleItemClick(index, rowIndex) {
   if (!pageData.value[index].data[rowIndex].showDetail) {
     if (!getToken()) {
@@ -275,20 +292,30 @@ async function handleItemClick(index, rowIndex) {
     }, 450);
   }
 }
+
 function handleLinkClick(link) {
   window.open(link);
 }
+
 async function policyFilterSearchFn() {
   const data = await policyFilterSearch(filterParams.value.year);
   if (data.resp_code === 0) {
     filterOptions.value = [];
     data.datas.screen.forEach((item) => {
-      filterParams.value[item.paramValue] = "";
-      item.showAll = item.dropDownBoxResp.length > 0 ? false : true;
+      !filterParams.value[item.paramValue] &&
+        (filterParams.value[item.paramValue] = "");
+      item.showAll = item.dropDownBoxResp?.length > 0 ? false : true;
     });
     data.datas.screen.forEach((item) => {
       if (item.paramValue === "policyReleased") {
         monthList.value = item;
+        item.dropDownBoxResp = item.dropDownBoxResp.map((item) => {
+          return {
+            ...paging.value,
+            paramDesc: item.paramDesc,
+            paramValue: item.paramValue,
+          };
+        });
         policyReleased.value = item.dropDownBoxResp[0].paramValue;
       } else {
         filterOptions.value.push(item);
@@ -297,6 +324,7 @@ async function policyFilterSearchFn() {
     getData();
   }
 }
+
 const showOpen = computed(() => {
   return (key) => {
     return filterOptions.value[key].dropDownBoxResp.length >= 6;
@@ -306,34 +334,115 @@ const showOpen = computed(() => {
 // 获取政策列表
 async function getData() {
   filterLoading.value = true;
+  pageData.value = [];
+  const index = monthList.value.dropDownBoxResp.findIndex(
+    (item) => item.paramValue === policyReleased.value,
+  );
+  if (index !== -1) {
+    const { page, limit, paramValue } = monthList.value.dropDownBoxResp[index];
+    const parameter = {
+      page,
+      limit,
+      ...filterParams.value,
+      policyReleased: paramValue,
+    };
+    await getMonthlyPolicyData(parameter);
+  }
 
-  const data = await getPolicyByFiltrateNoPagination({
-    ...filterParams.value,
-    policyReleased: policyReleased.value,
-  });
-  const routeId = ref(route.query.id ? route.query.id : null);
-
-  if (data.resp_code === 0) {
-    data.datas.forEach((item, index) => {
-      item.data.forEach((row, rowIndex) => {
-        if (row.id === routeId.value) {
-          setTimeout(() => {
-            handleItemClick(index, rowIndex);
-          });
-        } else {
-          row.showDetail = false;
-          row.className = "";
-        }
-      });
-    });
-    pageData.value = data.datas;
+  if (index + 1 < monthList.value.dropDownBoxResp.length) {
+    const { page, limit, paramValue } =
+      monthList.value.dropDownBoxResp[index + 1];
+    const parameter = {
+      page,
+      limit,
+      ...filterParams.value,
+      policyReleased: paramValue,
+    };
+    await getMonthlyPolicyData(parameter);
   }
   filterLoading.value = false;
 }
+
+async function handleScroll(
+  { wrapRef: { scrollHeight, scrollTop } },
+  { policyReleased, total, size, current },
+) {
+  /**
+   * 滚动到底部
+   * scrollHeight： 滚动条高度
+   * scrollTop： 滚动的距离
+   * 500: 元素高度
+   * 8: 当页面放大缩小是可能存在一定的误差
+   **/
+  if (scrollHeight - scrollTop - 500 === 0) {
+    // 已经展示所有数据
+    if (total <= size || total <= size * current) {
+      return;
+    } else {
+      // 继续加载更多数据
+      const index = monthList.value.dropDownBoxResp.findIndex(
+        (item) => item.paramDesc === policyReleased,
+      );
+      monthList.value.dropDownBoxResp[index].page = current + 1;
+      const { page, limit, paramValue } =
+        monthList.value.dropDownBoxResp[index];
+      const parameter = {
+        page,
+        limit,
+        ...filterParams.value,
+        policyReleased: paramValue,
+      };
+      const _index = pageData.value.findIndex(
+        (item) => item.policyReleased === policyReleased,
+      );
+      pageData.value[_index].loading = true;
+      const { datas, resp_code } =
+        await getPolicyByFiltrateNoPagination(parameter);
+      const routeId = ref(route.query.id ? route.query.id : null);
+      if (resp_code === 0) {
+        datas.data.forEach((item, index) => {
+          if (item.id === routeId.value) {
+            setTimeout(() => {
+              handleItemClick(0, index);
+            });
+          } else {
+            item.showDetail = false;
+            item.className = "";
+          }
+        });
+        pageData.value[_index] = {
+          ...datas,
+          loading: false,
+          data: [...pageData.value[_index].data, ...datas.data],
+        };
+      }
+    }
+  }
+}
+
+async function getMonthlyPolicyData(parameter) {
+  const { datas, resp_code } = await getPolicyByFiltrateNoPagination(parameter);
+  const routeId = ref(route.query.id ? route.query.id : null);
+  if (resp_code === 0) {
+    datas.data.forEach((item, index) => {
+      if (item.id === routeId.value) {
+        setTimeout(() => {
+          handleItemClick(0, index);
+        });
+      } else {
+        item.showDetail = false;
+        item.className = "";
+      }
+    });
+    pageData.value.push({ ...datas, loading: false });
+  }
+}
+
 function onSearch() {
   policyReleased.value = "";
   getData();
 }
+
 async function handleCheckChange(select: any, row: any) {
   const key = row.paramValue;
   const { checkedKeys } = select;
@@ -342,7 +451,6 @@ async function handleCheckChange(select: any, row: any) {
   }
   filterParams.value[key] = checkedKeys.join(",");
   await policyFilterSearchFn();
-  await getData();
 }
 
 // 过滤后的筛选项
@@ -359,6 +467,7 @@ const filterOptionsData = computed(() => {
 const handleShowAllClick = (key, _data) => {
   filterOptions.value[key].showAll = !filterOptions.value[key].showAll;
 };
+
 policyFilterSearchFn();
 </script>
 <style lang="scss" scoped>
@@ -371,8 +480,7 @@ policyFilterSearchFn();
   .header {
     width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: row-reverse;
     margin-bottom: 24px;
   }
 
@@ -439,110 +547,110 @@ policyFilterSearchFn();
           width: 100%;
           box-sizing: border-box;
           padding-right: 20px;
-        }
 
-        .policy_item_box_content {
-          width: 100%;
-          padding-bottom: 16px;
-          border-bottom: 1px solid #dbdce2;
-          margin-bottom: 16px;
+          .policy_item_box_content {
+            width: 100%;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #dbdce2;
+            margin-bottom: 16px;
 
-          .detail-data {
-            overflow: hidden;
+            .detail-data {
+              overflow: hidden;
 
-            .hidden-detail {
-              width: 100%;
-              height: 32px;
-              align-items: center;
-              display: flex;
-              justify-content: flex-end;
-              margin-top: 13px;
-              @include font(14px, 400, #244bf1, 22px);
-              cursor: pointer;
-            }
-
-            .detail_content {
-              margin-top: 16px;
-              width: 100%;
-              padding: 16px;
-              background-color: #f2f3f5;
-
-              > .detail_content_item:nth-child(1) {
-                margin-bottom: 16px;
+              .hidden-detail {
+                width: 100%;
+                height: 32px;
+                align-items: center;
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 13px;
+                @include font(14px, 400, #244bf1, 22px);
+                cursor: pointer;
               }
 
-              .detail_content_item {
+              .detail_content {
+                margin-top: 16px;
                 width: 100%;
-                display: flex;
+                padding: 16px;
+                background-color: #f2f3f5;
 
-                .detail_content_item_label {
-                  margin-right: 16px;
-                  width: 80px;
-                  @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
+                > .detail_content_item:nth-child(1) {
+                  margin-bottom: 16px;
                 }
 
-                .detail_content_item_value {
-                  flex: 1;
-                  border: 1px solid #dbdce2;
-                  border-bottom: 0;
+                .detail_content_item {
+                  width: 100%;
+                  display: flex;
 
-                  .detail_content_item_value_item {
-                    width: 100%;
-                    border-bottom: 1px solid #dbdce2;
-                    display: flex;
+                  .detail_content_item_label {
+                    margin-right: 16px;
+                    width: 80px;
+                    @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
+                  }
 
-                    .detail_content_item_value_item_label {
-                      @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
-                      width: 96px;
-                      border-right: 1px solid #dbdce2;
-                      background-color: #e8eaef;
-                      padding: 9px 16px;
-                    }
+                  .detail_content_item_value {
+                    flex: 1;
+                    border: 1px solid #dbdce2;
+                    border-bottom: 0;
 
-                    .detail_content_item_value_item_value {
-                      @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
-                      padding: 9px 16px;
-                      flex: 1;
+                    .detail_content_item_value_item {
+                      width: 100%;
+                      border-bottom: 1px solid #dbdce2;
+                      display: flex;
+
+                      .detail_content_item_value_item_label {
+                        @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+                        width: 96px;
+                        border-right: 1px solid #dbdce2;
+                        background-color: #e8eaef;
+                        padding: 9px 16px;
+                      }
+
+                      .detail_content_item_value_item_value {
+                        @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+                        padding: 9px 16px;
+                        flex: 1;
+                      }
                     }
                   }
                 }
               }
             }
-          }
-        }
 
-        .policy_item_value {
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          cursor: pointer;
+            .policy_item_value {
+              width: 100%;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              cursor: pointer;
 
-          &:hover {
-            .policy-name {
-              color: rgb(36, 75, 241);
-            }
-          }
+              &:hover {
+                .policy-name {
+                  color: rgb(36, 75, 241);
+                }
+              }
 
-          .policy-name {
-            @include widthAndHeight(682px, 24px);
-            @include font(16px, 400, rgba(0, 0, 0, 0.9), 24px);
-            @include textOverflow();
-          }
+              .policy-name {
+                @include widthAndHeight(682px, 24px);
+                @include font(16px, 400, rgba(0, 0, 0, 0.9), 24px);
+                @include textOverflow();
+              }
 
-          .tag-box {
-            display: flex;
-            align-items: center;
+              .tag-box {
+                display: flex;
+                align-items: center;
 
-            .tag {
-              font-weight: 400;
-              font-size: 12px;
-              color: #ff892e;
-              line-height: 20px;
-              padding: 2px 8px;
-              background: #fff3eb;
-              border-radius: 4px;
-              border: 1px solid #ff892e;
+                .tag {
+                  font-weight: 400;
+                  font-size: 12px;
+                  color: #ff892e;
+                  line-height: 20px;
+                  padding: 2px 8px;
+                  background: #fff3eb;
+                  border-radius: 4px;
+                  border: 1px solid #ff892e;
+                }
+              }
             }
           }
         }
@@ -608,21 +716,26 @@ $maxHeightVal: 800px;
 </style>
 <style lang="scss">
 @import "@/style/mixin.scss";
+
 .es-policyList {
   .el-tree-node__content {
     width: 100%;
     box-sizing: border-box;
+
     .custom-tree_item {
       width: auto;
       flex: 1;
+
       .custom-tree-node {
         width: 100% !important;
       }
+
       .open-box {
         position: absolute;
         bottom: -24px;
         left: 40px;
         z-index: 999999999;
+
         .showAll-btn {
           @include font(14px, 400, #244bf1, 24px);
           cursor: pointer;
