@@ -1,5 +1,5 @@
 import { textStyleObject } from "./pieECharts";
-import downloadBg from "@/assets/img/common/ECharts-bgc-two.png";
+import { chartWatermark } from "@/utils/echarts/eCharts";
 export const EChartColor = [
   "rgba(36, 75, 241, 1)",
   "rgba(36, 75, 241, 0.8)",
@@ -26,19 +26,7 @@ export function treemapEChartsOption() {
       textStyle: textStyleObject,
     },
     color: EChartColor,
-    graphic: [
-      {
-        type: "image",
-        left: "center",
-        bottom: "center",
-        style: {
-          image: downloadBg, // 图片的 URL
-          width: 415, // 图片宽度
-          height: 342, // 图片高度
-        },
-        z: 999,
-      },
-    ],
+    graphic: [chartWatermark],
     series: [
       {
         type: "treemap",

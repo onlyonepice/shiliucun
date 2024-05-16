@@ -47,15 +47,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, Ref, nextTick } from "vue";
-import useNamespace from "@/utils/nameSpace";
-const ns = useNamespace("winningBidEnterprise");
-import { enterpriseAnalysis } from "@/api/data";
 import { get } from "lodash";
-import { enterpriseFormOptions } from "../data";
-import lament_icon from "@/assets/img/common/lament_icon.png";
 import * as echarts from "echarts";
+import useNamespace from "@/utils/nameSpace";
+import { ref, watch, Ref, nextTick } from "vue";
+import { enterpriseAnalysis } from "@/api/data";
+import { enterpriseFormOptions } from "../data";
 import { useUserStore } from "@/store/modules/user";
+import { chartWatermark } from "@/utils/echarts/eCharts";
+import lament_icon from "@/assets/img/common/lament_icon.png";
+
+const ns = useNamespace("winningBidEnterprise");
 const isEmptyData = ref(false);
 const echartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
@@ -333,6 +335,7 @@ const initData = () => {
       text: "中标企业分析",
       left: "center",
     },
+    graphic: [chartWatermark],
     legend: {
       show: true,
       left: "center",

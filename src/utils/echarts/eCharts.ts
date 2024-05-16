@@ -1,5 +1,17 @@
 import { graphic, registerMap, getMap } from "echarts/core";
 import downloadBg from "@/assets/img/common/ECharts-bgc.png";
+export const chartWatermark = {
+  type: "image",
+  left: "center",
+  bottom: "center",
+  silent: true,
+  style: {
+    image: downloadBg,
+    width: 415,
+    height: 342,
+  },
+  z: 999,
+};
 export function eChartsOptionCommon() {
   return {
     // 设置标题
@@ -13,19 +25,7 @@ export function eChartsOptionCommon() {
         fontWeight: "bolder",
       },
     },
-    graphic: [
-      {
-        type: "image",
-        left: "center",
-        bottom: "center",
-        style: {
-          image: downloadBg, // 图片的 URL
-          width: 415, // 图片宽度
-          height: 342, // 图片高度
-        },
-        z: 999,
-      },
-    ],
+    graphic: [chartWatermark],
     grid: {
       top: "20%",
       left: "50",

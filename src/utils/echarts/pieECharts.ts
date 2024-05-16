@@ -1,4 +1,4 @@
-import downloadBg from "@/assets/img/common/ECharts-bgc.png";
+import { chartWatermark } from "@/utils/echarts/eCharts";
 
 // 样式配置
 export const textStyleObject = {
@@ -20,19 +20,7 @@ export function pieEChartsOption() {
         fontWeight: "bolder",
       },
     },
-    graphic: [
-      {
-        type: "image",
-        left: "center",
-        bottom: "center",
-        style: {
-          image: downloadBg, // 图片的 URL
-          width: 415, // 图片宽度
-          height: 342, // 图片高度
-        },
-        z: 999,
-      },
-    ],
+    graphic: [chartWatermark],
     // 图例设置
     legend: [
       {
