@@ -34,6 +34,7 @@ export type userType = {
   roles?: Array<string>;
   userInfo?: any;
   fileUrl?: any;
+  imgUrl?: any;
   userAccount?: object;
   isRememberPsd?: boolean;
   userAccountMobile?: string;

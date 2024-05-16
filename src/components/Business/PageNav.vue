@@ -36,12 +36,37 @@
         </div>
         <!-- 登录/注册 -->
         <div v-if="showLogin" @mouseleave="showAvatar = false">
-          <img
-            :class="ns.b('avatar')"
-            @mouseenter="showAvatar = true"
-            :src="PersonalAvatar"
-            alt=""
-          />
+          <div :class="ns.be('avatar', 'box')">
+            <img
+              v-if="useUserStoreHook().$state.userInfo.headImgUrl"
+              :class="ns.b('avatar')"
+              @mouseenter="showAvatar = true"
+              :src="
+                useUserStoreHook().$state.fileUrl +
+                useUserStoreHook().$state.userInfo.headImgUrl
+              "
+              alt=""
+            />
+            <img
+              v-else
+              :class="ns.b('avatar')"
+              @mouseenter="showAvatar = true"
+              :src="PersonalAvatar"
+              alt=""
+            />
+            <template v-if="useUserStoreHook().$state.userInfo.roles">
+              <img
+                v-if="
+                  useUserStoreHook().$state.userInfo.roles[0].code !==
+                    'PERSON_ORDINARY_USER' &&
+                  useUserStoreHook().$state.userInfo.roles[0].code !==
+                    'PERSON_TRIAL_ACCOUNT'
+                "
+                :class="ns.b('vip')"
+                :src="getVIPIcon"
+              />
+            </template>
+          </div>
           <div
             :class="[
               ns.b('extraAvatar'),
@@ -82,6 +107,11 @@ import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
 import PersonalAvatar from "@/assets/img/common/personal-avatar.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
+import PersonalVip from "@/assets/img/vip/personal-vip.png";
+import CompanyVip from "@/assets/img/vip/company-vip.png";
+import EESAOrdinaryVip from "@/assets/img/vip/eesa-ordinary-vip.png";
+import ViceDirectorVip from "@/assets/img/vip/vice-director-vip.png";
+import DirectorVip from "@/assets/img/vip/director-vip.png";
 const { VITE_INDUSTRIALMAP_URL, VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
 const router = useRouter();
@@ -99,6 +129,22 @@ defineProps({
     type: Boolean,
     default: false,
   },
+});
+// 获取vip图标
+const getVIPIcon = computed(() => {
+  const _code = useUserStoreHook().$state.userInfo.roles[0].code;
+  console.log("111111111", _code);
+  return _code === "PERSON_MEMBER_USER"
+    ? PersonalVip
+    : _code === "ENTERPRISE_MEMBER_USER"
+      ? CompanyVip
+      : _code === "ENTERPRISE_EESA_MEMBER_USER"
+        ? EESAOrdinaryVip
+        : _code === "VICE_CHAIRMAN_MEMBER"
+          ? ViceDirectorVip
+          : _code === "CHAIRMAN_MEMBER"
+            ? DirectorVip
+            : "";
 });
 const extraAvatar: Ref<any> = ref([
   { id: 1, text: "基本信息", path: "/homePersonal?id=1" },
@@ -503,10 +549,22 @@ const onLogin = () => {
   @include relative(10);
   cursor: pointer;
 }
-.es-pageNav-content .es-pageNav-avatar {
-  @include widthAndHeight(24px, 24px);
-  cursor: pointer;
+.es-pageNav-avatar__box {
+  @include widthAndHeight(40px, 40px);
   margin-left: 16px;
+  @include relative(1);
+}
+.es-pageNav-content .es-pageNav-avatar {
+  @include widthAndHeight(40px, 40px);
+  border-radius: 50%;
+  cursor: pointer;
+  background: #ffffff;
+}
+.es-pageNav-content .es-pageNav-vip {
+  height: 20px;
+  object-fit: contain;
+  @include absolute(11, none, none, -3px, 50%);
+  transform: translateX(-50%);
 }
 
 .es-pageNav-extra {
