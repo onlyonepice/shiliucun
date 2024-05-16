@@ -444,6 +444,8 @@ const onAnalysis = () => {
     return ElMessage({ message: "请选择对比地区", type: "warning" });
   }
   filterFinish.value = true;
+  // 获取筛选项描述文字，用于生成下载报告
+  getDesc();
   emit(
     "onAnalysis",
     Object.assign(
@@ -453,8 +455,6 @@ const onAnalysis = () => {
     ),
     "searchA",
   );
-  // 获取筛选项描述文字，用于生成下载报告
-  getDesc();
   addAreaType.value &&
     emit(
       "onAnalysis",

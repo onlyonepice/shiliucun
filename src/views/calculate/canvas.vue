@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref, onMounted, defineProps, computed, defineEmits } from "vue";
+import { ref, Ref, onMounted, computed, watch } from "vue";
 import * as echarts from "echarts";
 import "echarts/lib/chart/line";
 import {
@@ -265,17 +265,24 @@ async function getSliderConfig() {
     });
   }
 }
-
+watch(
+  () => props.searchParamsShow,
+  (val) => {
+    const {
+      regionName,
+      electricityTypeOneName,
+      tariffLevelId,
+      electricityTypeTwoName,
+    } = val;
+    eChartsOption.value.title.text = `${regionName}·${electricityTypeOneName}·${tariffLevelId}·${electricityTypeTwoName}·代理购电分月价差图`;
+  },
+  {
+    immediate: true,
+  },
+);
 onMounted(() => {
   window.addEventListener("resize", onHandleResize);
   const _defaultData = echartsConfig.value;
-  const {
-    regionName,
-    electricityTypeOneName,
-    tariffLevelId,
-    electricityTypeTwoName,
-  } = props.searchParamsShow;
-  eChartsOption.value.title.text = `${regionName}·${electricityTypeOneName}·${tariffLevelId}·${electricityTypeTwoName}·代理购电分月价差图`;
   let _color = [];
   let _data = [];
   _defaultData.forEach((item) => {
