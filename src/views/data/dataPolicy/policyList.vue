@@ -236,6 +236,11 @@ const filterParams = ref<any>({ keyword: "" });
 
 function handleMonthClick(row) {
   policyReleased.value = row.paramValue;
+  monthList.value.dropDownBoxResp = monthList.value.dropDownBoxResp.map(
+    (item) => {
+      return { ...item, ...paging.value };
+    },
+  );
   getData();
 }
 
