@@ -422,16 +422,18 @@ async function onSearch(type? = false, source?: string) {
   delete _search.choseProduct;
   _search.systemUnitPrice = Number(_search.systemUnitPrice);
   const { datas, resp_code }: any = await apiAnalyzeSearch(_search);
-  const _datas: any = await getTimesApi({
-    moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
-  });
-  if (_datas.datas !== null) {
-    ElMessage({
-      message: `<div style="display: flex;align-items: center;"><img width="17.5" height="17.5" style="margin-right: 9px;" src="https://eesa-mini-app.oss-rg-china-mainland.aliyuncs.com/i-report/v1.0/iReport3_icon_comment.png" /><span>剩余使用次数：${_datas.datas}次</span></div>`,
-      type: "info",
-      dangerouslyUseHTMLString: true,
-      duration: 2000,
+  if (_search.callingMode) {
+    const _datas: any = await getTimesApi({
+      moduleName: "INDUSTRIAL_COMMERCIAL_ENERGY_STORAGE",
     });
+    if (_datas.datas !== null) {
+      ElMessage({
+        message: `<div style="display: flex;align-items: center;"><img width="17.5" height="17.5" style="margin-right: 9px;" src="https://eesa-mini-app.oss-rg-china-mainland.aliyuncs.com/i-report/v1.0/iReport3_icon_comment.png" /><span>剩余使用次数：${_datas.datas}次</span></div>`,
+        type: "info",
+        dangerouslyUseHTMLString: true,
+        duration: 2000,
+      });
+    }
   }
   if (resp_code === 0) {
     if (source === "searchA") {
