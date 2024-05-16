@@ -266,6 +266,9 @@ const getReportLink = async () => {
 
 // 下载报告
 const getFileDownloadPdf = async (url: string, token: string, name: string) => {
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
   const { status, data }: any = await getFileApi(url, token);
   if (status === 200) {
     const a = document.createElement("a");
