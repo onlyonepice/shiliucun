@@ -333,7 +333,8 @@ watch(
 watch(
   () => useUserStoreHook().$state.userInfo.roles,
   (val) => {
-    val && val[0].code !== "PERSON_ORDINARY_USER" ? "续费VIP" : "开通VIP";
+    navList.value[6].text =
+      val && val[0].code !== "PERSON_ORDINARY_USER" ? "续费VIP" : "开通VIP";
   },
   { immediate: true },
 );
