@@ -89,7 +89,7 @@ const onBuyReport = () => {
 };
 // 订阅会员
 const onOpenVip = () => {
-  if (getToken()) {
+  if (!getToken()) {
     return useUserStore().openLogin(true);
   }
   useUserStore().$state.showMembersBuy = true;
