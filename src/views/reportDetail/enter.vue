@@ -81,7 +81,7 @@ import AliPay from "@/assets/img/common/ali-pay.png";
 import WeChatPay from "@/assets/img/common/weChat-pay.png";
 import BuyDialogBg from "@/assets/img/common/buy-dialog-bg.png";
 import { ElMessage } from "element-plus";
-
+import { getToken } from "@/utils/auth";
 const skeletonShow = ref(true);
 const buyDialogVisible: Ref<boolean> = ref(false); // 购买报告弹窗
 const route = useRoute();
@@ -109,18 +109,20 @@ const getReportDetail = async () => {
       id: Number(route.query.id),
       moduleName: route.query.moduleName,
     });
-    const _datas = await getTimesApi({
-      moduleName: "QUARTERLY_AND_MONTHLY_REPORTS",
-    });
-    if (_datas.datas !== null && _datas.datas > 0) {
-      ElMessage({
-        message: `<div style="display: flex;align-items: center;"><img width="17.5" height="17.5" style="margin-right: 9px;" src="https://eesa-mini-app.oss-rg-china-mainland.aliyuncs.com/i-report/v1.0/iReport3_icon_comment.png" /><span>剩余使用次数：${datas}次</span></div>`,
-        type: "info",
-        dangerouslyUseHTMLString: true,
-        duration: 2000,
-      });
-    }
     if (resp_code === 0) {
+      if (datas.moduleName === "QUARTERLY_AND_MONTHLY_REPORTS" && getToken()) {
+        const _datas = await getTimesApi({
+          moduleName: "QUARTERLY_AND_MONTHLY_REPORTS",
+        });
+        if (_datas.datas !== null && _datas.datas > 0) {
+          ElMessage({
+            message: `<div style="display: flex;align-items: center;"><img width="17.5" height="17.5" style="margin-right: 9px;" src="https://eesa-mini-app.oss-rg-china-mainland.aliyuncs.com/i-report/v1.0/iReport3_icon_comment.png" /><span>剩余使用次数：${datas}次</span></div>`,
+            type: "info",
+            dangerouslyUseHTMLString: true,
+            duration: 2000,
+          });
+        }
+      }
       breadcrumbList.value[breadcrumbList.value.length - 1].text =
         datas.reportName;
       // 取前三个标签
