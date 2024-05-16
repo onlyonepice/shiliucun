@@ -1,5 +1,6 @@
 <template>
   <div :class="[ns.b()]">
+    <Loading v-if="filterLoading" />
     <div class="header">
       <Search
         width="368px"
@@ -55,7 +56,6 @@
         </div>
       </div>
       <div class="policy-list">
-        <Loading v-if="filterLoading" />
         <div
           class="policy_item"
           v-for="(item, index) in pageData"
@@ -740,7 +740,7 @@ $maxHeightVal: 800px;
         position: absolute;
         bottom: -24px;
         left: 40px;
-        z-index: 999999999;
+        z-index: 10;
 
         .showAll-btn {
           @include font(14px, 400, #244bf1, 24px);

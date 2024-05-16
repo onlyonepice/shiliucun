@@ -1,3 +1,4 @@
+import { chartWatermark } from "@/utils/echarts/eCharts";
 export const eChartsOptionCommon = () => {
   return {
     color: ["#244BF1", "#FF892E"],
@@ -46,6 +47,7 @@ export const eChartsOptionCommon = () => {
       right: "5%",
       bottom: "30%",
     },
+    graphic: [chartWatermark],
     xAxis: {
       type: "category",
       data: ["上海市", "云南省"],

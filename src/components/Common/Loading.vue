@@ -28,7 +28,7 @@ defineProps({
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 99999;
+  z-index: 9999999;
 
   @include widthAndHeight(100vw, 100vh);
   animation-duration: 0.5s;
