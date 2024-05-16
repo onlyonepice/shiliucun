@@ -54,7 +54,8 @@
           </el-tree>
         </div>
       </div>
-      <div class="policy-list" v-loading="filterLoading">
+      <div class="policy-list">
+        <Loading v-if="filterLoading" />
         <div
           class="policy_item"
           v-for="(item, index) in pageData"
@@ -159,7 +160,7 @@
                     </div>
                   </div>
                 </template>
-                <template v-else> <EmptyData /> </template>
+                <template v-else><EmptyData /></template>
               </el-scrollbar>
             </el-collapse-item>
           </el-collapse>
