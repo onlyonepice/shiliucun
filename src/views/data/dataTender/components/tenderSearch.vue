@@ -343,7 +343,7 @@ onMounted(() => {
       position: absolute;
       bottom: 0;
       left: 40px;
-      z-index: 999999999;
+      z-index: 10;
     }
     .custom-tree-node {
       flex: 1;
