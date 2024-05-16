@@ -444,7 +444,7 @@ async function getMonthlyPolicyData(parameter) {
 }
 
 function onSearch() {
-  policyReleased.value = "";
+  policyReleased.value = monthList.value.dropDownBoxResp[0].paramValue;
   getData();
 }
 
