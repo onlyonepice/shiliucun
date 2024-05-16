@@ -9,7 +9,7 @@
           multiple
           collapse-tags
           collapse-tags-tooltip
-          :max-collapse-tags="2"
+          :max-collapse-tags="1"
           v-model="searchParams.regionName"
           placeholder="请选择"
           class="select__content"
