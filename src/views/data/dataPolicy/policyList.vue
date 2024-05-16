@@ -69,94 +69,97 @@
                 @scroll="() => handleScroll(scrollbar[index], item)"
                 :style="{ height: item.data.length > 10 ? '500px' : 'auto' }"
               >
-                <div
-                  class="policy_item_box_content"
-                  :key="row.policyName"
-                  v-for="(row, rowIndex) in item.data"
-                >
+                <template v-if="item.data.length">
                   <div
-                    class="policy_item_value"
-                    @click="handleItemClick(index, rowIndex)"
+                    class="policy_item_box_content"
+                    :key="row.policyName"
+                    v-for="(row, rowIndex) in item.data"
                   >
-                    <p class="policy-name">{{ row.policyName }}</p>
-                    <div class="tag-box">
-                      <p class="tag">{{ row.typeName }}</p>
-                    </div>
-                  </div>
-                  <div
-                    v-if="row.showDetail"
-                    class="detail-data"
-                    :class="row.className"
-                  >
-                    <div class="detail_content">
-                      <div class="detail_content_item">
-                        <p class="detail_content_item_label">基本信息</p>
-                        <div class="detail_content_item_value">
-                          <div class="detail_content_item_value_item">
-                            <p class="detail_content_item_value_item_label">
-                              发布时间
-                            </p>
-                            <p class="detail_content_item_value_item_value">
-                              {{ row.detailData?.releaseTime }}
-                            </p>
-                          </div>
-                          <div class="detail_content_item_value_item">
-                            <p class="detail_content_item_value_item_label">
-                              发布地区
-                            </p>
-                            <p class="detail_content_item_value_item_value">
-                              {{ getRegion(row.detailData?.regionName) }}
-                            </p>
-                          </div>
-                          <div
-                            class="detail_content_item_value_item"
-                            v-if="row.detailData?.allocationStorageRatio"
-                          >
-                            <p class="detail_content_item_value_item_label">
-                              配储比例
-                            </p>
-                            <p class="detail_content_item_value_item_value">
-                              {{ row.detailData?.allocationStorageRatio }}
-                            </p>
-                          </div>
-                          <div class="detail_content_item_value_item">
-                            <p class="detail_content_item_value_item_label">
-                              原文链接
-                            </p>
-                            <p
-                              @click="
-                                handleLinkClick(row.detailData?.originalLink)
-                              "
-                              style="color: #244bf1; cursor: pointer"
-                              class="detail_content_item_value_item_value"
-                            >
-                              查看原文链接
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="detail_content_item">
-                        <p class="detail_content_item_label">摘要</p>
-                        <div class="detail_content_item_value">
-                          <div class="detail_content_item_value_item">
-                            <p class="detail_content_item_value_item_label">
-                              摘要内容
-                            </p>
-                            <p class="detail_content_item_value_item_value">
-                              {{ row.detailData?.summary }}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p
-                      @click="handleHiddenDetailClick(index, rowIndex)"
-                      class="hidden-detail"
+                    <div
+                      class="policy_item_value"
+                      @click="handleItemClick(index, rowIndex)"
                     >
-                      收起详情&nbsp;&nbsp;^
-                    </p>
+                      <p class="policy-name">{{ row.policyName }}</p>
+                      <div class="tag-box">
+                        <p class="tag">{{ row.typeName }}</p>
+                      </div>
+                    </div>
+                    <div
+                      v-if="row.showDetail"
+                      class="detail-data"
+                      :class="row.className"
+                    >
+                      <div class="detail_content">
+                        <div class="detail_content_item">
+                          <p class="detail_content_item_label">基本信息</p>
+                          <div class="detail_content_item_value">
+                            <div class="detail_content_item_value_item">
+                              <p class="detail_content_item_value_item_label">
+                                发布时间
+                              </p>
+                              <p class="detail_content_item_value_item_value">
+                                {{ row.detailData?.releaseTime }}
+                              </p>
+                            </div>
+                            <div class="detail_content_item_value_item">
+                              <p class="detail_content_item_value_item_label">
+                                发布地区
+                              </p>
+                              <p class="detail_content_item_value_item_value">
+                                {{ getRegion(row.detailData?.regionName) }}
+                              </p>
+                            </div>
+                            <div
+                              class="detail_content_item_value_item"
+                              v-if="row.detailData?.allocationStorageRatio"
+                            >
+                              <p class="detail_content_item_value_item_label">
+                                配储比例
+                              </p>
+                              <p class="detail_content_item_value_item_value">
+                                {{ row.detailData?.allocationStorageRatio }}
+                              </p>
+                            </div>
+                            <div class="detail_content_item_value_item">
+                              <p class="detail_content_item_value_item_label">
+                                原文链接
+                              </p>
+                              <p
+                                @click="
+                                  handleLinkClick(row.detailData?.originalLink)
+                                "
+                                style="color: #244bf1; cursor: pointer"
+                                class="detail_content_item_value_item_value"
+                              >
+                                查看原文链接
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="detail_content_item">
+                          <p class="detail_content_item_label">摘要</p>
+                          <div class="detail_content_item_value">
+                            <div class="detail_content_item_value_item">
+                              <p class="detail_content_item_value_item_label">
+                                摘要内容
+                              </p>
+                              <p class="detail_content_item_value_item_value">
+                                {{ row.detailData?.summary }}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <p
+                        @click="handleHiddenDetailClick(index, rowIndex)"
+                        class="hidden-detail"
+                      >
+                        收起详情&nbsp;&nbsp;^
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </template>
+                <template v-else> <EmptyData /> </template>
               </el-scrollbar>
             </el-collapse-item>
           </el-collapse>
@@ -400,6 +403,7 @@ async function handleScroll(
         await getPolicyByFiltrateNoPagination(parameter);
       const routeId = ref(route.query.id ? route.query.id : null);
       if (resp_code === 0) {
+        !datas.data && (datas.data = []);
         datas.data.forEach((item, index) => {
           if (item.id === routeId.value) {
             setTimeout(() => {
@@ -424,6 +428,7 @@ async function getMonthlyPolicyData(parameter) {
   const { datas, resp_code } = await getPolicyByFiltrateNoPagination(parameter);
   const routeId = ref(route.query.id ? route.query.id : null);
   if (resp_code === 0) {
+    !datas.data && (datas.data = []);
     datas.data.forEach((item, index) => {
       if (item.id === routeId.value) {
         setTimeout(() => {
