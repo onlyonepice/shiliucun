@@ -155,10 +155,9 @@ async function getElectricityTypeOneName() {
   eChartsOption.value.color = ["#244BF1", "#FF892E", "#FFAF0B", "#01B82B"];
   eChartsOption.value.series.push({
     type: "pie",
-    radius: [204, 250],
+    radius: [184, 250],
     label: {
       show: true,
-      position: "inside",
       formatter: (params) => {
         return `${params.value}${params.data.unit === "MWH" ? "\n" : ""}${params.data.unit}`;
       },

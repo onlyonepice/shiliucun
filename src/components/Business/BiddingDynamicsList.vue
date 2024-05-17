@@ -89,12 +89,6 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">功率</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.powerScale }}MW
-              </p>
-            </div>
-            <div class="detail_content_item_value_item">
-              <p class="detail_content_item_value_item_label">功率</p>
-              <p class="detail_content_item_value_item_value">
                 {{
                   detailData.powerScale === 0
                     ? "未知"
