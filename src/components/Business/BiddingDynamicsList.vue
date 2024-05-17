@@ -93,15 +93,23 @@
               </p>
             </div>
             <div class="detail_content_item_value_item">
-              <p class="detail_content_item_value_item_label">能量</p>
+              <p class="detail_content_item_value_item_label">功率</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.energyScale }}MWh
+                {{
+                  detailData.powerScale === 0
+                    ? "未知"
+                    : detailData.powerScale + "MW"
+                }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
-              <p class="detail_content_item_value_item_label">技术类型</p>
+              <p class="detail_content_item_value_item_label">能量</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.technologyTypeName }}
+                {{
+                  detailData.energyScale === 0
+                    ? "未知"
+                    : detailData.energyScale + "MWh"
+                }}
               </p>
             </div>
           </div>
