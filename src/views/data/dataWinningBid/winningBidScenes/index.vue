@@ -76,7 +76,7 @@ const props = defineProps({
 const requestData: Ref<any> = ref({
   contentDict: "",
   releaseTime: "",
-  unit: [],
+  unit: "",
 });
 const options = ref(enterScenesFormOptions());
 interface response {
@@ -119,7 +119,7 @@ watch(
             case 6:
               item.datas.forEach((item: any) => {
                 if (item.defaultValue) {
-                  requestData.value.unit.push(item.paramValue);
+                  requestData.value.unit = "2";
                 }
               });
               break;
@@ -141,7 +141,6 @@ const getData = async () => {
   showEmpty.value = false;
   try {
     const _filter: any = cloneDeep(requestData.value);
-    _filter.unit = _filter.unit.join(",");
     const { datas } = await getWinningScenariosApi(_filter);
     if (datas.length === 0) {
       return (showEmpty.value = true);
@@ -161,19 +160,16 @@ const getData = async () => {
     canvasTitle.value = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}招标应用场景分布`;
     eChartsOption.value.title.text = canvasTitle.value;
     eChartsOption.value.color = ["#244BF1", "#FF892E", "#FFAF0B", "#01B82B"];
-    requestData.value.unit.forEach((item, index) => {
-      eChartsOption.value.series.push({
-        type: "pie",
-        radius: [204 - index * 50, 250 - index * 50],
-        label: {
-          show: true,
-          position: "inside",
-          formatter: (params) => {
-            return `${params.value}${params.data.unit === "MWH" ? "\n" : ""}${params.data.unit}`;
-          },
+    eChartsOption.value.series.push({
+      type: "pie",
+      radius: [184, 250],
+      label: {
+        show: true,
+        formatter: (params) => {
+          return `${params.value}${params.data.unit === "MWH" ? "\n" : ""}${params.data.unit}`;
         },
-        data: datas[index].data,
-      });
+      },
+      data: datas[0].data,
     });
     loading.value = false;
     initECharts();
@@ -209,14 +205,10 @@ const selectChange = (row, index, val) => {
   } else {
     unit.value[0].onBlur();
     nextTick(() => {
-      const _unit = [];
-      props.formOptions[6].datas.forEach((item) => {
-        item.defaultValue && _unit.push(item.paramValue);
-      });
       requestData.value = {
         contentDict: 712,
         releaseTime: "2024",
-        unit: _unit,
+        unit: "1",
       };
     });
   }

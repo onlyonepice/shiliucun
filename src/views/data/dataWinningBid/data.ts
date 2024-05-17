@@ -159,7 +159,7 @@ export const enterScenesFormOptions = () => {
       type: "select",
       label: "统计单位",
       model: "unit",
-      multiple: true,
+      multiple: false,
       bind: {
         ref: "unit-cascade",
         placeholder: "请选择",
