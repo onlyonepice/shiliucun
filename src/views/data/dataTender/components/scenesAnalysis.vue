@@ -37,7 +37,6 @@
         :options="unitFilter"
         labelKey="paramDesc"
         valueKey="paramValue"
-        :multiple="true"
         :defaultValue="unit"
         @onChange="
           (val) => {
@@ -100,7 +99,7 @@ const props = defineProps({
 // 筛选项结果
 const contentDict = ref(712);
 const releaseTime = ref("2024");
-const unit: any = ref([]);
+const unit = ref("2");
 const showEmpty: Ref<boolean> = ref(false);
 const canvasTitle = ref("");
 const onChangeFilter = (id: any, type: string) => {
@@ -114,24 +113,14 @@ const onChangeFilter = (id: any, type: string) => {
   } else {
     unitDom.value.onBlur();
     nextTick(() => {
-      unit.value = [];
+      unit.value = "2";
       contentDict.value = 712;
       releaseTime.value = "2024";
-      props.unitFilter.forEach((item) => {
-        if (item.defaultValue) {
-          unit.value.push(item.paramValue);
-        }
-      });
     });
   }
 };
 
 onMounted(() => {
-  props.unitFilter.forEach((item) => {
-    if (item.defaultValue) {
-      unit.value.push(item.paramValue);
-    }
-  });
   getElectricityTypeOneName();
 });
 
@@ -144,7 +133,7 @@ async function getElectricityTypeOneName() {
   const { datas } = await getTenderScenariosApi({
     contentDict: contentDict.value,
     releaseTime: releaseTime.value,
-    unit: _unit.join(","),
+    unit: unit.value,
   });
   if (datas.length === 0) {
     return (showEmpty.value = true);
@@ -164,19 +153,17 @@ async function getElectricityTypeOneName() {
   canvasTitle.value = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}招标应用场景分布`;
   eChartsOption.value.title.text = canvasTitle.value;
   eChartsOption.value.color = ["#244BF1", "#FF892E", "#FFAF0B", "#01B82B"];
-  unit.value.forEach((item, index) => {
-    eChartsOption.value.series.push({
-      type: "pie",
-      radius: [204 - index * 50, 250 - index * 50],
-      label: {
-        show: true,
-        position: "inside",
-        formatter: (params) => {
-          return `${params.value}${params.data.unit === "MWH" ? "\n" : ""}${params.data.unit}`;
-        },
+  eChartsOption.value.series.push({
+    type: "pie",
+    radius: [204, 250],
+    label: {
+      show: true,
+      position: "inside",
+      formatter: (params) => {
+        return `${params.value}${params.data.unit === "MWH" ? "\n" : ""}${params.data.unit}`;
       },
-      data: datas[index].data,
-    });
+    },
+    data: datas[0].data,
   });
 
   loading.value = false;
