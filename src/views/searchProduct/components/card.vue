@@ -6,11 +6,13 @@
       alt=""
       v-if="product.logoUrl"
     />
-    <img
-      :class="ns.b('img')"
-      :src="useUserStoreHook().$state.fileUrl + product.image"
-      alt=""
-    />
+    <div :class="ns.be('img', 'box')">
+      <img
+        :class="ns.b('img')"
+        :src="useUserStoreHook().$state.fileUrl + product.image"
+        alt=""
+      />
+    </div>
     <p :class="ns.b('price')">
       参考价<span>{{ product.price }}/kWh起</span>
     </p>
@@ -89,8 +91,14 @@ const onDetail = () => {
   @include widthAndHeight(96px, 40px);
   @include absolute(1, 0, none, none, 0);
 }
-.es-searchProduct-card-img {
+.es-searchProduct-card-img__box {
   @include widthAndHeight(238px, 238px);
+  @include flex();
+  overflow: hidden;
+}
+.es-searchProduct-card-img {
+  height: 238px;
+  object-fit: contain;
 }
 .es-searchProduct-card-price {
   margin: 16px 0 0 8px;

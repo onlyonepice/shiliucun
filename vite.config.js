@@ -46,6 +46,7 @@ export default ({ mode }) => {
     // },
     // 服务端渲染
     server: {
+      hmr: true,
       // 是否开启 https
       https: false,
       // 端口号
@@ -62,8 +63,8 @@ export default ({ mode }) => {
         brotliSize: true,
         emitFile: false,
         filename: "test.html", //分析图生成的文件名
-        open:true //如果存在本地服务端口，将在打包后自动展示
-      })
+        open: true, //如果存在本地服务端口，将在打包后自动展示
+      }),
     ],
     // https://cn.vitejs.dev/config/dep-optimization-options.html#dep-optimization-options
     optimizeDeps: {
