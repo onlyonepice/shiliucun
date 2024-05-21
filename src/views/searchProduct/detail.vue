@@ -3,11 +3,13 @@
     <breadcrumb :breadcrumbList="breadcrumbList" />
     <div :class="[ns.b('content'), 'es-commonPage']">
       <div :class="[ns.b('content-top')]">
-        <img
-          :class="[ns.be('info-left', 'bigImg')]"
-          :src="useUserStoreHook().$state.fileUrl + productDetail.image"
-          alt=""
-        />
+        <div :class="[ns.be('info-left', 'bigImg-box')]">
+          <img
+            :class="[ns.be('info-left', 'bigImg')]"
+            :src="useUserStoreHook().$state.fileUrl + productDetail.image"
+            alt=""
+          />
+        </div>
         <div :class="[ns.b('info-right')]">
           <h3 :class="[ns.b('info-right-title')]">
             {{ productDetail.name }}
@@ -61,11 +63,13 @@
               :src="useUserStoreHook().$state.fileUrl + item.logoUrl"
               alt=""
             />
-            <img
-              :class="[ns.be('item', 'logo')]"
-              :src="useUserStoreHook().$state.fileUrl + item.image"
-              alt=""
-            />
+            <div :class="[ns.be('item', 'logo-box')]">
+              <img
+                :class="[ns.be('item', 'logo')]"
+                :src="useUserStoreHook().$state.fileUrl + item.image"
+                alt=""
+              />
+            </div>
             <p :class="[ns.be('item', 'price')]">
               参考价<span>1200/kWh起</span>
             </p>
@@ -157,9 +161,15 @@ const onConnectCompany = (id: string) => {
   @include widthAndHeight(680px, 400px);
   position: relative;
 }
-.es-searchProductDetail-info-left__bigImg {
+.es-searchProductDetail-info-left__bigImg-box {
   @include widthAndHeight(400px, 400px);
+  overflow: hidden;
+  @include flex();
+}
+.es-searchProductDetail-info-left__bigImg {
+  height: 400px;
   margin: 0 24px 0 0;
+  object-fit: contain;
 }
 .es-searchProductDetail-info-right-title {
   @include textOverflow(2);
@@ -218,8 +228,15 @@ const onConnectCompany = (id: string) => {
   @include widthAndHeight(80px, 32px);
   @include absolute(1, 0, none, none, 0);
 }
+.es-searchProductDetail-item__logo-box {
+  @include widthAndHeight(176px, 176px);
+  @include flex();
+  overflow: hidden;
+  margin: 32px auto 16px;
+}
 .es-searchProductDetail-item__logo {
-  @include widthAndHeight(208px, 208px);
+  height: 176px;
+  object-fit: contain;
   margin-bottom: 16px;
 }
 .es-searchProductDetail-item__price {

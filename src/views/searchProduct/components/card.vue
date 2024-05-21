@@ -80,7 +80,7 @@ const onDetail = () => {
   box-shadow: none;
   transition: all 0.3s;
   cursor: pointer;
-  padding: 16px 16px 24px 16px;
+  padding: 0 16px 24px 16px;
   text-align: center;
   @include relative();
   &:hover {
@@ -92,9 +92,10 @@ const onDetail = () => {
   @include absolute(1, 0, none, none, 0);
 }
 .es-searchProduct-card-img__box {
-  @include widthAndHeight(238px, 238px);
+  @include widthAndHeight(214px, 214px);
   @include flex();
   overflow: hidden;
+  margin: 40px auto 0;
 }
 .es-searchProduct-card-img {
   height: 238px;

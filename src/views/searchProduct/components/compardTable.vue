@@ -3,11 +3,13 @@
     <div v-if="!info.enterprise" />
     <template v-else>
       <div style="position: relative">
-        <img
-          :class="ns.be('info', 'bigImg')"
-          :src="useUserStoreHook().$state.fileUrl + info.image"
-          alt=""
-        />
+        <div :class="ns.be('info', 'bigImg-box')">
+          <img
+            :class="ns.be('info', 'bigImg')"
+            :src="useUserStoreHook().$state.fileUrl + info.image"
+            alt=""
+          />
+        </div>
         <img
           v-if="useUserStoreHook().comparedList.length > 2"
           :class="ns.be('info', 'close')"
@@ -142,11 +144,18 @@ const onClickEnterprise = (id: string) => {
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .es-searchProduct-comparedTable-info {
-  height: 287px;
+  height: 267px;
   text-align: center;
   padding: 24px 0 16px 0;
+  &__bigImg-box {
+    @include widthAndHeight(171px, 171px);
+    @include flex();
+    overflow: hidden;
+    margin: 8px auto;
+  }
   &__bigImg {
-    @include widthAndHeight(195px, 195px);
+    height: 171px;
+    object-fit: contain;
   }
   &__price {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
