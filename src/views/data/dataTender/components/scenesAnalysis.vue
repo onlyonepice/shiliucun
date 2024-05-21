@@ -151,13 +151,16 @@ async function getElectricityTypeOneName() {
   canvasTitle.value = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}招标应用场景分布`;
   eChartsOption.value.title.text = canvasTitle.value;
   eChartsOption.value.color = ["#244BF1", "#FF892E", "#FFAF0B", "#01B82B"];
+  eChartsOption.value.tooltip = {
+    show: false,
+  };
   eChartsOption.value.series.push({
     type: "pie",
     radius: [184, 250],
     label: {
       show: true,
       formatter: (params) => {
-        return `${params.data.percentage}%`;
+        return `${params.name}：${params.data.percentage}%`;
       },
     },
     data: datas[0].data,

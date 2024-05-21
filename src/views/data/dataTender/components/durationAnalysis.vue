@@ -81,7 +81,7 @@ const EChartOptions: Ref<any> = ref({
     label: {
       color: "rgba(0, 0, 0, 0.6)",
       fontSize: 16,
-      formatter: (param) => param.value + "%",
+      formatter: (param) => `${param.name}：${param.data.percentage}%`,
     },
     data: [],
   },
@@ -144,6 +144,9 @@ async function getData() {
     );
     const data = datas?.data;
     if (resp_code === 0 && data) {
+      EChartOptions.value.tooltip = {
+        show: false,
+      };
       // 添加title
       EChartOptions.value.title.text = eChartName;
       // 添加series

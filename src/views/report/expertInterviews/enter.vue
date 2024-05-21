@@ -12,6 +12,7 @@
             :class="ns.be('content', 'records_item')"
           >
             <div :class="ns.be('content', 'records_item-title')">
+              <p v-if="item.isTopping === 1">精选</p>
               <a
                 :href="reportLink(item)"
                 target="_blank"
@@ -154,6 +155,15 @@ getExpertInterviews();
         }
 
         .es-expertInterviews-content__records_item-title {
+          @include flex(center, flex-start);
+          p {
+            @include widthAndHeight(40px, 24px);
+            background: #f75964;
+            border-radius: 4px;
+            @include flex(center, center);
+            @include font(14px, 400, rgba(255, 255, 255, 0.9), 20px);
+            margin-right: 8px;
+          }
           a {
             text-decoration: none;
             @include font(20px, 400, rgba(0, 0, 0, 0.9), 28px);
