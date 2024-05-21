@@ -119,9 +119,7 @@ watch(
               break;
             case 6:
               item.datas.forEach((item: any) => {
-                if (item.defaultValue) {
-                  requestData.value.unit = "2";
-                }
+                item.defaultValue && (requestData.value.unit = item.paramValue);
               });
               break;
           }

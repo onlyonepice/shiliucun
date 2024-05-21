@@ -71,7 +71,6 @@ import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getTenderScenariosApi } from "@/api/data";
 import { pieEChartsOption } from "@/utils/echarts/pieECharts";
-import { cloneDeep } from "lodash";
 import { useUserStore } from "@/store/modules/user";
 // import { nextTick } from "process";
 const unitDom = ref(); // 获取单位下拉框
@@ -100,7 +99,7 @@ const props = defineProps({
 // 筛选项结果
 const contentDict = ref(712);
 const releaseTime = ref("2024");
-const unit = ref("2");
+const unit = ref("");
 const showEmpty: Ref<boolean> = ref(false);
 const canvasTitle = ref("");
 const onChangeFilter = (id: any, type: string) => {
@@ -112,16 +111,20 @@ const onChangeFilter = (id: any, type: string) => {
   ) {
     getElectricityTypeOneName();
   } else {
-    unitDom.value.onBlur();
     nextTick(() => {
-      unit.value = "2";
       contentDict.value = 712;
       releaseTime.value = "2024";
+      props.unitFilter.forEach((item) => {
+        item.defaultValue && (unit.value = item.paramValue);
+      });
     });
   }
 };
 
 onMounted(() => {
+  props.unitFilter.forEach((item) => {
+    item.defaultValue && (unit.value = item.paramValue);
+  });
   getElectricityTypeOneName();
 });
 
@@ -130,7 +133,6 @@ async function getElectricityTypeOneName() {
   loading.value = true;
   showEmpty.value = false;
   eChartsOption.value.series = [];
-  let _unit = cloneDeep(unit.value);
   const { datas } = await getTenderScenariosApi({
     contentDict: contentDict.value,
     releaseTime: releaseTime.value,
