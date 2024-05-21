@@ -1,3 +1,4 @@
+<!-- 中标分析报告 -->
 <template>
   <div :class="ns.b()">
     <div class="report-list" v-loading="loading">

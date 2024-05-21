@@ -1,3 +1,4 @@
+<!-- 应用场景分析 -->
 <template>
   <div :class="ns.b()">
     <div :class="ns.b('filter')">
@@ -145,11 +146,6 @@ const getData = async () => {
     if (datas.length === 0) {
       return (showEmpty.value = true);
     }
-    datas.forEach((item) => {
-      item.data.forEach((item2) => {
-        item2.unit = item.unit === "数量" ? "个" : item.unit;
-      });
-    });
     const _releaseTime = _filter.releaseTime;
     let _title = "123";
     props.formOptions[0].datas.forEach((item) => {
@@ -166,7 +162,7 @@ const getData = async () => {
       label: {
         show: true,
         formatter: (params) => {
-          return `${params.value}${params.data.unit === "MWH" ? "\n" : ""}${params.data.unit}`;
+          return `${params.data.percentage}%`;
         },
       },
       data: datas[0].data,

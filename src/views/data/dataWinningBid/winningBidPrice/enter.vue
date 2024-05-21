@@ -1,3 +1,4 @@
+<!-- 中标价格分析 -->
 <template>
   <div :class="ns.b()">
     <div :class="ns.b('filter')">

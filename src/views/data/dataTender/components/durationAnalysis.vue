@@ -1,3 +1,4 @@
+<!-- 储能时长分析 -->
 <template>
   <div v-loading="loading" :class="ns.b()">
     <!-- 招标分析 -->
@@ -75,7 +76,7 @@ const EChartOptions: Ref<any> = ref({
   series: {
     type: "pie",
     startAngle: 0,
-    radius: ["52%", "68%"],
+    radius: [184, 250],
     avoidLabelOverlap: true,
     label: {
       color: "rgba(0, 0, 0, 0.6)",
@@ -227,7 +228,7 @@ function handleChange(val, key) {
     min-height: 320px;
 
     #eChart-duration-analysis {
-      @include widthAndHeight(100%, 500px);
+      @include widthAndHeight(100%, 642px);
     }
   }
 }

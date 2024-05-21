@@ -1,3 +1,4 @@
+<!-- 应用场景分析 -->
 <template>
   <div :class="ns.b()">
     <div :class="ns.b('top')">
@@ -138,11 +139,6 @@ async function getElectricityTypeOneName() {
   if (datas.length === 0) {
     return (showEmpty.value = true);
   }
-  datas.forEach((item) => {
-    item.data.forEach((item2) => {
-      item2.unit = item.unit === "数量" ? "个" : item.unit;
-    });
-  });
   const _releaseTime = releaseTime.value;
   let _title = "";
   props.contentFilter.forEach((item) => {
@@ -159,7 +155,7 @@ async function getElectricityTypeOneName() {
     label: {
       show: true,
       formatter: (params) => {
-        return `${params.value}${params.data.unit === "MWH" ? "\n" : ""}${params.data.unit}`;
+        return `${params.data.percentage}%`;
       },
     },
     data: datas[0].data,
