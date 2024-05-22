@@ -9,16 +9,6 @@ export default {
   },
   children: [
     {
-      path: "/database",
-      name: "Database",
-      components: {
-        default: () => import("@/views/data/dataBase/enter.vue"),
-      },
-      meta: {
-        title: "行业数据库",
-      },
-    },
-    {
       path: "/dataTender",
       name: "DataTender",
       components: {
