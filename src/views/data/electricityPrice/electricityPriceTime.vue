@@ -300,6 +300,7 @@ async function getDischargeStrategyData() {
 const onGetRegionalData = async () => {
   apiRegionalData(null)
     .then((res: any) => {
+      console.log(res.datas);
       regionalData.value = res.datas.filter(
         (item) =>
           !item.regionName.includes("(") &&
@@ -588,7 +589,7 @@ function handleTOUData() {
           left: 16,
           top: 16,
           style: {
-            text: `需量电价：${electricityPrice.value.demandElectricityPrice}元/千伏安·月`,
+            text: `需量电价：${electricityPrice.value.demandElectricityPrice}元/千瓦·月`,
             font: "14px Arial",
             fill: "#000",
           },
@@ -598,7 +599,7 @@ function handleTOUData() {
           left: 16,
           top: 40,
           style: {
-            text: `容量电价：${electricityPrice.value.capacityElectricityPrice}元/千瓦·月`,
+            text: `容量电价：${electricityPrice.value.capacityElectricityPrice}元/千伏安·月`,
             font: "14px Arial",
             fill: "#000",
           },
