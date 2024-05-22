@@ -68,8 +68,8 @@ const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 const eChartsDom = ref(null);
 const isEmptyData = ref(false);
 // 导出图片相关
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportImgTitle: Ref<string> = ref("");
+const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const ns = useNamespace("dataBusinessAnalysis");
 const loading: Ref<boolean> = ref(false);
@@ -123,7 +123,7 @@ async function getElectricityTypeOneName() {
     const _data = datas.slice(0, 20);
     eChartsOption.value.title.text = releaseTime.value + "储能招标企业分析";
     eChartsOption.value.title.subtext = `储能系统`;
-    eChartsOption.value.color = ["#165DFF", "#FF7D00"];
+    eChartsOption.value.color = ["#244BF1", "#34BCF4"];
     eChartsOption.value.grid = {
       top: "15%",
       left: "50",
@@ -168,8 +168,12 @@ async function getElectricityTypeOneName() {
           htmlStr += `
         <div style=" width: 100%; height: 32px; margin-top: 8px; background: #F4F5F7; border-radius: 4px; padding: 0 8px 0 10px; font-weight: 400; ${flexStyle}" >
           <div style="${flexStyle}" >
-            <div style=" width: 12px; height: 12px; margin-right: 10px; background-color: ${index === 0 ? "#165DFF" : "#FF7D00"}; border-radius: 2px; " ></div>
-            <span style="font-size: 14px; color: #5B6985;">${item.seriesName}</span>
+            <div style=" width: 12px; height: 12px; margin-right: 10px; background-color: ${
+              index === 0 ? "#165DFF" : "#FF7D00"
+            }; border-radius: 2px; " ></div>
+            <span style="font-size: 14px; color: #5B6985;">${
+              item.seriesName
+            }</span>
           </div>
           <span style="font-size: 14px; color: #000; font-weight: 600;margin-left: 36px;">
             ${item.value}${item.seriesName === "功率" ? "MW" : "MWh"}

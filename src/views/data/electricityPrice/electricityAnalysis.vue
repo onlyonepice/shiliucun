@@ -84,8 +84,8 @@
 import {
   getMonth,
   apiRegionalData,
-  getPeakAndValley,
   getVoltageLevel,
+  getPeakAndValley,
   getDifferentialRanking,
 } from "@/api/priceTracking";
 import { eChartsOptionCommon } from "./data";

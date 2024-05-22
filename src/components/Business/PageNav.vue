@@ -133,7 +133,6 @@ defineProps({
 // 获取vip图标
 const getVIPIcon = computed(() => {
   const _code = useUserStoreHook().$state.userInfo.roles[0].code;
-  console.log("111111111", _code);
   return _code === "PERSON_MEMBER_USER"
     ? PersonalVip
     : _code === "ENTERPRISE_MEMBER_USER"
