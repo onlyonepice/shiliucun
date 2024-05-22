@@ -190,7 +190,8 @@ const dischargeStrategyData = ref<string>("");
 const timeElectricityPriceData = ref<any>([]); // 分时电价数据
 const monthPriceDifferenceData = ref<any>({}); // 峰谷价差数据
 const monthElectricityPriceData = ref<any>([]); // 分时电价数据
-
+//
+const electricityPrice = ref(null);
 // 导出图片
 const exportResult = () => {
   const _echarts = echarts.getInstanceByDom(myeCharts.value);
@@ -587,7 +588,7 @@ function handleTOUData() {
           left: 16,
           top: 16,
           style: {
-            text: "需量电价：13元/千伏安·月",
+            text: `需量电价：${electricityPrice.value.demandElectricityPrice}元/千伏安·月`,
             font: "14px Arial",
             fill: "#000",
           },
@@ -597,7 +598,7 @@ function handleTOUData() {
           left: 16,
           top: 40,
           style: {
-            text: "容量电价：12元/千瓦·月",
+            text: `容量电价：${electricityPrice.value.capacityElectricityPrice}元/千瓦·月`,
             font: "14px Arial",
             fill: "#000",
           },
@@ -988,12 +989,21 @@ function handlePriceDifferenceData() {
 // 获取分时电价
 async function getTOUData() {
   try {
-    const { datas } = await getTimePrice({
+    const {
+      datas: {
+        timeElectricityPriceResps,
+        capacityElectricityPrice, // 容量电价
+        demandElectricityPrice, // 需量电价
+      },
+    } = await getTimePrice({
       ...searchParams.value,
       years: monthVal.value,
     });
-    console.log(datas);
-    timeElectricityPriceData.value = datas;
+    electricityPrice.value = {
+      capacityElectricityPrice,
+      demandElectricityPrice,
+    };
+    timeElectricityPriceData.value = timeElectricityPriceResps;
     choseSpecific.value === 1 && handleTOUData();
   } catch (error) {
     console.error(error);

@@ -76,7 +76,13 @@ export const getMonthPrice = (data) => {
 };
 // 分时电价
 export const getTimePrice = (data) => {
-  return http.request<Request>(
+  return http.request<{
+    datas: {
+      capacityElectricityPrice: number;
+      demandElectricityPrice: number;
+      timeElectricityPriceResps: Array<any>;
+    };
+  }>(
     "post",
     "/eesa-report/electricityTimeShare/electricityTimeShareShow/openApi/v1.1/getTimeElectricityPrice",
     { data },
