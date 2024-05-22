@@ -11,10 +11,31 @@
     </div>
     <div :class="[ns.b('content'), 'animate__animated animate__fadeIn']">
       <div :class="[ns.be('content', 'left')]">
-        <div :class="ns.be('content', 'item')">
-          <h5>真实姓名</h5>
-          <div :class="ns.be('item', 'value')">
+        <div :class="ns.be('content', 'flex')">
+          <img
+            v-if="useUserStore().$state.userInfo.headImgUrl"
+            :class="ns.b('avatar')"
+            :src="
+              useUserStore().$state.fileUrl +
+              useUserStore().$state.userInfo.headImgUrl
+            "
+            alt=""
+          />
+          <img v-else :class="ns.b('avatar')" :src="PersonalAvatar" alt="" />
+          <div :class="ns.be('item', 'head')">
             {{ modifyInfoFreeze.realName }}
+            <template v-if="useUserStore().$state.userInfo.roles">
+              <img
+                v-if="
+                  useUserStore().$state.userInfo.roles[0].code !==
+                    'PERSON_ORDINARY_USER' &&
+                  useUserStore().$state.userInfo.roles[0].code !==
+                    'PERSON_TRIAL_ACCOUNT'
+                "
+                :class="ns.b('vip')"
+                :src="getVIPIcon"
+              />
+            </template>
           </div>
         </div>
         <div :class="ns.be('content', 'item')">
@@ -194,11 +215,32 @@
       title="编辑信息"
       :visible="visibleInfo"
       width="560px"
-      height="474px"
+      height="544px"
       @onHandleClose="onHandleCloseInfo"
       confirmText="保存"
     >
       <template #content>
+        <div
+          :class="[
+            ns.be('content', 'infoDialog'),
+            ns.be('content', 'infoDialog-img'),
+          ]"
+        >
+          <span required>用户头像</span>
+          <img
+            :src="
+              headImgUrlUpdate
+                ? useUserStore().fileUrl + headImgUrlUpdate
+                : PersonalAvatar
+            "
+            alt=""
+            @click="modifyAvatarDialog = true"
+          />
+          <img
+            src="@/assets/img/common/carama-icon.png"
+            @click="modifyAvatarDialog = true"
+          />
+        </div>
         <div :class="ns.be('content', 'infoDialog')">
           <span required>真实姓名</span>
           <Select
@@ -292,6 +334,13 @@
       </template>
     </Dialog>
   </div>
+  <ModifyAvatar
+    v-if="modifyAvatarDialog"
+    ref="avatar"
+    :dialogVisibleShow="modifyAvatarDialog"
+    @onClose="modifyAvatarDialog = false"
+    @onSuccessAvatar="avatarDialogConfirm"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -300,7 +349,14 @@ import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
 import { NOOP } from "@vue/shared";
+import ModifyAvatar from "./ModifyAvatar.vue";
 import { regMobile, regEmail } from "@/utils/rule";
+import PersonalAvatar from "@/assets/img/common/personal-avatar.png";
+import PersonalVip from "@/assets/img/vip/personal-vip.png";
+import CompanyVip from "@/assets/img/vip/company-vip.png";
+import EESAOrdinaryVip from "@/assets/img/vip/eesa-ordinary-vip.png";
+import ViceDirectorVip from "@/assets/img/vip/vice-director-vip.png";
+import DirectorVip from "@/assets/img/vip/director-vip.png";
 import {
   updateUserInfo,
   modifyMbCode,
@@ -319,6 +375,7 @@ const visibleInfo: Ref<boolean> = ref(false); // 编辑信息弹窗
 const visibleInfoSet: Ref<boolean> = ref(false); // 编辑信息弹窗-延迟
 const btnDesc: Ref<string> = ref("获取验证码"); // 倒计时文案
 const areaList: Ref<any> = ref([]); // 地区数据
+const modifyAvatarDialog: Ref<boolean> = ref(false); // 修改头像弹窗
 const cascaderOption: Ref<any> = ref({
   expandTrigger: "hover",
   label: "name",
@@ -326,6 +383,7 @@ const cascaderOption: Ref<any> = ref({
   children: "regionResps",
 }); // 地区级联配置项
 const modifyInfo: Ref<any> = ref({
+  avatarImg: "",
   realName: "",
   company: "",
   position: "",
@@ -337,6 +395,7 @@ const modifyInfo: Ref<any> = ref({
 const modifyInfoFreeze: Ref<any> = ref({});
 const timer = ref(null); // 定时器
 const userDetailInfo: Ref<any> = ref(); // 用户详细信息
+const headImgUrlUpdate: Ref<string> = ref(""); // 头像
 const modifyMbForm: Ref<any> = ref({
   mobile: "",
   code: "",
@@ -347,14 +406,35 @@ const showInfo: Ref<any> = ref({
   weChat: false,
   email: false,
 });
+// 获取vip图标
+const getVIPIcon = computed(() => {
+  const _code = useUserStore().$state.userInfo.roles[0].code;
+  return _code === "PERSON_MEMBER_USER"
+    ? PersonalVip
+    : _code === "ENTERPRISE_MEMBER_USER"
+      ? CompanyVip
+      : _code === "ENTERPRISE_EESA_MEMBER_USER"
+        ? EESAOrdinaryVip
+        : _code === "VICE_CHAIRMAN_MEMBER"
+          ? ViceDirectorVip
+          : _code === "CHAIRMAN_MEMBER"
+            ? DirectorVip
+            : "";
+});
 onMounted(() => {
   userInfo.value = useUserStore().$state.userInfo;
   showInfo.value.mobile = userInfo.value.mobileHide;
   showInfo.value.weChat = userInfo.value.wecatHide;
   showInfo.value.email = userInfo.value.emailHide;
+  headImgUrlUpdate.value = userInfo.value.headImgUrl;
   onGetUserInfo();
   onGetArea();
 });
+// 修改头像弹窗
+const avatarDialogConfirm = (imgUrl: string) => {
+  modifyAvatarDialog.value = false;
+  headImgUrlUpdate.value = imgUrl;
+};
 // 修改用户信息
 const onChangeInfo = (value: any, type: string) => {
   type === "regionCode" &&
@@ -366,6 +446,7 @@ const onHandleCloseInfo = async (type: boolean) => {
   const _modifyInfo = JSON.parse(JSON.stringify(modifyInfo.value));
   if (!type) {
     visibleInfo.value = false;
+    headImgUrlUpdate.value = userInfo.value.headImgUrl;
     return setTimeout(() => {
       visibleInfoSet.value = false;
     }, 200);
@@ -391,6 +472,7 @@ const onHandleCloseInfo = async (type: boolean) => {
   if (_modifyInfo.email === null || _modifyInfo.email === "") {
     delete _modifyInfo.email;
   }
+  _modifyInfo.headImgUrl = headImgUrlUpdate.value;
   const { resp_code }: any = await editUserInfoApi(_modifyInfo);
   if (resp_code === 0) {
     ElMessage.success("编辑成功");
@@ -399,6 +481,7 @@ const onHandleCloseInfo = async (type: boolean) => {
       visibleInfoSet.value = false;
     }, 200);
     onGetUserInfo();
+    headImgUrlUpdate.value = userInfo.value.headImgUrl;
   }
 };
 // 获取用户详细信息
@@ -588,6 +671,15 @@ const onSendCode = async () => {
   @include widthAndHeight(96px, 96px);
   border-radius: 4px;
 }
+.es-homePersonalInfo-content__flex {
+  @include flex(center, flex-start, nowrap);
+  margin-bottom: 24px;
+  img {
+    @include widthAndHeight(80px, 80px);
+    border-radius: 50%;
+    margin-right: 16px;
+  }
+}
 .es-homePersonalInfo-content__item {
   width: 394px;
   @include margin(0, 0, 24px, 0);
@@ -599,6 +691,16 @@ const onSendCode = async () => {
   }
   &:nth-last-child(1) {
     @include margin(0, 0, 0, 0);
+  }
+}
+.es-homePersonalInfo-item__head {
+  @include font(20px, 600, rgba(0, 0, 0, 0.9), 28px);
+  .es-homePersonalInfo-vip {
+    @include widthAndHeight(auto, 20px);
+    object-fit: contain;
+    display: block;
+    border-radius: 0;
+    margin-top: 4px;
   }
 }
 .es-homePersonalInfo-content__item--special {
@@ -650,6 +752,24 @@ const onSendCode = async () => {
     color: red; /* 可以根据需要设置颜色 */
     display: inline-block;
     margin-right: 4px;
+  }
+}
+.es-homePersonalInfo-content__infoDialog-img {
+  @include flex(center, flex-start, nowrap);
+  margin-bottom: 16px;
+  height: 64px;
+  cursor: pointer;
+  @include relative();
+  span {
+    height: 22px;
+  }
+  img {
+    @include widthAndHeight(64px, 64px);
+    border-radius: 50%;
+  }
+  img:nth-of-type(2) {
+    @include widthAndHeight(26px, 26px);
+    @include absolute(1, none, none, 0, 123px);
   }
 }
 </style>
