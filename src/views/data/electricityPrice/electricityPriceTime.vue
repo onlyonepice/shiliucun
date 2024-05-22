@@ -508,7 +508,7 @@ function handleTOUData() {
         _defaultData.forEach((_item) => {
           if (item.periodType === _item.periodType) {
             const startData = {
-              value: item.electrovalence,
+              value: item.electrovalence.toFixed(4),
               label: label,
               symbol: "circle",
               symbolSize: 8,
@@ -520,7 +520,7 @@ function handleTOUData() {
               },
             };
             const noneData = {
-              value: item.electrovalence,
+              value: item.electrovalence.toFixed(4),
               label: label,
               symbol: "none",
             };
@@ -563,6 +563,47 @@ function handleTOUData() {
       }
     });
     const options = cloneDeep(eChartsOption.value);
+    options.graphic.push({
+      type: "group",
+      right: 0,
+      top: "0",
+      children: [
+        {
+          type: "rect",
+          shape: {
+            width: 190,
+            height: 70,
+            r: 4,
+          },
+          style: {
+            fill: "#F2F3F5",
+            stroke: "#eee",
+            lineWidth: 2,
+            radius: 10,
+          },
+        },
+        {
+          type: "text",
+          left: 16,
+          top: 16,
+          style: {
+            text: "需量电价：13元/千伏安·月",
+            font: "14px Arial",
+            fill: "#000",
+          },
+        },
+        {
+          type: "text",
+          left: 16,
+          top: 40,
+          style: {
+            text: "容量电价：12元/千瓦·月",
+            font: "14px Arial",
+            fill: "#000",
+          },
+        },
+      ],
+    });
     options.title[0].text = title;
     options.title[0].subtext = subtitle;
     options.title[1] = titleTwo.value;
@@ -705,7 +746,9 @@ function handleMonthData() {
     for (const key in item.data) {
       _defaultData.forEach((_item) => {
         if (_item.periodType === key) {
-          _item.data.push(item.data[key]);
+          _item.data.push(
+            item.data[key] === "-" ? "-" : toNumber(item.data[key]).toFixed(4),
+          );
         }
       });
     }
@@ -778,10 +821,10 @@ function handleMonthData() {
       width: 190,
       height:
         padding * 2 + (graphicChildren.length - 1) * fontLineHeight + fontSize,
-      r: 10,
+      r: 4,
     },
     style: {
-      fill: "#fff000",
+      fill: "#F2F3F5",
       stroke: "#eee",
       lineWidth: 2,
       radius: 10,
@@ -871,7 +914,9 @@ function handlePriceDifferenceData() {
     for (const key in item.data) {
       _defaultData.forEach((_item) => {
         if (_item.periodType === key) {
-          _item.data.push(item.data[key]);
+          _item.data.push(
+            item.data[key] === "-" ? "-" : toNumber(item.data[key]).toFixed(4),
+          );
         }
       });
     }
@@ -947,6 +992,7 @@ async function getTOUData() {
       ...searchParams.value,
       years: monthVal.value,
     });
+    console.log(datas);
     timeElectricityPriceData.value = datas;
     choseSpecific.value === 1 && handleTOUData();
   } catch (error) {
@@ -1053,12 +1099,14 @@ function disabledDate(time) {
 const backup_monthVal = ref(null); // 月份
 const backup_monthRange = ref(null); // 开始结束时间
 const backup_searchParams = ref(null); // 表单数据
+
 // 用户触发表单
 function handleTriggerForm() {
   backup_monthVal.value = cloneDeep(monthVal.value);
   backup_monthRange.value = cloneDeep(monthRange.value);
   backup_searchParams.value = cloneDeep(searchParams.value);
 }
+
 // 打开登录弹窗
 function handleOpenLogin() {
   setTimeout(() => {

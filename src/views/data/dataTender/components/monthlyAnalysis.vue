@@ -88,7 +88,7 @@ async function getElectricityTypeOneName() {
   }
   eChartsOption.value.title.text = "储能月度招标分析";
   eChartsOption.value.title.subtext = `储能系统`;
-  eChartsOption.value.color = ["#165DFF", "#FF7D00"];
+  eChartsOption.value.color = ["#244BF1", "#34BCF4"];
   const _y1 = [];
   const _y2 = [];
   datas.map((item) => {

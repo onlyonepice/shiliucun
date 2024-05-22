@@ -3,11 +3,11 @@
     <div v-for="(item, index) in navList" :key="index" :class="ns.b('item')">
       <div :class="ns.be('item', 'img-box')">
         <img :src="item.icon" alt="" />
+        <div :class="ns.be('item', 'text')">{{ item.name }}</div>
         <div v-if="item.iconHover" :class="ns.be('item', 'hover')">
           <img :src="item.iconHover" alt="" />
         </div>
       </div>
-      <div :class="ns.be('item', 'line')" />
     </div>
   </div>
 </template>
@@ -24,9 +24,13 @@ import customerServiceHover from "@/assets/img/consultationNav/customerService-h
 const ns = useNamespace("consultation-nav");
 
 const navList = ref([
-  { name: "客服", icon: customerService, iconHover: customerServiceHover },
-  { name: "小程序", icon: miniApp, iconHover: miniAppHover },
-  { name: "微信", icon: weChat, iconHover: weChatHover },
+  {
+    name: "掌上\n储能",
+    icon: customerService,
+    iconHover: customerServiceHover,
+  },
+  { name: "储能云", icon: miniApp, iconHover: miniAppHover },
+  { name: "客服\n咨询", icon: weChat, iconHover: weChatHover },
 ]);
 </script>
 <style lang="scss" scoped>
@@ -44,9 +48,9 @@ const navList = ref([
     1px solid #dbdce2,
     0px 4px 10px 0px rgba(0, 0, 0, 0.1)
   );
-  @include widthAndHeight(40px, auto);
+  @include widthAndHeight(64px, auto);
   @include flex();
-  padding: 4px;
+  padding: 11px 4px;
 
   .es-consultation-nav-item {
     @include flex();
@@ -55,25 +59,31 @@ const navList = ref([
 
     &:last-child {
       margin-bottom: 0;
-
-      .es-consultation-nav-item__line {
-        display: none;
-      }
     }
 
     .es-consultation-nav-item__img-box {
       @include flex();
-      @include widthAndHeight(32px, 32px);
+      @include widthAndHeight(40px, auto);
       border-radius: 4px;
       cursor: pointer;
-
+      text-align: center;
+      font-weight: 400;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.9);
+      line-height: 18px;
+      padding: 5px 0;
+      position: relative;
+      .es-consultation-nav-item__text {
+        white-space: pre-line;
+      }
       .es-consultation-nav-item__hover {
         animation-duration: 0.3s;
         animation-fill-mode: both;
         animation-name: fadeOutLeft;
-        position: fixed;
-        bottom: 48px;
-        right: 80px;
+        position: absolute;
+        top: 50%;
+        transform: translate(0%, -50%);
+        right: 0;
         @include box(
           8px,
           0,
@@ -90,7 +100,6 @@ const navList = ref([
           height: 100%;
         }
       }
-
       &:hover {
         background: #f2f3f5;
 
@@ -103,25 +112,19 @@ const navList = ref([
     img {
       @include widthAndHeight(20px, 20px);
     }
-
-    .es-consultation-nav-item__line {
-      margin-top: 2px;
-      @include widthAndHeight(16px, 1px);
-      background: #dbdce2;
-    }
   }
 }
 @keyframes fadeInLeft {
   0% {
     display: block;
     opacity: 0;
-    right: 66px;
+    right: 40px;
   }
 
   100% {
     display: block;
     opacity: 1;
-    right: 80px;
+    right: 58px;
   }
 }
 
@@ -129,13 +132,13 @@ const navList = ref([
   0% {
     display: block;
     opacity: 1;
-    right: 80px;
+    right: 58px;
   }
 
   100% {
     display: none;
     opacity: 0;
-    right: 66px;
+    right: 40px;
   }
 }
 </style>
