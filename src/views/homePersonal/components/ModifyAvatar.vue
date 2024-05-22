@@ -312,7 +312,7 @@ export default defineComponent({
 .dialog-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   text-align: center;
   line-height: 32px;
   font-size: 14px;
