@@ -40,7 +40,7 @@ const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
 import { getReNewsInformations } from "@/api/report";
 import { onMounted, ref, Ref } from "vue";
-import IndustryInsightList from "@/components/Common/IndustryInsightList.vue";
+import IndustryInsightList from "@/components/Business/IndustryInsightList.vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("industryInsight");
 const currentPage1 = ref(1);

@@ -16,7 +16,7 @@ declare module "vue" {
     ElInput: (typeof import("element-plus/es"))["ElInput"];
     ElScrollbar: (typeof import("element-plus/es"))["ElScrollbar"];
     ExportCanvasDialog: (typeof import("./../components/Business/ExportCanvasDialog.vue"))["default"];
-    IndustryInsightList: (typeof import("./../components/Common/IndustryInsightList.vue"))["default"];
+    IndustryInsightList: (typeof import("../components/Business/IndustryInsightList.vue"))["default"];
     Loading: (typeof import("./../components/Common/Loading.vue"))["default"];
     Login: (typeof import("./../components/Business/Login.vue"))["default"];
     Logout: (typeof import("./../components/Common/Dialog/Logout.vue"))["default"];
@@ -27,10 +27,10 @@ declare module "vue" {
     PageBottom: (typeof import("./../components/Business/PageBottom.vue"))["default"];
     PageNav: (typeof import("./../components/Business/PageNav.vue"))["default"];
     Pagination: (typeof import("./../components/Common/Pagination.vue"))["default"];
-    PolicyList: (typeof import("./../components/Common/PolicyList.vue"))["default"];
+    PolicyList: (typeof import("../components/Business/PolicyList.vue"))["default"];
     RouterLink: (typeof import("vue-router"))["RouterLink"];
     RouterView: (typeof import("vue-router"))["RouterView"];
-    Search: (typeof import("./../components/Common/Search.vue"))["default"];
+    Search: (typeof import("../components/Business/Search.vue"))["default"];
     Select: (typeof import("./../components/Common/Select.vue"))["default"];
     SkipMask: (typeof import("./../components/Common/SkipMask.vue"))["default"];
     Tabs: (typeof import("./../components/Common/Tabs.vue"))["default"];

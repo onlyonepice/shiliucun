@@ -30,6 +30,13 @@ pnpm run lint
 ├── components
     ├── Business // 业务组件
     ├── Common   // 功能组件
+        ├── Dialog // 弹窗
+        ├── Breadcrumb // 面包屑
+        ├── Loading // 加载
+        ├── Pagination // 分页器
+        ├── Select // 操作项-输入框/选择器
+        ├── SkipMask // 全局页面中间提示框
+        ├── Tabs // 标签栏
 ├── config // 配置文件
 ├── router // 路由
 ├── store // 状态管理

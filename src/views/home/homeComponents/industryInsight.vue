@@ -47,7 +47,7 @@ import useNamespace from "@/utils/nameSpace";
 import rightArrow from "@/assets/img/common/right-arrow.png";
 import { getReNewsInFormations } from "@/api/home";
 import { useRouter } from "vue-router";
-import IndustryInsightList from "@/components/Common/IndustryInsightList.vue";
+import IndustryInsightList from "@/components/Business/IndustryInsightList.vue";
 const ns = useNamespace("home-industryInsight");
 const router = useRouter();
 const pageData = ref([]);
