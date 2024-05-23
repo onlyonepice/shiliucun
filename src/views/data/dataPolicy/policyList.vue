@@ -456,7 +456,25 @@ async function handleCheckChange(select: any, row: any) {
     checkedKeys.splice(0, 1);
   }
   filterParams.value[key] = checkedKeys.join(",");
-  await policyFilterSearchFn();
+  const data = await policyFilterSearch(filterParams.value.year);
+  if (data.resp_code === 0) {
+    data.datas.screen.forEach((item) => {
+      if (item.paramValue === "policyReleased") {
+        monthList.value = item;
+        item.dropDownBoxResp = item.dropDownBoxResp.map((item) => {
+          return {
+            ...paging.value,
+            paramDesc: item.paramDesc,
+            paramValue: item.paramValue,
+          };
+        });
+        policyReleased.value = item.dropDownBoxResp[0].paramValue;
+      } else {
+        filterOptions.value.push(item);
+      }
+    });
+    getData();
+  }
 }
 
 // 过滤后的筛选项
