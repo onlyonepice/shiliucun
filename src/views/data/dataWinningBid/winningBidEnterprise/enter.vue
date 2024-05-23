@@ -326,11 +326,11 @@ const initData = () => {
   }
   const dimensions = ["group", "energyScale", "winningUnitPrice", "min", "max"];
   // 柱状图配置
-  const colorConfig = ["#165DFF", "#FF7D00", "#50B0F9"];
+  const colorConfig = ["#165DFF", "#6F89F6", "#50B0F9"];
   const unitConfig = ["MWh", "元/Wh", "元/Wh"];
   const labelConfig = ["容量", "中标均价", "中标范围"];
   echartOptions.value = {
-    color: ["#165DFF", "#FF7D00"],
+    color: ["#165DFF", "#6F89F6"],
     title: {
       show: true,
       text: "中标企业分析",

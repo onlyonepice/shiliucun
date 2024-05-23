@@ -120,7 +120,7 @@ async function getElectricityTypeOneName() {
         htmlStr += `
         <div style=" width: 100%; height: 32px; margin-top: 8px; background: #F4F5F7; border-radius: 4px; padding: 0 8px 0 10px; font-weight: 400; ${flexStyle}" >
           <div style="${flexStyle}" >
-            <div style=" width: 12px; height: 12px; margin-right: 10px; background-color: ${index === 0 ? "#165DFF" : "#FF7D00"}; border-radius: 2px; " ></div>
+            <div style=" width: 12px; height: 12px; margin-right: 10px; background-color: ${index === 0 ? "#244BF1" : "#34BCF4"}; border-radius: 2px; " ></div>
             <span style="font-size: 14px; color: #5B6985;">${item.seriesName}</span>
           </div>
           <span style="font-size: 14px; color: #000; font-weight: 600;margin-left: 36px;">

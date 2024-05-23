@@ -36,23 +36,24 @@
 </template>
 
 <script setup lang="ts">
+import {
+  winingBidTime,
+  getUnitListApi,
+  durationData_V2,
+  technologyType_V2,
+  getBiddingAreaApi,
+  getTenderTimeFilterApi,
+  applicationScenariosBox,
+  bidWinningContentData_V2,
+} from "@/api/data";
 import { ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import WinningBidPrice from "./winningBidPrice/enter.vue";
-import WinningBidEnterprise from "./winningBidEnterprise/enter.vue";
 import WinningBidReport from "./winningBidReport/enter.vue";
 import WinningBidScenes from "./winningBidScenes/index.vue";
 import WinningTimeAnalysis from "./winningTimeAnalysis/index.vue";
-import {
-  bidWinningContentData_V2,
-  technologyType_V2,
-  durationData_V2,
-  applicationScenariosBox,
-  winingBidTime,
-  getTenderTimeFilterApi,
-  getUnitListApi,
-  getBiddingAreaApi,
-} from "@/api/data";
+import WinningBidEnterprise from "./winningBidEnterprise/enter.vue";
+
 const ns = useNamespace("dataWinningBid");
 const tabList = ref([
   {
