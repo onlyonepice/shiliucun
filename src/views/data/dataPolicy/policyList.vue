@@ -469,8 +469,6 @@ async function handleCheckChange(select: any, row: any) {
           };
         });
         policyReleased.value = item.dropDownBoxResp[0].paramValue;
-      } else {
-        filterOptions.value.push(item);
       }
     });
     getData();
