@@ -480,8 +480,8 @@ const onHandleCloseInfo = async (type: boolean) => {
     setTimeout(() => {
       visibleInfoSet.value = false;
     }, 200);
+    useUserStore().handleGetUserInfo();
     onGetUserInfo();
-    headImgUrlUpdate.value = userInfo.value.headImgUrl;
   }
 };
 // 获取用户详细信息
