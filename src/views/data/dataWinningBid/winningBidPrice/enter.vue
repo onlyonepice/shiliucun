@@ -266,8 +266,8 @@ const initECharts = () => {
   myChart.setOption(EChartOptions.value);
 };
 const colorEnum = {
-  "4小时及以上": "#FF8D32",
-  "2到4小时（含2小时）": "#2FAEFF",
+  "4小时及以上": "#B8C4FB",
+  "2到4小时（含2小时）": "#6F89F6",
   "2小时以内": "#244BF1",
 };
 const initData = () => {
