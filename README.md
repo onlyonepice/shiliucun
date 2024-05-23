@@ -28,8 +28,8 @@ pnpm run lint
 ├── api // 接口文档
 ├── assets // 静态资源
 ├── components
-│   ├── Business // 业务组件
-│   ├── Common   // 功能组件
+    ├── Business // 业务组件
+    ├── Common   // 功能组件
 ├── config // 配置文件
 ├── router // 路由
 ├── store // 状态管理
@@ -38,12 +38,27 @@ pnpm run lint
 ├── utils // 工具类
 ├── views // 页面
     ├── calculate // 工商业测算
+    ├── data // 数据
         ├── dataTender // 招标
         ├── dataWinningBid // 中标
         ├── electricityPrice // 电价
         ├── dataPolicy // 政策
-    ├── data // 数据
+    ├── error // 错误页面
+        ├── 403
+        ├── 404
+        ├── 500
+    ├── financingPlan // 资源-融资方案
     ├── home // 首页
+    ├── homePersonal // 个人中心
+    ├── report // 报告
+        ├── expertInterviews // 专家访谈
+        ├── industryInsight // 行业洞察
+        ├── quarterlyMonthlyReports // 季度月报
+        ├── reportOnLine // 在线报告
+        ├── reportWhitePaper // 白皮书
+    ├── reportDetail // 报告详情
+    ├── searchProduct // 查产品
+    ├── vip // 会员中心
 ```
 
 ### Customize configuration
