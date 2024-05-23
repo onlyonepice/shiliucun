@@ -163,7 +163,7 @@ async function getElectricityTypeOneName() {
         const { data } = params;
         const contentTitle = `font-size: 16px; font-weight: 600; color: #1C232F; margin-bottom:8px; line-height: 24px;`;
         const pStyle = `width: 208px; height: 32px; background: #F4F5F7; display:flex; justify-content:space-between; align-item:center; padding:5px 8px; border-radius: 4px 4px 0 0;`;
-        const spanTitle = `font-size: 14px; font-weight: 400; color: #5B6985; ine-height: 22px;`;
+        const spanTitle = `font-size: 14px; font-weight: 400; color: #1C232F; ine-height: 22px;`;
         const spanValue = `font-size: 14px; font-weight: 600; color: #1C232F; line-height: 22px;`;
         return `
         <p style='${contentTitle}'>${params.name}</p>
