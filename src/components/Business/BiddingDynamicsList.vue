@@ -43,7 +43,7 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">发布时间</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.releaseTime }}
+                {{ detailData.releaseTime.split(" ")[0] }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
