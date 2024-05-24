@@ -274,7 +274,7 @@ watch(
       tariffLevelId,
       electricityTypeTwoName,
     } = val;
-    eChartsOption.value.title.text = `${regionName}·${electricityTypeOneName}·${tariffLevelId}·${electricityTypeTwoName}·代理购电分月价差图`;
+    eChartsOption.value.title.text = `${regionName}·${electricityTypeOneName}·${tariffLevelId}·${electricityTypeTwoName}·代理购电分月价差图（未来预测）`;
   },
   {
     immediate: true,
