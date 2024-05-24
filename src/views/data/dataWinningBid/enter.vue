@@ -76,11 +76,11 @@ const tabList = ref([
     value: "duration",
     code: "bidwin_scenes_click",
   },
-  {
-    name: "中标分析报告",
-    value: "report",
-    code: "bidwin_region_click",
-  },
+  // {
+  //   name: "中标分析报告",
+  //   value: "report",
+  //   code: "bidwin_region_click",
+  // },
 ]);
 
 const currentTab = ref("price");
