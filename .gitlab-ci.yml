@@ -1,0 +1,135 @@
+# 全局变量
+variables:
+  DOCKER_REGISTRY: "172.27.98.100:5001" 
+  TEST_SERVER: "172.27.98.101"
+  TEST_PATH: "test-i-reportV3"
+  OSS_PATH: "eesa-data-report"
+  PROD_URL: "https://data-report.eesaenergy.com/"
+
+stages:
+  - install 
+  - build
+  - deploy
+  - post_build_task
+
+test_install:
+  stage: install
+  image: $DOCKER_REGISTRY/front/node:v2
+  cache:  # 缓存
+    - key: eesa-modules
+      paths:
+        - ./node_modules
+      policy: push
+  script:
+     - echo "开始构建"
+     - ls
+     - node -v
+     - pnpm -v
+     - pnpm install --no-frozen-lockfile
+  tags:   #runner标签
+    - front
+  only:   #分支
+    - test
+
+prod_install:
+  stage: install
+  image: $DOCKER_REGISTRY/front/node:v2
+  cache:  # 缓存
+    - key: eesa-modules
+      paths:
+        - ./node_modules
+      policy: push
+  script:
+     - echo "开始构建"
+     - ls
+     - node -v
+     - pnpm -v
+     - pnpm install --no-frozen-lockfile
+  tags:   #runner标签
+    - front
+  only:   #分支
+    - /^Rel-.*$/
+
+test_build:
+  stage: build
+  image: $DOCKER_REGISTRY/front/node:v2
+  cache: # 缓存
+    - untracked: true
+      key: eesa-modules
+      policy: pull
+    - key: eesa-dist
+      paths:
+        - dist
+      policy: push  
+  script:
+     - pnpm run build:test
+  tags:
+    - front
+  only:
+    - test
+
+prod_build:
+  stage: build
+  image: $DOCKER_REGISTRY/front/node:v2
+  cache: # 缓存
+    - untracked: true
+      key: eesa-modules
+      policy: pull
+    - key: eesa-dist
+      paths:
+        - dist
+      policy: push  
+  script:
+     - pnpm run build:prod
+  tags:
+    - front
+  only:
+    - /^Rel-.*$/
+
+test_deploy:
+  stage: deploy
+  image: $DOCKER_REGISTRY/front/node:v2
+  cache: # 缓存
+    - untracked: true
+      key: eesa-dist
+      policy: pull
+  script:
+     - mkdir -p ~/.ssh
+     - touch ~/.ssh/id_rsa
+     - cat $test_id_rsa > ~/.ssh/id_rsa  
+     - chmod 600 ~/.ssh/id_rsa  
+     - ssh-keyscan -H $TEST_SERVER >> ~/.ssh/known_hosts
+     - scp -i ~/.ssh/id_rsa -r dist/* root@$TEST_SERVER:/opt/nginx/html/$TEST_PATH/
+  tags:
+    - front
+  only:
+    - test
+
+
+prod_deploy:
+  stage: deploy
+  image: $DOCKER_REGISTRY/op/ossutil:latest
+  cache: # 缓存
+    - untracked: true
+      key: eesa-dist
+      policy: pull
+  script:
+    - ossutil rm oss://$OSS_PATH/ --exclude "*.py" -rf
+    - ossutil cp -r dist/ oss://$OSS_PATH/
+  tags:
+    - front
+  only:
+    - /^Rel-.*$/
+  when: manual  #手动触发
+
+post_build_task:
+  stage: post_build_task
+  image: $DOCKER_REGISTRY/op/aliyun-cli:latest
+  script:
+    - aliyun cdn RefreshObjectCaches --ObjectPath $PROD_URL
+  tags:
+    - front
+  only:
+    - /^Rel-.*$/
+  needs: ['prod_deploy']
+
