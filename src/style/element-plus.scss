@@ -1,5 +1,39 @@
 @import "@/style/mixin.scss";
 
+body {
+  .el-button {
+    background-color: #f3f4f7;
+    color: rgba(0, 0, 0, 0.9);
+    border: none;
+    min-width: 80px;
+    &:focus,
+    &:hover {
+      background-color: #e7e8ef;
+      color: rgba(0, 0, 0, 0.9);
+    }
+    &:active {
+      background: #dbdce2;
+      color: rgba(0, 0, 0, 0.9);
+    }
+  }
+
+  .el-button--primary {
+    background-color: #244bf1;
+    color: #ffffff;
+
+    &:focus,
+    &:hover {
+      background-color: #3a5df2;
+      color: #ffffff;
+    }
+
+    &:active {
+      background-color: #1f40cd;
+      color: #ffffff;
+    }
+  }
+}
+
 .el-input {
   @include widthAndHeight(100%, 32px);
 }
@@ -91,28 +125,6 @@
 .el-dialog__body {
   padding-top: 0;
   padding-bottom: 0;
-}
-
-.el-button--primary {
-  background: #2d5cf6 !important;
-  color: #ffffff !important;
-
-  &:hover {
-    background-color: #507ef7 !important;
-  }
-}
-
-.el-button {
-  background-color: #f3f4f7;
-  color: #5b6985;
-  border: none;
-  min-width: 80px;
-}
-
-.el-button:focus,
-.el-button:hover {
-  background-color: #e7e8ef;
-  color: #5b6985;
 }
 
 .el-cascader-node.in-active-path,
@@ -299,7 +311,6 @@ html .el-message--info {
   border: 1px solid #244bf1;
   font-weight: 400;
   font-size: 14px;
-  // color: rgba(0, 0, 0, 0.9);
   line-height: 22px;
   --el-message-text-color: rgba(0, 0, 0, 0.9);
   .el-message-icon--info {
