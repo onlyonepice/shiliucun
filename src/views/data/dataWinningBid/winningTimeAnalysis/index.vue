@@ -50,6 +50,7 @@
       />
     </div>
   </div>
+  <ElectricityText :url="VITE_DATABASE_URL + '#/winningBidLibraryManage'" />
 </template>
 
 <script setup lang="ts">
@@ -63,6 +64,7 @@ import Select from "@/components/Common/Select.vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
 import { getWinningEnergyStorageDurationAnalysis } from "@/api/data";
+const { VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("durationAnalysis");
 const props = defineProps({
   formOptions: {

@@ -46,6 +46,7 @@
       @close="exportVisible = false"
     />
   </div>
+  <ElectricityText :url="VITE_DATABASE_URL + '#/winningBidLibraryManage'" />
 </template>
 
 <script lang="ts" setup>
@@ -57,6 +58,7 @@ import { EChartOptions, charsToRemove } from "@/utils/echarts/mapAndPieECharts";
 import { cloneDeep, toNumber } from "lodash";
 import chinaMap from "@/assets/map/china.json";
 import { useUserStore } from "@/store/modules/user";
+const { VITE_DATABASE_URL } = import.meta.env;
 const eChartsOption: Ref<any> = ref(EChartOptions());
 // 获取eCharts节点
 const eChartsDom = ref(null);

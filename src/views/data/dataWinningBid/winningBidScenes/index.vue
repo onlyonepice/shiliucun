@@ -47,6 +47,7 @@
       @close="exportVisible = false"
     />
   </div>
+  <ElectricityText :url="VITE_DATABASE_URL + '#/winningBidLibraryManage'" />
 </template>
 
 <script setup lang="ts">
@@ -59,6 +60,7 @@ import { enterScenesFormOptions } from "../data.js";
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
 import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
+const { VITE_DATABASE_URL } = import.meta.env;
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗

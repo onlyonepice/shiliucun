@@ -53,6 +53,7 @@
       @close="exportVisible = false"
     />
   </div>
+  <ElectricityText :url="VITE_DATABASE_URL + '#/winningBidLibraryManage'" />
 </template>
 
 <script lang="ts" setup>
@@ -63,6 +64,7 @@ import { getBusinessDynamicsListApi } from "@/api/data";
 import { eChartsOptionCommon, textStyleObject } from "@/utils/echarts/eCharts";
 import { cloneDeep } from "lodash";
 import { useUserStore } from "@/store/modules/user";
+const { VITE_DATABASE_URL } = import.meta.env;
 const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 获取eCharts节点
 const eChartsDom = ref(null);

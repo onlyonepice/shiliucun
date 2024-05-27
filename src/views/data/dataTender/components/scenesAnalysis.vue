@@ -63,6 +63,7 @@
       @close="exportVisible = false"
     />
   </div>
+  <ElectricityText :url="VITE_DATABASE_URL + '#/winningBidLibraryManage'" />
 </template>
 
 <script lang="ts" setup>
@@ -72,6 +73,7 @@ import useNamespace from "@/utils/nameSpace";
 import { getTenderScenariosApi } from "@/api/data";
 import { pieEChartsOption } from "@/utils/echarts/pieECharts";
 import { useUserStore } from "@/store/modules/user";
+const { VITE_DATABASE_URL } = import.meta.env;
 // import { nextTick } from "process";
 const unitDom = ref(); // 获取单位下拉框
 const eChartsOption: Ref<any> = ref(pieEChartsOption());

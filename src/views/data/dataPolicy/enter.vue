@@ -7,17 +7,16 @@
     />
     <PolicyList v-if="choseTabs === 1" />
     <PolicyAnalysis v-if="choseTabs === 2" />
+    <ElectricityText :url="VITE_DATABASE_URL + '#/policyLibraryManage'" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-
 import PolicyList from "./policyList.vue";
 import PolicyAnalysis from "./policyAnalysis.vue";
-
 import useNamespace from "@/utils/nameSpace";
-
+const { VITE_DATABASE_URL } = import.meta.env;
 interface TabsList {
   id: number;
   name: string;

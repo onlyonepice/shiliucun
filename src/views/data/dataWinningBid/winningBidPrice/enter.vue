@@ -47,6 +47,7 @@
       />
     </div>
   </div>
+  <ElectricityText :url="VITE_DATABASE_URL + '#/winningBidLibraryManage'" />
 </template>
 
 <script setup lang="ts">
@@ -60,7 +61,7 @@ import { capacityAnalysis_V2 } from "@/api/data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
 import lament_icon from "@/assets/img/common/lament_icon.png";
-
+const { VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("winningBidPrice");
 const EChartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
