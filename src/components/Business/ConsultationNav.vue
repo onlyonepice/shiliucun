@@ -26,11 +26,19 @@ const ns = useNamespace("consultation-nav");
 const navList = ref([
   {
     name: "掌上\n储能",
+    icon: miniApp,
+    iconHover: miniAppHover,
+  },
+  {
+    name: "储能云",
+    icon: weChat,
+    iconHover: weChatHover,
+  },
+  {
+    name: "客服\n咨询",
     icon: customerService,
     iconHover: customerServiceHover,
   },
-  { name: "储能云", icon: miniApp, iconHover: miniAppHover },
-  { name: "客服\n咨询", icon: weChat, iconHover: weChatHover },
 ]);
 </script>
 <style lang="scss" scoped>
