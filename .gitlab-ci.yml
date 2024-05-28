@@ -16,7 +16,7 @@ test_install:
   stage: install
   image: $DOCKER_REGISTRY/front/node:v2
   cache:  # 缓存
-    - key: eesa-modules
+    - key: eesa-$CI_COMMIT_REF_NAME
       paths:
         - ./node_modules
       policy: push
@@ -35,7 +35,7 @@ prod_install:
   stage: install
   image: $DOCKER_REGISTRY/front/node:v2
   cache:  # 缓存
-    - key: eesa-modules
+    - key: eesa-$CI_COMMIT_REF_NAME
       paths:
         - ./node_modules
       policy: push
@@ -55,9 +55,9 @@ test_build:
   image: $DOCKER_REGISTRY/front/node:v2
   cache: # 缓存
     - untracked: true
-      key: eesa-modules
+      key: eesa-$CI_COMMIT_REF_NAME
       policy: pull
-    - key: eesa-dist
+    - key: eesa-$CI_COMMIT_REF_NAME-dist
       paths:
         - dist
       policy: push  
@@ -73,9 +73,9 @@ prod_build:
   image: $DOCKER_REGISTRY/front/node:v2
   cache: # 缓存
     - untracked: true
-      key: eesa-modules
+      key: eesa-$CI_COMMIT_REF_NAME
       policy: pull
-    - key: eesa-dist
+    - key: eesa-$CI_COMMIT_REF_NAME-dist
       paths:
         - dist
       policy: push  
@@ -91,7 +91,7 @@ test_deploy:
   image: $DOCKER_REGISTRY/front/node:v2
   cache: # 缓存
     - untracked: true
-      key: eesa-dist
+      key: eesa-$CI_COMMIT_REF_NAME-dist
       policy: pull
   script:
      - mkdir -p ~/.ssh
@@ -111,7 +111,7 @@ prod_deploy:
   image: $DOCKER_REGISTRY/op/ossutil:latest
   cache: # 缓存
     - untracked: true
-      key: eesa-dist
+      key: eesa-$CI_COMMIT_REF_NAME-dist
       policy: pull
   script:
     - ossutil rm oss://$OSS_PATH/ --exclude "*.py" -rf
