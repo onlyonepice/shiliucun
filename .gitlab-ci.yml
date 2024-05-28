@@ -126,7 +126,7 @@ post_build_task:
   stage: post_build_task
   image: $DOCKER_REGISTRY/op/aliyun-cli:latest
   script:
-    - aliyun cdn RefreshObjectCaches --ObjectPath $PROD_URL
+    - aliyun cdn RefreshObjectCaches --ObjectPath $PROD_URL --ObjectType Directory --Force true
   tags:
     - data-report
   only:
