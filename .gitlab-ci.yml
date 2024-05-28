@@ -24,8 +24,8 @@ test_install:
      - echo "开始构建"
      - ls
      - node -v
-     - pnpm -v
-     - pnpm install --no-frozen-lockfile
+     - npm -v
+     - npm install --registry "https://registry.npmmirror.com"
   tags:   #runner标签
     - data-report
   only:   #分支
@@ -43,8 +43,8 @@ prod_install:
      - echo "开始构建"
      - ls
      - node -v
-     - pnpm -v
-     - pnpm install --no-frozen-lockfile
+     - npm -v
+     - npm install --registry "https://registry.npmmirror.com"
   tags:   #runner标签
     - data-report
   only:   #分支
@@ -62,7 +62,7 @@ test_build:
         - dist
       policy: push  
   script:
-     - pnpm run build:test
+     - npm run build:test
   tags:
     - data-report
   only:
@@ -80,7 +80,7 @@ prod_build:
         - dist
       policy: push  
   script:
-     - pnpm run build:prod
+     - npm run build:prod
   tags:
     - data-report
   only:
