@@ -1,9 +1,6 @@
 <template>
   <div v-for="item in pageData" :key="item.id" :class="ns.b('list')">
     <div :class="ns.bm('list', 'content')">
-      <div :class="[ns.bm('content', 'year'), ns.bm('content', 'title')]">
-        {{ item.writingTime.split("-")[0] }}年
-      </div>
       <div :class="[ns.bm('content', 'title')]" v-html="item.reportName" />
       <div :class="[ns.bm('content', 'line')]" />
       <div :class="[ns.bm('content', 'desc')]" v-html="item.contentOverview" />

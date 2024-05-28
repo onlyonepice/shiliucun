@@ -22,7 +22,12 @@
         :key="item[valueKey]"
         :label="item[labelKey]"
         :value="item[valueKey]"
-      />
+      >
+        <div>
+          {{ item[labelKey]
+          }}<img v-if="item.lock" :src="SelectKey" class="select__key" />
+        </div>
+      </el-option>
     </el-select>
     <div v-if="props.type === 'input'" class="select__input select__content">
       <el-input
@@ -66,6 +71,7 @@
 
 <script lang="ts" setup>
 import { watch, ref } from "vue";
+import SelectKey from "@/assets/img/common/select-key-icon.png";
 const emit = defineEmits(["onChange", "triggerForm"]);
 const props = defineProps({
   // 筛选项宽度
@@ -102,7 +108,7 @@ const props = defineProps({
     default: "请选择",
   },
   options: {
-    type: Array,
+    type: Array as any,
     default: () => [],
   },
   valueKey: {
@@ -181,7 +187,10 @@ defineExpose({
   @include font(14px, 400, rgba(0, 0, 00.6), 22px);
   text-align: right;
 }
-
+.select__key {
+  @include widthAndHeight(16px, 16px);
+  margin-left: 8px;
+}
 .select__content {
   flex: 1;
 }
