@@ -99,17 +99,29 @@ const getReleaseTime = () => {
 getReleaseTime();
 // 招标内容筛选项改变
 const onChangeFilter = (id: string | number, type: string) => {
-  type === "contentDict" ? (contentDict.value = id) : (releaseTime.value = id);
-  if (useUserStore().checkPermission("ANALYSIS_BIDDING_ENTERPRISES")) {
-    getElectricityTypeOneName();
-  } else {
-    nextTick(() => {
-      contentDict.value = props.contentFilter[0].id;
-      const _data = props.timeFilter.filter((item) => {
-        return item.defaultValue;
+  const _releaseTime = releaseTime.value;
+  if (type === "contentDict") {
+    contentDict.value = id;
+    if (useUserStore().checkPermission("ANALYSIS_BIDDING_ENTERPRISES")) {
+      getElectricityTypeOneName();
+    } else {
+      nextTick(() => {
+        contentDict.value = props.contentFilter[0].id;
       });
-      releaseTime.value = _data[0].paramValue;
+    }
+  } else {
+    const _data = props.timeFilter.filter((item) => {
+      return item.paramValue === id;
     });
+    releaseTime.value = id;
+    if (!_data[0].lock) {
+      getElectricityTypeOneName();
+    } else {
+      useUserStore().openVip(true);
+      nextTick(() => {
+        releaseTime.value = _releaseTime;
+      });
+    }
   }
 };
 
@@ -121,7 +133,7 @@ async function getElectricityTypeOneName() {
     contentDict: contentDict.value,
     releaseTime: releaseTime.value,
   });
-  if (datas.length && resp_code === 0) {
+  if (datas && datas.length && resp_code === 0) {
     const _data = datas.slice(0, 20);
     eChartsOption.value.title.text = releaseTime.value + "储能招标企业分析";
     eChartsOption.value.title.subtext = `储能系统`;

@@ -105,21 +105,37 @@ const unit = ref("");
 const showEmpty: Ref<boolean> = ref(false);
 const canvasTitle = ref("");
 const onChangeFilter = (id: any, type: string) => {
-  type === "contentDict" && (contentDict.value = id);
-  type === "releaseTime" && (releaseTime.value = id);
-  type === "unit" && (unit.value = id);
-  if (
-    useUserStore().checkPermission("ANALYSIS_OF_BIDDING_APPLICATION_SCENARIOS")
-  ) {
-    getElectricityTypeOneName();
-  } else {
-    nextTick(() => {
-      contentDict.value = 712;
-      releaseTime.value = "2024";
-      props.unitFilter.forEach((item) => {
-        item.defaultValue && (unit.value = item.paramValue);
+  const _releaseTime = releaseTime.value;
+  if (type !== "releaseTime") {
+    type === "contentDict" && (contentDict.value = id);
+    type === "unit" && (unit.value = id);
+    if (
+      useUserStore().checkPermission(
+        "ANALYSIS_OF_BIDDING_APPLICATION_SCENARIOS",
+      )
+    ) {
+      getElectricityTypeOneName();
+    } else {
+      nextTick(() => {
+        contentDict.value = 712;
+        props.unitFilter.forEach((item) => {
+          item.defaultValue && (unit.value = item.paramValue);
+        });
       });
+    }
+  } else {
+    const _data = props.timeFilter.filter((item) => {
+      return item.paramValue === id;
     });
+    releaseTime.value = id;
+    if (!_data[0].lock) {
+      getElectricityTypeOneName();
+    } else {
+      useUserStore().openVip(true);
+      nextTick(() => {
+        releaseTime.value = _releaseTime;
+      });
+    }
   }
 };
 

@@ -4,7 +4,7 @@
     <!-- 中标 -->
     <div :class="ns.b('filter')">
       <Select
-        title="招标内容"
+        title="中标内容"
         :options="contentList"
         valueKey="id"
         labelKey="paramDesc"
@@ -56,12 +56,10 @@
 <script setup lang="ts">
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
-import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
-import { ref, Ref, watch, computed } from "vue";
+import { ref, Ref, watch, computed, nextTick } from "vue";
 import { useUserStore } from "@/store/modules/user";
 import Select from "@/components/Common/Select.vue";
-import { useUserStoreHook } from "@/store/modules/user";
 import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
 import { getWinningEnergyStorageDurationAnalysis } from "@/api/data";
 const { VITE_DATABASE_URL } = import.meta.env;
@@ -190,19 +188,29 @@ function handleTriggerForm() {
 
 // 筛选项发生变化时
 function handleChange(val, key) {
-  searchParams.value[key] = val;
-  if (!getToken()) {
-    setTimeout(() => {
-      searchParams.value = searchParams_deep.value;
-    });
-    useUserStoreHook().openLogin(true);
-  } else {
-    if (
-      !useUserStore().checkPermission("BID_WINNING_ENERGY_STORAGE_DURATION")
-    ) {
-      return (loading.value = false);
+  const _releaseTime = searchParams.value.releaseTime;
+  if (key !== "releaseTime") {
+    searchParams.value[key] = val;
+    if (useUserStore().checkPermission("BID_WINNING_ENERGY_STORAGE_DURATION")) {
+      getData();
+    } else {
+      nextTick(() => {
+        searchParams.value = searchParams_deep.value;
+      });
     }
-    getData();
+  } else {
+    const _data = dateList.value.filter((item) => {
+      return item.paramName === val;
+    });
+    searchParams.value.releaseTime = val;
+    if (!_data[0].lock) {
+      getData();
+    } else {
+      useUserStore().openVip(true);
+      nextTick(() => {
+        searchParams.value.releaseTime = _releaseTime;
+      });
+    }
   }
 }
 </script>

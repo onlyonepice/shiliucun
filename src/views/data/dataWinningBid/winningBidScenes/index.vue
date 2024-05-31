@@ -65,7 +65,7 @@ const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const canvasTitle = ref(""); // 弹窗标题
-const unit = ref(); // 单位选择dom
+// const unit = ref(); // 单位选择dom
 const showEmpty: Ref<boolean> = ref(false);
 // 获取eCharts节点
 const eChartsDom: Ref<any> = ref(null);
@@ -196,20 +196,35 @@ function exportResult() {
 }
 
 const selectChange = (row, index, val) => {
-  if (
-    useUserStore().checkPermission("APPLICATION_SCENARIOS_FOR_WINNING_BIDS")
-  ) {
+  const _releaseTime = requestData.value["releaseTime"];
+  if (row.model !== "releaseTime") {
     requestData.value[row.model] = val;
-    getData();
+    if (
+      useUserStore().checkPermission("APPLICATION_SCENARIOS_FOR_WINNING_BIDS")
+    ) {
+      getData();
+    } else {
+      nextTick(() => {
+        requestData.value = {
+          contentDict: 712,
+          releaseTime: "2024",
+          unit: "1",
+        };
+      });
+    }
   } else {
-    unit.value[0].onBlur();
-    nextTick(() => {
-      requestData.value = {
-        contentDict: 712,
-        releaseTime: "2024",
-        unit: "1",
-      };
+    const _data = props.formOptions[4]["datas"].filter((item) => {
+      return item.paramName === val;
     });
+    requestData.value["releaseTime"] = val;
+    if (!_data[0].lock) {
+      getData();
+    } else {
+      useUserStore().openVip(true);
+      nextTick(() => {
+        requestData.value["releaseTime"] = _releaseTime;
+      });
+    }
   }
 };
 </script>

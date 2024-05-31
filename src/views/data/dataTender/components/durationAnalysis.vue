@@ -56,12 +56,10 @@
 <script setup lang="ts">
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
-import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
-import { computed, ref, Ref, watch } from "vue";
+import { computed, ref, Ref, watch, nextTick } from "vue";
 import { useUserStore } from "@/store/modules/user";
 import Select from "@/components/Common/Select.vue";
-import { useUserStoreHook } from "@/store/modules/user";
 import { getEnergyStorageDurationAnalysis } from "@/api/data";
 import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
 const { VITE_DATABASE_URL } = import.meta.env;
@@ -193,21 +191,33 @@ function handleTriggerForm() {
 
 // 筛选项发生变化时
 function handleChange(val, key) {
-  searchParams.value[key] = val;
-  if (!getToken()) {
-    setTimeout(() => {
-      searchParams.value = searchParams_deep.value;
-    });
-    useUserStoreHook().openLogin(true);
-  } else {
+  const _releaseTime = searchParams.value.releaseTime;
+  if (key !== "releaseTime") {
+    searchParams.value[key] = val;
     if (
-      !useUserStore().checkPermission(
+      useUserStore().checkPermission(
         "ANALYSIS_OF_BIDDING_ENERGY_STORAGE_DURATION",
       )
     ) {
-      return (loading.value = false);
+      getData();
+    } else {
+      nextTick(() => {
+        searchParams.value = searchParams_deep.value;
+      });
     }
-    getData();
+  } else {
+    const _data = dateList.value.filter((item) => {
+      return item.paramValue === val;
+    });
+    searchParams.value.releaseTime = val;
+    if (!_data[0].lock) {
+      getData();
+    } else {
+      useUserStore().openVip(true);
+      nextTick(() => {
+        searchParams.value.releaseTime = _releaseTime;
+      });
+    }
   }
 }
 </script>

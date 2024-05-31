@@ -576,16 +576,32 @@ const initData = () => {
   };
 };
 const selectChange = (row, index, val) => {
-  if (useUserStore().checkPermission("ANALYSIS_OF_WINNING_ENTERPRISES")) {
+  const _year = requestData.value["year"];
+  if (row.model !== "year") {
     requestData.value[row.model] = val;
-    getData();
+    if (useUserStore().checkPermission("ANALYSIS_OF_WINNING_ENTERPRISES")) {
+      getData();
+    } else {
+      nextTick(() => {
+        requestData.value[row.model] =
+          options[index].bind.options[0][
+            options[index].bind.cascaderOption.value
+          ];
+      });
+    }
   } else {
-    nextTick(() => {
-      requestData.value[row.model] =
-        options[index].bind.options[0][
-          options[index].bind.cascaderOption.value
-        ];
+    const _data = props.formOptions[4]["datas"].filter((item) => {
+      return item.paramName === val;
     });
+    requestData.value["year"] = val;
+    if (!_data[0].lock) {
+      getData();
+    } else {
+      useUserStore().openVip(true);
+      nextTick(() => {
+        requestData.value["year"] = _year;
+      });
+    }
   }
 };
 </script>
