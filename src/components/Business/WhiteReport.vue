@@ -62,9 +62,9 @@ const onDetail = (data: any) => {
 }
 
 .es-whitePaper-list--content {
-  width: 760px;
   @include margin(0, 24px, 0, 0);
   @include relative();
+  flex: 1;
 }
 
 .es-whitePaper-content--title {
@@ -100,6 +100,5 @@ const onDetail = (data: any) => {
 
 .es-whitePaper-list--cover {
   @include widthAndHeight(368px, 552px);
-  object-fit: cover;
 }
 </style>
