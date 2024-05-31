@@ -206,7 +206,7 @@ async function getElectricityTypeOneName() {
         },
       ]);
     createECharts();
-  } else if (datas.length === 0 || resp_code !== 0) {
+  } else if ((datas && datas.length === 0) || resp_code !== 0) {
     isEmptyData.value = true;
   }
   loading.value = false;
