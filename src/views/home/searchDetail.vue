@@ -57,7 +57,7 @@
               >
                 <div class="Energy_Storage_Frontier-box">
                   <div
-                    @click="handleEnergy_Storage_FrontierClick(row.url)"
+                    @click="handleEnergy_Storage_FrontierClick(row.route)"
                     class="Energy_Storage_Frontier-box_item"
                     :style="{ marginRight: rowIndex === 3 ? '0' : '24px' }"
                     v-for="(row, rowIndex) in pageOptions.All.data[key]"
@@ -65,15 +65,15 @@
                   >
                     <img
                       class="Energy_Storage_Frontier-box_item_left"
-                      :src="row.img"
+                      :src="useUserStore().$state.fileUrl + row.icon"
                       alt=""
                     />
                     <div class="Energy_Storage_Frontier-box_item_right">
                       <p class="Energy_Storage_Frontier-box_item_name">
-                        {{ row.moduleDesc }}
+                        {{ row.title }}
                       </p>
                       <p class="Energy_Storage_Frontier-box_item_code">
-                        {{ row.code }}
+                        {{ row.moduleDesc }}
                       </p>
                     </div>
                   </div>
@@ -173,11 +173,7 @@ import { windowScrollStore } from "@/store/modules/windowScroll";
 import icon_clear from "@/assets/img/common/icon_clear.png";
 import searchIcon from "@/assets/img/common/search-icon.png";
 import search_null from "@/assets/img/common/search_null.png";
-import financing_plan from "@/assets/img/common/financing_plan.png";
-import price_tracking from "@/assets/img/common/price_tracking.png";
-import policy_tracking from "@/assets/img/common/policy_tracking.png";
-import return_on_investment from "@/assets/img/common/return_on_investment.png";
-import winning_bid_tracking from "@/assets/img/common/winning_bid_tracking.png";
+import { useUserStore } from "@/store/modules/user";
 windowScrollStore().SET_SCROLL_TOP(0);
 const router = useRouter();
 const loading = ref(false);
@@ -198,8 +194,11 @@ const pageOptions = ref<any>({
   WHITE_PAPER: { name: "白皮书", show: false },
   ONLINE_REPORT: { name: "在线报告", show: false },
 }) as any;
-const handleEnergy_Storage_FrontierClick = (url) => {
-  router.push(url);
+// 跳转路径
+const handleEnergy_Storage_FrontierClick = (url: string) => {
+  url.indexOf("http") !== -1
+    ? window.open(url, "externalWindow")
+    : router.push(url);
 };
 // 搜索事件
 const onSearch = () => {
@@ -221,43 +220,7 @@ const searchFn = async () => {
     let isNull = true;
     const data = await globalSearch({ keyword: searchContent.value });
     if (_data.resp_code === 0) {
-      pageOptions.value.All.data.Energy_Storage_Frontier = _data.datas.map(
-        (item) => {
-          if (item.moduleDesc === "工商业投资回报性分析") {
-            item.moduleDesc = "工商业投资回报性";
-          }
-          switch (item.moduleDesc) {
-            case "工商业投资回报性":
-              item.img = return_on_investment;
-              item.code = "Return on investment";
-              item.url = "/calculate";
-              break;
-            case "代理购电价格追踪":
-              item.img = price_tracking;
-              item.code = "Price tracking";
-              item.url = "/electricityPrice";
-              break;
-            case "中标项目追踪":
-              item.img = winning_bid_tracking;
-              item.code = "Winning bid tracking";
-              item.url = "/dataWinningBid";
-              break;
-            case "政策追踪":
-              item.img = policy_tracking;
-              item.code = "Policy tracking";
-              item.url = "/policy";
-              break;
-            case "融资方案":
-              item.img = financing_plan;
-              item.code = "Financing plan";
-              item.url = "/financingPlan";
-              break;
-            default:
-              break;
-          }
-          return item;
-        },
-      );
+      pageOptions.value.All.data.Energy_Storage_Frontier = _data.datas;
     }
     if (data.resp_code === 0) {
       for (const key in data.datas) {

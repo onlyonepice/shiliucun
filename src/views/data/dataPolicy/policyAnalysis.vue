@@ -48,11 +48,7 @@
 <script lang="ts" setup>
 import { ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
-
-// import back from "@/assets/img/Echarts-bgc-two.png";
-
 import { policyAnalysis, getPolicyReleased } from "@/api/data";
-
 import PolicyType from "./component/policyType.vue";
 import PolicyLevel from "./component/policyLevel.vue";
 import PolicyRegionAnalysis from "./component/policyRegionAnalysis.vue";
