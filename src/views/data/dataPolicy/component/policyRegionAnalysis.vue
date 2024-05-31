@@ -38,6 +38,7 @@ async function getElectricityTypeOneName() {
       return isNaN(params.value) ? "" : params.name;
     },
   };
+
   // 设置省份数据，chinaMap 省份名字需要与后端反的省份一致才展示
   eChartsOption.value.series[0].data = data
     .filter((item) => item.value !== 0)

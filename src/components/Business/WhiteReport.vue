@@ -99,7 +99,7 @@ const onDetail = (data: any) => {
 }
 
 .es-whitePaper-list--cover {
-  @include widthAndHeight(368px, 426px);
+  @include widthAndHeight(368px, 552px);
   object-fit: cover;
 }
 </style>
