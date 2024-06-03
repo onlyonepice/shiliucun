@@ -37,6 +37,7 @@
       :visible="exportVisible"
       :img-url="exportImgUrl"
       :img-title="exportImgTitle"
+      :maskSize="{ width: 142, height: 203, show: true }"
       @close="exportVisible = false"
     />
   </div>
@@ -185,7 +186,7 @@ function exportResult() {
   margin-top: 32px;
 }
 .echarts-mask {
-  @include widthAndHeight(254px, 405px);
+  @include widthAndHeight(274px, 455px);
   @include absolute(1, none, 34px, 50px, none);
   background: rgba(255, 255, 255, 0.3);
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
