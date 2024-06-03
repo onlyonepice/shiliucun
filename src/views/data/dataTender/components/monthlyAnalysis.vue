@@ -24,7 +24,10 @@
         id="eChart_dataMonthlyAnalysis"
         ref="eChartsDom"
       />
-      <div class="echarts-mask" v-if="!echartsMask">
+      <div
+        class="echarts-mask animate__animated animate__fadeIn"
+        v-if="!echartsMask"
+      >
         <h4>开通企业VIP查看完整数据</h4>
         <el-button type="primary" @click="useUserStore().openVip(true)"
           >立即开通</el-button

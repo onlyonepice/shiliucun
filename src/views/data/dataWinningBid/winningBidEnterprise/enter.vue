@@ -29,21 +29,29 @@
         >中标价格在去除最高值和最低值后，以能量规模（MWh）为权重，使用加权平均的方法计算。</span
       >
     </div>
-    <div :class="ns.b('eCharts-box')">
+    <div :class="ns.b('eCharts-box')" v-if="!isEmptyData">
       <div
-        v-if="!isEmptyData"
         v-loading="loading"
         id="eChart-winningBidEnterprise"
         ref="eChartsDom"
       />
-      <EmptyData v-else />
-      <ExportCanvasDialog
-        :visible="exportVisible"
-        :img-url="exportImgUrl"
-        :img-title="`储能月度中标单价/容量分析-${requestData.biddingContent}（${requestData.technologyType}）`"
-        @close="exportVisible = false"
-      />
+      <div
+        class="echarts-mask-bottom animate__animated animate__fadeIn"
+        v-if="!echartsMask"
+      >
+        <h4>开通企业VIP查看完整数据</h4>
+        <el-button type="primary" @click="useUserStore().openVip(true)"
+          >立即开通</el-button
+        >
+      </div>
     </div>
+    <EmptyData v-else />
+    <ExportCanvasDialog
+      :visible="exportVisible"
+      :img-url="exportImgUrl"
+      :img-title="`储能月度中标单价/容量分析-${requestData.biddingContent}（${requestData.technologyType}）`"
+      @close="exportVisible = false"
+    />
   </div>
   <ElectricityText :url="VITE_DATABASE_URL + '#/winningBidLibraryManage'" />
 </template>
@@ -53,7 +61,7 @@ import { get } from "lodash";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { ref, watch, Ref, nextTick } from "vue";
-import { enterpriseAnalysis } from "@/api/data";
+import { enterpriseAnalysis, maskPermissions } from "@/api/data";
 import { enterpriseFormOptions } from "../data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
@@ -63,6 +71,7 @@ const ns = useNamespace("winningBidEnterprise");
 const isEmptyData = ref(false);
 const echartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
+const echartsMask: Ref<boolean> = ref(true);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 // 获取eCharts节点
@@ -230,7 +239,7 @@ const getData = async () => {
   }
 };
 
-const initECharts = () => {
+const initECharts = async () => {
   const myChart = echarts.init(
     document.getElementById("eChart-winningBidEnterprise"),
   );
@@ -242,6 +251,8 @@ const initECharts = () => {
       });
     }
   });
+  const res = await maskPermissions({ moduleName: "中标企业分析" });
+  echartsMask.value = res.datas;
   myChart.setOption(echartOptions.value);
 };
 
@@ -608,6 +619,7 @@ const selectChange = (row, index, val) => {
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+
 .es-winningBidEnterprise {
   width: 100%;
 }
@@ -647,10 +659,22 @@ const selectChange = (row, index, val) => {
 }
 .es-winningBidEnterprise-eCharts-box {
   width: 100%;
-
+  @include relative();
   #eChart-winningBidEnterprise {
     width: 100%;
     height: 642px;
+  }
+}
+.echarts-mask-bottom {
+  @include widthAndHeight(calc(100% - 120px), 200px);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7px);
+  @include absolute(1, none, 60px, 69px, none);
+  text-align: center;
+  h4 {
+    margin-top: 70px;
+    margin-bottom: 14px;
   }
 }
 </style>

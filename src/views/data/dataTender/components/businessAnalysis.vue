@@ -39,12 +39,18 @@
         <el-button type="primary" @click="exportResult">下载图片</el-button>
       </div>
     </div>
-    <div
-      v-if="!isEmptyData"
-      v-loading="loading"
-      id="eChart_businessAnalysis"
-      ref="eChartsDom"
-    />
+    <div :class="ns.b('eCharts-box')" v-if="!isEmptyData">
+      <div v-loading="loading" id="eChart_businessAnalysis" ref="eChartsDom" />
+      <div
+        class="echarts-mask-bottom animate__animated animate__fadeIn"
+        v-if="!echartsMask"
+      >
+        <h4>开通企业VIP查看完整数据</h4>
+        <el-button type="primary" @click="useUserStore().openVip(true)"
+          >立即开通</el-button
+        >
+      </div>
+    </div>
     <EmptyData v-else />
     <ExportCanvasDialog
       :visible="exportVisible"
@@ -60,7 +66,7 @@
 import { onMounted, ref, Ref, nextTick } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
-import { getBusinessDynamicsListApi } from "@/api/data";
+import { getBusinessDynamicsListApi, maskPermissions } from "@/api/data";
 import { eChartsOptionCommon, textStyleObject } from "@/utils/echarts/eCharts";
 import { cloneDeep } from "lodash";
 import { useUserStore } from "@/store/modules/user";
@@ -69,6 +75,7 @@ const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 获取eCharts节点
 const eChartsDom = ref(null);
 const isEmptyData = ref(false);
+const echartsMask = ref(true);
 // 导出图片相关
 const exportImgTitle: Ref<string> = ref("");
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
@@ -212,10 +219,12 @@ async function getElectricityTypeOneName() {
   loading.value = false;
 }
 // 创建图表
-function createECharts() {
+async function createECharts() {
   const myChart = echarts.init(
     document.getElementById("eChart_businessAnalysis"),
   );
+  const res = await maskPermissions({ moduleName: "招标企业分析" });
+  echartsMask.value = res.datas;
   myChart.setOption(eChartsOption.value);
 }
 
@@ -234,9 +243,25 @@ function exportResult() {
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+.es-dataBusinessAnalysis-eCharts-box {
+  @include widthAndHeight(1152px, 681px);
+  @include relative();
+}
 #eChart_businessAnalysis {
   @include widthAndHeight(1152px, 681px);
   margin-top: 32px;
+}
+.echarts-mask-bottom {
+  @include widthAndHeight(calc(100% - 120px), 120px);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7px);
+  @include absolute(1, none, 36px, 48px, none);
+  text-align: center;
+  h4 {
+    margin-top: 40px;
+    margin-bottom: 14px;
+  }
 }
 .es-dataBusinessAnalysis-top {
   @include flex(center, space-between, nowrap);
