@@ -224,7 +224,7 @@ async function createECharts() {
   const myChart = echarts.init(
     document.getElementById("eChart_businessAnalysis"),
   );
-  if (!getToken()) {
+  if (getToken()) {
     const res = await maskPermissions({ moduleName: "招标企业分析" });
     echartsMask.value = res.datas;
   }

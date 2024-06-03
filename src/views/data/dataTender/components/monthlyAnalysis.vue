@@ -156,7 +156,7 @@ async function getElectricityTypeOneName() {
         textStyle: textStyleObject,
       },
     ]);
-  if (!getToken()) {
+  if (getToken()) {
     const res = await maskPermissions({ moduleName: "招标月度分析" });
     echartsMask.value = res.datas;
   }
