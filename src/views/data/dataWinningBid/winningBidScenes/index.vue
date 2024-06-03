@@ -153,7 +153,7 @@ const getData = async () => {
         _title = item.paramName;
       }
     });
-    canvasTitle.value = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}招标应用场景分布`;
+    canvasTitle.value = `${_releaseTime.split("-")[0]}年${_releaseTime.split("-")[1] !== undefined ? _releaseTime.split("-")[1] + "月" : ""}${_title}中标应用场景分布`;
     eChartsOption.value.title.text = canvasTitle.value;
     eChartsOption.value.color = ["#244BF1", "#466FFD", "#7493FE", "#CED9FF"];
     eChartsOption.value.tooltip = {

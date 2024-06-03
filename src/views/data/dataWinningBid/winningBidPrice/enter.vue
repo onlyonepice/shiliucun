@@ -31,21 +31,22 @@
         >中标价格在去除最高值和最低值后，以能量规模（MWh）为权重，使用加权平均的方法计算。</span
       >
     </div>
-    <div :class="ns.b('eCharts-box')">
-      <div
-        v-if="!isEmptyData"
-        v-loading="loading"
-        id="eChart-winningBidPrice"
-        ref="eChartsDom"
-      />
-      <EmptyData v-else />
-      <ExportCanvasDialog
-        :visible="exportVisible"
-        :img-url="exportImgUrl"
-        :img-title="`储能月度中标单价/容量分析-${requestData.biddingContent}（${requestData.technologyType}）`"
-        @close="exportVisible = false"
-      />
+    <div :class="ns.b('eCharts-box')" v-if="!isEmptyData">
+      <div v-loading="loading" id="eChart-winningBidPrice" ref="eChartsDom" />
+      <div class="echarts-mask" v-if="!echartsMask">
+        <h4>开通企业VIP查看完整数据</h4>
+        <el-button type="primary" @click="useUserStore().openVip(true)"
+          >立即开通</el-button
+        >
+      </div>
     </div>
+    <EmptyData v-else />
+    <ExportCanvasDialog
+      :visible="exportVisible"
+      :img-url="exportImgUrl"
+      :img-title="`储能月度中标单价/容量分析-${requestData.biddingContent}（${requestData.technologyType}）`"
+      @close="exportVisible = false"
+    />
   </div>
   <ElectricityText :url="VITE_DATABASE_URL + '#/winningBidLibraryManage'" />
 </template>
@@ -57,7 +58,7 @@ import * as echarts from "echarts";
 import { priceFormOptions } from "../data";
 import useNamespace from "@/utils/nameSpace";
 import { ref, watch, Ref, nextTick } from "vue";
-import { capacityAnalysis_V2 } from "@/api/data";
+import { capacityAnalysis_V2, maskPermissions } from "@/api/data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
 import lament_icon from "@/assets/img/common/lament_icon.png";
@@ -67,6 +68,7 @@ const EChartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const echartsMask: Ref<boolean> = ref(true); // echarts蒙层
 // 获取eCharts节点
 const eChartsDom = ref(null);
 const props = defineProps({
@@ -241,7 +243,6 @@ const getData = async () => {
       ];
       EChartOptions.value.series = barSeries.reverse().concat(lineSeries);
       EChartOptions.value.legend = legend;
-
       initECharts();
     } else if (!datas.length) {
       isEmptyData.value = true;
@@ -252,7 +253,7 @@ const getData = async () => {
   }
 };
 
-const initECharts = () => {
+const initECharts = async () => {
   const myChart = echarts.init(
     document.getElementById("eChart-winningBidPrice"),
   );
@@ -264,6 +265,8 @@ const initECharts = () => {
       });
     }
   });
+  const res = await maskPermissions({ moduleName: "中标价格分析" });
+  echartsMask.value = res.datas;
   myChart.setOption(EChartOptions.value);
 };
 const colorEnum = {
@@ -483,6 +486,18 @@ const selectChange = (row, index, val) => {
 .es-winningBidPrice {
   width: 100%;
 }
+.echarts-mask {
+  @include widthAndHeight(240px, 475px);
+  @include absolute(1, none, 90px, 96px, none);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(25px);
+  text-align: center;
+  h4 {
+    margin-top: 180px;
+    margin-bottom: 14px;
+  }
+}
 .es-winningBidPrice-filter {
   width: 100%;
   display: flex;
@@ -522,6 +537,7 @@ const selectChange = (row, index, val) => {
 }
 .es-winningBidPrice-eCharts-box {
   width: 100%;
+  @include relative();
 
   #eChart-winningBidPrice {
     width: 100%;

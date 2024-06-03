@@ -267,3 +267,12 @@ export const getPolicyReleased = () => {
     "/eesa-report/Policy/front/openApi/v1.0/getPolicyReleased",
   );
 };
+
+// 招中标模块遮罩层权限
+export const maskPermissions = (data: any) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/homePage/public/front/v1.0/maskLayerPermissions",
+    data,
+  );
+};

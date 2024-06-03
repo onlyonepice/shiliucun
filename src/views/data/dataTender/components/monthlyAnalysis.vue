@@ -24,7 +24,7 @@
         id="eChart_dataMonthlyAnalysis"
         ref="eChartsDom"
       />
-      <div class="echarts-mask" v-if="echartsMask">
+      <div class="echarts-mask" v-if="!echartsMask">
         <h4>开通企业VIP查看完整数据</h4>
         <el-button type="primary" @click="useUserStore().openVip(true)"
           >立即开通</el-button
@@ -48,7 +48,7 @@
 import { onMounted, ref, Ref, watch } from "vue";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
-import { getBiddingDynamicsListApi } from "@/api/data";
+import { getBiddingDynamicsListApi, maskPermissions } from "@/api/data";
 import { eChartsOptionCommon, textStyleObject } from "@/utils/echarts/eCharts";
 import { cloneDeep } from "lodash";
 import { useUserStore } from "@/store/modules/user";
@@ -98,6 +98,7 @@ async function getElectricityTypeOneName() {
     isEmptyData.value = true;
     return;
   }
+
   eChartsOption.value.title.text = "储能月度招标分析";
   eChartsOption.value.title.subtext = `储能系统`;
   eChartsOption.value.color = ["#244BF1", "#34BCF4"];
@@ -151,6 +152,8 @@ async function getElectricityTypeOneName() {
         textStyle: textStyleObject,
       },
     ]);
+  const res = await maskPermissions({ moduleName: "招标月度分析" });
+  echartsMask.value = res.datas;
   loading.value = false;
   createECharts();
 }

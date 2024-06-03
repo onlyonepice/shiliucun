@@ -68,19 +68,6 @@ export const exportImg = (type = "png", downLoadName: string, picInfo) => {
           ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
         ctx.drawImage(contentImage, 0, 0, canvas.width, canvas.height);
-        const _type = true;
-        if (_type) {
-          ctx.drawImage(
-            canvasMask(274, 455),
-            canvas.width - 274 - 30,
-            0,
-            274,
-            455,
-          );
-          canvasText(ctx, canvas.width - 170, 200);
-          canvasBtn(ctx, canvas.width - 210, 220);
-        }
-
         const dataURL = canvas.toDataURL("image/png");
         downloadBase64(dataURL, downLoadName);
         resolve("success");
@@ -91,58 +78,3 @@ export const exportImg = (type = "png", downLoadName: string, picInfo) => {
       });
   });
 };
-
-/**
- * 绘制蒙层
- * **/
-const canvasMask = (width: number, height: number) => {
-  const tempCanvas = document.createElement("canvas");
-  tempCanvas.width = width;
-  tempCanvas.height = height;
-  const tempCtx = tempCanvas.getContext("2d");
-  tempCtx.fillStyle = "rgba(255, 255, 255, 0.9)"; // 半透明白色
-  tempCtx.fillRect(0, 0, width, height);
-  tempCtx.filter = "blur(25px)";
-  tempCtx.drawImage(tempCanvas, 0, 0);
-  return tempCanvas;
-};
-/**
- * 绘制文字及按钮
- * **/
-const canvasText = (ctx: any, x: number, y: number) => {
-  ctx.fillStyle = "black";
-  ctx.font = "14px serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("开通企业VIP查看完整数据", x, y);
-};
-/**
- * 绘制按钮
- * **/
-const canvasBtn = (ctx: any, x: number, y: number) => {
-  // 绘制按钮背景
-  ctx.fillStyle = "#244BF1";
-  // ctx.fillRect(x, y, 88, 32);
-  drawRoundedRect(ctx, x, y, 88, 32, 4);
-  ctx.fill();
-  // 绘制按钮文本
-  ctx.fillStyle = "white";
-  ctx.font = "14px serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("立即开通", x + 44, y + 16);
-};
-// 绘制带圆角的矩形
-function drawRoundedRect(ctx, x, y, width, height, radius) {
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.lineTo(x + width - radius, y);
-  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-  ctx.lineTo(x + width, y + height - radius);
-  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-  ctx.lineTo(x + radius, y + height);
-  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-  ctx.lineTo(x, y + radius);
-  ctx.quadraticCurveTo(x, y, x + radius, y);
-  ctx.closePath();
-}

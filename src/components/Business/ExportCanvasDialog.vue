@@ -32,14 +32,6 @@
         :key="item.png"
         :src="item[exportTypeValue]"
       />
-      <div
-        v-if="maskSize.show"
-        :style="`width: ${maskSize.width}px;height: ${maskSize.height}px`"
-        class="mask-canvas"
-      >
-        <h6>开通企业VIP查看完整数据</h6>
-        <div>立即开通</div>
-      </div>
     </div>
     <template #footer>
       <span class="dialog-footer">
@@ -66,10 +58,6 @@ export default {
     imgTitle: {
       type: String,
       default: "",
-    },
-    maskSize: {
-      type: Object,
-      default: () => {},
     },
   },
   data() {
@@ -176,14 +164,6 @@ export default {
     &:first-child {
       margin-top: 0;
     }
-  }
-}
-.mask-canvas {
-  @include absolute(1, 0, 0, none, none);
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(25px);
-  div {
   }
 }
 </style>

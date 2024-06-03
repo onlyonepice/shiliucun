@@ -129,7 +129,7 @@ const eChartName = computed(() => {
   const content = contentList.value.find(
     (item) => item.id === searchParams.value.contentDict,
   ).paramDesc;
-  return `${searchParams.value.releaseTime}${searchParams.value.partition}${content}招标不同储能时长能量规模占比`;
+  return `${searchParams.value.releaseTime}${searchParams.value.partition}${content}中标不同储能时长能量规模占比`;
 });
 // 获取数据
 async function getData() {
