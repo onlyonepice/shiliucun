@@ -23,9 +23,8 @@
         :label="item[labelKey]"
         :value="item[valueKey]"
       >
-        <div>
-          {{ item[labelKey]
-          }}<img v-if="item.lock" :src="SelectKey" class="select__key" />
+        <div class="select__key">
+          {{ item[labelKey] }}<img v-if="item.lock" :src="SelectKey" />
         </div>
       </el-option>
     </el-select>
@@ -188,8 +187,11 @@ defineExpose({
   text-align: right;
 }
 .select__key {
-  @include widthAndHeight(16px, 16px);
-  margin-left: 8px;
+  @include flex(center, flex-start);
+  img {
+    @include widthAndHeight(16px, 16px);
+    margin-left: 8px;
+  }
 }
 .select__content {
   flex: 1;

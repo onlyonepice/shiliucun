@@ -67,15 +67,9 @@ export const exportImg = (type = "png", downLoadName: string, picInfo) => {
           ctx.fillStyle = "#ffffff";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
-        ctx.drawImage(
-          contentImage,
-          0,
-          0,
-          contentImage.width,
-          contentImage.height,
-        );
-        const watermarkedDataURL = canvas.toDataURL("image/png");
-        downloadBase64(watermarkedDataURL, downLoadName);
+        ctx.drawImage(contentImage, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL("image/png");
+        downloadBase64(dataURL, downLoadName);
         resolve("success");
       })
       .catch((error) => {

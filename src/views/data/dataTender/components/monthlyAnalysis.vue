@@ -18,12 +18,20 @@
         <el-button type="primary" @click="exportResult">下载图片</el-button>
       </div>
     </div>
-    <div
-      v-if="!isEmptyData"
-      v-loading="loading"
-      id="eChart_dataMonthlyAnalysis"
-      ref="eChartsDom"
-    />
+    <div v-if="!isEmptyData" class="echarts-box">
+      <div
+        v-loading="loading"
+        id="eChart_dataMonthlyAnalysis"
+        ref="eChartsDom"
+      />
+      <div class="echarts-mask" v-if="echartsMask">
+        <h4>开通企业VIP查看完整数据</h4>
+        <el-button type="primary" @click="useUserStore().openVip(true)"
+          >立即开通</el-button
+        >
+      </div>
+    </div>
+
     <EmptyData v-else />
     <ExportCanvasDialog
       :visible="exportVisible"
@@ -55,6 +63,7 @@ const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const ns = useNamespace("dataMonthlyAnalysis");
 const loading: Ref<boolean> = ref(false);
+const echartsMask: Ref<boolean> = ref(true); // echarts蒙层
 const props = defineProps({
   contentFilter: {
     type: Array as () => any[],
@@ -167,9 +176,25 @@ function exportResult() {
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+.echarts-box {
+  @include widthAndHeight(1152px, 505px);
+  @include relative();
+}
 #eChart_dataMonthlyAnalysis {
   @include widthAndHeight(1152px, 505px);
   margin-top: 32px;
+}
+.echarts-mask {
+  @include widthAndHeight(254px, 405px);
+  @include absolute(1, none, 34px, 50px, none);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(25px);
+  text-align: center;
+  h4 {
+    margin-top: 180px;
+    margin-bottom: 14px;
+  }
 }
 .es-dataMonthlyAnalysis-top {
   @include flex(center, space-between, nowrap);
