@@ -58,6 +58,7 @@
 import { get } from "lodash";
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
+import { getToken } from "@/utils/auth";
 import { priceFormOptions } from "../data";
 import useNamespace from "@/utils/nameSpace";
 import { ref, watch, Ref, nextTick } from "vue";
@@ -268,8 +269,10 @@ const initECharts = async () => {
       });
     }
   });
-  const res = await maskPermissions({ moduleName: "中标价格分析" });
-  echartsMask.value = res.datas;
+  if (!getToken()) {
+    const res = await maskPermissions({ moduleName: "中标价格分析" });
+    echartsMask.value = res.datas;
+  }
   myChart.setOption(EChartOptions.value);
 };
 const colorEnum = {

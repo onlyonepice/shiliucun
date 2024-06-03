@@ -60,6 +60,7 @@
 import { get } from "lodash";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
+import { getToken } from "@/utils/auth";
 import { ref, watch, Ref, nextTick } from "vue";
 import { enterpriseAnalysis, maskPermissions } from "@/api/data";
 import { enterpriseFormOptions } from "../data";
@@ -251,8 +252,10 @@ const initECharts = async () => {
       });
     }
   });
-  const res = await maskPermissions({ moduleName: "中标企业分析" });
-  echartsMask.value = res.datas;
+  if (!getToken()) {
+    const res = await maskPermissions({ moduleName: "中标企业分析" });
+    echartsMask.value = res.datas;
+  }
   myChart.setOption(echartOptions.value);
 };
 

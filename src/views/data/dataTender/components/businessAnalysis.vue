@@ -65,6 +65,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, Ref, nextTick } from "vue";
 import * as echarts from "echarts";
+import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
 import { getBusinessDynamicsListApi, maskPermissions } from "@/api/data";
 import { eChartsOptionCommon, textStyleObject } from "@/utils/echarts/eCharts";
@@ -223,8 +224,10 @@ async function createECharts() {
   const myChart = echarts.init(
     document.getElementById("eChart_businessAnalysis"),
   );
-  const res = await maskPermissions({ moduleName: "招标企业分析" });
-  echartsMask.value = res.datas;
+  if (!getToken()) {
+    const res = await maskPermissions({ moduleName: "招标企业分析" });
+    echartsMask.value = res.datas;
+  }
   myChart.setOption(eChartsOption.value);
 }
 

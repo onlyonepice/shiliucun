@@ -49,6 +49,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, Ref, watch } from "vue";
+import { getToken } from "@/utils/auth";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { getBiddingDynamicsListApi, maskPermissions } from "@/api/data";
@@ -155,8 +156,10 @@ async function getElectricityTypeOneName() {
         textStyle: textStyleObject,
       },
     ]);
-  const res = await maskPermissions({ moduleName: "招标月度分析" });
-  echartsMask.value = res.datas;
+  if (!getToken()) {
+    const res = await maskPermissions({ moduleName: "招标月度分析" });
+    echartsMask.value = res.datas;
+  }
   loading.value = false;
   createECharts();
 }
