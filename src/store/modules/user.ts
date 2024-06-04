@@ -18,6 +18,7 @@ export const useUserStore = defineStore({
     openLoginVisible: false, // 打开登录弹窗
     openVipVisible: false, // 打开vip弹窗
     openVipTitle: "开通VIP会员，继续使用该功能。",
+    openVipSubmitTitle: "开通会员",
     permissionList: [], // 用户权限
     showMembersBuy: false, //订阅会员弹框
     comparedList: [], // 产品对比列表

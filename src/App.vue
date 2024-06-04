@@ -36,6 +36,7 @@
   <OpenVip
     :title="useUserStore().$state.openVipTitle"
     :visible="useUserStore().$state.openVipVisible"
+    :submitText="useUserStore().$state.openVipSubmitTitle"
   />
   <Login
     class="animate__animated"

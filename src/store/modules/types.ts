@@ -46,5 +46,6 @@ export type userType = {
   permissionList: Array<any>;
   showMembersBuy: boolean;
   openVipTitle: string;
+  openVipSubmitTitle: string;
   comparedList: Array<any>;
 };

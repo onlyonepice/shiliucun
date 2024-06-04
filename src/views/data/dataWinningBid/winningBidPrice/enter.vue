@@ -38,7 +38,7 @@
         v-if="echartsMask"
       >
         <h4>开通企业VIP查看完整数据</h4>
-        <el-button type="primary" @click="useUserStore().openVip(true)"
+        <el-button type="primary" @click="router.push('/vip')"
           >立即开通</el-button
         >
       </div>
@@ -66,6 +66,8 @@ import { capacityAnalysis_V2, maskPermissions } from "@/api/data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
 import lament_icon from "@/assets/img/common/lament_icon.png";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const { VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("winningBidPrice");
 const EChartOptions: Ref<any> = ref({});
@@ -271,7 +273,7 @@ const initECharts = async () => {
   });
   if (getToken()) {
     const res = await maskPermissions({ moduleName: "中标价格分析" });
-    echartsMask.value = res.datas;
+    echartsMask.value = res.datas.isCovered;
   }
   myChart.setOption(EChartOptions.value);
 };

@@ -46,7 +46,7 @@
         v-if="echartsMask"
       >
         <h4>开通企业VIP查看完整数据</h4>
-        <el-button type="primary" @click="useUserStore().openVip(true)"
+        <el-button type="primary" @click="router.push('/vip')"
           >立即开通</el-button
         >
       </div>
@@ -71,6 +71,8 @@ import { getBusinessDynamicsListApi, maskPermissions } from "@/api/data";
 import { eChartsOptionCommon, textStyleObject } from "@/utils/echarts/eCharts";
 import { cloneDeep } from "lodash";
 import { useUserStore } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const { VITE_DATABASE_URL } = import.meta.env;
 const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 获取eCharts节点
@@ -125,6 +127,8 @@ const onChangeFilter = (id: string | number, type: string) => {
     if (!_data[0].lock) {
       getElectricityTypeOneName();
     } else {
+      useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
+      useUserStore().openVipSubmitTitle = "立即开通";
       useUserStore().openVip(true);
       nextTick(() => {
         releaseTime.value = _releaseTime;
@@ -226,7 +230,7 @@ async function createECharts() {
   );
   if (getToken()) {
     const res = await maskPermissions({ moduleName: "招标企业分析" });
-    echartsMask.value = res.datas;
+    echartsMask.value = res.datas.isCovered;
   }
   myChart.setOption(eChartsOption.value);
 }

@@ -10,9 +10,9 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="handleClose(false)">我知道了</el-button>
-        <el-button type="primary" @click="handleClose(true)"
-          >开通会员</el-button
-        >
+        <el-button type="primary" @click="handleClose(true)">{{
+          submitText
+        }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -35,6 +35,10 @@ const props = defineProps({
     type: String,
     default: "开通VIP会员，继续使用该功能。",
   },
+  submitText: {
+    type: String,
+    default: "开通会员",
+  },
 });
 watch(
   () => props.visible,
@@ -45,6 +49,7 @@ watch(
 );
 const handleClose = (type: boolean) => {
   useUserStore().openVip(false);
+  useUserStore().$state.openVipSubmitTitle = "开通会员";
   if (type) {
     if (router.currentRoute.value.path === "/reportDetail") {
       useUserStore().$state.showMembersBuy = true;

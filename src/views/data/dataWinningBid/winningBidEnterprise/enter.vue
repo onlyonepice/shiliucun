@@ -40,7 +40,7 @@
         v-if="echartsMask"
       >
         <h4>开通企业VIP查看完整数据</h4>
-        <el-button type="primary" @click="useUserStore().openVip(true)"
+        <el-button type="primary" @click="router.push('/vip')"
           >立即开通</el-button
         >
       </div>
@@ -67,6 +67,8 @@ import { enterpriseFormOptions } from "../data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
 import lament_icon from "@/assets/img/common/lament_icon.png";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const { VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("winningBidEnterprise");
 const isEmptyData = ref(false);
@@ -254,7 +256,7 @@ const initECharts = async () => {
   });
   if (getToken()) {
     const res = await maskPermissions({ moduleName: "中标企业分析" });
-    echartsMask.value = res.datas;
+    echartsMask.value = res.datas.isCovered;
   }
   myChart.setOption(echartOptions.value);
 };
@@ -611,6 +613,8 @@ const selectChange = (row, index, val) => {
     if (!_data[0].lock) {
       getData();
     } else {
+      useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
+      useUserStore().openVipSubmitTitle = "立即开通";
       useUserStore().openVip(true);
       nextTick(() => {
         requestData.value["year"] = _year;

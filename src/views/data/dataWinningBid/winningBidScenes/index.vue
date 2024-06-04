@@ -220,6 +220,8 @@ const selectChange = (row, index, val) => {
     if (!_data[0].lock) {
       getData();
     } else {
+      useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
+      useUserStore().openVipSubmitTitle = "立即开通";
       useUserStore().openVip(true);
       nextTick(() => {
         requestData.value["releaseTime"] = _releaseTime;

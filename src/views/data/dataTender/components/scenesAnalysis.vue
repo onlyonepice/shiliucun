@@ -131,6 +131,8 @@ const onChangeFilter = (id: any, type: string) => {
     if (!_data[0].lock) {
       getElectricityTypeOneName();
     } else {
+      useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
+      useUserStore().openVipSubmitTitle = "立即开通";
       useUserStore().openVip(true);
       nextTick(() => {
         releaseTime.value = _releaseTime;
