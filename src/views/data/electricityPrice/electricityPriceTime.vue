@@ -10,6 +10,7 @@
         @triggerForm="handleTriggerForm"
         :options="regionalData"
         valueKey="regionName"
+        labelKey="regionName"
         :defaultValue="searchParams.regionName"
       />
       <Select
