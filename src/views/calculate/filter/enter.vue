@@ -49,6 +49,7 @@
             :title="addAreaType ? '地区A' : '地区'"
             :options="cityData"
             valueKey="regionName"
+            labelKey="regionName"
             :defaultValue="searchParams.regionName"
             width="100%"
             @onChange="
