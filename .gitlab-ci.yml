@@ -43,8 +43,8 @@ prod_install:
      - echo "开始构建"
      - ls
      - node -v
-     - npm -v
-     - npm install --registry "https://registry.npmmirror.com"
+     - pnpm -v
+     - pnpm install --registry "https://registry.npmmirror.com"
   tags:   #runner标签
     - data-report
   only:   #分支
@@ -80,7 +80,7 @@ prod_build:
         - dist
       policy: push  
   script:
-     - npm run build:prod
+     - pnpm run build:prod
   tags:
     - data-report
   only:
