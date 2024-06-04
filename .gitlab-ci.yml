@@ -114,8 +114,8 @@ prod_deploy:
       key: eesa-$CI_COMMIT_REF_NAME-dist
       policy: pull
   script:
-    - ossutil rm oss://$OSS_PATH/ --exclude "*.py" -rf
-    - ossutil cp -r dist/ oss://$OSS_PATH/
+    - ossutil rm oss://eesa-data-report/ --exclude "*.py" -rf
+    - ossutil cp -r dist/ oss://eesa-data-report/
   tags:
     - data-report
   only:
