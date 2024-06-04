@@ -46,6 +46,7 @@
           >
         </div>
       </div>
+      <!-- 产品参数 -->
       <div
         :class="[ns.b('content-list')]"
         v-if="productDetailList.length !== 0"
