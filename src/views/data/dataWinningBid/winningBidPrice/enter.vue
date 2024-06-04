@@ -2,29 +2,24 @@
 <template>
   <div :class="ns.b()">
     <div :class="ns.b('filter')">
-      <div
+      <Select
         v-for="(item, index) in options"
-        :style="{ marginRight: index === options.length - 1 ? '16px' : '24px' }"
-        :key="item.label"
-        class="select-item"
-      >
-        <span class="label">
-          {{ item.label }}
-        </span>
-        <Select
-          v-model="requestData[item.model]"
-          :options="item.bind.options"
-          :type="item.type"
-          :labelKey="item.bind.cascaderOption.label"
-          :valueKey="item.bind.cascaderOption.value"
-          :defaultValue="requestData[item.model]"
-          width="256px"
-          @onChange="(val) => selectChange(item, index, val)"
-        />
-      </div>
-      <p class="line" />
-      <el-button type="primary" @click="exportResult">下载图片</el-button>
+        :key="item.title"
+        v-model="requestData[item.model]"
+        :options="item.bind.options"
+        :title="item.title"
+        :labelKey="item.bind.cascaderOption.label"
+        :valueKey="item.bind.cascaderOption.value"
+        :defaultValue="requestData[item.model]"
+        @onChange="(val) => selectChange(item, index, val)"
+      />
     </div>
+    <el-button
+      type="primary"
+      @click="exportResult"
+      style="float: right; margin-top: 32px; margin-bottom: 16px"
+      >下载图片</el-button
+    >
     <div :class="ns.b('hint')">
       <img :src="lament_icon" alt="" />
       <span

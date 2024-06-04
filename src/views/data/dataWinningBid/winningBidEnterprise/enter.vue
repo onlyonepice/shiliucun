@@ -2,26 +2,18 @@
 <template>
   <div :class="ns.b()">
     <div :class="ns.b('filter')">
-      <div
+      <Select
         v-for="(item, index) in options"
-        :style="{ marginRight: (index + 1) % 3 === 0 ? '0' : '24px' }"
-        :key="item.label"
-        class="select-item"
-      >
-        <span class="label">
-          {{ item.label }}
-        </span>
-        <Select
-          v-model="requestData[item.model]"
-          :options="item.bind.options"
-          :type="item.type"
-          :labelKey="item.bind.cascaderOption.label"
-          :valueKey="item.bind.cascaderOption.value"
-          :defaultValue="requestData[item.model]"
-          width="256px"
-          @onChange="(val) => selectChange(item, index, val)"
-        />
-      </div>
+        :key="item.title"
+        v-model="requestData[item.model]"
+        :options="item.bind.options"
+        :type="item.type"
+        :title="item.title"
+        :labelKey="item.bind.cascaderOption.label"
+        :valueKey="item.bind.cascaderOption.value"
+        :defaultValue="requestData[item.model]"
+        @onChange="(val) => selectChange(item, index, val)"
+      />
     </div>
     <div :class="ns.b('hint')">
       <img :src="lament_icon" alt="" />
@@ -644,6 +636,9 @@ const selectChange = (row, index, val) => {
       @include font(14px.400, rgba(0, 0, 0, 0.6), 22px);
       width: 72px;
     }
+  }
+  .select {
+    width: 25% !important;
   }
 }
 .es-winningBidEnterprise-hint {

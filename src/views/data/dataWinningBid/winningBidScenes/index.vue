@@ -2,27 +2,18 @@
 <template>
   <div :class="ns.b()">
     <div :class="ns.b('filter')">
-      <div
+      <Select
         v-for="(item, index) in options"
-        :key="item.label"
-        class="select-item"
-      >
-        <span class="label">
-          {{ item.label }}
-        </span>
-        <Select
-          :ref="item.model"
-          v-model="requestData[item.model]"
-          :options="item.bind.options"
-          :type="item.type"
-          :multiple="item.multiple"
-          :labelKey="item.bind.cascaderOption.label"
-          :valueKey="item.bind.cascaderOption.value"
-          :defaultValue="requestData[item.model]"
-          width="296px"
-          @onChange="(val) => selectChange(item, index, val)"
-        />
-      </div>
+        :key="item.title"
+        :title="item.title"
+        :options="item.bind.options"
+        :labelKey="item.bind.cascaderOption.label"
+        :valueKey="item.bind.cascaderOption.value"
+        :defaultValue="requestData[item.model]"
+        :ref="item.model"
+        v-model="requestData[item.model]"
+        @onChange="(val) => selectChange(item, index, val)"
+      />
     </div>
     <el-button
       v-if="!showEmpty"

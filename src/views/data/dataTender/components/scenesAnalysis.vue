@@ -145,6 +145,9 @@ onMounted(() => {
   props.unitFilter.forEach((item) => {
     item.defaultValue && (unit.value = item.paramValue);
   });
+  props.timeFilter.forEach((item) => {
+    item.defaultValue && (releaseTime.value = item.paramValue);
+  });
   getElectricityTypeOneName();
 });
 

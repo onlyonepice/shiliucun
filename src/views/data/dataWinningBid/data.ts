@@ -2,7 +2,7 @@ export const priceFormOptions = () => {
   return [
     {
       type: "select",
-      label: "中标内容",
+      title: "中标内容",
       model: "biddingContent",
       bind: {
         placeholder: "请选择",
@@ -16,7 +16,7 @@ export const priceFormOptions = () => {
     },
     {
       type: "select",
-      label: "技术类型",
+      title: "技术类型",
       model: "technologyType",
       bind: {
         ref: "business-electricity-cascade",
@@ -31,7 +31,7 @@ export const priceFormOptions = () => {
     },
     {
       type: "select",
-      label: "应用场景",
+      title: "应用场景",
       model: "applicationScenarios",
       bind: {
         placeholder: "请选择",
@@ -49,7 +49,7 @@ export const enterpriseFormOptions = () => {
   return [
     {
       type: "select",
-      label: "中标内容",
+      title: "中标内容",
       model: "biddingContent",
       bind: {
         placeholder: "请选择",
@@ -63,7 +63,7 @@ export const enterpriseFormOptions = () => {
     },
     {
       type: "select",
-      label: "技术类型",
+      title: "技术类型",
       model: "technologyType",
       bind: {
         ref: "business-electricity-cascade",
@@ -78,7 +78,7 @@ export const enterpriseFormOptions = () => {
     },
     {
       type: "select",
-      label: "储能时长",
+      title: "储能时长",
       model: "energyStorageDuration",
       bind: {
         ref: "tariffLevel-cascade",
@@ -93,7 +93,7 @@ export const enterpriseFormOptions = () => {
     },
     {
       type: "select",
-      label: "应用场景",
+      title: "应用场景",
       model: "applicationScenarios",
       bind: {
         placeholder: "请选择",
@@ -107,7 +107,7 @@ export const enterpriseFormOptions = () => {
     },
     {
       type: "select",
-      label: "中标时间",
+      title: "中标时间",
       model: "year",
       bind: {
         ref: "year-cascade",
@@ -126,7 +126,7 @@ export const enterScenesFormOptions = () => {
   return [
     {
       type: "select",
-      label: "中标内容",
+      title: "中标内容",
       model: "contentDict",
       multiple: false,
       bind: {
@@ -141,7 +141,7 @@ export const enterScenesFormOptions = () => {
     },
     {
       type: "select",
-      label: "发布日期",
+      title: "发布日期",
       model: "releaseTime",
       multiple: false,
       bind: {
@@ -157,7 +157,7 @@ export const enterScenesFormOptions = () => {
     },
     {
       type: "select",
-      label: "统计单位",
+      title: "统计单位",
       model: "unit",
       multiple: false,
       bind: {
