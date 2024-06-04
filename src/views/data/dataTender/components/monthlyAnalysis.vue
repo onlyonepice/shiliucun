@@ -184,7 +184,7 @@ function exportResult() {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .echarts-box {
   @include widthAndHeight(1152px, 505px);

@@ -487,7 +487,7 @@ const selectChange = (row, index, val) => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .es-winningBidPrice {
   width: 100%;
