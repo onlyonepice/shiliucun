@@ -43,7 +43,7 @@
       <div v-loading="loading" id="eChart_businessAnalysis" ref="eChartsDom" />
       <div
         class="echarts-mask-bottom animate__animated animate__fadeIn"
-        v-if="!echartsMask"
+        v-if="echartsMask"
       >
         <h4>开通企业VIP查看完整数据</h4>
         <el-button type="primary" @click="useUserStore().openVip(true)"
@@ -76,7 +76,7 @@ const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 获取eCharts节点
 const eChartsDom = ref(null);
 const isEmptyData = ref(false);
-const echartsMask = ref(true);
+const echartsMask = ref(false);
 // 导出图片相关
 const exportImgTitle: Ref<string> = ref("");
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址

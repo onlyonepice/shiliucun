@@ -84,12 +84,14 @@ async function getElectricityTypeOneName() {
   eChartsOption.value.visualMap = {
     type: "piecewise",
     max,
-    min: 1,
-    splitNumber: max < 5 ? max : 5,
+    min: 0,
+    splitNumber: max,
     show: true,
     inRange: {
       color: max < 5 ? color.slice(max - max * 2) : color,
     },
+    calculable: true,
+    precision: 0, // 设置值为整数
   };
   delete eChartsOption.value.dataRange;
   createECharts();

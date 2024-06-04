@@ -26,7 +26,7 @@
       />
       <div
         class="echarts-mask animate__animated animate__fadeIn"
-        v-if="!echartsMask"
+        v-if="echartsMask"
       >
         <h4>开通企业VIP查看完整数据</h4>
         <el-button type="primary" @click="useUserStore().openVip(true)"
@@ -68,7 +68,7 @@ const exportImgTitle: Ref<string> = ref("");
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const ns = useNamespace("dataMonthlyAnalysis");
 const loading: Ref<boolean> = ref(false);
-const echartsMask: Ref<boolean> = ref(true); // echarts蒙层
+const echartsMask: Ref<boolean> = ref(false); // echarts蒙层
 const props = defineProps({
   contentFilter: {
     type: Array as () => any[],

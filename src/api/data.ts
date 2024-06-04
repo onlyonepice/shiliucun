@@ -269,10 +269,10 @@ export const getPolicyReleased = () => {
 };
 
 // 招中标模块遮罩层权限
-export const maskPermissions = (data: any) => {
+export const maskPermissions = (params: any) => {
   return http.request<responseType>(
-    "post",
+    "get",
     "/eesa-report/homePage/public/front/v1.0/maskLayerPermissions",
-    data,
+    { params },
   );
 };

@@ -35,7 +35,7 @@
       <div v-loading="loading" id="eChart-winningBidPrice" ref="eChartsDom" />
       <div
         class="echarts-mask animate__animated animate__fadeIn"
-        v-if="!echartsMask"
+        v-if="echartsMask"
       >
         <h4>开通企业VIP查看完整数据</h4>
         <el-button type="primary" @click="useUserStore().openVip(true)"
@@ -72,7 +72,7 @@ const EChartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
-const echartsMask: Ref<boolean> = ref(true); // echarts蒙层
+const echartsMask: Ref<boolean> = ref(false); // echarts蒙层
 // 获取eCharts节点
 const eChartsDom = ref(null);
 const props = defineProps({
