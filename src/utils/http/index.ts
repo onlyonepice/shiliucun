@@ -18,6 +18,9 @@ import { stringify } from "qs";
 const { VITE_GLOB_API_URL } = import.meta.env;
 import { useUserStoreHook } from "@/store/modules/user";
 
+const { CancelToken } = Axios;
+const cacheRequest = {};
+
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
   // 请求超时时间
@@ -73,6 +76,13 @@ class PureHttp {
           PureHttp.initConfig.beforeRequestCallback(config);
           return config;
         }
+
+        const reqKey = `${config.url}&${config.method}`;
+        removeCacheRequest(reqKey);
+        config.cancelToken = new CancelToken((c) => {
+          cacheRequest[reqKey] = c;
+        });
+
         // 导出报告耗时较长，需要设置超时时间 5分钟
         exportList.includes(config.url) && (config.timeout = 1000 * 60 * 5);
         // 添加平台标识
@@ -155,7 +165,7 @@ class PureHttp {
       },
       (error: PureHttpError) => {
         const $error = error;
-        ElMessage.error($error);
+        $error.message !== "canceled" && ElMessage.error($error);
         // onErrorHandling();
         $error.isCancelRequest = Axios.isCancel($error);
         // 所有的响应异常 区分来源为取消请求/非取消请求
@@ -213,5 +223,13 @@ class PureHttp {
 const onErrorHandling = () => {
   useUserStoreHook().logOut();
 };
+
+function removeCacheRequest(reqKey) {
+  if (cacheRequest[reqKey]) {
+    // 这里调用的就是上面的CancelToken生成的c函数，调用就会取消请求
+    cacheRequest[reqKey]();
+    delete cacheRequest[reqKey];
+  }
+}
 
 export const http = new PureHttp();
