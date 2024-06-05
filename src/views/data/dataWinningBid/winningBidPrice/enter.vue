@@ -14,18 +14,15 @@
         @onChange="(val) => selectChange(item, index, val)"
       />
     </div>
-    <el-button
-      type="primary"
-      @click="exportResult"
-      style="float: right; margin-top: 32px; margin-bottom: 16px"
-      >下载图片</el-button
-    >
     <div :class="ns.b('hint')">
       <img :src="lament_icon" alt="" />
       <span
         >中标价格在去除最高值和最低值后，以能量规模（MWh）为权重，使用加权平均的方法计算。</span
       >
     </div>
+    <el-button type="primary" @click="exportResult" style="float: right"
+      >下载图片</el-button
+    >
     <div :class="ns.b('eCharts-box')" v-if="!isEmptyData">
       <div v-loading="loading" id="eChart-winningBidPrice" ref="eChartsDom" />
       <div
@@ -541,6 +538,7 @@ const selectChange = (row, index, val) => {
 .es-winningBidPrice-eCharts-box {
   width: 100%;
   @include relative();
+  margin-top: 80px;
 
   #eChart-winningBidPrice {
     width: 100%;
