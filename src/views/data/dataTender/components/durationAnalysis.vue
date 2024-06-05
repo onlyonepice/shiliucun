@@ -192,34 +192,32 @@ function handleTriggerForm() {
 // 筛选项发生变化时
 function handleChange(val, key) {
   const _releaseTime = searchParams.value.releaseTime;
-  if (key !== "releaseTime") {
-    searchParams.value[key] = val;
-    if (
-      useUserStore().checkPermission(
-        "ANALYSIS_OF_BIDDING_ENERGY_STORAGE_DURATION",
-      )
-    ) {
-      getData();
-    } else {
-      nextTick(() => {
-        searchParams.value = searchParams_deep.value;
+  searchParams.value[key] = val;
+  if (
+    useUserStore().checkPermission(
+      "ANALYSIS_OF_BIDDING_ENERGY_STORAGE_DURATION",
+    )
+  ) {
+    if (key === "releaseTime") {
+      const _data = dateList.value.filter((item) => {
+        return item.paramValue === val;
       });
+      if (!_data[0].lock) {
+        getData();
+      } else {
+        useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
+        useUserStore().openVipSubmitTitle = "立即开通";
+        useUserStore().openVip(true);
+        return nextTick(() => {
+          searchParams.value.releaseTime = _releaseTime;
+        });
+      }
     }
+    getData();
   } else {
-    const _data = dateList.value.filter((item) => {
-      return item.paramValue === val;
+    nextTick(() => {
+      searchParams.value = searchParams_deep.value;
     });
-    searchParams.value.releaseTime = val;
-    if (!_data[0].lock) {
-      getData();
-    } else {
-      useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
-      useUserStore().openVipSubmitTitle = "立即开通";
-      useUserStore().openVip(true);
-      nextTick(() => {
-        searchParams.value.releaseTime = _releaseTime;
-      });
-    }
   }
 }
 </script>
@@ -228,8 +226,6 @@ function handleChange(val, key) {
 @import "@/style";
 
 .es-durationAnalysis {
-  margin-top: 9px;
-
   .es-durationAnalysis-filter {
     display: flex;
   }

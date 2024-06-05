@@ -13,6 +13,7 @@
         :valueKey="item.bind.cascaderOption.value"
         :defaultValue="requestData[item.model]"
         @onChange="(val) => selectChange(item, index, val)"
+        style="margin-bottom: 12px"
       />
     </div>
     <div :class="ns.b('hint')">
@@ -585,33 +586,32 @@ const initData = () => {
 };
 const selectChange = (row, index, val) => {
   const _year = requestData.value["year"];
-  if (row.model !== "year") {
-    requestData.value[row.model] = val;
-    if (useUserStore().checkPermission("ANALYSIS_OF_WINNING_ENTERPRISES")) {
-      getData();
-    } else {
-      nextTick(() => {
-        requestData.value[row.model] =
-          options[index].bind.options[0][
-            options[index].bind.cascaderOption.value
-          ];
+  requestData.value[row.model] = val;
+  if (useUserStore().checkPermission("ANALYSIS_OF_WINNING_ENTERPRISES")) {
+    if (row.model === "year") {
+      const _data = props.formOptions[4]["datas"].filter((item) => {
+        return item.paramName === val;
       });
+      if (!_data[0].lock) {
+        getData();
+      } else {
+        useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
+        useUserStore().openVipSubmitTitle = "立即开通";
+        useUserStore().openVip(true);
+        return nextTick(() => {
+          requestData.value["year"] = _year;
+        });
+      }
     }
+    getData();
   } else {
-    const _data = props.formOptions[4]["datas"].filter((item) => {
-      return item.paramName === val;
+    nextTick(() => {
+      requestData.value[row.model] =
+        options.value[index].bind.options[0][
+          options.value[index].bind.cascaderOption.value
+        ];
+      requestData.value["year"] = _year;
     });
-    requestData.value["year"] = val;
-    if (!_data[0].lock) {
-      getData();
-    } else {
-      useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
-      useUserStore().openVipSubmitTitle = "立即开通";
-      useUserStore().openVip(true);
-      nextTick(() => {
-        requestData.value["year"] = _year;
-      });
-    }
   }
 };
 </script>

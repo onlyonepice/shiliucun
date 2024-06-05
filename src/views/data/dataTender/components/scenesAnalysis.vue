@@ -2,43 +2,40 @@
 <template>
   <div :class="ns.b()">
     <div :class="ns.b('top')">
-      <span :class="ns.be('top', 'title')">招标内容</span>
       <Select
         v-model="contentDict"
-        width="296px"
         :options="contentFilter"
         labelKey="paramDesc"
         valueKey="id"
         :defaultValue="contentDict"
+        title="招标内容"
         @onChange="
           (val) => {
             return onChangeFilter(val, 'contentDict');
           }
         "
       />
-      <span :class="ns.be('top', 'title')">发布日期</span>
       <Select
         v-model="releaseTime"
-        width="296px"
         :options="timeFilter"
         labelKey="paramDesc"
         valueKey="paramValue"
         :defaultValue="releaseTime"
+        title="发布日期"
         @onChange="
           (val) => {
             return onChangeFilter(val, 'releaseTime');
           }
         "
       />
-      <span :class="ns.be('top', 'title')">统计单位</span>
       <Select
         ref="unitDom"
         v-model="unit"
-        width="296px"
         :options="unitFilter"
         labelKey="paramDesc"
         valueKey="paramValue"
         :defaultValue="unit"
+        title="统计单位"
         @onChange="
           (val) => {
             return onChangeFilter(val, 'unit');
@@ -106,38 +103,38 @@ const showEmpty: Ref<boolean> = ref(false);
 const canvasTitle = ref("");
 const onChangeFilter = (id: any, type: string) => {
   const _releaseTime = releaseTime.value;
-  if (type !== "releaseTime") {
-    type === "contentDict" && (contentDict.value = id);
-    type === "unit" && (unit.value = id);
-    if (
-      useUserStore().checkPermission(
-        "ANALYSIS_OF_BIDDING_APPLICATION_SCENARIOS",
-      )
-    ) {
-      getElectricityTypeOneName();
-    } else {
-      nextTick(() => {
-        contentDict.value = 712;
-        props.unitFilter.forEach((item) => {
-          item.defaultValue && (unit.value = item.paramValue);
+  type === "contentDict"
+    ? (contentDict.value = id)
+    : type === "unit"
+      ? (unit.value = id)
+      : (releaseTime.value = id);
+  if (
+    useUserStore().checkPermission("ANALYSIS_OF_BIDDING_APPLICATION_SCENARIOS")
+  ) {
+    if (type === "releaseTime") {
+      const _data = props.timeFilter.filter((item) => {
+        return item.paramValue === id;
+      });
+      if (!_data[0].lock) {
+        getElectricityTypeOneName();
+      } else {
+        useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
+        useUserStore().openVipSubmitTitle = "立即开通";
+        useUserStore().openVip(true);
+        return nextTick(() => {
+          releaseTime.value = _releaseTime;
         });
-      });
+      }
     }
+    getElectricityTypeOneName();
   } else {
-    const _data = props.timeFilter.filter((item) => {
-      return item.paramValue === id;
-    });
-    releaseTime.value = id;
-    if (!_data[0].lock) {
-      getElectricityTypeOneName();
-    } else {
-      useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
-      useUserStore().openVipSubmitTitle = "立即开通";
-      useUserStore().openVip(true);
-      nextTick(() => {
-        releaseTime.value = _releaseTime;
+    nextTick(() => {
+      contentDict.value = 712;
+      props.unitFilter.forEach((item) => {
+        item.defaultValue && (unit.value = item.paramValue);
       });
-    }
+      releaseTime.value = _releaseTime;
+    });
   }
 };
 

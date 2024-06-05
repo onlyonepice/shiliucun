@@ -3,36 +3,30 @@
   <div :class="ns.b()">
     <div :class="ns.b('top')">
       <div :class="ns.be('top', 'left')">
-        <div>
-          <span :class="ns.be('top', 'title')">招标内容</span>
-          <Select
-            width="256px"
-            :options="contentFilter"
-            labelKey="paramDesc"
-            valueKey="id"
-            @onChange="
-              (val) => {
-                return onChangeFilter(val, 'contentDict');
-              }
-            "
-            :defaultValue="contentDict"
-          />
-        </div>
-        <div>
-          <span :class="ns.be('top', 'title')">发布日期</span>
-          <Select
-            width="256px"
-            :options="timeFilter"
-            labelKey="paramDesc"
-            valueKey="paramValue"
-            @onChange="
-              (val) => {
-                return onChangeFilter(val, 'releaseTime');
-              }
-            "
-            :defaultValue="releaseTime"
-          />
-        </div>
+        <Select
+          :options="contentFilter"
+          labelKey="paramDesc"
+          valueKey="id"
+          title="招标内容"
+          @onChange="
+            (val) => {
+              return onChangeFilter(val, 'contentDict');
+            }
+          "
+          :defaultValue="contentDict"
+        />
+        <Select
+          :options="timeFilter"
+          labelKey="paramDesc"
+          valueKey="paramValue"
+          title="发布日期"
+          @onChange="
+            (val) => {
+              return onChangeFilter(val, 'releaseTime');
+            }
+          "
+          :defaultValue="releaseTime"
+        />
       </div>
       <div :class="ns.be('top', 'right')">
         <span :class="ns.be('top', 'line')" />
@@ -110,30 +104,32 @@ getReleaseTime();
 // 招标内容筛选项改变
 const onChangeFilter = (id: string | number, type: string) => {
   const _releaseTime = releaseTime.value;
-  if (type === "contentDict") {
-    contentDict.value = id;
-    if (useUserStore().checkPermission("ANALYSIS_BIDDING_ENTERPRISES")) {
-      getElectricityTypeOneName();
-    } else {
-      nextTick(() => {
-        contentDict.value = props.contentFilter[0].id;
+  type === "contentDict" ? (contentDict.value = id) : (releaseTime.value = id);
+  const _data = props.timeFilter.filter((item) => {
+    return item.paramValue === id;
+  });
+  if (useUserStore().checkPermission("ANALYSIS_BIDDING_ENTERPRISES")) {
+    if (type === "releaseTime") {
+      const _data = props.timeFilter.filter((item) => {
+        return item.paramValue === id;
       });
+      if (!_data[0].lock) {
+        getElectricityTypeOneName();
+      } else {
+        useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
+        useUserStore().openVipSubmitTitle = "立即开通";
+        useUserStore().openVip(true);
+        return nextTick(() => {
+          releaseTime.value = _releaseTime;
+        });
+      }
     }
+    getElectricityTypeOneName();
   } else {
-    const _data = props.timeFilter.filter((item) => {
-      return item.paramValue === id;
+    nextTick(() => {
+      contentDict.value = props.contentFilter[0].id;
+      releaseTime.value = _releaseTime;
     });
-    releaseTime.value = id;
-    if (!_data[0].lock) {
-      getElectricityTypeOneName();
-    } else {
-      useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
-      useUserStore().openVipSubmitTitle = "立即开通";
-      useUserStore().openVip(true);
-      nextTick(() => {
-        releaseTime.value = _releaseTime;
-      });
-    }
   }
 };
 
@@ -274,11 +270,8 @@ function exportResult() {
   @include flex(center, space-between, nowrap);
 }
 .es-dataBusinessAnalysis-top__left {
-  @include flex(center, flex-start, nowrap);
-  & > div {
-    @include flex(center, flex-start, nowrap);
-    margin-right: 24px;
-  }
+  width: 80%;
+  @include flex(center, space-between, nowrap);
   .es-dataBusinessAnalysis-top__title {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     margin-right: 16px;

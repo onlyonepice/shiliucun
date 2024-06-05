@@ -3,13 +3,12 @@
   <div :class="ns.b()">
     <div :class="ns.b('top')">
       <div :class="ns.be('top', 'left')">
-        <span :class="ns.be('top', 'title')">招标内容</span>
         <Select
           v-model="contentDict"
-          width="256px"
           :options="contentFilter"
           labelKey="paramDesc"
           valueKey="id"
+          title="招标内容"
           :defaultValue="contentDict"
         />
       </div>
@@ -210,7 +209,7 @@ function exportResult() {
   @include flex(center, space-between, nowrap);
 }
 .es-dataMonthlyAnalysis-top__left {
-  width: 328px;
+  width: 80%;
   @include flex(center, flex-start, nowrap);
   .es-dataMonthlyAnalysis-top__title {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);

@@ -188,36 +188,34 @@ function exportResult() {
 
 const selectChange = (row, index, val) => {
   const _releaseTime = requestData.value["releaseTime"];
-  if (row.model !== "releaseTime") {
-    requestData.value[row.model] = val;
-    if (
-      useUserStore().checkPermission("APPLICATION_SCENARIOS_FOR_WINNING_BIDS")
-    ) {
-      getData();
-    } else {
-      nextTick(() => {
-        requestData.value = {
-          contentDict: 712,
-          releaseTime: "2024",
-          unit: "1",
-        };
+  requestData.value[row.model] = val;
+  if (
+    useUserStore().checkPermission("APPLICATION_SCENARIOS_FOR_WINNING_BIDS")
+  ) {
+    if (row.model === "releaseTime") {
+      const _data = props.formOptions[4]["datas"].filter((item) => {
+        return item.paramName === val;
       });
+      if (!_data[0].lock) {
+        getData();
+      } else {
+        useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
+        useUserStore().openVipSubmitTitle = "立即开通";
+        useUserStore().openVip(true);
+        return nextTick(() => {
+          requestData.value["releaseTime"] = _releaseTime;
+        });
+      }
     }
+    getData();
   } else {
-    const _data = props.formOptions[4]["datas"].filter((item) => {
-      return item.paramName === val;
+    nextTick(() => {
+      requestData.value[row.model] =
+        options.value[index].bind.options[0][
+          options.value[index].bind.cascaderOption.value
+        ];
+      requestData.value["year"] = _releaseTime;
     });
-    requestData.value["releaseTime"] = val;
-    if (!_data[0].lock) {
-      getData();
-    } else {
-      useUserStore().openVipTitle = "开通企业VIP查看完整数据。";
-      useUserStore().openVipSubmitTitle = "立即开通";
-      useUserStore().openVip(true);
-      nextTick(() => {
-        requestData.value["releaseTime"] = _releaseTime;
-      });
-    }
   }
 };
 </script>

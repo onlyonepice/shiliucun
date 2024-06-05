@@ -178,7 +178,6 @@ defineExpose({
 .select {
   @include widthAndHeight(30%, 32px);
   @include flex(center, flex-start);
-  margin-bottom: 12px;
 }
 
 .select__title {
