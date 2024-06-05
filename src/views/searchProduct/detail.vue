@@ -3,47 +3,93 @@
     <breadcrumb :breadcrumbList="breadcrumbList" />
     <div :class="[ns.b('content'), 'es-commonPage']">
       <div :class="[ns.b('content-top')]">
-        <div :class="[ns.be('info-left', 'bigImg-box')]">
-          <img
-            :class="[ns.be('info-left', 'bigImg')]"
-            :src="useUserStoreHook().$state.fileUrl + productDetail.image"
-            alt=""
-          />
+        <div :class="[ns.b('content-top-title')]">
+          <div :class="[ns.be('info-left', 'bigImg-box')]">
+            <img
+              :class="[ns.be('info-left', 'bigImg')]"
+              :src="useUserStoreHook().$state.fileUrl + productDetail.image"
+              alt=""
+            />
+          </div>
+          <div :class="[ns.b('info-right')]">
+            <h3 :class="[ns.b('info-right-title')]">
+              {{ productDetail.name }}
+            </h3>
+            <p :class="[ns.b('info-right-company')]">
+              {{ productDetail.enterprise }}
+            </p>
+            <p :class="[ns.b('info-right-price')]">
+              参考价<span>{{ productDetail.price }}/kWh起</span>
+            </p>
+            <template v-if="productDetail.models">
+              <p :class="[ns.b('info-right-common')]">
+                额定功率：{{
+                  productDetail.models[0].ratedPower === ""
+                    ? "-"
+                    : productDetail.models[0].ratedPower + "kW"
+                }}
+              </p>
+              <p :class="[ns.b('info-right-common')]">
+                电池系统能量：{{
+                  productDetail.models[0].batterySystemEnergy
+                }}kWh
+              </p>
+              <p :class="[ns.b('info-right-common')]">
+                系统综合效率：{{
+                  productDetail.models[0].systemOverallEfficiency
+                }}%
+              </p>
+              <p :class="[ns.b('info-right-common')]">
+                冷却方式：{{
+                  productDetail.models[0].coolingMethodName.join("，")
+                }}
+              </p>
+            </template>
+            <el-button
+              :class="[ns.b('info-right-connect')]"
+              type="primary"
+              @click="onConnectCompany(productDetail.enterpriseId)"
+              >联系厂商</el-button
+            >
+          </div>
         </div>
-        <div :class="[ns.b('info-right')]">
-          <h3 :class="[ns.b('info-right-title')]">
-            {{ productDetail.name }}
-          </h3>
-          <p :class="[ns.b('info-right-company')]">
-            {{ productDetail.enterprise }}
-          </p>
-          <p :class="[ns.b('info-right-price')]">
-            参考价<span>{{ productDetail.price }}/kWh起</span>
-          </p>
-          <template v-if="productDetail.models">
-            <p :class="[ns.b('info-right-common')]">
-              额定功率：{{ productDetail.models[0].ratedPower }}kW
-            </p>
-            <p :class="[ns.b('info-right-common')]">
-              电池系统能量：{{ productDetail.models[0].batterySystemEnergy }}kWh
-            </p>
-            <p :class="[ns.b('info-right-common')]">
-              系统综合效率：{{
-                productDetail.models[0].systemOverallEfficiency
-              }}%
-            </p>
-            <p :class="[ns.b('info-right-common')]">
-              冷却方式：{{
-                productDetail.models[0].coolingMethodName.join("，")
-              }}
-            </p>
-          </template>
-          <el-button
-            :class="[ns.b('info-right-connect')]"
-            type="primary"
-            @click="onConnectCompany(productDetail.enterpriseId)"
-            >联系厂商</el-button
-          >
+        <!-- 产品参数 -->
+        <div :class="[ns.b('content-detail')]">
+          <h3>产品参数</h3>
+          <el-table :data="tableData" style="width: 100%" :border="true">
+            <el-table-column fixed prop="name" label="" width="160">
+              <template #default="scope">
+                <p
+                  :style="{
+                    'text-align': 'right',
+                    color: 'rgba(0, 0, 0, 0.9)',
+                    'font-weight': scope.$index === 0 ? 600 : 400,
+                  }"
+                >
+                  {{ scope.row.name }}
+                </p>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="info1"
+              v-for="item in tableData[0].info.length"
+              :key="item"
+              label=""
+              :width="
+                943 / tableData[0].info.length < 300
+                  ? 300
+                  : 943 / tableData[0].info.length
+              "
+            >
+              <template #default="scope">
+                <detailTable
+                  v-if="scope.row.info[item - 1]"
+                  :index="scope.$index"
+                  :info="scope.row.info[item - 1] || {}"
+                />
+              </template>
+            </el-table-column>
+          </el-table>
         </div>
       </div>
       <div
@@ -90,7 +136,9 @@ import {
   getProductDetailListApi,
 } from "@/api/searchProduct";
 import { useRoute, useRouter } from "vue-router";
+import detailTable from "./components/detailTable.vue";
 import { useUserStoreHook } from "@/store/modules/user";
+import { cloneDeep } from "lodash";
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const router = useRouter();
 const ns = useNamespace("searchProductDetail");
@@ -98,10 +146,23 @@ const breadcrumbList: Ref<Array<any>> = ref([
   { text: "查产品", path: "/searchProduct" },
   { text: "", path: "" },
 ]);
+const tabNameList = ref([
+  "产品型号",
+  "产品形态",
+  "储能系统技术",
+  "额定功率/kW",
+  "电池系统能量/kWh",
+  "标称电压/V",
+  "系统综合效率/%",
+  "放电深度/%",
+  "年衰减率/%",
+  "冷却方式",
+  "尺寸/m*m*m",
+]);
+const tableData: Ref<any> = ref([]);
 const route = useRoute();
 const productDetail: Ref<any> = ref({}); // 产品详情
 const productDetailList: Ref<any> = ref({});
-
 // 获取产品详情
 const getProductDetail = async () => {
   const { datas, resp_code }: any = await getProductDetailApi({
@@ -110,6 +171,12 @@ const getProductDetail = async () => {
   if (resp_code === 0) {
     productDetail.value = datas;
     breadcrumbList.value[1].text = datas.name;
+    for (let index = 0; index < 11; index++) {
+      tableData.value.push({
+        name: tabNameList.value[index],
+        info: cloneDeep(datas.models),
+      });
+    }
   }
 };
 // 获取产品列表
@@ -155,6 +222,8 @@ const onConnectCompany = (id: string) => {
   padding: 24px;
   background: #ffffff;
   border-radius: 8px;
+}
+.es-searchProductDetail-content-top-title {
   @include flex(flex-start, space-between, nowrap);
 }
 .es-searchProductDetail-info-right {
@@ -197,6 +266,12 @@ const onConnectCompany = (id: string) => {
 }
 .es-searchProductDetail-info-right-connect {
   @include absolute(1, none, none, 0, 0);
+}
+.es-searchProductDetail-content-detail {
+  h3 {
+    margin-top: 32px;
+    margin-bottom: 17px;
+  }
 }
 .es-searchProductDetail-content-list {
   @include widthAndHeight(100%);
@@ -262,5 +337,27 @@ const onConnectCompany = (id: string) => {
   @include textOverflowOne();
   width: 176px;
   margin: 0 auto;
+}
+</style>
+<style lang="scss">
+@import "@/style/mixin.scss";
+.es-searchProductDetail {
+  .el-table__header-wrapper {
+    height: 0;
+  }
+  .el-table .el-table__cell {
+    padding: 0;
+    height: auto !important;
+    padding: 9px 15px 7px 15px;
+  }
+  .el-table .cell {
+    padding: 0;
+  }
+  .el-table__row td:nth-of-type(1) {
+    background: #f2f3f5;
+    text-align: right;
+    @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+    border-right: none !important;
+  }
 }
 </style>

@@ -11,6 +11,8 @@
       :filterInfo="filterInfo"
       @onChoseFilter="onChoseFilter"
     />
+    <!-- 筛选项 -->
+    <SearchProductSorting @onChangeSorting="onChangeSorting" />
     <div :class="ns.b('content')">
       <Loading v-if="loading" />
       <template v-else>
@@ -63,6 +65,7 @@ import { useUserStoreHook } from "@/store/modules/user";
 import SearchProductCard from "./components/card.vue";
 import SearchProductFilter from "./components/filter.vue";
 import SearchProductCompared from "./components/compared.vue";
+import SearchProductSorting from "./components/sorting.vue";
 import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash";
 const ns = useNamespace("searchProduct");
@@ -78,6 +81,8 @@ const filterInfo: Ref<any> = ref({
   coolingMethodIds: [],
   enterpriseIds: [],
   productType: "", // 产品类型
+  inPriceSort: null,
+  defaultSort: true,
 });
 const showCompared: Ref<boolean> = ref(false); // 是否显示对比
 const showComparedDelay: Ref<boolean> = ref(false); // 是否显示对比
@@ -101,6 +106,19 @@ watch(
 // 选择标签栏
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
+};
+// 排序方式改变
+const onChangeSorting = (choseTabs: number, upOrDown: boolean) => {
+  console.log("======", choseTabs, upOrDown);
+  if (choseTabs === 1) {
+    filterInfo.value.inPriceSort = null;
+    filterInfo.value.defaultSort = true;
+  }
+  if (choseTabs === 2) {
+    filterInfo.value.defaultSort = null;
+    filterInfo.value.inPriceSort = upOrDown;
+  }
+  getProductList();
 };
 // 查询冷却方式
 const getCoolDown = async () => {

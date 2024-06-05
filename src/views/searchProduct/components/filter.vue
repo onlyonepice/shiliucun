@@ -1,8 +1,13 @@
 <template>
-  <p :class="ns.b('total')">
-    共找到<span>{{ total }}</span
-    >款产品
-  </p>
+  <div :class="ns.b()">
+    <p :class="ns.b('total')">
+      共找到<span>{{ total }}</span
+      >款产品
+    </p>
+    <el-button type="primary" @click="productVisible = true"
+      >产品入驻</el-button
+    >
+  </div>
   <div :class="[ns.b('filter'), 'animate__animated animate__fadeIn']">
     <div
       :class="ns.be('filter', 'item')"
@@ -60,6 +65,11 @@
       </div>
     </div>
   </div>
+  <MiniAppNeed
+    :visible="productVisible"
+    type="product"
+    @onHandleClose="productVisible = false"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -71,6 +81,7 @@ import MoreData from "@/assets/img/reportDetail/icon_expand_nor.png";
 const ns = useNamespace("searchProduct-filter");
 const emits = defineEmits(["onChoseFilter"]);
 const showMore: Ref<boolean> = ref(false); // 是否展开更多
+const productVisible: Ref<boolean> = ref(false); // 产品入驻弹窗
 const props = defineProps({
   total: {
     type: Number,
@@ -100,10 +111,12 @@ const getEnterpriseId = (id: string) => {
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-
+.es-searchProduct-filter {
+  @include flex(center, space-between, nowrap);
+  margin-bottom: 17px;
+}
 .es-searchProduct-filter-total {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
-  margin-bottom: 17px;
   span {
     @include font(14px, 600, #ff892e, 22px);
     margin: 0 8px 0 8px;
