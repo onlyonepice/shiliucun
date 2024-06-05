@@ -47,6 +47,10 @@ const exportList = [
   "/file-service/eesa/report/file/convertFile",
   "/file-service/eesa/report/wordToBase64",
 ];
+// 取消重复请求接口数组
+const cancelTokenList = [
+  "/eesa-report/investmentIndustryCommerce/front/v1.1/search",
+];
 
 class PureHttp {
   constructor() {
@@ -77,11 +81,14 @@ class PureHttp {
           return config;
         }
 
-        const reqKey = `${config.url}&${config.method}`;
-        removeCacheRequest(reqKey);
-        config.cancelToken = new CancelToken((c) => {
-          cacheRequest[reqKey] = c;
-        });
+        // 在白名单里的要取消重复请求
+        if (cancelTokenList.indexOf(config.url) !== -1) {
+          const reqKey = `${config.url}&${config.method}`;
+          removeCacheRequest(reqKey);
+          config.cancelToken = new CancelToken((c) => {
+            cacheRequest[reqKey] = c;
+          });
+        }
 
         // 导出报告耗时较长，需要设置超时时间 5分钟
         exportList.includes(config.url) && (config.timeout = 1000 * 60 * 5);
