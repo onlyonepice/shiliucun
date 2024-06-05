@@ -72,10 +72,14 @@
             </el-table-column>
             <el-table-column
               prop="info1"
-              v-for="item in 5"
+              v-for="item in tableData[0].info.length"
               :key="item"
               label=""
-              width="244"
+              :width="
+                943 / tableData[0].info.length < 300
+                  ? 300
+                  : 943 / tableData[0].info.length
+              "
             >
               <template #default="scope">
                 <detailTable
