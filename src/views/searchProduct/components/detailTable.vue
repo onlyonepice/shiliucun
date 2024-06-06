@@ -11,7 +11,8 @@
     {{ info.productFormName ? info.productFormName : "-" }}
   </div>
   <div v-if="index === 2" :class="ns.b('common')" name="储能系统技术">
-    {{ info.productFormName ? info.productFormName : "-" }}
+    <!-- {{ info.productFormName ? info.productFormName : "-" }} -->
+    -
   </div>
   <div v-if="index === 3" :class="ns.b('common')" name="额定功率/kW">
     {{ info.ratedPower ? info.ratedPower : "-" }}
