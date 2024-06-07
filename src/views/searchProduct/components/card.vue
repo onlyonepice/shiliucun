@@ -58,12 +58,40 @@
       </div>
       <div :class="ns.be('list-right', 'info')">
         <div :class="ns.be('list-right', 'info-list')">
-          <p>形式：机柜式</p>
-          <p>冷却方式：液冷</p>
-          <p>电池系统能量：215kWh</p>
-          <p>额定功率：100kW</p>
-          <p>系统综合效率：90%</p>
-          <p>年衰减率：2%%</p>
+          <p>
+            形式：{{
+              !!product.productFormName ? product.productFormName : "-"
+            }}
+          </p>
+          <p>
+            冷却方式：{{
+              !!product.coolingMethodName ? product.coolingMethodName : "-"
+            }}
+          </p>
+          <p>
+            电池系统能量：{{
+              !!product.batterySystemEnergy
+                ? product.batterySystemEnergy + "kwh"
+                : "-"
+            }}
+          </p>
+          <p>
+            额定功率：{{
+              !!product.ratedPower ? product.ratedPower + "kW" : "-"
+            }}
+          </p>
+          <p>
+            系统综合效率：{{
+              !!product.systemOverallEfficiency
+                ? product.systemOverallEfficiency + "%"
+                : "-"
+            }}
+          </p>
+          <p>
+            年衰减率：{{
+              !!product.annualDecayRate ? product.annualDecayRate + "%" : "-"
+            }}
+          </p>
         </div>
         <div :class="ns.b('btn')">
           <el-button @click.stop="onCompared()">

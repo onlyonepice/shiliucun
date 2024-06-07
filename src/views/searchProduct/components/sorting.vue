@@ -5,9 +5,9 @@
         :class="[
           ns.b('common'),
           ns.b('default'),
-          choseTabs === 1 ? ns.b('common-active') : '',
+          choseTabs === 0 ? ns.b('common-active') : '',
         ]"
-        @click="choseTabs = 1"
+        @click="changeChoseTabs(0)"
       >
         默认
       </div>
@@ -19,7 +19,7 @@
           ns.b('default'),
           choseTabs === item.id ? ns.b('common-active') : '',
         ]"
-        @click="choseTabs = item.id"
+        @click="changeChoseTabs(item.id)"
       >
         {{ item.text }}
         <div :class="ns.b('common-sorting')">
@@ -30,7 +30,7 @@
                 : SortingUp
             "
             alt=""
-            @click="upOrDown = false"
+            @click="changeUpOrDown(false)"
           />
           <img
             :src="
@@ -39,7 +39,7 @@
                 : SortingDown
             "
             alt=""
-            @click="upOrDown = true"
+            @click="changeUpOrDown(true)"
           />
         </div>
       </div>
@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref, watch } from "vue";
+import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import SortingUp from "@/assets/img/common/sorting-up.png";
 import SortingUpShow from "@/assets/img/common/sorting-up-show.png";
@@ -76,44 +76,38 @@ import ArrangementCard from "@/assets/img/common/arrangement-card.png";
 import ArrangementList from "@/assets/img/common/arrangement-list.png";
 const ns = useNamespace("searchProduct-sorting");
 const emits = defineEmits(["onChangeSorting", "onChangeArrangement"]);
-const choseTabs: Ref<number> = ref(1); // 1: 默认 2: 价格
-const upOrDown: Ref<boolean> = ref(null); // false升序/true降序
+const choseTabs: Ref<number> = ref(0); // 0: 默认 1: 价格 2: 额定功率 3: 系统容量
+const upOrDown: Ref<boolean> = ref(false); // false升序/true降序
 const arrangementType: Ref<String> = ref("card"); // 卡片排列还是列表
 const sortingList: Ref<Array<any>> = ref([
   {
-    id: 2,
+    id: 1,
     text: "价格",
     desc: "inPriceSort",
   },
-  {
-    id: 3,
-    text: "额定功率",
-    desc: "inPriceSort",
-  },
-  {
-    id: 4,
-    text: "系统容量",
-    desc: "inPriceSort",
-  },
+  // {
+  //   id: 2,
+  //   text: "额定功率",
+  //   desc: "inPriceSort",
+  // },
+  // {
+  //   id: 3,
+  //   text: "系统容量",
+  //   desc: "inPriceSort",
+  // },
 ]);
-// 是否选择价格排序
-watch(
-  () => choseTabs.value,
-  (val) => {
-    if (val !== 1) {
-      upOrDown.value = false;
-    } else {
-      upOrDown.value = null;
-    }
-  },
-);
-// 改变排序
-watch(
-  () => upOrDown.value,
-  (val) => {
-    emits("onChangeSorting", choseTabs.value, val);
-  },
-);
+const changeChoseTabs = (id: number) => {
+  if (id === choseTabs.value) {
+    return;
+  }
+  choseTabs.value = id;
+  upOrDown.value = false;
+  emits("onChangeSorting", id, upOrDown.value);
+};
+const changeUpOrDown = (type: boolean) => {
+  upOrDown.value = type;
+  emits("onChangeSorting", choseTabs.value, type);
+};
 const changeArrangement = (type: string) => {
   arrangementType.value = type;
   emits("onChangeArrangement", type);

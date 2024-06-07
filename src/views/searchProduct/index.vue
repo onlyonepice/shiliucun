@@ -85,8 +85,6 @@ const filterInfo: Ref<any> = ref({
   coolingMethodIds: [],
   enterpriseIds: [],
   productType: "", // 产品类型
-  inPriceSort: null,
-  defaultSort: true,
 });
 const showCompared: Ref<boolean> = ref(false); // 是否显示对比
 const showComparedDelay: Ref<boolean> = ref(false); // 是否显示对比
@@ -117,20 +115,14 @@ const changeArrangement = (type: string) => {
   cardType.value = type;
 };
 // 排序方式改变
-const onChangeSorting = (choseTabs: number, upOrDown: boolean) => {
-  if (choseTabs === 1) {
-    filterInfo.value.inPriceSort = null;
-    filterInfo.value.defaultSort = true;
-  }
-  if (choseTabs === 2) {
-    filterInfo.value.defaultSort = null;
-    filterInfo.value.inPriceSort = upOrDown;
-  }
+const onChangeSorting = (id: number, type: boolean) => {
+  filterInfo.value.sortType = id;
+  filterInfo.value.sortMethod = type;
   getProductList();
 };
 // 查询冷却方式
 const getCoolDown = async () => {
-  const { datas } = await getCoolDownApi({
+  const { datas }: any = await getCoolDownApi({
     isSelectByHide: true,
     pid: 0,
     type: "product_cooling_method",
