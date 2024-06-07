@@ -25,7 +25,7 @@ test_install:
      - ls
      - node -v
      - pnpm -v
-     - pnpm install --no-frozen-lockfile
+     - pnpm install --no-frozen-lockfile --registry "https://registry.npmmirror.com"
   tags:   #runner标签
     - data-report
   only:   #分支
