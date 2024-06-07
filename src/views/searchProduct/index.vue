@@ -12,7 +12,10 @@
       @onChoseFilter="onChoseFilter"
     />
     <!-- 筛选项 -->
-    <SearchProductSorting @onChangeSorting="onChangeSorting" />
+    <SearchProductSorting
+      @onChangeSorting="onChangeSorting"
+      @onChangeArrangement="changeArrangement"
+    />
     <div :class="ns.b('content')">
       <Loading v-if="loading" />
       <template v-else>
@@ -26,6 +29,7 @@
               @onCompared="onCompared"
               :product="item"
               :comparedList="comparedList"
+              :cardType="cardType"
             />
           </div>
         </template>
@@ -90,6 +94,7 @@ const productList: Ref<any> = ref([]); // 产品列表
 const comparedList: Ref<any> = ref([]); // 已对比列表
 const total: Ref<number> = ref(0);
 const loading: Ref<boolean> = ref(false); // 加载状态
+const cardType: Ref<string> = ref("card"); // 卡片展示方式
 // 筛选项数组
 const filterList: Ref<Array<any>> = ref([
   { id: 1, type: "txt", title: "冷却方式", data: [] },
@@ -107,9 +112,12 @@ watch(
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
 };
+// 修改卡片展示样式
+const changeArrangement = (type: string) => {
+  cardType.value = type;
+};
 // 排序方式改变
 const onChangeSorting = (choseTabs: number, upOrDown: boolean) => {
-  console.log("======", choseTabs, upOrDown);
   if (choseTabs === 1) {
     filterInfo.value.inPriceSort = null;
     filterInfo.value.defaultSort = true;
