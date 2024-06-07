@@ -18,7 +18,7 @@
       >
         <div v-if="item.show">
           <div class="wrapper__text">
-            <span>{{ getNewDate }}{{ item.name }}</span>
+            <span>自然月{{ item.name }}</span>
             <span
               >{{ getElectricityPrice(item.key) < 0 ? "-" : ""
               }}{{ slider[item.id].value }}%</span
@@ -137,10 +137,6 @@ const echartsConfig = ref([
 const defaultElectricityPriceFreeze = ref({}); // 初始电价
 const defaultElectricityPrice = ref({}); // 默认电价，用来存储输入框中的值
 
-// 获取最新的日期
-const getNewDate = computed(() => {
-  return `${new Date().getFullYear()}年${new Date().getMonth() + 1}月`;
-});
 const getElectricityPrice = computed(() => (key: string) => {
   return Number(
     (
