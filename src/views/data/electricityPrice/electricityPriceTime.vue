@@ -566,47 +566,48 @@ function handleTOUData() {
       }
     });
     const options = cloneDeep(eChartsOption.value);
-    options.graphic.push({
-      type: "group",
-      right: 0,
-      top: "0",
-      children: [
-        {
-          type: "rect",
-          shape: {
-            width: 190,
-            height: 70,
-            r: 4,
+    electricityPrice.value.demandElectricityPrice !== 0 &&
+      options.graphic.push({
+        type: "group",
+        right: 0,
+        top: "0",
+        children: [
+          {
+            type: "rect",
+            shape: {
+              width: 190,
+              height: 70,
+              r: 4,
+            },
+            style: {
+              fill: "#F2F3F5",
+              stroke: "#eee",
+              lineWidth: 2,
+              radius: 10,
+            },
           },
-          style: {
-            fill: "#F2F3F5",
-            stroke: "#eee",
-            lineWidth: 2,
-            radius: 10,
+          {
+            type: "text",
+            left: 16,
+            top: 16,
+            style: {
+              text: `需量电价：${electricityPrice.value.demandElectricityPrice}元/千瓦·月`,
+              font: "14px Arial",
+              fill: "#000",
+            },
           },
-        },
-        {
-          type: "text",
-          left: 16,
-          top: 16,
-          style: {
-            text: `需量电价：${electricityPrice.value.demandElectricityPrice}元/千瓦·月`,
-            font: "14px Arial",
-            fill: "#000",
+          {
+            type: "text",
+            left: 16,
+            top: 40,
+            style: {
+              text: `容量电价：${electricityPrice.value.capacityElectricityPrice}元/千伏安·月`,
+              font: "14px Arial",
+              fill: "#000",
+            },
           },
-        },
-        {
-          type: "text",
-          left: 16,
-          top: 40,
-          style: {
-            text: `容量电价：${electricityPrice.value.capacityElectricityPrice}元/千伏安·月`,
-            font: "14px Arial",
-            fill: "#000",
-          },
-        },
-      ],
-    });
+        ],
+      });
     options.title[0].text = title;
     options.title[0].subtext = subtitle;
     options.title[1] = titleTwo.value;
