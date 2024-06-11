@@ -85,6 +85,8 @@ const filterInfo: Ref<any> = ref({
   coolingMethodIds: [],
   enterpriseIds: [],
   productType: "", // 产品类型
+  sortType: 0,
+  sortMethod: null,
 });
 const showCompared: Ref<boolean> = ref(false); // 是否显示对比
 const showComparedDelay: Ref<boolean> = ref(false); // 是否显示对比
