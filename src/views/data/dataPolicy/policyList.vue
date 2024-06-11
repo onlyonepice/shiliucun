@@ -82,7 +82,9 @@
                     >
                       <p class="policy-name">{{ row.policyName }}</p>
                       <div class="tag-box">
-                        <p class="tag">{{ row.typeName }}</p>
+                        <p class="tag" v-for="tag in row.typeName" :key="tag">
+                          {{ tag }}
+                        </p>
                       </div>
                     </div>
                     <div
@@ -302,15 +304,19 @@ function handleLinkClick(link) {
 }
 
 async function policyFilterSearchFn() {
-  const data = await policyFilterSearch(filterParams.value.year);
-  if (data.resp_code === 0) {
+  let {
+    datas: { screen },
+    resp_code,
+  } = await policyFilterSearch(filterParams.value.year);
+  if (resp_code === 0) {
+    screen = screen.filter((item: any) => item.dropDownBoxResp);
     filterOptions.value = [];
-    data.datas.screen.forEach((item) => {
+    screen.forEach((item) => {
       !filterParams.value[item.paramValue] &&
         (filterParams.value[item.paramValue] = "");
       item.showAll = item.dropDownBoxResp?.length > 0 ? false : true;
     });
-    data.datas.screen.forEach((item) => {
+    screen.forEach((item) => {
       if (item.paramValue === "policyReleased") {
         monthList.value = item;
         item.dropDownBoxResp = item.dropDownBoxResp.map((item) => {
@@ -671,6 +677,10 @@ policyFilterSearchFn();
                   background: #fff3eb;
                   border-radius: 4px;
                   border: 1px solid #ff892e;
+                  margin-left: 8px;
+                  &:first-child {
+                    margin-left: 0;
+                  }
                 }
               }
             }
