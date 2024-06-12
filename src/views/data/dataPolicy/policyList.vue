@@ -39,7 +39,11 @@
                 <div
                   @click.stop
                   v-if="showOpen(key)"
-                  style="{left:56px}"
+                  style="
+                     {
+                      left: 56px;
+                    }
+                  "
                   class="open-box"
                 >
                   <p
@@ -179,7 +183,7 @@
               ? 'active-month month_item'
               : 'month_item'
           "
-          v-for="item in monthList.dropDownBoxResp"
+          v-for="item in monthList?.dropDownBoxResp || []"
           :key="item.paramValue"
           @click="handleMonthClick(item)"
         >
@@ -200,14 +204,14 @@ interface ListType {
 }
 import {
   policyFilterSearch,
-  getPolicyByFiltrateNoPagination,
   getPolicyDetailsApi,
+  getPolicyByFiltrateNoPagination,
 } from "@/api/data";
-import { getTimesApi } from "@/api/user";
 import { cloneDeep } from "lodash";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { getToken } from "@/utils/auth";
+import { getTimesApi } from "@/api/user";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import { windowScrollStore } from "@/store/modules/windowScroll";
@@ -222,14 +226,14 @@ const paging = ref({
   page: 1,
 });
 
-const scrollbar = ref<any>(null);
 const pageData = ref([]);
-const policyReleased = ref(""); //政策发布时间
-const treeRefFilter = ref(null);
 const activeName = ref([0, 1]);
+const treeRefFilter = ref(null);
 const filterLoading = ref(true);
+const scrollbar = ref<any>(null);
 const filterOptions = ref([]); //所有筛选项
-const monthList = ref<ListType>({}); // 右侧时间筛选
+const policyReleased = ref(""); //政策发布时间
+const monthList = ref<ListType>(); // 右侧时间筛选
 
 const defaultProps = {
   children: "dropDownBoxResp",
@@ -237,7 +241,7 @@ const defaultProps = {
   value: "paramValue",
 };
 
-// 左侧啥选项选中的值
+// 左侧选项选中的值
 const filterParams = ref<any>({ keyword: "" });
 
 function handleMonthClick(row) {
