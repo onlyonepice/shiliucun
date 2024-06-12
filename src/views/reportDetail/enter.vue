@@ -69,7 +69,7 @@ import {
 
 import QRCode from "qrcode";
 import Skeleton from "./components/skeleton.vue";
-import { ref, Ref, onMounted } from "vue";
+import { ref, Ref, onMounted, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useRoute, useRouter } from "vue-router";
 import { reportStore } from "@/store/modules/report";
@@ -82,12 +82,23 @@ import WeChatPay from "@/assets/img/common/weChat-pay.png";
 import BuyDialogBg from "@/assets/img/common/buy-dialog-bg.png";
 import { ElMessage } from "element-plus";
 import { getToken } from "@/utils/auth";
+import { useUserStoreHook } from "@/store/modules/user";
 const skeletonShow = ref(true);
 const buyDialogVisible: Ref<boolean> = ref(false); // 购买报告弹窗
 const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("reportDetail");
 const payTimer = ref(null); // 支付定时器
+const useUserStore = useUserStoreHook();
+
+watch(
+  () => useUserStore.$state.token,
+  (val) => {
+    if (val) {
+      getReportDetail();
+    }
+  },
+);
 
 const breadcrumbList: Ref<Array<any>> = ref([
   { text: "周/月/季报", path: "/quarterlyMonthlyReports" },
