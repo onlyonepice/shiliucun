@@ -553,7 +553,7 @@ policyFilterSearchFn();
         }
 
         .name {
-          @include font(16px, 600, rgba(0, 0, 0, 0.9), 24px);
+          @include font(16px, 400, rgba(0, 0, 0, 0.6), 24px);
         }
 
         .parent-name {
