@@ -4,7 +4,7 @@ import { http } from "@/utils/http";
 export const getCoolDownApi = (data: any) => {
   return http.request<void>(
     "post",
-    "/eesa-data-center/sysDict/back/V1.0/selectByTypeDefaultHideData",
+    "/eesa-data-center/sysDict/front/v1.0/selectByTypeDefaultHideData",
     { data },
   );
 };
