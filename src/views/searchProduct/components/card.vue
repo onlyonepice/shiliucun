@@ -28,7 +28,7 @@
       </el-button>
     </div>
   </div>
-  <div v-else :class="ns.b('list')">
+  <div v-else :class="ns.b('list')" @click="onDetail()">
     <div :class="ns.b('list-left')">
       <img
         :src="useUserStoreHook().$state.fileUrl + product.logoUrl"
