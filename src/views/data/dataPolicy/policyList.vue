@@ -663,9 +663,9 @@ policyFilterSearchFn();
               }
 
               .policy-name {
-                @include widthAndHeight(682px, 24px);
                 @include font(16px, 400, rgba(0, 0, 0, 0.9), 24px);
                 @include textOverflow();
+                @include margin(0, 24px, 0, 0);
               }
 
               .tag-box {
@@ -682,6 +682,7 @@ policyFilterSearchFn();
                   border-radius: 4px;
                   border: 1px solid #ff892e;
                   margin-left: 8px;
+                  white-space: nowrap;
                   &:first-child {
                     margin-left: 0;
                   }
