@@ -232,7 +232,7 @@ const onDetail = () => {
 }
 .es-searchProduct-card-list-left__logo {
   @include widthAndHeight(96px, 40px);
-  @include absolute(1, 0, none, none, 0);
+  @include absolute(1, 1px, none, none, 0);
 }
 .es-searchProduct-card-list-left__img {
   @include widthAndHeight(190px, 190px);
