@@ -29,7 +29,7 @@
             <template #default="{ node, data }">
               <div class="custom-tree_item">
                 <div class="custom-tree-node">
-                  <span :class="!data.policyQuantity ? 'name' : 'parent-name'">
+                  <span :class="data.dropDownBoxResp ? 'name' : 'parent-name'">
                     {{ node.label }}
                   </span>
                   <span class="number" v-if="data.policyQuantity">
