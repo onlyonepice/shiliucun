@@ -66,7 +66,10 @@
           :key="item.policyReleased"
         >
           <el-collapse v-model="activeName">
-            <el-collapse-item :title="item.policyReleased" :name="index">
+            <el-collapse-item
+              :title="`${item.policyReleased} （${item.total}条数据）`"
+              :name="index"
+            >
               <el-scrollbar
                 class="policy_item_box"
                 v-loading="item.loading"
