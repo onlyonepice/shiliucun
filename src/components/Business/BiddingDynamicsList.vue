@@ -13,7 +13,13 @@
             alt=""
           />
           <template v-if="source === 'policy'">
-            <div class="tag">{{ currentData.typeName }}</div>
+            <div
+              class="tag"
+              v-for="(tagItem, index) in currentData.typeName"
+              :key="index"
+            >
+              {{ tagItem }}
+            </div>
           </template>
           <p
             :class="['tag', currentData.status ? '' : 'tagDisable']"
@@ -267,15 +273,23 @@ const currentData = ref<dataType>(null);
 const detailData = ref(null);
 
 const handleSetDetailShowClick = async () => {
-  if ("showDetail" in props.pageData === false) {
+  if (props.source === "policy") {
     router.push({
-      path: "/dataTender",
-      query: {
-        id: currentData.value.id,
-      },
+      name: "Policy",
+      query: { id: props.pageData.id },
     });
-    return;
+  } else {
+    if ("showDetail" in props.pageData === false) {
+      router.push({
+        path: "/dataTender",
+        query: {
+          id: currentData.value.id,
+        },
+      });
+      return;
+    }
   }
+
   if (currentData.value.showDetail) {
     setTimeout(() => {
       currentData.value.showDetail = false;
@@ -394,6 +408,7 @@ watch(
         background: #fff3ea;
         border-radius: 4px;
         border: 1px solid #ff8d32;
+        margin-right: 4px;
         @include font(12px, 400, #ff8d32, 20px);
       }
 
