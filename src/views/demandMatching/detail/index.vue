@@ -6,7 +6,11 @@
       :detailInfo="detailInfo"
       :minePublish="minePublish"
       :totalApply="totalApply"
-      @onApply="applyDialogVisible = true"
+      @onApply="
+        applyDialogVisible = true;
+        getDemandDetail();
+      "
+      @onDelete="deleteDialogVisible = true"
       @onCheckApplyList="drawer = true"
     />
     <div
@@ -26,7 +30,19 @@
     :visible="applyDialogVisible"
     :needId="detailInfo.id"
   />
-  <ApplyList :drawer="drawer" @onHandleClose="drawer = false" />
+  <DeleteDialog
+    v-if="deleteDialogVisible"
+    :visible="deleteDialogVisible"
+    :needId="detailInfo.id"
+  />
+  <ApplyList
+    :drawer="drawer"
+    :totalApply="totalApply"
+    :applyList="applyList"
+    @onHandleClose="drawer = false"
+    @onchangeCurrent="onchangeCurrent"
+    @onAgreeOrRefuse="getApplyList()"
+  />
 </template>
 
 <script setup lang="ts">
@@ -34,11 +50,12 @@ import { Ref, ref, onMounted, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import BusinessCard from "./components/businessCard.vue";
 import DetailInfo from "./components/detailInfo.vue";
+import ApplyList from "./components/applyList.vue";
+import ApplyDialog from "./dialog/apply.vue";
+import DeleteDialog from "./dialog/delete.vue";
 import { useUserStore } from "@/store/modules/user";
 import { useRoute } from "vue-router";
 import { getDemandDetailApi, getApplyListApi } from "@/api/demandMatching";
-import ApplyDialog from "./dialog/apply.vue";
-import ApplyList from "./components/applyList.vue";
 import LamentIcon from "@/assets/img/common/lament_icon.png";
 const route = useRoute();
 const ns = useNamespace("demandMatchingDetail");
@@ -49,9 +66,11 @@ const breadcrumbList: Ref<Array<any>> = ref([
 const minePublish: Ref<boolean> = ref(false); // 是否是我发布的需求
 const detailInfo: Ref<any> = ref({}); // 需求详情
 const applyDialogVisible: Ref<boolean> = ref(false); // 申请报名弹窗
+const deleteDialogVisible: Ref<boolean> = ref(false); // 删除需求弹窗
 const showExtra: Ref<boolean> = ref(true); // 是否显示额外信息
 const totalApply: Ref<number> = ref(0); // 报名总数
 const drawer: Ref<boolean> = ref(false); // 报名列表弹窗
+const applyList: Ref<Array<any>> = ref([]); // 报名列表
 watch(
   () => drawer.value,
   (val) => {
@@ -83,7 +102,13 @@ const getApplyList = async () => {
   );
   if (resp_code === 0) {
     totalApply.value = datas.total;
+    applyList.value = datas.records;
   }
+};
+// 报名列表分页
+const onchangeCurrent = (val: number) => {
+  pageInfo.value.page = val;
+  getApplyList();
 };
 </script>
 <style lang="scss">

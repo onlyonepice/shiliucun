@@ -4,35 +4,40 @@
       <div>
         <!-- 待审核 -->
         <template v-if="detailInfo.status === 1">
-          <el-button>删除</el-button>
+          <el-button @click="emits('onDelete')">删除</el-button>
         </template>
         <!-- 需求中 -->
         <template v-if="detailInfo.status === 2">
-          <el-button
-            v-if="!minePublish && detailInfo.applyStatus === null"
-            type="primary"
-            @click="emits('onApply')"
-            >立即报名</el-button
-          >
-          <el-button
-            v-if="
-              !minePublish &&
-              (detailInfo.applyStatus === 1 || detailInfo.applyStatus === 4)
-            "
-            >撤销报名</el-button
-          >
+          <template v-if="!minePublish">
+            <el-button
+              v-if="detailInfo.applyStatus === null"
+              type="primary"
+              @click="emits('onApply')"
+              >立即报名</el-button
+            >
+            <el-button
+              v-if="
+                detailInfo.applyStatus === 1 || detailInfo.applyStatus === 4
+              "
+              >撤销报名</el-button
+            >
+          </template>
+          <template v-else>
+            <el-button type="primary">需求已解决</el-button>
+            <el-button @click="emits('onDelete')">删除</el-button>
+          </template>
           <el-button @click="onShare()">分享</el-button>
         </template>
         <!-- 审核未通过 -->
         <template v-if="detailInfo.status === 3">
           <el-button type="primary">重新提交</el-button>
-          <el-button>删除</el-button>
+          <el-button @click="emits('onDelete')">删除</el-button>
         </template>
         <!-- 已解决 -->
         <template v-if="detailInfo.status === 4" />
         <!-- 已下架 -->
         <template v-if="detailInfo.status === 5">
-          <el-button>删除</el-button>
+          <el-button @click="emits('onDelete')">删除</el-button>
         </template>
       </div>
       <div :class="ns.be('top', 'number')">
@@ -86,7 +91,7 @@ import { useUserStore } from "@/store/modules/user";
 import useClipboard from "vue-clipboard3";
 import { searchDemandStatus, searchApplicationStatus } from "../../config";
 import { ElMessage } from "element-plus";
-const emits = defineEmits(["onApply", "onCheckApplyList"]);
+const emits = defineEmits(["onApply", "onCheckApplyList", "onDelete"]);
 const { toClipboard } = useClipboard();
 const ns = useNamespace("demandMatching-detail");
 const props = defineProps({

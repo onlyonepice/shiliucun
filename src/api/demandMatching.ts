@@ -26,3 +26,20 @@ export const getApplyListApi = (data: any) => {
     { data },
   );
 };
+
+// 同意或拒绝申请
+export const agreeOrRefuseApplyApi = (data: any) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    "/eesa-industrial-map/need/apply/front/V1.0/apply/change/status",
+    { data },
+  );
+};
+
+// 查阅状态修改
+export const changeApplyStatusApi = (params: number) => {
+  return http.request<{ datas; resp_code }>(
+    "get",
+    `/eesa-industrial-map/need/apply/front/V1.0/apply/${params}`,
+  );
+};
