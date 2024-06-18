@@ -55,6 +55,7 @@
       width="560px"
       :height="step === 1 ? '568px' : '678px'"
       :showFoot="false"
+      @onHandleClose="onHandleCloseDialog"
     >
       <template #content>
         <div :class="ns.b('step-box')">
@@ -255,8 +256,11 @@
           <div :class="ns.be('content', 'infoDialog')">
             <span required>需求类型</span>
             <Select
-              type="input"
+              type="select"
               :defaultValue="needData.type"
+              :options="needTypeList"
+              labelKey="label"
+              valueKey="id"
               @onChange="
                 (val) => {
                   return onChangeNeed(val, 'type');
@@ -288,7 +292,6 @@
                 :headers="uploadToken"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
                 :limit="3"
               >
                 <el-icon>
@@ -297,15 +300,19 @@
               </el-upload>
             </div>
           </div>
-        </div>
-        <div class="btn-box">
-          <el-button @click="backStep" style="margin-right: 231px"
-            >上一步</el-button
-          >
-          <el-button @click="onHandleCloseInfo(false)">取消</el-button>
-          <el-button type="primary" @click="handleReleaseNeed(false)"
-            >发布需求</el-button
-          >
+          <div class="hint">最多上传三张图片</div>
+          <div class="btn-box">
+            <el-button @click="backStep" style="margin-right: 231px"
+              >上一步</el-button
+            >
+            <el-button @click="onHandleCloseInfo(false)">取消</el-button>
+            <el-button type="primary" @click="handleReleaseNeed(false)"
+              >发布需求</el-button
+            >
+          </div>
+          <div class="info-card">
+            <businessCard :info="userDetailInfo" />
+          </div>
         </div>
       </template>
     </Dialog>
@@ -320,6 +327,7 @@
 </template>
 
 <script lang="ts" setup>
+import businessCard from "@/views/demandMatching/detail/components/businessCard.vue";
 import NoChoseRadio from "@/assets/img/common/i-Report-radio-false.png";
 import HasChoseRadio from "@/assets/img/common/i-Report-radio-true.png";
 import UploadImg from "@/assets/img/common/upload-image.png";
@@ -330,6 +338,7 @@ import { ElMessage } from "element-plus";
 import { NOOP } from "@vue/shared";
 import { regMobile, regEmail } from "@/utils/rule";
 import type { UploadProps } from "element-plus";
+const emits = defineEmits(["close"]);
 import {
   updateUserInfo,
   modifyMbCode,
@@ -341,6 +350,11 @@ import {
   editUserInfoApi,
   getPositionTypeApi,
 } from "@/api/user";
+import {
+  getNeedTypeApi,
+  releaseNeedApi,
+  updateNeedApi,
+} from "@/api/demandList";
 import { getToken } from "@/utils/auth";
 import { getInnermostObject } from "@/utils/index";
 const uploadToken: Ref<any> = ref({
@@ -352,6 +366,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  needDetailData: {
+    type: Object,
+    default: () => {},
+  },
 });
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
@@ -361,7 +379,6 @@ const userInfo: Ref<any> = ref({});
 const visibleMobile: Ref<boolean> = ref(false); // 修改手机号弹窗
 const visibleInfo: Ref<boolean> = ref(false); // 编辑信息弹窗
 const visibleInfoSet: Ref<boolean> = ref(false); // 编辑信息弹窗-延迟
-
 const btnDesc: Ref<string> = ref("获取验证码"); // 倒计时文案
 const areaList: Ref<any> = ref([]); // 地区数据
 const cascaderOption: Ref<any> = ref({
@@ -383,7 +400,6 @@ const modifyInfo: Ref<any> = ref({
 const modifyInfoFreeze: Ref<any> = ref({});
 const timer = ref(null); // 定时器
 const userDetailInfo: Ref<any> = ref(); // 用户详细信息
-const headImgUrlUpdate: Ref<string> = ref(""); // 头像
 const modifyMbForm: Ref<any> = ref({
   mobile: "",
   code: "",
@@ -395,15 +411,7 @@ const showInfo: Ref<any> = ref({
   email: false,
 });
 const step = ref(1);
-watch(
-  () => props.show,
-  (e) => {
-    step.value = 2;
-    visibleInfo.value = e;
-    visibleInfoSet.value = e;
-  },
-  { deep: true, immediate: true },
-);
+
 const handleConfirmUserInfo = () => {
   isConfirmUserInfo.value = !isConfirmUserInfo.value;
 };
@@ -413,13 +421,45 @@ onMounted(() => {
   showInfo.value.mobile = userInfo.value.mobileHide;
   showInfo.value.weChat = userInfo.value.wecatHide;
   showInfo.value.email = userInfo.value.emailHide;
-  headImgUrlUpdate.value = userInfo.value.headImgUrl;
   onGetUserInfo();
   onGetArea();
   getPositionType();
+  getNeedType();
 });
-const handleReleaseNeed = () => {
-  console.log(imageList.value);
+const onChangeNeed = (value: any, type: string) => {
+  needData.value[type] = value;
+  if (type === "type") {
+    needTypeList.value.forEach((item) => {
+      if (item.id === value) {
+        needData.value.typeName = item.label;
+      }
+    });
+  }
+};
+const handleReleaseNeed = async () => {
+  if (needData.value.title === "") {
+    ElMessage.error("请填写标题");
+    return;
+  } else if (needData.value.type === "") {
+    ElMessage.error("请选择需求类型");
+    return;
+  } else if (needData.value.description === "") {
+    ElMessage.error("请填写需求描述");
+    return;
+  }
+  needData.value.imageUrls = imageList.value.map((item) => {
+    return item.response.datas.includes(useUserStore().fileUrl)
+      ? item.response.datas.replace(item.response.datas, "")
+      : item.response.datas;
+  });
+  needData.value.imageUrls = needData.value.imageUrls.join(",");
+  const data = needData.value.id
+    ? await updateNeedApi(needData.value)
+    : await releaseNeedApi(needData.value);
+  if (data.resp_code === 0) {
+    ElMessage.success("提交发布成功");
+    emits("close");
+  }
 };
 // 修改用户信息
 const onChangeInfo = (value: any, type: string) => {
@@ -427,12 +467,15 @@ const onChangeInfo = (value: any, type: string) => {
     (modifyInfo.value.regionCode = value[value.length - 1]);
   type !== "regionCode" && (modifyInfo.value[type] = value);
 };
+const onHandleCloseDialog = () => {
+  emits("close");
+};
 // 关闭编辑信息
 const onHandleCloseInfo = async (type: boolean) => {
   const _modifyInfo = JSON.parse(JSON.stringify(modifyInfo.value));
   if (!type) {
-    visibleInfo.value = false;
-    headImgUrlUpdate.value = userInfo.value.headImgUrl;
+    emits("close");
+    return;
   }
   if (!isConfirmUserInfo.value) {
     ElMessage.error("请先确认信息无误");
@@ -459,7 +502,6 @@ const onHandleCloseInfo = async (type: boolean) => {
   if (_modifyInfo.email === null || _modifyInfo.email === "") {
     delete _modifyInfo.email;
   }
-  _modifyInfo.headImgUrl = headImgUrlUpdate.value;
   const { resp_code }: any = await editUserInfoApi(_modifyInfo);
   if (resp_code === 0) {
     step.value = 2;
@@ -467,10 +509,16 @@ const onHandleCloseInfo = async (type: boolean) => {
     onGetUserInfo();
   }
 };
+const needTypeList = ref([]);
+const getNeedType = async () => {
+  const data = await getNeedTypeApi();
+  if (data.resp_code === 0) {
+    needTypeList.value = data.datas;
+  }
+};
 const positionTypeList = ref([]);
 const getPositionType = async () => {
   const data = await getPositionTypeApi();
-  console.log(data);
   if (data.resp_code === 0) {
     positionTypeList.value = data.datas;
   }
@@ -529,17 +577,8 @@ const onHandleClose = async (type: boolean) => {
     }
   }
 };
-const needData = ref({
-  title: "",
-  type: "",
-  imageUrls: "",
-  typeName: "",
-  description: "",
-});
+const needData = ref();
 const imageList = ref([]);
-const handleRemove = (e) => {
-  console.log(e, imageList.value);
-};
 // 查看大图
 const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!;
@@ -598,10 +637,55 @@ const onSendCode = async () => {
     NOOP();
   }
 };
+watch(
+  () => props.show,
+  (e) => {
+    step.value = 1;
+    visibleInfo.value = e;
+    visibleInfoSet.value = e;
+    isConfirmUserInfo.value = false;
+    const val = props.needDetailData;
+    if (val && Object.keys(val).length > 0) {
+      needData.value = Object.assign(val, needData.value);
+      if (val.imageUrls) {
+        imageList.value = val.imageUrls.split(",").map((item) => {
+          return {
+            name: "",
+            url: useUserStore().fileUrl + item,
+          };
+        });
+      }
+    } else {
+      imageList.value = [];
+      needData.value = {
+        title: "",
+        type: "",
+        imageUrls: "",
+        typeName: "",
+        description: "",
+      };
+    }
+  },
+  { deep: true, immediate: true },
+);
 </script>
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
+.hint {
+  position: relative;
+  top: -18px;
+  left: 79px;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.6);
+}
+.info-card {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
 .isShow {
   width: 116px;
   display: flex;
@@ -615,9 +699,7 @@ const onSendCode = async () => {
     margin-right: 8px;
   }
 }
-.btn-box {
-  margin-top: 24px;
-}
+
 .es-releaseDemand-content {
   @include flex(flex-start, space-between, nowrap);
 }

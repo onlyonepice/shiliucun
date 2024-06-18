@@ -33,3 +33,27 @@ export const getApplyNeedApi = (data) => {
     { data },
   );
 };
+// 需求列表-获取需求类型列表
+export const getNeedTypeApi = () => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-industrial-map/openApi/needType/front/V1.0/getNeedType",
+  );
+};
+// 需求列表-发布需求
+export const releaseNeedApi = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-industrial-map/need/need/front/V1.0/releaseNeed",
+    { data },
+  );
+};
+
+// 需求列表-修改需求
+export const updateNeedApi = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-industrial-map/need/need/front/V1.0/updateNeed",
+    { data },
+  );
+};

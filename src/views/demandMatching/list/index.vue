@@ -40,7 +40,12 @@
         >
           {{ item.label }}
         </p>
-        <el-button class="release-demand" type="primary">发布需求</el-button>
+        <el-button
+          @click="releaseDemandShow = true"
+          class="release-demand"
+          type="primary"
+          >发布需求</el-button
+        >
       </div>
       <div :class="ns.b('data-box')">
         <div class="data-box_item" v-for="item in demandList" :key="item.id">
@@ -90,7 +95,15 @@
         >
           {{ item.title }}
         </p>
-        <el-button class="release-demand" type="primary">发布需求</el-button>
+        <div class="release-demand">
+          <el-button @click="releaseDemandShow = true" type="primary"
+            >发布需求</el-button
+          >
+          <businessCard
+            style="margin-top: 24px"
+            :info="useUserStore().userInfo"
+          />
+        </div>
       </div>
       <!-- 我发布的 -->
       <div style="width: 760px" v-show="currentManageTab === 'release'">
@@ -171,14 +184,16 @@
         </div>
       </div>
     </div>
-    <ReleaseDemand :show="true" />
+    <ReleaseDemand @close="releaseDemandClose" :show="releaseDemandShow" />
   </div>
 </template>
 
 <script setup lang="ts">
 import ReleaseDemand from "../releaseDemand.vue";
 import useNamespace from "@/utils/nameSpace";
+import businessCard from "@/views/demandMatching/detail/components/businessCard.vue";
 const ns = useNamespace("demand-list");
+import { useUserStore } from "@/store/modules/user";
 import { ref } from "vue";
 import {
   getTypeNotNullApi,
@@ -278,6 +293,10 @@ const changeManageTab = (value) => {
     getApplyNeed();
   }
   currentManageTab.value = value;
+};
+const releaseDemandShow = ref(false);
+const releaseDemandClose = () => {
+  releaseDemandShow.value = false;
 };
 const onSearch = (value) => {
   filterParams.value.title = value;
@@ -421,6 +440,9 @@ getNeed();
     position: absolute;
     right: 0;
     top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
   }
 }
 .es-demand-list-data-box {
