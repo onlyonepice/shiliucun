@@ -205,3 +205,10 @@ export function getTimesApi(params: any) {
     { params },
   );
 }
+// 获取岗位类型
+export function getPositionTypeApi() {
+  return http.request<responseType>(
+    "post",
+    `/api-user/sysDict/front/V1.0/frontSelectTreeByType/positionType`,
+  );
+}
