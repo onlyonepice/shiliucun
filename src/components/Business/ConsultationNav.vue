@@ -1,5 +1,5 @@
 <template>
-  <div :class="ns.b()">
+  <div :class="ns.b()" v-if="useUserStore().$state.showConsultationNav">
     <div v-for="(item, index) in navList" :key="index" :class="ns.b('item')">
       <div :class="ns.be('item', 'img-box')">
         <img :src="item.icon" alt="" />
@@ -12,9 +12,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
-
+import { useUserStore } from "@/store/modules/user";
 import customerService from "@/assets/img/consultationNav/customerService.png";
 import miniApp from "@/assets/img/consultationNav/miniApp.png";
 import weChat from "@/assets/img/consultationNav/weChat.png";
@@ -22,7 +22,7 @@ import miniAppHover from "@/assets/img/consultationNav/miniApp-hover.png";
 import weChatHover from "@/assets/img/consultationNav/weChat-hover.png";
 import customerServiceHover from "@/assets/img/consultationNav/customerService-hover.png";
 const ns = useNamespace("consultation-nav");
-
+const showConsultation: Ref<boolean> = ref(true);
 const navList = ref([
   {
     name: "掌上\n储能",
@@ -40,6 +40,15 @@ const navList = ref([
     iconHover: customerServiceHover,
   },
 ]);
+watch(
+  () => useUserStore().$state.showConsultationNav,
+  (newVal) => {
+    showConsultation.value = newVal;
+  },
+  {
+    immediate: true,
+  },
+);
 </script>
 <style lang="scss" scoped>
 @import "@/style";

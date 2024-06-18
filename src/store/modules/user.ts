@@ -22,6 +22,7 @@ export const useUserStore = defineStore({
     permissionList: [], // 用户权限
     showMembersBuy: false, //订阅会员弹框
     comparedList: [], // 产品对比列表
+    showConsultationNav: true, // 展示产品二维码
   }),
   getters: {
     getFileUrl(): string {
