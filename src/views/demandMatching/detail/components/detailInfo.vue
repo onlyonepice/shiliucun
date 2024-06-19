@@ -1,6 +1,9 @@
 <template>
   <div :class="ns.b()">
-    <div :class="ns.b('top')" v-if="detailInfo.status !== 4">
+    <div
+      :class="ns.b('top')"
+      v-if="detailInfo.status !== 4 && detailInfo.status !== 5"
+    >
       <div>
         <!-- 待审核 -->
         <template v-if="detailInfo.status === 1">
@@ -23,7 +26,9 @@
             >
           </template>
           <template v-else>
-            <el-button type="primary">需求已解决</el-button>
+            <el-button type="primary" @click="emits('onSolve')"
+              >需求已解决</el-button
+            >
             <el-button @click="emits('onDelete')">删除</el-button>
           </template>
           <el-button @click="onShare()">分享</el-button>
@@ -50,7 +55,23 @@
         >
       </div>
     </div>
-    <div v-if="detailInfo.status !== 4" :class="ns.be('top', 'line')" />
+    <div
+      v-if="detailInfo.status === 1 || detailInfo.status === 2"
+      :class="ns.be('top', 'line')"
+    />
+    <!-- 下架原因 -->
+    <div v-if="detailInfo.status === 5">
+      <div :class="ns.be('top', 'removed')" />
+      <div :class="ns.be('top', 'number')">
+        <span>{{ totalApply }}人已报名</span>
+      </div>
+    </div>
+    <!-- 驳回原因 -->
+    <div v-if="detailInfo.status === 3">
+      <div :class="ns.be('top', 'turnDown')">
+        未通过原因：{{ detailInfo.auditRemark }}
+      </div>
+    </div>
     <div :class="ns.be('info', 'head')">
       <div>
         <h3>{{ detailInfo.title }}</h3>
@@ -91,7 +112,12 @@ import { useUserStore } from "@/store/modules/user";
 import useClipboard from "vue-clipboard3";
 import { searchDemandStatus, searchApplicationStatus } from "../../config";
 import { ElMessage } from "element-plus";
-const emits = defineEmits(["onApply", "onCheckApplyList", "onDelete"]);
+const emits = defineEmits([
+  "onApply",
+  "onCheckApplyList",
+  "onDelete",
+  "onSolve",
+]);
 const { toClipboard } = useClipboard();
 const ns = useNamespace("demandMatching-detail");
 const props = defineProps({
@@ -118,7 +144,7 @@ const getImgList = computed(() => {
 // 分享链接
 const onShare = async () => {
   await toClipboard(window.location.href);
-  ElMessage.success("分享成功");
+  ElMessage.success("分享链接已复制");
 };
 </script>
 <style lang="scss">
@@ -138,6 +164,20 @@ const onShare = async () => {
 }
 .es-demandMatching-detail-top__number {
   @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+}
+.es-demandMatching-detail-top__removed {
+  @include widthAndHeight(621px, 38px);
+  background: #f2f3f5;
+  border-radius: 4px;
+  padding: 8px 16px;
+  @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
+}
+.es-demandMatching-detail-top__turnDown {
+  @include widthAndHeight(100%, 38px);
+  background: #feeff0;
+  border-radius: 4px;
+  padding: 8px 16px;
+  @include font(14px, 600, #f75964, 22px);
 }
 .es-demandMatching-detail-top__line {
   @include widthAndHeight(712px, 1px);

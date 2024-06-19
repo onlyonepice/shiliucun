@@ -1,16 +1,30 @@
 <template>
   <Dialog
-    :visible="visibleDelete"
+    :visible="visibleSolve"
     width="400px"
-    height="360px"
+    :height="score > 0 && score < 6 ? '492px' : score > 7 ? '450px' : '360px'"
     @onHandleClose="onHandleClose"
-    confirmText="删除需求"
+    confirmText="提交评分"
     cancelText="下次再说"
     :class="ns.b()"
   >
     <template #content>
-      <img :class="ns.b('logo')" :src="DeleteDemand" alt="" />
-      <div :class="ns.b('content')">
+      <img :class="ns.b('logo')" :src="SolveDemand" alt="" />
+      <div :class="ns.b('number')">
+        <div
+          :class="[score === item ? ns.b('number-active') : '']"
+          v-for="item in 10"
+          :key="item"
+          @click="onChoseScore(item)"
+        >
+          {{ item }}
+        </div>
+      </div>
+      <div style="margin-bottom: 20px">
+        <span>非常糟糕</span>
+        <span style="float: right">非常棒</span>
+      </div>
+      <div :class="ns.b('content')" v-if="reasonList.length > 0">
         <div
           v-for="item in reasonList"
           :key="item.id"
@@ -39,13 +53,15 @@
 <script setup lang="ts">
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import DeleteDemand from "@/assets/img/demand/delete-demand.png";
-import { getCloseReasonApi, closeDemandApi } from "@/api/demandMatching";
-const ns = useNamespace("demandMatchingDialog-delete");
-const visibleDelete: Ref<boolean> = ref(false); // 弹窗
+import SolveDemand from "@/assets/img/demand/solve-demand.png";
+import { getAssignConfigApi, closeDemandApi } from "@/api/demandMatching";
+const ns = useNamespace("demandMatchingDialog-solve");
+const visibleSolve: Ref<boolean> = ref(false); // 弹窗
 const reasonList: Ref<any[]> = ref([]); // 关闭原因列表
+const allReasonList: Ref<any[]> = ref([]); // 所有原因列表
 const deleteInfo: Ref<string> = ref(""); // 删除原因
 const dictId: Ref<Array<number>> = ref([]); // 关闭原因id
+const score: Ref<number> = ref(0); // 评分
 const emits = defineEmits(["onHandleClose"]);
 const props = defineProps({
   visible: {
@@ -61,7 +77,7 @@ const props = defineProps({
 watch(
   () => props.visible,
   (newVal) => {
-    visibleDelete.value = newVal;
+    visibleSolve.value = newVal;
   },
   { immediate: true },
 );
@@ -71,12 +87,19 @@ const onHandleClose = async (type: boolean) => {
       content: deleteInfo.value,
       dictId: dictId.value,
       needId: props.needId,
-      score: 0,
-      type: "feedback",
+      score: score.value,
+      type: "score",
     });
   }
-  visibleDelete.value = false;
+  visibleSolve.value = false;
   emits("onHandleClose");
+};
+// 选择分数
+const onChoseScore = (data: number) => {
+  score.value = data;
+  allReasonList.value.forEach((item) => {
+    item.scores.includes(data) && (reasonList.value = item.list);
+  });
 };
 // 选择原因
 const choseReason = (item: any) => {
@@ -88,32 +111,55 @@ const choseReason = (item: any) => {
   }
 };
 // 获取关闭原因
-const getCloseReason = async () => {
-  const { datas, resp_code } = await getCloseReasonApi({
-    type: "needClose",
-    value: "NEED_CLOSE",
-  });
+const getAssignConfig = async () => {
+  const { datas, resp_code } = await getAssignConfigApi({});
   if (resp_code === 0) {
-    reasonList.value = datas;
+    allReasonList.value = datas;
   }
 };
-getCloseReason();
+getAssignConfig();
 </script>
 <style lang="scss">
 @import "@/style/mixin.scss";
 
-.es-demandMatchingDialog-delete-logo {
+.es-demandMatchingDialog-solve-logo {
   @include widthAndHeight(400px, 118px);
   @include absolute(1, -14px, 0, none, none);
 }
-.es-demandMatchingDialog-delete-content {
+.es-demandMatchingDialog-solve-number {
+  margin-top: 80px;
+  margin-bottom: 4px;
+  @include flex(center, space-between, nowrap);
+  .es-demandMatchingDialog-solve-number-active {
+    background: #eaedfe;
+    border: 1px solid #244bf1;
+    color: #244bf1;
+  }
+  div {
+    @include widthAndHeight(32px, 32px);
+    border-radius: 4px;
+    border: 1px solid #dbdce2;
+    background: #ffffff;
+    cursor: pointer;
+    @include flex(center, center);
+    @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+    &:hover {
+      background: #f2f3f5;
+    }
+  }
+}
+.es-demandMatchingDialog-solve-number
+  .es-demandMatchingDialog-solve-number-active {
+  background: #eaedfe !important;
+  border: 1px solid #244bf1;
+  color: #244bf1;
+}
+.es-demandMatchingDialog-solve-content {
   border-radius: 8px;
-  height: 72px;
-  margin-top: 79px;
-  margin-bottom: 16px;
+  padding: 0 0 16px;
   @include flex(center, space-between, wrap);
 }
-.es-demandMatchingDialog-delete-content__label {
+.es-demandMatchingDialog-solve-content__label {
   @include widthAndHeight(172px, 32px);
   background: #f2f3f5;
   border-radius: 4px;
@@ -121,13 +167,14 @@ getCloseReason();
   text-align: center;
   cursor: pointer;
   border: 1px solid rgba(0, 0, 0, 0);
+  margin-bottom: 8px;
 }
-.es-demandMatchingDialog-delete-content__label-active {
+.es-demandMatchingDialog-solve-content__label-active {
   background: #eaedfe;
   border: 1px solid #244bf1;
   color: #244bf1;
 }
-.es-demandMatchingDialog-delete {
+.es-demandMatchingDialog-solve {
   .el-textarea__inner {
     background: #f2f3f5;
     border-radius: 4px;

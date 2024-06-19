@@ -11,6 +11,7 @@
         getDemandDetail();
       "
       @onDelete="deleteDialogVisible = true"
+      @onSolve="solveDialogVisible = true"
       @onCheckApplyList="drawer = true"
     />
     <div
@@ -34,6 +35,19 @@
     v-if="deleteDialogVisible"
     :visible="deleteDialogVisible"
     :needId="detailInfo.id"
+    @onHandleClose="
+      deleteDialogVisible = false;
+      router.go(-1);
+    "
+  />
+  <SolveDialog
+    v-if="solveDialogVisible"
+    :visible="solveDialogVisible"
+    :needId="detailInfo.id"
+    @onHandleClose="
+      solveDialogVisible = false;
+      router.go(-1);
+    "
   />
   <ApplyList
     :drawer="drawer"
@@ -53,11 +67,13 @@ import DetailInfo from "./components/detailInfo.vue";
 import ApplyList from "./components/applyList.vue";
 import ApplyDialog from "./dialog/apply.vue";
 import DeleteDialog from "./dialog/delete.vue";
+import SolveDialog from "./dialog/solve.vue";
 import { useUserStore } from "@/store/modules/user";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { getDemandDetailApi, getApplyListApi } from "@/api/demandMatching";
 import LamentIcon from "@/assets/img/common/lament_icon.png";
 const route = useRoute();
+const router = useRouter();
 const ns = useNamespace("demandMatchingDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
   { text: "需求大厅", path: "/demandMatching/list" },
@@ -67,6 +83,7 @@ const minePublish: Ref<boolean> = ref(false); // 是否是我发布的需求
 const detailInfo: Ref<any> = ref({}); // 需求详情
 const applyDialogVisible: Ref<boolean> = ref(false); // 申请报名弹窗
 const deleteDialogVisible: Ref<boolean> = ref(false); // 删除需求弹窗
+const solveDialogVisible: Ref<boolean> = ref(false); // 解决需求弹窗
 const showExtra: Ref<boolean> = ref(true); // 是否显示额外信息
 const totalApply: Ref<number> = ref(0); // 报名总数
 const drawer: Ref<boolean> = ref(false); // 报名列表弹窗
