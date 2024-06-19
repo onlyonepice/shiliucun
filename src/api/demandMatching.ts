@@ -26,3 +26,47 @@ export const getApplyListApi = (data: any) => {
     { data },
   );
 };
+
+// 同意或拒绝申请
+export const agreeOrRefuseApplyApi = (data: any) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    "/eesa-industrial-map/need/apply/front/V1.0/apply/change/status",
+    { data },
+  );
+};
+
+// 查阅状态修改
+export const changeApplyStatusApi = (params: number) => {
+  return http.request<{ datas; resp_code }>(
+    "get",
+    `/eesa-industrial-map/need/apply/front/V1.0/apply/${params}`,
+  );
+};
+
+// 查询关闭需求原因
+export const getCloseReasonApi = (params: any) => {
+  return http.request<{ datas; resp_code }>(
+    "get",
+    `/eesa-industrial-map/sysDict/back/V1.0/findListByTypeAndValue`,
+    { params },
+  );
+};
+
+// 关闭需求
+export const closeDemandApi = (data: any) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    "/eesa-industrial-map/need/needNps/front/v1.0/submitNps",
+    { data },
+  );
+};
+
+// 查询打分配置
+export const getAssignConfigApi = (params: any) => {
+  return http.request<{ datas; resp_code }>(
+    "get",
+    `/eesa-industrial-map/sysDict/back/v1.0/findAllByTypeAndValue`,
+    { params },
+  );
+};

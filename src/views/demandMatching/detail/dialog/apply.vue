@@ -26,9 +26,12 @@
         maxlength="150"
         show-word-limit
       />
-      <el-button :class="ns.b('edit')">编辑名片</el-button>
+      <el-button :class="ns.b('edit')" @click="visibleInfo = true"
+        >编辑名片</el-button
+      >
     </template>
   </Dialog>
+  <InfoDialog :visible="visibleInfo" @onHandleCloseInfo="visibleInfo = false" />
 </template>
 
 <script setup lang="ts">
@@ -38,8 +41,10 @@ import BusinessCard from "../components/businessCard.vue";
 import { useUserStore } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
 import { applyDemandApi } from "@/api/demandMatching";
+const emits = defineEmits(["onApply"]);
 const ns = useNamespace("demandMatchingDetail-apply");
 const visibleApply: Ref<boolean> = ref(false); // 弹窗
+const visibleInfo: Ref<boolean> = ref(false);
 const applyInfo: Ref<any> = ref({
   enterpriseSummary: "",
   message: "",
@@ -73,7 +78,7 @@ const onHandleClose = async (type: boolean) => {
   if (type) {
     const { email, mobile, company, realName, position } =
       useUserStore().userInfo;
-    await applyDemandApi({
+    const { resp_code } = await applyDemandApi({
       email,
       mobile,
       enterpriseName: company,
@@ -83,6 +88,10 @@ const onHandleClose = async (type: boolean) => {
       enterpriseSummary: applyInfo.value.enterpriseSummary,
       message: applyInfo.value.message,
     });
+    if (resp_code === 0) {
+      emits("onApply");
+      resp_code === 0 && ElMessage.success("报名成功");
+    }
   }
 };
 </script>
