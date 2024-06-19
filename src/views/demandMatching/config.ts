@@ -43,7 +43,7 @@ export const demandStatus: DemandStatusType[] = [
   },
   {
     name: "已下架",
-    value: "5",
+    value: "99",
     background: "#F2F3F5",
     color: "rgba(0,0,0,0.9)",
     borderColor: "#DBDCE2",

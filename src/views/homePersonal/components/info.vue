@@ -615,7 +615,7 @@ const onSendCode = async () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "@/style/mixin.scss";
 .es-homePersonalInfo-top {
   @include flex(center, space-between);

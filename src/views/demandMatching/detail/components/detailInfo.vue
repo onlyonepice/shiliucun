@@ -2,7 +2,7 @@
   <div :class="ns.b()">
     <div
       :class="ns.b('top')"
-      v-if="detailInfo.status !== 4 && detailInfo.status !== 5"
+      v-if="detailInfo.status !== 4 && detailInfo.status !== 99"
     >
       <div>
         <!-- 待审核 -->
@@ -41,9 +41,7 @@
         <!-- 已解决 -->
         <template v-if="detailInfo.status === 4" />
         <!-- 已下架 -->
-        <template v-if="detailInfo.status === 5">
-          <el-button @click="emits('onDelete')">删除</el-button>
-        </template>
+        <template v-if="detailInfo.status === 99" />
       </div>
       <div :class="ns.be('top', 'number')">
         <span>{{ totalApply }}人已报名</span>
@@ -60,8 +58,10 @@
       :class="ns.be('top', 'line')"
     />
     <!-- 下架原因 -->
-    <div v-if="detailInfo.status === 5">
-      <div :class="ns.be('top', 'removed')" />
+    <div v-if="detailInfo.status === 99" :class="ns.be('top', 'removed-head')">
+      <div :class="ns.be('top', 'removed')">
+        下架原因：{{ detailInfo.unEnableReason }}
+      </div>
       <div :class="ns.be('top', 'number')">
         <span>{{ totalApply }}人已报名</span>
       </div>
@@ -78,8 +78,9 @@
         <div
           :class="ns.be('info__head', 'tag')"
           :style="{
-            border: '1px solid ' + searchDemandStatus(detailInfo.status)?.color,
-            color: searchDemandStatus(detailInfo.status)?.borderColor,
+            border:
+              '1px solid ' + searchDemandStatus(detailInfo.status)?.borderColor,
+            color: searchDemandStatus(detailInfo.status)?.color,
             backgroundColor: searchDemandStatus(detailInfo.status)?.background,
           }"
         >
@@ -164,6 +165,10 @@ const onShare = async () => {
 }
 .es-demandMatching-detail-top__number {
   @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+}
+.es-demandMatching-detail-top__removed-head {
+  @include flex(center, space-between, nowrap);
+  margin-top: 24px;
 }
 .es-demandMatching-detail-top__removed {
   @include widthAndHeight(621px, 38px);

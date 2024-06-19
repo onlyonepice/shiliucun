@@ -6,10 +6,7 @@
       :detailInfo="detailInfo"
       :minePublish="minePublish"
       :totalApply="totalApply"
-      @onApply="
-        applyDialogVisible = true;
-        getDemandDetail();
-      "
+      @onApply="applyDialogVisible = true"
       @onDelete="deleteDialogVisible = true"
       @onSolve="solveDialogVisible = true"
       @onCheckApplyList="drawer = true"
@@ -30,6 +27,7 @@
     v-if="applyDialogVisible"
     :visible="applyDialogVisible"
     :needId="detailInfo.id"
+    @onApply="getDemandDetail()"
   />
   <DeleteDialog
     v-if="deleteDialogVisible"
@@ -110,6 +108,7 @@ const getDemandDetail = async () => {
     detailInfo.value = datas;
     minePublish.value = datas.userId === useUserStore().userInfo.id;
     showExtra.value = minePublish.value ? false : datas.applyStatus !== 2;
+    detailInfo.value.enabled === 2 && (detailInfo.value.status = 99);
   }
 };
 // 获取报名列表
