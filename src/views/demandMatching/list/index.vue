@@ -48,7 +48,12 @@
         >
       </div>
       <div :class="ns.b('data-box')">
-        <div class="data-box_item" v-for="item in demandList" :key="item.id">
+        <div
+          class="data-box_item"
+          @click="handleDetailClick(item)"
+          v-for="item in demandList"
+          :key="item.id"
+        >
           <div class="data-box_item_top">
             <p class="data-box_item_type">
               {{ item.typeName }}
@@ -108,7 +113,12 @@
       <!-- 我发布的 -->
       <div style="width: 760px" v-show="currentManageTab === 'release'">
         <div :class="ns.b('data-box')">
-          <div class="data-box_item" v-for="item in releaseList" :key="item.id">
+          <div
+            class="data-box_item"
+            @click="handleDetailClick(item)"
+            v-for="item in releaseList"
+            :key="item.id"
+          >
             <div class="data-box_item_top">
               <p class="data-box_item_type">
                 {{ item.typeName }}
@@ -147,7 +157,12 @@
       <!-- 我报名的 -->
       <div style="width: 760px" v-show="currentManageTab === 'apply'">
         <div :class="ns.b('data-box')">
-          <div class="data-box_item" v-for="item in applyList" :key="item.id">
+          <div
+            class="data-box_item"
+            @click="handleDetailClick(item)"
+            v-for="item in applyList"
+            :key="item.id"
+          >
             <div class="data-box_item_top">
               <p class="data-box_item_type">
                 {{ item.type }}
@@ -194,6 +209,9 @@ import useNamespace from "@/utils/nameSpace";
 import businessCard from "@/views/demandMatching/detail/components/businessCard.vue";
 const ns = useNamespace("demand-list");
 import { useUserStore } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+const router = useRouter();
+import { getToken } from "@/utils/auth";
 import { ref } from "vue";
 import {
   getTypeNotNullApi,
@@ -272,7 +290,7 @@ const filterParams = ref({
 const total = ref(0);
 const demandList = ref([]);
 const typeList = ref();
-const currentPage = ref("manage");
+const currentPage = ref("demand");
 const currentManageTab = ref("release");
 const manageTabArr = ref([
   {
@@ -306,6 +324,9 @@ const onSearch = (value) => {
   getTypeNotNull();
 };
 const changeTab = (value) => {
+  if (!getToken() && value === "manage") {
+    return useUserStore().openLogin(true);
+  }
   currentPage.value = value;
   filterParams.value.pageNumber = 1;
   getNeed();
@@ -314,6 +335,14 @@ const changeType = (value) => {
   filterParams.value.type = value;
   filterParams.value.pageNumber = 1;
   getNeed();
+};
+const handleDetailClick = (row) => {
+  router.push({
+    path: "/demandMatching/detail",
+    query: {
+      id: row.id,
+    },
+  });
 };
 const onchangeCurrent = (number: number) => {
   filterParams.value.pageNumber = number;
@@ -453,6 +482,7 @@ getNeed();
     padding-bottom: 15px;
     border-bottom: 1px solid #dbdce2;
     margin-bottom: 16px;
+    cursor: pointer;
     .data-box_item_top {
       width: 100%;
       display: flex;
