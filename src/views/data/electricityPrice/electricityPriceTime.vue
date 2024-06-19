@@ -317,6 +317,7 @@ const titleText = computed(() => {
   obj.specialElectricityTypeName = specialElectricityType.value.find(
     (item) => item.paramName === searchParams.value.electricityTypeOneName,
   )?.paramDesc;
+
   // 特殊地区 用电类型-电压等级1-电压等级2
   const subVoltageId =
     typeof searchParams.value.tariffLevelId === "object" &&
@@ -325,10 +326,12 @@ const titleText = computed(() => {
       : searchParams.value.tariffLevelId;
   let subVoltage = [];
   specialVoltageLevel.value.forEach((item) => {
-    if (item.paramName === searchParams.value.tariffLevelId[0]) {
-      obj.specialVoltageLevelId = item.paramDesc;
-      subVoltage = item?.children;
-    }
+    item.children?.forEach((child) => {
+      if (child.paramName === searchParams.value.tariffLevelId) {
+        obj.specialVoltageLevelId = item.paramDesc;
+        subVoltage = item.children;
+      }
+    });
   });
   obj.specialSubVoltageLevelId = subVoltage.find(
     (item) => item.paramName === subVoltageId,
