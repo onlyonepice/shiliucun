@@ -338,9 +338,9 @@ const changeType = (value) => {
 };
 const handleDetailClick = (row) => {
   router.push({
-    path: "/demandMatching/detail",
+    path: `/demandMatching/detail`,
     query: {
-      id: row.id,
+      id: row.id || row.needId,
     },
   });
 };

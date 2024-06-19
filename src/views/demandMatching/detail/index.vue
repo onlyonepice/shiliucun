@@ -1,8 +1,10 @@
 <template>
   <breadcrumb :breadcrumbList="breadcrumbList" />
-  <div :class="[ns.b(), 'es-commonPage animate__animated animate__fadeIn']">
+  <div
+    :class="[ns.b(), 'es-commonPage animate__animated animate__fadeIn']"
+    v-if="detailInfo.id"
+  >
     <DetailInfo
-      v-if="detailInfo.id"
       :detailInfo="detailInfo"
       :minePublish="minePublish"
       :totalApply="totalApply"
@@ -10,6 +12,8 @@
       @onDelete="deleteDialogVisible = true"
       @onSolve="solveDialogVisible = true"
       @onCheckApplyList="drawer = true"
+      @onResetApply="resetDialogVisible = true"
+      @onRevocation="onRevocation"
     />
     <div
       :style="{ height: showExtra ? '256px' : '246px' }"
@@ -55,6 +59,11 @@
     @onchangeCurrent="onchangeCurrent"
     @onAgreeOrRefuse="getApplyList()"
   />
+  <ReleaseDemand
+    :show="resetDialogVisible"
+    :needDetailData="detailInfo"
+    @close="resetDialogVisible = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -66,9 +75,14 @@ import ApplyList from "./components/applyList.vue";
 import ApplyDialog from "./dialog/apply.vue";
 import DeleteDialog from "./dialog/delete.vue";
 import SolveDialog from "./dialog/solve.vue";
+import ReleaseDemand from "../releaseDemand.vue";
 import { useUserStore } from "@/store/modules/user";
 import { useRoute, useRouter } from "vue-router";
-import { getDemandDetailApi, getApplyListApi } from "@/api/demandMatching";
+import {
+  getDemandDetailApi,
+  getApplyListApi,
+  cancelApplyApi,
+} from "@/api/demandMatching";
 import LamentIcon from "@/assets/img/common/lament_icon.png";
 const route = useRoute();
 const router = useRouter();
@@ -82,6 +96,7 @@ const detailInfo: Ref<any> = ref({}); // 需求详情
 const applyDialogVisible: Ref<boolean> = ref(false); // 申请报名弹窗
 const deleteDialogVisible: Ref<boolean> = ref(false); // 删除需求弹窗
 const solveDialogVisible: Ref<boolean> = ref(false); // 解决需求弹窗
+const resetDialogVisible: Ref<boolean> = ref(false); // 重置报名弹窗
 const showExtra: Ref<boolean> = ref(true); // 是否显示额外信息
 const totalApply: Ref<number> = ref(0); // 报名总数
 const drawer: Ref<boolean> = ref(false); // 报名列表弹窗
@@ -109,6 +124,13 @@ const getDemandDetail = async () => {
     minePublish.value = datas.userId === useUserStore().userInfo.id;
     showExtra.value = minePublish.value ? false : datas.applyStatus !== 2;
     detailInfo.value.enabled === 2 && (detailInfo.value.status = 99);
+  }
+};
+// 撤销报名
+const onRevocation = async () => {
+  const { resp_code } = await cancelApplyApi(detailInfo.value.id);
+  if (resp_code === 0) {
+    getDemandDetail();
   }
 };
 // 获取报名列表

@@ -502,6 +502,7 @@ const onHandleCloseInfo = async (type: boolean) => {
   if (_modifyInfo.email === null || _modifyInfo.email === "") {
     delete _modifyInfo.email;
   }
+  delete _modifyInfo.region;
   const { resp_code }: any = await editUserInfoApi(_modifyInfo);
   if (resp_code === 0) {
     step.value = 2;

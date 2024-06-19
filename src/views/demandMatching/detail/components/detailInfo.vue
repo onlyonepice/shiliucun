@@ -13,15 +13,12 @@
         <template v-if="detailInfo.status === 2">
           <template v-if="!minePublish">
             <el-button
-              v-if="detailInfo.applyStatus === null"
+              v-if="detailInfo.applyId === null"
               type="primary"
               @click="emits('onApply')"
               >立即报名</el-button
             >
-            <el-button
-              v-if="
-                detailInfo.applyStatus === 1 || detailInfo.applyStatus === 4
-              "
+            <el-button v-else @click="emits('onRevocation')"
               >撤销报名</el-button
             >
           </template>
@@ -35,7 +32,9 @@
         </template>
         <!-- 审核未通过 -->
         <template v-if="detailInfo.status === 3">
-          <el-button type="primary">重新提交</el-button>
+          <el-button type="primary" @click="emits('onResetApply')"
+            >重新提交</el-button
+          >
           <el-button @click="emits('onDelete')">删除</el-button>
         </template>
         <!-- 已解决 -->
@@ -118,6 +117,8 @@ const emits = defineEmits([
   "onCheckApplyList",
   "onDelete",
   "onSolve",
+  "onResetApply",
+  "onRevocation",
 ]);
 const { toClipboard } = useClipboard();
 const ns = useNamespace("demandMatching-detail");

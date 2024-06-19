@@ -70,3 +70,11 @@ export const getAssignConfigApi = (params: any) => {
     { params },
   );
 };
+
+// 撤销报名
+export const cancelApplyApi = (id: number) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    `/eesa-industrial-map/need/apply/front/v1.0/applyCancel?id=${id}`,
+  );
+};
