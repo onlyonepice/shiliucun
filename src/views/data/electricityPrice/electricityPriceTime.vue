@@ -58,7 +58,7 @@
         :options="specialElectricityType"
         valueKey="paramName"
         labelKey="paramDesc"
-        :defaultValue="specialSearchParams.specialElectricityTypeName"
+        :defaultValue="searchParams.electricityTypeOneName"
       />
       <Select
         v-if="isSpecialRegion && specialVoltageLevel.length > 0"
@@ -67,7 +67,7 @@
         title="电压等级"
         @triggerForm="handleTriggerForm"
         :options="specialVoltageLevel"
-        :defaultValue="specialSearchParams.specialVoltageLevelId"
+        :defaultValue="searchParams.tariffLevelId"
         :cascaderOption="cascaderOption"
         :showAllLevels="false"
       />
@@ -135,10 +135,11 @@ import {
   getTimePrice,
   getMonthPrice,
   getMonthByTime,
-  apiRegionalData,
   getElectricityType,
   getMonthDifference,
   getDischargeStrategy,
+  querySpecialRegionIdsApi,
+  electricityTypeVoltageLevelApi,
 } from "@/api/priceTracking";
 import * as echarts from "echarts";
 import { onMounted, computed, Ref, ref, onBeforeUnmount } from "vue";
@@ -206,114 +207,10 @@ const voltageLevelData = ref<any>([]); // 电压等级
 const cascaderOption: any = ref({
   value: "paramName",
   label: "paramDesc",
-  children: "voltageLevel",
+  children: "children",
   expandTrigger: "hover",
 });
-
-const dataTemplate = ref([
-  {
-    paramName: "101",
-    paramDesc: "工商业用电(101至3000kVA)",
-    voltageLevel: [
-      {
-        paramName: "1",
-        paramDesc: "10千伏（高供低计）",
-        voltageLevel: [
-          {
-            paramName: "1-1",
-            paramDesc: "250kW·h及以下／千伏安·月",
-          },
-          {
-            paramName: "1-2",
-            paramDesc: "251kW·h以上／千伏安·月",
-          },
-        ],
-      },
-      {
-        paramName: "2",
-        paramDesc: "10千伏（高供高计）",
-        voltageLevel: [
-          {
-            paramName: "2-1",
-            paramDesc: "252kW·h及以下／千伏安·月",
-          },
-          {
-            paramName: "2-2",
-            paramDesc: "253kW·h以上／千伏安·月",
-          },
-        ],
-      },
-      {
-        paramName: "3",
-        paramDesc: "20千伏",
-        voltageLevel: [
-          {
-            paramName: "3-1",
-            paramDesc: "254kW·h及以下／千伏安·月",
-          },
-          {
-            paramName: "3-2",
-            paramDesc: "255kW·h以上／千伏安·月",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    paramName: "3001",
-    paramDesc: "工商业用电(3001kVA及以上)",
-    voltageLevel: [
-      {
-        paramName: "4",
-        paramDesc: "不满1千伏",
-        voltageLevel: [
-          {
-            paramName: "4-1",
-            paramDesc: "256kW·h及以下／千伏安·月",
-          },
-          {
-            paramName: "4-2",
-            paramDesc: "257kW·h以上／千伏安·月",
-          },
-        ],
-      },
-      {
-        paramName: "5",
-        paramDesc: "1～10（20）千伏",
-        voltageLevel: [
-          {
-            paramName: "5-1",
-            paramDesc: "258kW·h及以下／千伏安·月",
-          },
-          {
-            paramName: "5-2",
-            paramDesc: "259kW·h以上／千伏安·月",
-          },
-        ],
-      },
-      {
-        paramName: "6",
-        paramDesc: "35～110千伏",
-        voltageLevel: [
-          {
-            paramName: "6-1",
-            paramDesc: "260kW·h及以下／千伏安·月",
-          },
-          {
-            paramName: "6-2",
-            paramDesc: "261kW·h以上／千伏安·月",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    paramName: "100",
-    paramDesc: "工商业用电(100千伏安及以下公变接入用电)",
-    voltageLevel: [],
-  },
-]);
-
+const dataTemplate = ref([]); // 特殊地区用电类型、电压等级数据
 const specialElectricityType = ref<any>([]); // 特殊地区 用电类型数组
 const specialVoltageLevel = ref<any>([]); // 特殊地区 电压等级数组
 // 用作展示tip时的判断
@@ -325,17 +222,8 @@ const searchParams = ref({
   tariffLevelId: "",
   electricityTypeOneName: "",
   electricityTypeTwoName: "",
-
-  // specialElectricityTypeName: "",
-  // specialVoltageLevelId: "",
 });
 
-// 特殊地区 筛选项搜索结果
-const specialSearchParams = ref({
-  regionName: "",
-  specialElectricityTypeName: "",
-  specialVoltageLevelId: "",
-});
 // 月份
 const monthVal = ref("");
 
@@ -427,20 +315,19 @@ const titleText = computed(() => {
   )?.paramDesc;
 
   obj.specialElectricityTypeName = specialElectricityType.value.find(
-    (item) =>
-      item.paramName === specialSearchParams.value.specialElectricityTypeName,
+    (item) => item.paramName === searchParams.value.electricityTypeOneName,
   )?.paramDesc;
   // 特殊地区 用电类型-电压等级1-电压等级2
   const subVoltageId =
-    typeof specialSearchParams.value.specialVoltageLevelId === "object" &&
-    specialSearchParams.value.specialVoltageLevelId
-      ? specialSearchParams.value.specialVoltageLevelId[1]
-      : specialSearchParams.value.specialVoltageLevelId;
+    typeof searchParams.value.tariffLevelId === "object" &&
+    searchParams.value.tariffLevelId
+      ? searchParams.value.tariffLevelId[1]
+      : searchParams.value.tariffLevelId;
   let subVoltage = [];
   specialVoltageLevel.value.forEach((item) => {
-    if (item.paramName === specialSearchParams.value.specialVoltageLevelId[0]) {
+    if (item.paramName === searchParams.value.tariffLevelId[0]) {
       obj.specialVoltageLevelId = item.paramDesc;
-      subVoltage = item?.voltageLevel;
+      subVoltage = item?.children;
     }
   });
   obj.specialSubVoltageLevelId = subVoltage.find(
@@ -480,7 +367,7 @@ async function getDischargeStrategyData() {
 
 // 获取地区数据
 const onGetRegionalData = async () => {
-  apiRegionalData(null)
+  querySpecialRegionIdsApi(null)
     .then((res: any) => {
       regionalData.value = res.datas.filter(
         (item) =>
@@ -534,11 +421,18 @@ async function getElectricityTypeTwo() {
 
 // 获取月份
 async function getMonthByTimes() {
-  specialSearchParams.value.regionName = searchParams.value.regionName;
   try {
-    // const requestData = isSpecialRegion.value
-    //   ? specialSearchParams.value
-    //   : searchParams.value;
+    if (isSpecialRegion.value) {
+      searchParams.value.electricityTypeTwoName = "";
+      const tariffLevelId = searchParams.value.tariffLevelId;
+      searchParams.value.tariffLevelId =
+        typeof tariffLevelId === "object" && tariffLevelId
+          ? tariffLevelId[1]
+          : tariffLevelId;
+      if (searchParams.value.electricityTypeOneName === "C") {
+        searchParams.value.tariffLevelId = "";
+      }
+    }
     const requestData = searchParams.value;
     const { datas } = await getMonthByTime({ ...requestData });
     monthData.value = datas;
@@ -553,25 +447,53 @@ async function getMonthByTimes() {
     timeFrame.value.start = getTimeStamp(datas[0].paramName);
     timeFrame.value.end = getTimeStamp(datas[datas.length - 1].paramName);
     monthVal.value = datas[datas.length - 1].paramName;
-    if (!isSpecialRegion.value) {
-      getTOUData();
-      getMonthPriceData();
-      getMonthDifferenceData();
-    } else {
-      getSpecialTOUData();
-      getSpecialMonthPriceData();
-      getSpecialMonthDifferenceData();
-    }
+    getTOUData();
+    getMonthPriceData();
+    getMonthDifferenceData();
   } catch (error) {
     console.error(error);
     loading.value = false;
   }
 }
-
+const filterRegion = (val) => {
+  let res = false;
+  regionalData.value.forEach((regionItem) => {
+    if (val === regionItem.regionName) {
+      if (regionItem.special == "1") {
+        res = true;
+      } else {
+        res = false;
+      }
+    }
+  });
+  return res;
+};
+const getSpecialRegionOption = async () => {
+  specialElectricityType.value = [];
+  specialVoltageLevel.value = [];
+  const { resp_code, datas } = await electricityTypeVoltageLevelApi({
+    regionName: searchParams.value.regionName,
+  });
+  if (resp_code === 0) {
+    dataTemplate.value = datas;
+    dataTemplate.value.forEach((item) => {
+      specialElectricityType.value.push(item);
+      searchParams.value.electricityTypeOneName =
+        specialElectricityType.value[0].paramName;
+      specialVoltageLevel.value = specialElectricityType.value[0].children;
+      if (specialVoltageLevel.value.length > 0) {
+        searchParams.value.tariffLevelId =
+          specialVoltageLevel.value[0].children[0].paramName;
+      }
+    });
+  }
+  getMonthByTimes();
+};
 /* change */
 // 地区 change
 function changeRegion(val) {
-  if (val.indexOf("深圳") === -1) {
+  const regionStatus = filterRegion(val);
+  if (!regionStatus) {
     isSpecialRegion.value = false;
     searchParams.value.regionName = val;
     if (!getToken()) {
@@ -587,37 +509,19 @@ function changeRegion(val) {
     getElectricityTypeTwo();
   } else {
     searchParams.value.regionName = val;
+    searchParams.value.electricityTypeOneName = "";
+    getSpecialRegionOption();
     if (!getToken()) {
       return handleOpenLogin();
     }
     isSpecialRegion.value = true;
     loading.value = true;
-    getSpecialElectricityType();
   }
 }
 
-// 获取特殊地区 用电类型
-const getSpecialElectricityType = () => {
-  dataTemplate.value.forEach((item) => {
-    specialElectricityType.value.push(item);
-    specialSearchParams.value.specialElectricityTypeName =
-      specialElectricityType.value[0].paramName;
-    specialVoltageLevel.value = specialElectricityType.value[0].voltageLevel;
-    if (specialVoltageLevel.value.length > 0) {
-      specialSearchParams.value.specialVoltageLevelId =
-        specialVoltageLevel.value[0].voltageLevel[0].paramName;
-    }
-    console.log(
-      specialVoltageLevel.value,
-      specialSearchParams.value.specialVoltageLevelId,
-    );
-  });
-  getMonthByTimes();
-};
-
 // 特殊地区 用电类型 change
 const changeSpecialElectricityType = (val) => {
-  specialSearchParams.value.specialElectricityTypeName = val;
+  searchParams.value.electricityTypeOneName = val;
   if (!getToken()) {
     return handleOpenLogin();
   }
@@ -625,10 +529,10 @@ const changeSpecialElectricityType = (val) => {
 
   dataTemplate.value.forEach((item) => {
     if (val === item.paramName) {
-      specialVoltageLevel.value = item.voltageLevel;
+      specialVoltageLevel.value = item.children || [];
       if (specialVoltageLevel.value.length > 0) {
-        specialSearchParams.value.specialVoltageLevelId =
-          specialVoltageLevel.value[0].voltageLevel[0].paramName;
+        searchParams.value.tariffLevelId =
+          specialVoltageLevel.value[0].children[0].paramName;
       }
     }
   });
@@ -637,7 +541,7 @@ const changeSpecialElectricityType = (val) => {
 
 // 特殊地区 电压等级 change
 const changeSpecialVoltageLevel = (val) => {
-  specialSearchParams.value.specialVoltageLevelId = val;
+  searchParams.value.tariffLevelId = val;
   if (!getToken()) {
     return handleOpenLogin();
   }
@@ -1320,69 +1224,6 @@ async function getMonthDifferenceData() {
   }
 }
 
-// 特殊地区
-// 获取分时电价
-async function getSpecialTOUData() {
-  specialSearchParams.value.regionName = searchParams.value.regionName;
-  try {
-    const {
-      datas: {
-        timeElectricityPriceResps,
-        capacityElectricityPrice, // 容量电价
-        demandElectricityPrice, // 需量电价
-      },
-    } = await getTimePrice({
-      ...specialSearchParams.value,
-      years: monthVal.value,
-    });
-    electricityPrice.value = {
-      capacityElectricityPrice,
-      demandElectricityPrice,
-    };
-    timeElectricityPriceData.value = timeElectricityPriceResps;
-    choseSpecific.value === 1 && handleTOUData();
-  } catch (error) {
-    console.error(error);
-    loading.value = false;
-  }
-}
-
-// 获取分月电价
-async function getSpecialMonthPriceData() {
-  specialSearchParams.value.regionName = searchParams.value.regionName;
-  try {
-    const [startTime, endTime] = monthRange.value;
-    const { datas } = await getMonthPrice({
-      ...specialSearchParams.value,
-      startTime,
-      endTime,
-    });
-    monthElectricityPriceData.value = datas;
-    choseSpecific.value === 2 && handleMonthData();
-  } catch (error) {
-    console.error(error);
-    loading.value = false;
-  }
-}
-
-// 获取峰谷差价
-async function getSpecialMonthDifferenceData() {
-  specialSearchParams.value.regionName = searchParams.value.regionName;
-  try {
-    const [startTime, endTime] = monthRange.value;
-    const { datas } = await getMonthDifference({
-      ...specialSearchParams.value,
-      startTime,
-      endTime,
-    });
-    monthPriceDifferenceData.value = datas;
-    choseSpecific.value === 3 && handlePriceDifferenceData();
-  } catch (error) {
-    console.error(error);
-    loading.value = false;
-  }
-}
-
 // 重新定义图标大小
 function reSizeEchart() {
   const myChart = echarts.init(
@@ -1521,6 +1362,7 @@ function handleOpenLogin() {
     ::v-deep(.select) {
       width: 32.5% !important;
       margin-top: 0px !important;
+      margin-right: 14px;
 
       &:nth-child(4) {
         margin-top: 16px !important;
