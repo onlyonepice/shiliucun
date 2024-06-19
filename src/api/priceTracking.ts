@@ -12,6 +12,24 @@ export const apiRegionalData = (params: { type: string } | null) => {
     { params: params || {} },
   );
 };
+
+//获取特殊地区数据
+export const querySpecialRegionIdsApi = (params: { type: string } | null) => {
+  return http.request<{ datas: Array<any> }>(
+    "get",
+    "/eesa-report/electricityPriceTracking/electricityPriceTrackingSpecial/openApi/v1.0/querySpecialRegionIds",
+    { params: params || {} },
+  );
+};
+
+//获取特殊地区用电类型 电压等级
+export const electricityTypeVoltageLevelApi = (params) => {
+  return http.request<{ datas: Array<any> }>(
+    "get",
+    "/eesa-report/electricityPriceTracking/electricityPriceTrackingSpecial/openApi/v1.0/getElectricityTypeVoltageLevel",
+    { params },
+  );
+};
 // 分股价差筛选项
 export const getPeakAndValley = () => {
   return http.request<Request>(

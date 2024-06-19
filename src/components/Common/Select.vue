@@ -63,6 +63,7 @@
         :disabled="props.disabled"
         @change="handleChange"
         @visible-change="handleVerifyLogin"
+        :show-all-levels="props.showAllLevels"
       />
     </div>
   </div>
@@ -129,6 +130,11 @@ const props = defineProps({
   cascaderOption: {
     type: Object,
     default: () => {},
+  },
+  // 仅显示最后一级
+  showAllLevels: {
+    type: Boolean,
+    default: true,
   },
   maxlength: {
     type: Number,
