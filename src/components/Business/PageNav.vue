@@ -235,7 +235,7 @@ const navList: Ref<Array<NavList>> = ref([
         text: "融资方案",
         path: ["/financingPlan"],
       },
-      { id: 2, text: "供需对接", path: "" },
+      { id: 2, text: "供需对接", path: "/demandMatching/list" },
     ],
   },
   {

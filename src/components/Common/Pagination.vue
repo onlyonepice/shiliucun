@@ -1,6 +1,8 @@
 <template>
   <div :class="[ns.b()]">
-    <span :class="ns.b('text')">共计 {{ total }} 条</span>
+    <span :class="ns.b('text')">{{
+      desc === "" ? `共计 ${total} 条` : desc
+    }}</span>
     <el-pagination
       background
       layout="prev, pager, next"
@@ -23,6 +25,10 @@ defineProps({
   pageSize: {
     type: Number,
     default: 10,
+  },
+  desc: {
+    type: String,
+    default: "",
   },
 });
 const onchangeCurrent = (data: any) => {
