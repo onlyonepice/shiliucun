@@ -947,7 +947,6 @@ function handleMonthData() {
   let _data: any = [];
   let _color: any = [];
   const title = `${titleText.value.regionName}代理工商业购电分月电价图`;
-  // const subtitle = `·${titleText.value.electricityTypeOneName}·${titleText.value.electricityTypeTwoName}·${titleText.value.tariffLevelId}`;
   const subtitle = getSubTitle();
   _defaultData.forEach((item) => {
     if (item.data.some((item) => item !== "-")) {
@@ -1107,7 +1106,6 @@ function handlePriceDifferenceData() {
   let _color: any = [];
   let _data: any = [];
   const title = `${titleText.value.regionName}代理工商业购电峰谷价差`;
-  // const subtitle = `·${titleText.value.electricityTypeOneName}·${titleText.value.electricityTypeTwoName}·${titleText.value.tariffLevelId}`;
   const subtitle = getSubTitle();
   _defaultData.forEach((item) => {
     if (item.data.some((item) => item !== "-")) {
@@ -1345,7 +1343,6 @@ function handleOpenLogin() {
 
   .filter {
     @include flex(center, space-between);
-    // @include flex(center, flex-start);
     @include margin(24px, 0, 24px, 0);
 
     ::v-deep(.select) {
@@ -1358,7 +1355,6 @@ function handleOpenLogin() {
     }
   }
   .filter-active {
-    // @include flex(center, space-between);
     @include flex(center, flex-start);
     @include margin(24px, 0, 24px, 0);
 
