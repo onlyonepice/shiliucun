@@ -63,7 +63,12 @@
                   :style="{
                     'text-align': 'right',
                     color: 'rgba(0, 0, 0, 0.9)',
-                    'font-weight': scope.$index === 0 ? 600 : 400,
+                    'font-weight':
+                      scope.$index === 1 ||
+                      scope.$index === 5 ||
+                      scope.$index === 8
+                        ? 600
+                        : 400,
                   }"
                 >
                   {{ scope.row.name }}
@@ -148,16 +153,20 @@ const breadcrumbList: Ref<Array<any>> = ref([
 ]);
 const tabNameList = ref([
   "产品型号",
-  "产品形态",
-  "储能系统技术",
-  "额定功率/kW",
+  "电池参数",
+  "电芯类型",
   "电池系统能量/kWh",
-  "标称电压/V",
-  "系统综合效率/%",
   "放电深度/%",
+  "PCS参数",
+  "标称电压/V",
+  "额定功率/kW",
+  "系统参数",
+  "产品形态",
+  "系统综合效率/%",
   "年衰减率/%",
   "冷却方式",
   "尺寸/m*m*m",
+  "产品单价/元/kWh",
 ]);
 const tableData: Ref<any> = ref([]);
 const route = useRoute();
@@ -171,7 +180,7 @@ const getProductDetail = async () => {
   if (resp_code === 0) {
     productDetail.value = datas;
     breadcrumbList.value[1].text = datas.name;
-    for (let index = 0; index < 11; index++) {
+    for (let index = 0; index < 15; index++) {
       tableData.value.push({
         name: tabNameList.value[index],
         info: cloneDeep(datas.models),

@@ -128,7 +128,7 @@ const getDemandDetail = async () => {
 };
 // 撤销报名
 const onRevocation = async () => {
-  const { resp_code } = await cancelApplyApi(detailInfo.value.id);
+  const { resp_code } = await cancelApplyApi(detailInfo.value.applyId);
   if (resp_code === 0) {
     getDemandDetail();
   }
