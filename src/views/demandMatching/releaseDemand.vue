@@ -296,7 +296,7 @@
             <div style="flex: 1">
               <el-upload
                 v-model:file-list="imageList"
-                action="https://test.platform.eesaenergy.com/api-file/fileUpload"
+                :action="`${VITE_GLOB_API_URL}/api-file/fileUpload`"
                 :headers="uploadToken"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
@@ -351,8 +351,8 @@ import { regMobile, regEmail } from "@/utils/rule";
 import type { UploadProps } from "element-plus";
 import { cloneDeep } from "lodash";
 import { getToken } from "@/utils/auth";
-
 const emits = defineEmits(["close"]);
+const { VITE_GLOB_API_URL } = import.meta.env;
 import {
   updateUserInfo,
   modifyMbCode,
