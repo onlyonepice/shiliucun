@@ -660,7 +660,14 @@ watch(
     visibleInfo.value = e;
     visibleInfoSet.value = e;
     isConfirmUserInfo.value = false;
-    const val = cloneDeep(props.needDetailData);
+  },
+  { deep: true, immediate: true },
+);
+watch(
+  () => props.needDetailData,
+  (val) => {
+    console.log(val);
+    needData.value = cloneDeep(val);
     if (val && Object.keys(val).length > 0) {
       needData.value = Object.assign(val, needData.value);
       if (val.imageUrls) {
@@ -682,7 +689,10 @@ watch(
       };
     }
   },
-  { deep: true, immediate: true },
+  {
+    deep: true,
+    immediate: true,
+  },
 );
 </script>
 

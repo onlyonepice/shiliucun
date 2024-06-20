@@ -67,6 +67,7 @@
                 :style="{
                   background: statusItem.background,
                   color: statusItem.color,
+                  borderColor: statusItem.color,
                 }"
               >
                 {{ statusItem.name }}
@@ -132,6 +133,7 @@
                   :style="{
                     background: statusItem.background,
                     color: statusItem.color,
+                    borderColor: statusItem.color,
                   }"
                 >
                   {{ statusItem.name }}
@@ -176,6 +178,7 @@
                   :style="{
                     background: statusItem.background,
                     color: statusItem.color,
+                    borderColor: statusItem.color,
                   }"
                 >
                   {{ statusItem.name }}
