@@ -197,6 +197,7 @@
       </div>
     </div>
     <ReleaseDemand
+      v-if="getToken()"
       @close="releaseDemandClose"
       @success="releaseDemandSuccess"
       :show="releaseDemandShow"

@@ -57,6 +57,7 @@
     @onAgreeOrRefuse="getApplyList()"
   />
   <ReleaseDemand
+    v-if="getToken()"
     :show="resetDialogVisible"
     :needDetailData="JSON.parse(JSON.stringify(detailInfo))"
     :appendToBody="true"
@@ -65,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+import { getToken } from "@/utils/auth";
 import { Ref, ref, onMounted, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import BusinessCard from "./components/businessCard.vue";

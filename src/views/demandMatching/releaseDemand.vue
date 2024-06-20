@@ -349,6 +349,9 @@ import { ElMessage } from "element-plus";
 import { NOOP } from "@vue/shared";
 import { regMobile, regEmail } from "@/utils/rule";
 import type { UploadProps } from "element-plus";
+import { cloneDeep } from "lodash";
+import { getToken } from "@/utils/auth";
+
 const emits = defineEmits(["close"]);
 import {
   updateUserInfo,
@@ -366,7 +369,6 @@ import {
   releaseNeedApi,
   updateNeedApi,
 } from "@/api/demandList";
-import { getToken } from "@/utils/auth";
 import { getInnermostObject } from "@/utils/index";
 const uploadToken: Ref<any> = ref({
   Authorization: "Bearer " + getToken(),
@@ -662,7 +664,7 @@ watch(
     visibleInfo.value = e;
     visibleInfoSet.value = e;
     isConfirmUserInfo.value = false;
-    const val = props.needDetailData;
+    const val = cloneDeep(props.needDetailData);
     if (val && Object.keys(val).length > 0) {
       needData.value = Object.assign(val, needData.value);
       if (val.imageUrls) {
