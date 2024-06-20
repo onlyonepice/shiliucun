@@ -18,7 +18,7 @@ export const step2Field = [
     rules: [
       {
         required: true,
-        message: "请输入企业名称",
+        message: "请选择企业名称",
         trigger: "change",
       },
     ],

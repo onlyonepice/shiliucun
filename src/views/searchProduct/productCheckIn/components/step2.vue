@@ -1,12 +1,11 @@
 <template>
   <div :class="[ns.b()]">
-    <el-form ref="formRef" :model="form" label-width="auto">
+    <el-form ref="formRef" :model="form" label-width="auto" :rules="rules">
       <el-form-item
         v-for="item in formField"
         :key="item.prop"
         :label="item.label"
         :prop="item.prop"
-        :rules="item.rules"
       >
         <el-input
           v-if="item.type === 'input'"
@@ -130,7 +129,7 @@
 </template>
 <script setup lang="ts">
 import dayjs from "dayjs";
-import { ref, watch } from "vue";
+import { ref, watch, reactive } from "vue";
 import { step2Field } from "./data";
 import { ElMessage } from "element-plus";
 import { getToken } from "@/utils/auth";
@@ -138,6 +137,30 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { getEnterpriseListApi } from "@/api/searchProduct";
 const { VITE_GLOB_API_URL } = import.meta.env;
 import useNamespace from "@/utils/nameSpace";
+import type { FormRules } from "element-plus";
+const checkEnterprise = (rule: any, value: any, callback: any) => {
+  if (!value) {
+    return callback(new Error("请选择企业"));
+  }
+  if (form.value.enterpriseId === null) {
+    return callback(new Error("请选择企业"));
+  }
+};
+const rules = reactive<FormRules<typeof form>>({
+  productName: [
+    { trigger: "change", required: true, message: "请输入产品名称" },
+  ],
+  enterpriseName: [
+    { validator: checkEnterprise, trigger: "change", required: true },
+  ],
+  releaseTime: [
+    { trigger: "change", required: true, message: "请选择产品发布时间" },
+  ],
+  images: [{ trigger: "change", required: true, message: "请上传产品图片" }],
+  specificationDocumentFileList: [
+    { trigger: "change", required: false, message: "请上传图片" },
+  ],
+});
 
 const prop = defineProps({
   draftData: {
@@ -242,9 +265,6 @@ function getFileType(fileName) {
 
 function handleNext(formRefName) {
   formRefName.validate((valid) => {
-    if (form.value.enterpriseId === null) {
-      return ElMessage.warning("请选择企业");
-    }
     if (valid) {
       optimizeData();
       emits("next", form.value);
