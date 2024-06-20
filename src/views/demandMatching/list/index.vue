@@ -104,10 +104,7 @@
           <el-button @click="releaseDemandShow = true" type="primary"
             >发布需求</el-button
           >
-          <businessCard
-            style="margin-top: 24px"
-            :info="useUserStore().userInfo"
-          />
+          <businessCard style="margin-top: 24px" :info="userDetailInfo" />
         </div>
       </div>
       <!-- 我发布的 -->
@@ -212,13 +209,15 @@ import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
 const router = useRouter();
 import { getToken } from "@/utils/auth";
-import { ref } from "vue";
+import { ref, onUnmounted } from "vue";
+
 import {
   getTypeNotNullApi,
   getNeedApi,
   getReleaseNeedApi,
   getApplyNeedApi,
 } from "@/api/demandList";
+import { getUserDetailInfo } from "@/api/user";
 const demandStatus = [
   {
     name: "待审核",
@@ -304,6 +303,17 @@ const manageTabArr = ref([
     isShowRed: false,
   },
 ]);
+
+const userDetailInfo = ref({});
+// 获取用户详细信息
+const onGetUserInfo = async () => {
+  const { resp_code, datas } = await getUserDetailInfo();
+  if (resp_code === 0) {
+    console.log(datas);
+    userDetailInfo.value = datas;
+  }
+};
+
 const changeManageTab = (value) => {
   if (value === "release") {
     getReleaseNeed();
@@ -327,9 +337,13 @@ const changeTab = (value) => {
   if (!getToken() && value === "manage") {
     return useUserStore().openLogin(true);
   }
+  if (value === "manage") {
+    onGetUserInfo();
+    getReleaseNeed();
+  } else {
+    getNeed();
+  }
   currentPage.value = value;
-  filterParams.value.pageNumber = 1;
-  getNeed();
 };
 const changeType = (value) => {
   filterParams.value.type = value;
@@ -399,7 +413,9 @@ const onchangeCurrentApply = (number: number) => {
   applyParams.value.page = number;
   getApplyNeed();
 };
-getReleaseNeed();
+onUnmounted(() => {
+  releaseDemandShow.value = false;
+});
 getTypeNotNull();
 getNeed();
 </script>

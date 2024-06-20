@@ -5,6 +5,7 @@
       :visible="visibleMobile"
       width="560px"
       height="224px"
+      :appendToBody="false"
       @onHandleClose="onHandleClose"
       :confirmText="modifyMbStep === 1 ? '下一步' : '完成'"
     >
@@ -55,6 +56,7 @@
       width="560px"
       :height="step === 1 ? '568px' : '678px'"
       :showFoot="false"
+      :appendToBody="false"
       @onHandleClose="onHandleCloseDialog"
     >
       <template #content>
@@ -260,7 +262,7 @@
               :defaultValue="needData.type"
               :options="needTypeList"
               labelKey="label"
-              valueKey="id"
+              valueKey="code"
               @onChange="
                 (val) => {
                   return onChangeNeed(val, 'type');
@@ -470,6 +472,9 @@ const onChangeInfo = (value: any, type: string) => {
 const onHandleCloseDialog = () => {
   emits("close");
 };
+const backStep = () => {
+  step.value = 1;
+};
 // 关闭编辑信息
 const onHandleCloseInfo = async (type: boolean) => {
   const _modifyInfo = JSON.parse(JSON.stringify(modifyInfo.value));
@@ -549,7 +554,6 @@ const onModifyMobile = () => {
 };
 function onHandleModifyMobile() {
   visibleMobile.value = true;
-  visibleInfoSet.value = false;
 }
 // 点击取消或确定按钮
 const onHandleClose = async (type: boolean) => {
