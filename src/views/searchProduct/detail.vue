@@ -55,16 +55,13 @@
                     :key="item"
                   >
                     {{ item.name }}
-                    <span
-                      style="margin-left: 8px"
-                      @click="onOptionUrl('check', item.path)"
-                      >查看</span
-                    >
-                    <span style="margin: 0 8px">|</span>
-                    <a
+                    <el-link
+                      type="primary"
                       :href="useUserStoreHook().$state.fileUrl + item.path"
                       :download="item.name"
-                      >下载</a
+                      :underline="false"
+                      style="margin-left: 8px; color: #244bf1"
+                      >下载</el-link
                     >
                   </div>
                 </div>
@@ -220,12 +217,6 @@ const getProductDetailList = async () => {
   });
   if (resp_code === 0) {
     productDetailList.value = datas;
-  }
-};
-// 查看或下载产品文档
-const onOptionUrl = (type: string, url: string) => {
-  if (type === "check") {
-    window.open(useUserStoreHook().$state.fileUrl + url, "externalWindow");
   }
 };
 // 跳转其他产品详情
