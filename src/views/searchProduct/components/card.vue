@@ -37,7 +37,7 @@
         :class="ns.be('list-left', 'logo')"
       />
       <img
-        :src="useUserStoreHook().$state.fileUrl + product.image"
+        :src="useUserStoreHook().$state.fileUrl + product.image[0]"
         alt=""
         :class="ns.be('list-left', 'img')"
       />
@@ -173,6 +173,7 @@ const onDetail = () => {
 .es-searchProduct-card-logo {
   @include widthAndHeight(96px, 40px);
   @include absolute(1, 0, none, none, 0);
+  object-fit: contain;
 }
 .es-searchProduct-card-img__box {
   @include widthAndHeight(214px, 214px);
@@ -233,11 +234,13 @@ const onDetail = () => {
 .es-searchProduct-card-list-left__logo {
   @include widthAndHeight(96px, 40px);
   @include absolute(1, 1px, none, none, 0);
+  object-fit: contain;
 }
 .es-searchProduct-card-list-left__img {
   @include widthAndHeight(190px, 190px);
   margin-left: 16px;
   @include absolute(1, none, none, 16px, 0);
+  object-fit: contain;
 }
 .es-searchProduct-card-list-right {
   @include widthAndHeight(100%, 176px);
