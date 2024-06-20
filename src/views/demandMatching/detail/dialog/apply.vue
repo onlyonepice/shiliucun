@@ -75,12 +75,6 @@ watch(
   { immediate: true },
 );
 const onHandleClose = async (type: boolean) => {
-  if (type && applyInfo.value.enterpriseSummary === "") {
-    return ElMessage.warning("请填写企业简介");
-  }
-  if (type && applyInfo.value.message === "") {
-    return ElMessage.warning("请填写留言");
-  }
   visibleApply.value = false;
   if (type) {
     const { email, mobile, company, realName, position } =
@@ -96,10 +90,10 @@ const onHandleClose = async (type: boolean) => {
       message: applyInfo.value.message,
     });
     if (resp_code === 0) {
-      emits("onApply");
       resp_code === 0 && ElMessage.success("报名成功");
     }
   }
+  emits("onApply");
 };
 // 获取用户信息
 const geuUserInfo = async () => {

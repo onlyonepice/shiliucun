@@ -31,7 +31,10 @@
     v-if="applyDialogVisible"
     :visible="applyDialogVisible"
     :needId="detailInfo.id"
-    @onApply="getDemandDetail()"
+    @onApply="
+      applyDialogVisible = false;
+      getDemandDetail();
+    "
   />
   <DeleteDialog
     v-if="deleteDialogVisible"
