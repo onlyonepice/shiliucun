@@ -2,6 +2,7 @@
   <div :class="[ns.b()]">
     <div :class="[ns.e('header')]">
       <div :class="[ns.e('header-prompt')]">
+        <img src="@/assets/img/searchProduct/prompt.png" alt="" />
         <p>产品参数填写越完整，越容易获得客户的信任，以提高咨询率。</p>
       </div>
       <!-- 限制十个型号 -->
@@ -243,6 +244,13 @@ getOptions();
       @include flex(center);
       background: #eaedfe;
       padding: 0 16px 0 8px;
+
+      img {
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+      }
+
       p {
         @include font(12px, 400, rgba(0, 0, 0, 0.6), 20px);
       }

@@ -2,7 +2,6 @@
   <div :class="[ns.b(), 'es-commonPage']">
     <div :class="ns.b('content')">
       <Loading v-if="loading" />
-      {{ loading }}
       <div :class="ns.e('tab-list')">
         <template v-for="(item, index) in tabs" :key="item.value">
           <div :class="ns.e('tab-item')">
@@ -63,6 +62,7 @@ import Step1 from "./components/step1.vue";
 import Step2 from "./components/step2.vue";
 import Step3 from "./components/step3.vue";
 import useNamespace from "@/utils/nameSpace";
+import { step2Field } from "./components/data";
 import { useRoute, useRouter } from "vue-router";
 
 import {
@@ -105,8 +105,10 @@ async function getDetails() {
       delete datas?.id;
       draftData.value = datas;
       form = datas;
-      const { models } = datas;
-      if (models) {
+      const step2Status = step2Field.every((item) => {
+        return datas[item.prop];
+      });
+      if (step2Status) {
         tabVal.value = 3;
       } else {
         tabVal.value = 2;
