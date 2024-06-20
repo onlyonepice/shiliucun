@@ -162,7 +162,7 @@ function handleSubmit(formData) {
     loading.value = true;
     productCheckInSaveOrUpdateApi(data).then(({ resp_code }) => {
       if (resp_code === 0) {
-        !route.query.id ? (dialogVisible.value = true) : router.go(-1);
+        route.query.id ? router.go(-1) : router.push("homePersonal?id=6");
       } else {
         ElMessage.error("产品上传失败");
       }

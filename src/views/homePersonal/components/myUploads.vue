@@ -5,14 +5,14 @@
       <el-table :data="mainData" style="width: 810px">
         <el-table-column label="产品名称" prop="name" />
         <el-table-column label="企业名称" prop="enterprise" min-width="120px" />
-        <el-table-column label="产品图片" min-width="120px">
+        <el-table-column label="产品图片" width="110px">
           <template #default="scope">
-            <img
-              class="image"
-              v-for="item in scope.row.image"
-              :key="item"
-              :src="fileUrl + item"
-            />
+            <div @click="handleViewImages(scope.row.image)" class="table-image">
+              <img class="image" :src="fileUrl + scope.row.image[0]" />
+              <div v-if="scope.row.image.length > 1" class="image-marck">
+                +{{ scope.row.image.length - 1 }}
+              </div>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="状态" prop="name" min-width="90px">
@@ -118,7 +118,12 @@
                   >
                     {{ item.name }}
                     <span>
-                      <a :href="fileUrl + item.path" target="_blank"> 查看 </a>
+                      <a
+                        :href="`https://pdf.eesaexpo.com/?file=${fileUrl}${item.path}`"
+                        target="_blank"
+                      >
+                        查看
+                      </a>
                     </span>
                   </div>
                 </div>
@@ -127,7 +132,7 @@
           </div>
         </div>
         <el-table :data="tableField" style="width: 100%">
-          <el-table-column label="" prop="label" width="160px" />
+          <el-table-column label="" fixed="left" prop="label" width="160px" />
           <el-table-column
             v-for="(item, index) in detailsData.models"
             :key="index"
@@ -199,6 +204,11 @@
         </el-table>
       </div>
     </template>
+    <el-image-viewer
+      v-if="showBig"
+      :onClose="handelViewImgClose"
+      :url-list="showBigImgList"
+    />
   </div>
 </template>
 
@@ -214,6 +224,8 @@ import {
 import { step3Field } from "@/views/searchProduct/productCheckIn/components/data";
 
 const total = ref(0);
+const showBig = ref(false);
+const showBigImgList = ref([]);
 const stepField = ref<any>(step3Field);
 const mainData = ref([]);
 const tableField = ref([]);
@@ -240,6 +252,13 @@ async function handelViewAttribute(row) {
 }
 function handelReUpload(id, status) {
   router.push(`/searchProductProductCheckIn?id=${id}&status=${status}`);
+}
+function handelViewImgClose() {
+  showBig.value = false;
+}
+function handleViewImages(imgs) {
+  showBigImgList.value = imgs.map((item) => fileUrl + item);
+  showBig.value = true;
 }
 getProductCheckInList();
 
@@ -274,20 +293,27 @@ function handleCurrentChange(val: number) {
       align-items: center;
       flex-wrap: wrap;
     }
-
-    .image {
-      width: 70px;
-      margin-right: 8px;
-      margin-top: 8px;
+    .table-image {
+      width: 80px;
+      height: 80px;
+      position: relative;
       cursor: pointer;
-
-      &:nth-child(2n) {
-        margin-right: 0px;
+      @include flex(center, center);
+      .image {
+        max-width: 80px;
+        max-height: 80px;
       }
-
-      &:nth-child(1),
-      &:nth-child(2) {
-        margin-top: 0px;
+      .image-marck {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        @include flex(center, center);
+        background-color: rgba(0, 0, 0, 0.2);
+        font-size: 20px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
       }
     }
   }

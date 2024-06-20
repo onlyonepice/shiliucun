@@ -12,7 +12,7 @@
     </div>
     <el-form ref="formRef" :model="tableForm" label-width="auto">
       <el-table :data="tableField" style="width: 100%">
-        <el-table-column label="" prop="label" width="160px" />
+        <el-table-column fixed="left" label="" prop="label" width="160px" />
         <el-table-column
           v-for="(item, index) in tableForm"
           :key="item.id"
