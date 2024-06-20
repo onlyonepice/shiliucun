@@ -145,6 +145,7 @@ const checkEnterprise = (rule: any, value: any, callback: any) => {
   if (form.value.enterpriseId === null) {
     return callback(new Error("请选择企业"));
   }
+  callback();
 };
 const rules = reactive<FormRules<typeof form>>({
   productName: [
