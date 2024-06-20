@@ -8,7 +8,7 @@
       :detailInfo="detailInfo"
       :minePublish="minePublish"
       :totalApply="totalApply"
-      @onApply="applyDialogVisible = true"
+      @onApply="onOpenApplyDialog()"
       @onDelete="deleteDialogVisible = true"
       @onSolve="solveDialogVisible = true"
       @onCheckApplyList="drawer = true"
@@ -124,6 +124,14 @@ const getDemandDetail = async () => {
     minePublish.value = datas.userId === useUserStore().userInfo.id;
     showExtra.value = minePublish.value ? false : datas.applyStatus !== 2;
     detailInfo.value.enabled === 2 && (detailInfo.value.status = 99);
+  }
+};
+// 打开报名弹窗
+const onOpenApplyDialog = () => {
+  if (getToken()) {
+    applyDialogVisible.value = true;
+  } else {
+    useUserStore().openLogin(true);
   }
 };
 // 删除需求
