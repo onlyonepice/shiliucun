@@ -24,9 +24,9 @@
             <template v-if="productDetail.models">
               <p :class="[ns.b('info-right-common')]">
                 额定功率：{{
-                  productDetail.models[0].ratedPower === ""
-                    ? "-"
-                    : productDetail.models[0].ratedPower + "kW"
+                  !productDetail.models[0].ratedPower
+                    ? productDetail.models[0].ratedPower + "kW"
+                    : "-"
                 }}
               </p>
               <p :class="[ns.b('info-right-common')]">
