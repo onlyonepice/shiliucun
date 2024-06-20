@@ -53,12 +53,19 @@ export const getCloseReasonApi = (params: any) => {
   );
 };
 
-// 关闭需求
+// 关闭需求打分
 export const closeDemandApi = (data: any) => {
   return http.request<{ datas; resp_code }>(
     "post",
     "/eesa-industrial-map/need/needNps/front/v1.0/submitNps",
     { data },
+  );
+};
+// 删除需求
+export const deleteDemandApi = (id: number) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    `/eesa-industrial-map/need/need/front/V1.0/deleteNeedById?needId=${id}`,
   );
 };
 

@@ -40,7 +40,11 @@
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import DeleteDemand from "@/assets/img/demand/delete-demand.png";
-import { getCloseReasonApi, closeDemandApi } from "@/api/demandMatching";
+import {
+  getCloseReasonApi,
+  closeDemandApi,
+  deleteDemandApi,
+} from "@/api/demandMatching";
 const ns = useNamespace("demandMatchingDialog-delete");
 const visibleDelete: Ref<boolean> = ref(false); // 弹窗
 const reasonList: Ref<any[]> = ref([]); // 关闭原因列表
@@ -74,6 +78,7 @@ const onHandleClose = async (type: boolean) => {
       score: 0,
       type: "feedback",
     });
+    await deleteDemandApi(props.needId);
   }
   emits("onHandleClose", type);
   visibleDelete.value = false;
