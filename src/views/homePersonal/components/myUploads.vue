@@ -131,7 +131,7 @@
             </div>
           </div>
         </div>
-        <el-table :data="tableField" style="width: 100%">
+        <el-table :data="tableField" style="max-width: 810px; width: 100%">
           <el-table-column label="" fixed="left" prop="label" width="160px" />
           <el-table-column
             v-for="(item, index) in detailsData.models"
@@ -345,6 +345,7 @@ function handleCurrentChange(val: number) {
 
   .es-MyUploads-details {
     .es-MyUploads-header {
+      width: 100%;
       .es-MyUploads-product-state {
         margin-top: 24px;
 
