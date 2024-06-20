@@ -73,7 +73,7 @@ import {
 const id = ref(null);
 const loading = ref(false);
 let form: any = {};
-const tabVal = ref(2);
+const tabVal = ref(1);
 const route = useRoute();
 const router = useRouter();
 const draftData = ref(null);

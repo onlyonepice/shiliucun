@@ -180,6 +180,7 @@ watch(
           }
         });
       }
+      form.value.enterpriseId = prop.draftData.enterpriseId;
     }
   },
   {
@@ -265,6 +266,7 @@ function getFileType(fileName) {
 }
 
 function handleNext(formRefName) {
+  console.log("=======", form.value);
   formRefName.validate((valid) => {
     if (valid) {
       optimizeData();
