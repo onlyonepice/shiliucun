@@ -18,7 +18,12 @@
               @click="emits('onApply')"
               >立即报名</el-button
             >
-            <el-button v-else @click="emits('onRevocation')"
+            <el-button
+              v-if="
+                detailInfo.applyId !== null &&
+                (detailInfo.applyStatus === 1 || detailInfo.applyStatus === 4)
+              "
+              @click="emits('onRevocation')"
               >撤销报名</el-button
             >
           </template>
