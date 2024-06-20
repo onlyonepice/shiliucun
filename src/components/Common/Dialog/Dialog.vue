@@ -5,7 +5,7 @@
     :class="ns.b()"
     :show-close="false"
     :close-on-click-modal="false"
-    :append-to-body="true"
+    :append-to-body="appendToBody"
     :style="{ width: width, height: height }"
   >
     <img
@@ -41,6 +41,7 @@ const props = defineProps({
   width: { type: String, default: "" },
   height: { type: String, default: "" },
   showFoot: { type: Boolean, default: true },
+  appendToBody: { type: Boolean, default: true },
 });
 watch(
   () => props.visible,
