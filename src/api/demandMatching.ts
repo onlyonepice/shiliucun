@@ -64,7 +64,7 @@ export const closeDemandApi = (data: any) => {
 // 删除需求
 export const deleteDemandApi = (id: number) => {
   return http.request<{ datas; resp_code }>(
-    "post",
+    "get",
     `/eesa-industrial-map/need/need/front/V1.0/deleteNeedById?needId=${id}`,
   );
 };
