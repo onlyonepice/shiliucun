@@ -465,9 +465,15 @@ const handleReleaseNeed = async () => {
     return;
   }
   needData.value.imageUrls = imageList.value.map((item) => {
-    return item.response.datas.includes(useUserStore().fileUrl)
-      ? item.response.datas.replace(item.response.datas, "")
-      : item.response.datas;
+    item.url = item.response ? item.response.datas : item.url;
+    return item.url.includes(useUserStore().fileUrl)
+      ? item.url.replace(useUserStore().fileUrl, "")
+      : item.url;
+  });
+  imageList.value.forEach((item) => {
+    item.url = item.response
+      ? useUserStore().fileUrl + item.response.datas
+      : item.url;
   });
   needData.value.imageUrls = needData.value.imageUrls.join(",");
   const data = needData.value.id
@@ -670,12 +676,18 @@ watch(
 watch(
   () => props.needDetailData,
   (val) => {
-    console.log(val);
-    needData.value = cloneDeep(val);
-    if (val && Object.keys(val).length > 0) {
-      needData.value = Object.assign(val, needData.value);
-      if (val.imageUrls) {
-        imageList.value = val.imageUrls.split(",").map((item) => {
+    const arr = cloneDeep(val);
+    if (val && Object.keys(arr).length > 0) {
+      needData.value = {
+        title: arr.title,
+        type: arr.type,
+        imageUrls: arr.imageUrls,
+        typeName: arr.typeName,
+        description: arr.description,
+        id: arr.id ? arr.id : null,
+      };
+      if (needData.value.imageUrls) {
+        imageList.value = needData.value.imageUrls.split(",").map((item) => {
           return {
             name: "",
             url: useUserStore().fileUrl + item,

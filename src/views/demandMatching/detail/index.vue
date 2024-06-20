@@ -57,10 +57,11 @@
     @onAgreeOrRefuse="getApplyList()"
   />
   <ReleaseDemand
-    v-if="getToken()"
+    v-if="getToken() && Object.keys(detailInfo).length > 0"
     :show="resetDialogVisible"
     :needDetailData="detailInfo"
     :appendToBody="true"
+    @success="releaseDemandSuccess"
     @close="resetDialogVisible = false"
   />
 </template>
@@ -116,6 +117,10 @@ onMounted(() => {
   getDemandDetail();
   getApplyList();
 });
+const releaseDemandSuccess = () => {
+  getDemandDetail();
+  resetDialogVisible.value = false;
+};
 // 获取需求详情
 const getDemandDetail = async () => {
   const { datas, resp_code } = await getDemandDetailApi({ id: route.query.id });
