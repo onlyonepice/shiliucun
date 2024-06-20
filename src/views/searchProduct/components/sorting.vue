@@ -30,7 +30,6 @@
                 : SortingUp
             "
             alt=""
-            @click="changeUpOrDown(false)"
           />
           <img
             :src="
@@ -39,7 +38,6 @@
                 : SortingDown
             "
             alt=""
-            @click="changeUpOrDown(true)"
           />
         </div>
       </div>
@@ -98,15 +96,12 @@ const sortingList: Ref<Array<any>> = ref([
 ]);
 const changeChoseTabs = (id: number) => {
   if (id === choseTabs.value) {
-    return;
+    upOrDown.value = !upOrDown.value;
+  } else {
+    upOrDown.value = false;
   }
   choseTabs.value = id;
-  upOrDown.value = false;
   emits("onChangeSorting", id, upOrDown.value);
-};
-const changeUpOrDown = (type: boolean) => {
-  upOrDown.value = type;
-  emits("onChangeSorting", choseTabs.value, type);
 };
 const changeArrangement = (type: string) => {
   arrangementType.value = type;
