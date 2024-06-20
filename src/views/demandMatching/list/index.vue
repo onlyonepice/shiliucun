@@ -41,7 +41,7 @@
           {{ item.label }}
         </p>
         <el-button
-          @click="releaseDemandShow = true"
+          @click="handleReleaseClick"
           class="release-demand"
           type="primary"
           >发布需求</el-button
@@ -101,7 +101,7 @@
           {{ item.title }}
         </p>
         <div class="release-demand">
-          <el-button @click="releaseDemandShow = true" type="primary"
+          <el-button @click="handleReleaseClick" type="primary"
             >发布需求</el-button
           >
           <businessCard style="margin-top: 24px" :info="userDetailInfo" />
@@ -197,7 +197,7 @@
       </div>
     </div>
     <ReleaseDemand
-      v-if="getToken()"
+      v-if="isLogin"
       @close="releaseDemandClose"
       @success="releaseDemandSuccess"
       :show="releaseDemandShow"
@@ -215,7 +215,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 import { getToken } from "@/utils/auth";
 import { ref, onUnmounted, onMounted } from "vue";
-
+import { demandStatus, applicationStatus } from "../config";
 import {
   getTypeNotNullApi,
   getNeedApi,
@@ -223,58 +223,7 @@ import {
   getApplyNeedApi,
 } from "@/api/demandList";
 import { getUserDetailInfo } from "@/api/user";
-const demandStatus = [
-  {
-    name: "待审核",
-    value: "1",
-    background: "#FFF3EA",
-    color: "#ED832E",
-  },
-  {
-    name: "需求中",
-    value: "2",
-    background: "#FFF3EA",
-    color: "#FF8D32",
-  },
-  {
-    name: "审核未通过",
-    value: "3",
-    background: "#FEEFF0",
-    color: "#F75964",
-  },
-  {
-    name: "已解决",
-    value: "4",
-    background: "#E9F6F2",
-    color: "#25AB7B",
-  },
-];
-const applicationStatus = [
-  {
-    name: "待查阅",
-    value: "1",
-    background: "#FFF3EA",
-    color: "#ED832E",
-  },
-  {
-    name: "已同意",
-    value: "2",
-    background: "#E9F6F2",
-    color: "#25AB7B",
-  },
-  {
-    name: "已拒绝",
-    value: "3",
-    background: "#FEEFF0",
-    color: "#F75964",
-  },
-  {
-    name: "已查阅",
-    value: "4",
-    background: "#ECF6FF",
-    color: "#39A7FD",
-  },
-];
+const isLogin = ref(getToken());
 const tabList = ref([
   {
     name: "需求大厅",
@@ -308,7 +257,13 @@ const manageTabArr = ref([
     isShowRed: false,
   },
 ]);
-
+const handleReleaseClick = () => {
+  isLogin.value = getToken();
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
+  releaseDemandShow.value = true;
+};
 const userDetailInfo = ref({});
 // 获取用户详细信息
 const onGetUserInfo = async () => {
@@ -524,6 +479,7 @@ onMounted(() => {
         padding: 2px 8px;
         @include font(12px, 400, none, 20px);
         margin-left: 16px;
+        border: 1px solid #ff892e;
       }
       .line {
         width: 2px;
