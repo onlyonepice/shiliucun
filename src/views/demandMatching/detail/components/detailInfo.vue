@@ -7,7 +7,7 @@
       <div>
         <!-- 待审核 -->
         <template v-if="detailInfo.status === 1">
-          <el-button @click="emits('onDelete')">删除</el-button>
+          <el-button @click="emits('onDelete')">删除需求</el-button>
         </template>
         <!-- 需求中 -->
         <template v-if="detailInfo.status === 2">
@@ -26,7 +26,7 @@
             <el-button type="primary" @click="emits('onSolve')"
               >需求已解决</el-button
             >
-            <el-button @click="emits('onDelete')">删除</el-button>
+            <el-button @click="emits('onDelete')">删除需求</el-button>
           </template>
           <el-button @click="onShare()">分享</el-button>
         </template>
@@ -35,7 +35,7 @@
           <el-button type="primary" @click="emits('onResetApply')"
             >重新提交</el-button
           >
-          <el-button @click="emits('onDelete')">删除</el-button>
+          <el-button @click="emits('onDelete')">删除需求</el-button>
         </template>
         <!-- 已解决 -->
         <template v-if="detailInfo.status === 4" />
