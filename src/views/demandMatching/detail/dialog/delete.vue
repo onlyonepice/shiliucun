@@ -2,7 +2,7 @@
   <Dialog
     :visible="visibleDelete"
     width="400px"
-    height="360px"
+    height="420px"
     @onHandleClose="onHandleClose"
     confirmText="删除需求"
     cancelText="下次再说"
@@ -113,12 +113,12 @@ getCloseReason();
 }
 .es-demandMatchingDialog-delete-content {
   border-radius: 8px;
-  height: 72px;
+  // height: 72px;
   margin-top: 79px;
-  margin-bottom: 16px;
   @include flex(center, space-between, wrap);
 }
 .es-demandMatchingDialog-delete-content__label {
+  margin-bottom: 16px;
   @include widthAndHeight(172px, 32px);
   background: #f2f3f5;
   border-radius: 4px;
