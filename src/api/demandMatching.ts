@@ -85,3 +85,11 @@ export const cancelApplyApi = (id: number) => {
     `/eesa-industrial-map/need/apply/front/v1.0/applyCancel?id=${id}`,
   );
 };
+
+// 解决需求
+export const solveDemandApi = (id: number) => {
+  return http.request<{ datas; resp_code }>(
+    "get",
+    `/eesa-industrial-map/need/need/front/v1.0/finishNeedById?needId=${id}`,
+  );
+};

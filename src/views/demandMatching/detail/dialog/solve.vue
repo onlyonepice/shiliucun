@@ -54,7 +54,11 @@
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import SolveDemand from "@/assets/img/demand/solve-demand.png";
-import { getAssignConfigApi, closeDemandApi } from "@/api/demandMatching";
+import {
+  getAssignConfigApi,
+  closeDemandApi,
+  solveDemandApi,
+} from "@/api/demandMatching";
 const ns = useNamespace("demandMatchingDialog-solve");
 const visibleSolve: Ref<boolean> = ref(false); // 弹窗
 const reasonList: Ref<any[]> = ref([]); // 关闭原因列表
@@ -90,6 +94,7 @@ const onHandleClose = async (type: boolean) => {
       score: score.value,
       type: "score",
     });
+    await solveDemandApi(props.needId);
   }
   visibleSolve.value = false;
   emits("onHandleClose", type);
