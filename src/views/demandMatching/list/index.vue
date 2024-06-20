@@ -41,7 +41,7 @@
           {{ item.label }}
         </p>
         <el-button
-          @click="releaseDemandShow = true"
+          @click="handleReleaseClick"
           class="release-demand"
           type="primary"
           >发布需求</el-button
@@ -101,7 +101,7 @@
           {{ item.title }}
         </p>
         <div class="release-demand">
-          <el-button @click="releaseDemandShow = true" type="primary"
+          <el-button @click="handleReleaseClick" type="primary"
             >发布需求</el-button
           >
           <businessCard style="margin-top: 24px" :info="userDetailInfo" />
@@ -197,7 +197,7 @@
       </div>
     </div>
     <ReleaseDemand
-      v-if="getToken()"
+      v-if="isLogin"
       @close="releaseDemandClose"
       @success="releaseDemandSuccess"
       :show="releaseDemandShow"
@@ -223,7 +223,7 @@ import {
   getApplyNeedApi,
 } from "@/api/demandList";
 import { getUserDetailInfo } from "@/api/user";
-
+const isLogin = ref(getToken());
 const tabList = ref([
   {
     name: "需求大厅",
@@ -257,7 +257,13 @@ const manageTabArr = ref([
     isShowRed: false,
   },
 ]);
-
+const handleReleaseClick = () => {
+  isLogin.value = getToken();
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
+  releaseDemandShow.value = true;
+};
 const userDetailInfo = ref({});
 // 获取用户详细信息
 const onGetUserInfo = async () => {
@@ -473,6 +479,7 @@ onMounted(() => {
         padding: 2px 8px;
         @include font(12px, 400, none, 20px);
         margin-left: 16px;
+        border: 1px solid #ff892e;
       }
       .line {
         width: 2px;
