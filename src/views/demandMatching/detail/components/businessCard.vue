@@ -8,9 +8,9 @@
     <img
       :class="ns.be('content', 'right')"
       :src="
-        !info.companyLogo
-          ? 'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/no_img.png'
-          : useUserStore().fileUrl + info.companyLogo
+        !!info.companyLogo
+          ? useUserStore().fileUrl + info.companyLogo
+          : 'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/no_img.png'
       "
     />
     <h6>手机：{{ info.mobile === null ? "***********" : info.mobile }}</h6>

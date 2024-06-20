@@ -5,7 +5,7 @@
       :visible="visibleMobile"
       width="560px"
       height="224px"
-      :appendToBody="false"
+      :appendToBody="appendToBody"
       @onHandleClose="onHandleClose"
       :confirmText="modifyMbStep === 1 ? '下一步' : '完成'"
     >
@@ -56,7 +56,7 @@
       width="560px"
       :height="step === 1 ? '568px' : '718px'"
       :showFoot="false"
-      :appendToBody="false"
+      :appendToBody="appendToBody"
       @onHandleClose="onHandleCloseDialog"
     >
       <template #content>
@@ -380,6 +380,10 @@ const props = defineProps({
   needDetailData: {
     type: Object,
     default: () => {},
+  },
+  appendToBody: {
+    type: Boolean,
+    default: false,
   },
 });
 const dialogImageUrl = ref("");

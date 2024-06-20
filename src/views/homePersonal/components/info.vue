@@ -473,6 +473,7 @@ const onHandleCloseInfo = async (type: boolean) => {
     delete _modifyInfo.email;
   }
   _modifyInfo.headImgUrl = headImgUrlUpdate.value;
+  delete _modifyInfo.region;
   const { resp_code }: any = await editUserInfoApi(_modifyInfo);
   if (resp_code === 0) {
     ElMessage.success("编辑成功");
@@ -670,6 +671,7 @@ const onSendCode = async () => {
 .es-homePersonalInfo-right__headImgUrl {
   @include widthAndHeight(96px, 96px);
   border-radius: 4px;
+  object-fit: contain;
 }
 .es-homePersonalInfo-content__flex {
   @include flex(center, flex-start, nowrap);

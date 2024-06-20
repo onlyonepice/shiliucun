@@ -58,7 +58,8 @@
   />
   <ReleaseDemand
     :show="resetDialogVisible"
-    :needDetailData="detailInfo"
+    :needDetailData="JSON.parse(JSON.stringify(detailInfo))"
+    :appendToBody="true"
     @close="resetDialogVisible = false"
   />
 </template>

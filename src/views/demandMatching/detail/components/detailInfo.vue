@@ -125,7 +125,7 @@ const ns = useNamespace("demandMatching-detail");
 const props = defineProps({
   detailInfo: {
     type: Object,
-    default: () => ({}),
+    default: () => {},
   },
   // 是否是我发布的需求
   minePublish: {
@@ -149,11 +149,12 @@ const onShare = async () => {
   ElMessage.success("分享链接已复制");
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/style/mixin.scss";
 
 .es-demandMatching-detail {
-  @include widthAndHeight(760px, auto);
+  max-width: 760px;
+  min-width: 660px;
   padding: 0 24px 208px 24px;
   background: #ffffff;
   border-radius: 4px;
@@ -177,6 +178,7 @@ const onShare = async () => {
   border-radius: 4px;
   padding: 8px 16px;
   @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
+  @include textOverflowOne();
 }
 .es-demandMatching-detail-top__turnDown {
   @include widthAndHeight(100%, 38px);
@@ -184,6 +186,7 @@ const onShare = async () => {
   border-radius: 4px;
   padding: 8px 16px;
   @include font(14px, 600, #f75964, 22px);
+  @include textOverflowOne();
 }
 .es-demandMatching-detail-top__line {
   @include widthAndHeight(712px, 1px);
