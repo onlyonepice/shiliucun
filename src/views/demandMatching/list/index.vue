@@ -196,7 +196,11 @@
         </div>
       </div>
     </div>
-    <ReleaseDemand @close="releaseDemandClose" :show="releaseDemandShow" />
+    <ReleaseDemand
+      @close="releaseDemandClose"
+      @success="releaseDemandSuccess"
+      :show="releaseDemandShow"
+    />
   </div>
 </template>
 
@@ -209,7 +213,7 @@ import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
 const router = useRouter();
 import { getToken } from "@/utils/auth";
-import { ref, onUnmounted } from "vue";
+import { ref, onUnmounted, onMounted } from "vue";
 
 import {
   getTypeNotNullApi,
@@ -323,6 +327,10 @@ const changeManageTab = (value) => {
   currentManageTab.value = value;
 };
 const releaseDemandShow = ref(false);
+const releaseDemandSuccess = () => {
+  getReleaseNeed();
+  releaseDemandShow.value = false;
+};
 const releaseDemandClose = () => {
   releaseDemandShow.value = false;
 };
@@ -416,8 +424,10 @@ const onchangeCurrentApply = (number: number) => {
 onUnmounted(() => {
   releaseDemandShow.value = false;
 });
-getTypeNotNull();
-getNeed();
+onMounted(() => {
+  getTypeNotNull();
+  getNeed();
+});
 </script>
 <style scoped lang="scss">
 @import "@/style/mixin.scss";
