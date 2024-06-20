@@ -72,11 +72,13 @@
 
 <script lang="ts" setup>
 import { Ref, ref } from "vue";
+import { getToken } from "@/utils/auth";
 import { useRouter } from "vue-router";
-import SearchProductIcon from "@/assets/img/common/search-product-icon.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
 import MoreData from "@/assets/img/reportDetail/icon_expand_nor.png";
+import SearchProductIcon from "@/assets/img/common/search-product-icon.png";
+
 const ns = useNamespace("searchProduct-filter");
 const emits = defineEmits(["onChoseFilter"]);
 const showMore: Ref<boolean> = ref(false); // 是否展开更多
@@ -106,8 +108,11 @@ const getCoolingMethodIds = (id: string) => {
 const getEnterpriseId = (id: string) => {
   return props.filterInfo.enterpriseIds.indexOf(id) !== -1;
 };
-// 产品入住
+// 产品入驻
 function handleProductCheckIn() {
+  if (!getToken()) {
+    return useUserStoreHook().openLogin(true);
+  }
   router.value.push("/searchProductProductCheckIn");
 }
 </script>

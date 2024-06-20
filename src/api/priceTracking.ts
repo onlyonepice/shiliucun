@@ -24,7 +24,7 @@ export const querySpecialRegionIdsApi = (params: { type: string } | null) => {
 
 //获取特殊地区用电类型 电压等级
 export const electricityTypeVoltageLevelApi = (params) => {
-  return http.request<{ datas: Array<any> }>(
+  return http.request<{ datas: Array<any>; resp_code: number }>(
     "get",
     "/eesa-report/electricityPriceTracking/electricityPriceTrackingSpecial/openApi/v1.0/getElectricityTypeVoltageLevel",
     { params },
