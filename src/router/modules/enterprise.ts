@@ -15,6 +15,20 @@ export default {
         title: "查产品",
         keepAlive: true,
       },
+      children: [
+        {
+          path: "/searchProductProductCheckIn",
+          name: "ProductCheckIn",
+          components: {
+            default: () =>
+              import("@/views/searchProduct/productCheckIn/productCheckIn.vue"),
+          },
+          meta: {
+            title: "产品入住",
+            backgroundColor: "#F2F3F5",
+          },
+        },
+      ],
     },
     {
       path: "/searchProductDetail",
