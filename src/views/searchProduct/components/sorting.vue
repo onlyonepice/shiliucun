@@ -85,16 +85,16 @@ const sortingList: Ref<Array<any>> = ref([
     text: "价格",
     desc: "inPriceSort",
   },
-  // {
-  //   id: 2,
-  //   text: "额定功率",
-  //   desc: "inPriceSort",
-  // },
-  // {
-  //   id: 3,
-  //   text: "系统容量",
-  //   desc: "inPriceSort",
-  // },
+  {
+    id: 2,
+    text: "额定功率",
+    desc: "inPriceSort",
+  },
+  {
+    id: 3,
+    text: "系统容量",
+    desc: "inPriceSort",
+  },
 ]);
 const changeChoseTabs = (id: number) => {
   if (id === choseTabs.value) {
