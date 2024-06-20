@@ -215,7 +215,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 import { getToken } from "@/utils/auth";
 import { ref, onUnmounted, onMounted } from "vue";
-
+import { demandStatus, applicationStatus } from "../config";
 import {
   getTypeNotNullApi,
   getNeedApi,
@@ -223,58 +223,7 @@ import {
   getApplyNeedApi,
 } from "@/api/demandList";
 import { getUserDetailInfo } from "@/api/user";
-const demandStatus = [
-  {
-    name: "待审核",
-    value: "1",
-    background: "#FFF3EA",
-    color: "#ED832E",
-  },
-  {
-    name: "需求中",
-    value: "2",
-    background: "#FFF3EA",
-    color: "#FF8D32",
-  },
-  {
-    name: "审核未通过",
-    value: "3",
-    background: "#FEEFF0",
-    color: "#F75964",
-  },
-  {
-    name: "已解决",
-    value: "4",
-    background: "#E9F6F2",
-    color: "#25AB7B",
-  },
-];
-const applicationStatus = [
-  {
-    name: "待查阅",
-    value: "1",
-    background: "#FFF3EA",
-    color: "#ED832E",
-  },
-  {
-    name: "已同意",
-    value: "2",
-    background: "#E9F6F2",
-    color: "#25AB7B",
-  },
-  {
-    name: "已拒绝",
-    value: "3",
-    background: "#FEEFF0",
-    color: "#F75964",
-  },
-  {
-    name: "已查阅",
-    value: "4",
-    background: "#ECF6FF",
-    color: "#39A7FD",
-  },
-];
+
 const tabList = ref([
   {
     name: "需求大厅",

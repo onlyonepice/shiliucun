@@ -36,6 +36,7 @@
         :disabled="props.disabled"
         :maxlength="maxlength"
         @input="handleChange"
+        resize="none"
         @focus="handleFocusVerifyLogin"
         :show-word-limit="specialType === 'textarea'"
         :rows="3"
