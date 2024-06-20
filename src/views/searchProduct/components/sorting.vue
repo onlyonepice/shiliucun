@@ -84,12 +84,12 @@ const sortingList: Ref<Array<any>> = ref([
     desc: "inPriceSort",
   },
   {
-    id: 2,
+    id: 3,
     text: "额定功率",
     desc: "inPriceSort",
   },
   {
-    id: 3,
+    id: 2,
     text: "系统容量",
     desc: "inPriceSort",
   },
