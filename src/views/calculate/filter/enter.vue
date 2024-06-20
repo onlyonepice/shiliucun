@@ -115,6 +115,7 @@
             title="地区B"
             :options="cityData"
             valueKey="regionName"
+            labelKey="regionName"
             :defaultValue="searchParamsB.regionName"
             width="100%"
             @onChange="

@@ -7,7 +7,7 @@
           <div :class="[ns.be('info-left', 'bigImg-box')]">
             <img
               :class="[ns.be('info-left', 'bigImg')]"
-              :src="useUserStoreHook().$state.fileUrl + productDetail.image"
+              :src="useUserStoreHook().$state.fileUrl + productDetail.image[0]"
               alt=""
             />
           </div>
@@ -44,6 +44,28 @@
                   productDetail.models[0].coolingMethodName.join("，")
                 }}
               </p>
+              <div
+                :class="[ns.b('info-right-common')]"
+                v-if="productDetail.specificationDocumentFile"
+              >
+                产品说明书/产品文档：
+                <div>
+                  <div
+                    v-for="item in productDetail.specificationDocumentFile"
+                    :key="item"
+                  >
+                    {{ item.name }}
+                    <el-link
+                      type="primary"
+                      :href="useUserStoreHook().$state.fileUrl + item.path"
+                      :download="item.name"
+                      :underline="false"
+                      style="margin-left: 8px; color: #244bf1"
+                      >下载</el-link
+                    >
+                  </div>
+                </div>
+              </div>
             </template>
             <el-button
               :class="[ns.b('info-right-connect')]"
@@ -63,7 +85,12 @@
                   :style="{
                     'text-align': 'right',
                     color: 'rgba(0, 0, 0, 0.9)',
-                    'font-weight': scope.$index === 0 ? 600 : 400,
+                    'font-weight':
+                      scope.$index === 1 ||
+                      scope.$index === 5 ||
+                      scope.$index === 8
+                        ? 600
+                        : 400,
                   }"
                 >
                   {{ scope.row.name }}
@@ -148,16 +175,20 @@ const breadcrumbList: Ref<Array<any>> = ref([
 ]);
 const tabNameList = ref([
   "产品型号",
-  "产品形态",
-  "储能系统技术",
-  "额定功率/kW",
+  "电池参数",
+  "电芯类型",
   "电池系统能量/kWh",
-  "标称电压/V",
-  "系统综合效率/%",
   "放电深度/%",
+  "PCS参数",
+  "标称电压/V",
+  "额定功率/kW",
+  "系统参数",
+  "产品形态",
+  "系统综合效率/%",
   "年衰减率/%",
   "冷却方式",
   "尺寸/m*m*m",
+  "产品单价/元/kWh",
 ]);
 const tableData: Ref<any> = ref([]);
 const route = useRoute();
@@ -171,7 +202,7 @@ const getProductDetail = async () => {
   if (resp_code === 0) {
     productDetail.value = datas;
     breadcrumbList.value[1].text = datas.name;
-    for (let index = 0; index < 11; index++) {
+    for (let index = 0; index < 15; index++) {
       tableData.value.push({
         name: tabNameList.value[index],
         info: cloneDeep(datas.models),
@@ -263,6 +294,14 @@ const onConnectCompany = (id: string) => {
 .es-searchProductDetail-info-right-common {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 20px);
   margin-bottom: 8px;
+  @include flex(flex-start, flex-start, wrap);
+  span {
+    @include font(12px, 400, #244bf1, 20px);
+    cursor: pointer;
+  }
+  a {
+    text-decoration: none;
+  }
 }
 .es-searchProductDetail-info-right-connect {
   @include absolute(1, none, none, 0, 0);

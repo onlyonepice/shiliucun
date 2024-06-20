@@ -5,7 +5,7 @@ export default {
     default: () => import("@/views/home/index.vue"),
   },
   meta: {
-    title: "首页",
+    title: "掌上储能",
   },
   children: [
     {
@@ -15,7 +15,7 @@ export default {
         default: () => import("@/views/home/searchDetail.vue"),
       },
       meta: {
-        title: "首页",
+        title: "掌上储能",
       },
     },
     {

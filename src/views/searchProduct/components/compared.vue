@@ -23,7 +23,9 @@
           @mouseleave="choseComputed = ''"
         >
           <img
-            :src="useUserStoreHook().$state.fileUrl + comparedList[index].image"
+            :src="
+              useUserStoreHook().$state.fileUrl + comparedList[index].image[0]
+            "
             alt=""
           />
           <div>
@@ -132,6 +134,9 @@ const onCompared = () => {
     .es-searchProduct-compared-compared-item__box {
       width: 100%;
       @include flex(flex-start, space-between, nowrap);
+      img {
+        object-fit: contain;
+      }
     }
     .es-searchProduct-compared-compared-item__empty {
       width: 100%;
