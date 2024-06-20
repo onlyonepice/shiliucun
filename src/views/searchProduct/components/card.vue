@@ -9,7 +9,7 @@
     <div :class="ns.be('img', 'box')">
       <img
         :class="ns.b('img')"
-        :src="useUserStoreHook().$state.fileUrl + product.image"
+        :src="useUserStoreHook().$state.fileUrl + product.image[0]"
         alt=""
       />
     </div>

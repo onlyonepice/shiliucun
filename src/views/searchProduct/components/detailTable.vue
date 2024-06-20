@@ -9,7 +9,7 @@
   </div>
   <div v-if="index === 1" :class="ns.b('common')" name="电池参数" />
   <div v-if="index === 2" :class="ns.b('common')" name="电芯类型">
-    {{ info.batteryType ? info.batteryType : "-" }}
+    {{ info.batteryTypeName ? info.batteryTypeName : "-" }}
   </div>
   <div v-if="index === 3" :class="ns.b('common')" name="电池系统能量/kWh">
     {{ info.batterySystemEnergy ? info.batterySystemEnergy + "kWh" : "-" }}

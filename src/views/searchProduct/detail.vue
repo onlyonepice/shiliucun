@@ -7,7 +7,7 @@
           <div :class="[ns.be('info-left', 'bigImg-box')]">
             <img
               :class="[ns.be('info-left', 'bigImg')]"
-              :src="useUserStoreHook().$state.fileUrl + productDetail.image"
+              :src="useUserStoreHook().$state.fileUrl + productDetail.image[0]"
               alt=""
             />
           </div>
