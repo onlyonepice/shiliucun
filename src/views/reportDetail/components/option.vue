@@ -105,7 +105,7 @@
         <span>内容截图</span>
         <el-upload
           v-model:file-list="fileList"
-          action="https://test.platform.eesaenergy.com/api-file/fileUpload"
+          :action="`${VITE_GLOB_API_URL}/api-file/fileUpload`"
           :headers="uploadToken"
           list-type="picture-card"
           :on-preview="handlePictureCardPreview"
@@ -135,7 +135,7 @@ import {
   setReportFeedbackApi,
   setReportScoreApi,
 } from "@/api/reportDetail";
-
+const { VITE_GLOB_API_URL } = import.meta.env;
 import { getToken } from "@/utils/auth";
 import { ElMessage } from "element-plus";
 import { regMobile } from "@/utils/rule";
@@ -145,11 +145,9 @@ import type { UploadProps } from "element-plus";
 import { ref, defineProps, Ref, watch } from "vue";
 import { useUserStore } from "@/store/modules/user";
 import { reportStore } from "@/store/modules/report";
-
 import UploadImg from "@/assets/img/common/upload-image.png";
 import StarEmpty from "@/assets/img/reportDetail/i-Report-star.png";
 import StarFull from "@/assets/img/reportDetail/i-Report-star-fill.png";
-
 const props = defineProps({
   detail: {
     type: Object,
