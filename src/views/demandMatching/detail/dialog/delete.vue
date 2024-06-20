@@ -75,8 +75,8 @@ const onHandleClose = async (type: boolean) => {
       type: "feedback",
     });
   }
+  emits("onHandleClose", type);
   visibleDelete.value = false;
-  emits("onHandleClose");
 };
 // 选择原因
 const choseReason = (item: any) => {

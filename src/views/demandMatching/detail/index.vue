@@ -37,10 +37,7 @@
     v-if="deleteDialogVisible"
     :visible="deleteDialogVisible"
     :needId="detailInfo.id"
-    @onHandleClose="
-      deleteDialogVisible = false;
-      router.go(-1);
-    "
+    @onHandleClose="onDelete"
   />
   <SolveDialog
     v-if="solveDialogVisible"
@@ -124,6 +121,13 @@ const getDemandDetail = async () => {
     minePublish.value = datas.userId === useUserStore().userInfo.id;
     showExtra.value = minePublish.value ? false : datas.applyStatus !== 2;
     detailInfo.value.enabled === 2 && (detailInfo.value.status = 99);
+  }
+};
+// 删除需求
+const onDelete = async (type: boolean) => {
+  deleteDialogVisible.value = false;
+  if (type) {
+    router.go(-1);
   }
 };
 // 撤销报名
