@@ -13,6 +13,16 @@
           v-model.trim="form[item.prop]"
           placeholder="请输入"
         />
+        <el-autocomplete
+          v-if="item.type === 'autocomplete'"
+          v-model.trim="form[item.prop]"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="请输入"
+          value-key="name"
+          style="width: 100%"
+          @select="handleSelect"
+          @change="handleChange"
+        />
         <el-date-picker
           v-if="item.type === 'month'"
           v-model="form[item.prop]"
@@ -125,6 +135,7 @@ import { step2Field } from "./data";
 import { ElMessage } from "element-plus";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
+import { getEnterpriseListApi } from "@/api/searchProduct";
 const { VITE_GLOB_API_URL } = import.meta.env;
 import useNamespace from "@/utils/nameSpace";
 
@@ -158,7 +169,10 @@ const ns = useNamespace("step2");
 const showBigImgList = ref([]);
 const showBig = ref(false);
 const formRef = ref(null);
-const form = ref<any>({});
+const form = ref<any>({
+  enterpriseId: null,
+  enterpriseName: null,
+});
 
 const emits = defineEmits(["next", "back", "saveDraft"]);
 
@@ -175,6 +189,27 @@ function beforeAvatarUpload(rawFile, { accept, size }) {
   }
   return true;
 }
+// 远程搜索内容
+const querySearchAsync = async (
+  queryString: string,
+  cb: (arg: any) => void,
+) => {
+  const { resp_code, datas }: any = await getEnterpriseListApi({
+    matchingContent: queryString,
+  });
+  if (resp_code === 0) {
+    cb(datas);
+  }
+};
+// 选择企业
+const handleSelect = (data: any) => {
+  form.value.enterpriseName = data.name;
+  form.value.enterpriseId = data.id;
+};
+// 优化数据，内容变化
+const handleChange = () => {
+  form.value.enterpriseId = null;
+};
 // 上传成功
 function handleAvatarSuccess({ resp_code, datas }, { prop }) {
   if (resp_code === 0) {
@@ -207,6 +242,9 @@ function getFileType(fileName) {
 
 function handleNext(formRefName) {
   formRefName.validate((valid) => {
+    if (form.value.enterpriseId === null) {
+      return ElMessage.warning("请选择企业");
+    }
     if (valid) {
       optimizeData();
       emits("next", form.value);

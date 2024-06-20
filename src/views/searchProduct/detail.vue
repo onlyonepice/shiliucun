@@ -24,7 +24,7 @@
             <template v-if="productDetail.models">
               <p :class="[ns.b('info-right-common')]">
                 额定功率：{{
-                  !productDetail.models[0].ratedPower
+                  !!productDetail.models[0].ratedPower
                     ? productDetail.models[0].ratedPower + "kW"
                     : "-"
                 }}
@@ -139,7 +139,7 @@
             <div :class="[ns.be('item', 'logo-box')]">
               <img
                 :class="[ns.be('item', 'logo')]"
-                :src="useUserStoreHook().$state.fileUrl + item.image"
+                :src="useUserStoreHook().$state.fileUrl + item.image[0]"
                 alt=""
               />
             </div>

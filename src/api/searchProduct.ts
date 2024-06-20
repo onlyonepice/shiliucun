@@ -89,3 +89,12 @@ export const getProductCheckInListApi = (data: {
     { data },
   );
 };
+
+// 模糊查询企业
+export const getEnterpriseListApi = (params: any) => {
+  return http.request<void>(
+    "get",
+    "/eesa-industrial-map/tEnterprise/back/V1.0/fuzzyMatching",
+    { params },
+  );
+};

@@ -14,7 +14,7 @@ export const step2Field = [
   {
     label: "企业名称",
     prop: "enterpriseName",
-    type: "input",
+    type: "autocomplete",
     rules: [
       {
         required: true,
