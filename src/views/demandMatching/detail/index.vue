@@ -59,7 +59,7 @@
   <ReleaseDemand
     v-if="getToken()"
     :show="resetDialogVisible"
-    :needDetailData="JSON.parse(JSON.stringify(detailInfo))"
+    :needDetailData="detailInfo"
     :appendToBody="true"
     @close="resetDialogVisible = false"
   />

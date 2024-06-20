@@ -63,7 +63,7 @@
     />
     <!-- 下架原因 -->
     <div v-if="detailInfo.status === 99" :class="ns.be('top', 'removed-head')">
-      <div :class="ns.be('top', 'removed')">
+      <div :class="ns.be('top', 'removed')" :title="detailInfo.unEnableReason">
         下架原因：{{ detailInfo.unEnableReason }}
       </div>
       <div :class="ns.be('top', 'number')">
@@ -72,7 +72,7 @@
     </div>
     <!-- 驳回原因 -->
     <div v-if="detailInfo.status === 3">
-      <div :class="ns.be('top', 'turnDown')">
+      <div :class="ns.be('top', 'turnDown')" :title="detailInfo.auditRemark">
         未通过原因：{{ detailInfo.auditRemark }}
       </div>
     </div>
@@ -101,11 +101,13 @@
       </div>
     </div>
     <h4 :class="ns.be('info', 'description')">{{ detailInfo.description }}</h4>
-    <img
+    <el-image
       :class="ns.be('info', 'img')"
       v-for="item in getImgList"
       :key="item"
       :src="useUserStore().fileUrl + item"
+      :preview-src-list="[useUserStore().fileUrl + item]"
+      fit="cover"
     />
   </div>
 </template>
