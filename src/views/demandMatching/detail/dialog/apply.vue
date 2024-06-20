@@ -20,6 +20,7 @@
         placeholder="请输入"
         maxlength="500"
         show-word-limit
+        resize="none"
       />
       <h5>留言</h5>
       <el-input
@@ -28,6 +29,7 @@
         placeholder="请输入"
         maxlength="150"
         show-word-limit
+        resize="none"
       />
       <el-button :class="ns.b('edit')" @click="visibleInfo = true"
         >编辑名片</el-button
