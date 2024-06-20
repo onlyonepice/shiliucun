@@ -43,10 +43,7 @@
     v-if="solveDialogVisible"
     :visible="solveDialogVisible"
     :needId="detailInfo.id"
-    @onHandleClose="
-      solveDialogVisible = false;
-      router.go(-1);
-    "
+    @onHandleClose="onSolve"
   />
   <ApplyList
     :drawer="drawer"
@@ -129,6 +126,12 @@ const getDemandDetail = async () => {
 // 删除需求
 const onDelete = async (type: boolean) => {
   deleteDialogVisible.value = false;
+  if (type) {
+    router.go(-1);
+  }
+};
+const onSolve = async (type: boolean) => {
+  solveDialogVisible.value = false;
   if (type) {
     router.go(-1);
   }

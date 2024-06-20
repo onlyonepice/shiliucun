@@ -154,7 +154,7 @@ const onShare = async () => {
 
 .es-demandMatching-detail {
   max-width: 760px;
-  min-width: 660px;
+  min-width: 620px;
   padding: 0 24px 208px 24px;
   background: #ffffff;
   border-radius: 4px;

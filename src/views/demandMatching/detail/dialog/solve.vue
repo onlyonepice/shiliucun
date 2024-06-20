@@ -92,11 +92,12 @@ const onHandleClose = async (type: boolean) => {
     });
   }
   visibleSolve.value = false;
-  emits("onHandleClose");
+  emits("onHandleClose", type);
 };
 // 选择分数
 const onChoseScore = (data: number) => {
   score.value = data;
+  reasonList.value = [];
   allReasonList.value.forEach((item) => {
     item.scores.includes(data) && (reasonList.value = item.list);
   });
