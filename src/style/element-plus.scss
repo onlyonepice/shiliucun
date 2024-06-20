@@ -6,11 +6,13 @@ body {
     color: rgba(0, 0, 0, 0.9);
     border: none;
     min-width: 80px;
+
     &:focus,
     &:hover {
       background-color: #e7e8ef;
       color: rgba(0, 0, 0, 0.9);
     }
+
     &:active {
       background: #dbdce2;
       color: rgba(0, 0, 0, 0.9);
@@ -32,6 +34,11 @@ body {
       color: #ffffff;
     }
   }
+}
+
+.el-textarea__inner:focus {
+  box-shadow: 0 0 0 1px #244bf1 inset !important;
+  outline: none;
 }
 
 .el-input {
@@ -96,6 +103,7 @@ body {
   box-shadow: 0 0 0 1px #165dff inset !important;
   background-color: #ffffff !important;
 }
+
 .el-input__wrapper.is-focus {
   box-shadow: 0 0 0 1px #165dff inset !important;
   background-color: #ffffff !important;
@@ -242,6 +250,7 @@ body {
   .el-table th.el-table__cell {
     background-color: #f2f3f5;
   }
+
   .el-tag.is-closable {
     background-color: #ffffff;
     color: rgba(0, 0, 0, 0.9);
@@ -258,10 +267,12 @@ body {
   height: 48px;
   border-bottom: 1px solid #f2f3f5;
 }
+
 .el-textarea__inner {
   background-color: #f4f5f7;
   box-shadow: none;
 }
+
 .el-textarea__inner:hover {
   box-shadow: none;
 }
@@ -313,6 +324,7 @@ html .el-message--info {
   font-size: 14px;
   line-height: 22px;
   --el-message-text-color: rgba(0, 0, 0, 0.9);
+
   .el-message-icon--info {
     display: none;
   }

@@ -54,7 +54,7 @@
       title="发布需求"
       :visible="visibleInfo"
       width="560px"
-      :height="step === 1 ? '568px' : '678px'"
+      :height="step === 1 ? '568px' : '718px'"
       :showFoot="false"
       :appendToBody="false"
       @onHandleClose="onHandleCloseDialog"
@@ -248,6 +248,7 @@
             <Select
               type="input"
               :defaultValue="needData.title"
+              :maxlength="20"
               @onChange="
                 (val) => {
                   return onChangeNeed(val, 'title');
@@ -270,10 +271,15 @@
               "
             />
           </div>
-          <div :class="ns.be('content', 'infoDialog')">
+          <div
+            :class="ns.be('content', 'infoDialog')"
+            style="margin-bottom: 58px"
+          >
             <span required>需求描述</span>
             <Select
               type="input"
+              :maxlength="150"
+              specialType="textarea"
               :defaultValue="needData.description"
               @onChange="
                 (val) => {
@@ -295,10 +301,13 @@
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :limit="3"
+                :class="imageList.length >= 3 ? 'upload-box' : ''"
               >
-                <el-icon>
-                  <img style="width: 102px; height: 102px" :src="UploadImg" />
-                </el-icon>
+                <template #trigger>
+                  <el-icon>
+                    <img style="width: 102px; height: 102px" :src="UploadImg" />
+                  </el-icon>
+                </template>
               </el-upload>
             </div>
           </div>
@@ -460,7 +469,7 @@ const handleReleaseNeed = async () => {
     : await releaseNeedApi(needData.value);
   if (data.resp_code === 0) {
     ElMessage.success("提交发布成功");
-    emits("close");
+    emits("success");
   }
 };
 // 修改用户信息
@@ -881,11 +890,6 @@ watch(
   background-color: #244bf1 !important;
 }
 .es-releaseDemand {
-  .el-switch::before {
-    content: "对外展示";
-    @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
-    @include margin(0, 8px, 0, 0);
-  }
   .el-switch__core {
     @include widthAndHeight(44px, 22px);
   }
@@ -936,5 +940,10 @@ watch(
 }
 .el-upload-list--picture-card .el-upload-list__item-status-label {
   background-color: #244bf1;
+}
+.upload-box {
+  .el-upload--picture-card {
+    display: none !important;
+  }
 }
 </style>
