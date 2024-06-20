@@ -24,7 +24,7 @@ export default {
               import("@/views/searchProduct/productCheckIn/productCheckIn.vue"),
           },
           meta: {
-            title: "产品入住",
+            title: "产品入驻",
             backgroundColor: "#F2F3F5",
           },
         },
