@@ -51,3 +51,41 @@ export const getProductComparedApi = (ids: any) => {
     `/eesa-report/energyStorageProduct/productIndustrialEnergyStorage/front/v1.0/contrast?ids=${ids}`,
   );
 };
+
+// 获取产品详情
+export const getProductDetailsApi = (id) => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    "/eesa-report/energyStorageProduct/productIndustrialEnergyStorage/openApi/v1.0/detail",
+    { params: { id } },
+  );
+};
+// 表单回填详情接口
+export const getProductDetailsEditApi = (id) => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    "/eesa-report/energyStorageProduct/energyStorageProduct/front/v1.0/getProductById",
+    { params: { id } },
+  );
+};
+// 上传修改参数
+export const productCheckInSaveOrUpdateApi = (data: any) => {
+  console.log("44444", data);
+
+  return http.request<{ resp_code: number; datas: any }>(
+    "post",
+    "/eesa-report/energyStorageProduct/energyStorageProduct/front/v1.0/saveOrUpdate",
+    { data },
+  );
+};
+// 个人中心_我的上传
+export const getProductCheckInListApi = (data: {
+  limit: number;
+  page: number;
+}) => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "post",
+    "/eesa-report/energyStorageProduct/energyStorageProduct/front/v1.0/getCurrentUserProduct",
+    { data },
+  );
+};

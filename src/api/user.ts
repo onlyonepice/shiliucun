@@ -205,6 +205,14 @@ export function getTimesApi(params: any) {
     { params },
   );
 }
+// 查询字典表选择项（通用）
+export function getSelectByTypeApi(data: { type: string }) {
+  return http.request<responseType>(
+    "post",
+    `/eesa-report/front/openApi/v1.0/selectByTypeDefaultHideData`,
+    { data },
+  );
+}
 // 获取岗位类型
 export function getPositionTypeApi() {
   return http.request<responseType>(

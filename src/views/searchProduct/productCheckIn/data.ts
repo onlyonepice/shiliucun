@@ -1,0 +1,25 @@
+export const fieldAll = {
+  images: [],
+  models: [
+    {
+      size: "",
+      ratedPower: "",
+      modelName: "",
+      productForm: "",
+      productType: "",
+      dischargeDepth: "",
+      coolingMethod: [],
+      annualDecayRate: "",
+      nominalVoltageMax: "",
+      nominalVoltageMin: "",
+      batterySystemEnergy: "",
+      systemOverallEfficiency: "",
+      energyStorageSystemProductUnitPrice: "",
+    },
+  ],
+  productName: "",
+  productType: "",
+  releaseTime: "",
+  enterpriseName: "",
+  specificationDocumentFileList: [],
+};

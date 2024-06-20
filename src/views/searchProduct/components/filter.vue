@@ -4,9 +4,7 @@
       共找到<span>{{ total }}</span
       >款产品
     </p>
-    <el-button type="primary" @click="productVisible = true"
-      >产品入驻</el-button
-    >
+    <el-button type="primary" @click="handleProductCheckIn">产品入驻</el-button>
   </div>
   <div :class="[ns.b('filter'), 'animate__animated animate__fadeIn']">
     <div
@@ -65,15 +63,16 @@
       </div>
     </div>
   </div>
-  <MiniAppNeed
+  <!-- <MiniAppNeed
     :visible="productVisible"
     type="product"
     @onHandleClose="productVisible = false"
-  />
+  /> -->
 </template>
 
 <script lang="ts" setup>
 import { Ref, ref } from "vue";
+import { useRouter } from "vue-router";
 import SearchProductIcon from "@/assets/img/common/search-product-icon.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
@@ -81,7 +80,7 @@ import MoreData from "@/assets/img/reportDetail/icon_expand_nor.png";
 const ns = useNamespace("searchProduct-filter");
 const emits = defineEmits(["onChoseFilter"]);
 const showMore: Ref<boolean> = ref(false); // 是否展开更多
-const productVisible: Ref<boolean> = ref(false); // 产品入驻弹窗
+const router = ref(useRouter());
 const props = defineProps({
   total: {
     type: Number,
@@ -107,6 +106,10 @@ const getCoolingMethodIds = (id: string) => {
 const getEnterpriseId = (id: string) => {
   return props.filterInfo.enterpriseIds.indexOf(id) !== -1;
 };
+// 产品入住
+function handleProductCheckIn() {
+  router.value.push("/searchProductProductCheckIn");
+}
 </script>
 
 <style lang="scss" scoped>

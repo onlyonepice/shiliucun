@@ -48,6 +48,7 @@
           <collectionComponent v-if="choseTab === 2" />
           <orderComponent v-if="choseTab === 3" />
           <passwordComponent v-if="choseTab === 4" />
+          <MyUploadsBox v-if="choseTab === 6" />
         </div>
       </div>
     </div>
@@ -68,6 +69,8 @@ import Order from "@/assets/img/homePersonal/order.png";
 import OrderChose from "@/assets/img/homePersonal/order-chose.png";
 import Password from "@/assets/img/homePersonal/password.png";
 import PasswordChose from "@/assets/img/homePersonal/password-chose.png";
+import MyUploads from "@/assets/img/homePersonal/myUploads.png";
+import MyUploadsChose from "@/assets/img/homePersonal/myUploads-chose.png";
 import LogoutImg from "@/assets/img/homePersonal/logout.png";
 import MapIcon from "@/assets/img/common/map-logo.png";
 import ClassRoomIcon from "@/assets/img/common/classroom-logo.png";
@@ -76,6 +79,7 @@ import infoComponent from "./components/info.vue";
 import collectionComponent from "./components/collection.vue";
 import orderComponent from "./components/order.vue";
 import passwordComponent from "./components/password.vue";
+import MyUploadsBox from "./components/myUploads.vue";
 const ns = useNamespace("homePersonal");
 const { VITE_INDUSTRIALMAP_URL, VITE_CLASSROOM_URL } = import.meta.env;
 const route = useRoute();
@@ -104,6 +108,7 @@ const tabList: Ref<Array<any>> = ref([
   { id: 1, text: "基本信息", iconChose: InfoChose, icon: Info },
   { id: 2, text: "我的收藏", iconChose: CollectionChose, icon: Collection },
   { id: 3, text: "我的订单", iconChose: OrderChose, icon: Order },
+  { id: 6, text: "我的上传", iconChose: MyUploadsChose, icon: MyUploads },
   { id: 4, text: "修改密码", iconChose: PasswordChose, icon: Password },
   { id: 5, text: "退出登录", icon: LogoutImg },
 ]);
@@ -219,9 +224,11 @@ onMounted(() => {
   flex: 1;
 }
 .es-homePersonal-left__tab {
-  @include widthAndHeight(100%, 296px);
+  @include widthAndHeight(100%, 320px);
   background: #ffffff;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
   @include padding(24px, 16px, 24px, 16px);
   div {
     @include widthAndHeight(238px, 32px);
@@ -235,7 +242,9 @@ onMounted(() => {
       @include margin(0, 8px, 0, 0);
     }
     &:nth-last-of-type(1) {
-      @include margin(64px, 0, 0, 0);
+      // @include margin(40px, 0, 0, 0);
+      margin: 0;
+      margin-top: auto;
     }
   }
   .es-homePersonal-left__tab--chose {
