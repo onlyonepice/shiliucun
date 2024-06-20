@@ -513,10 +513,10 @@ function changeRegion(val) {
   } else {
     searchParams.value.regionName = val;
     searchParams.value.electricityTypeOneName = "";
-    getSpecialRegionOption();
     if (!getToken()) {
       return handleOpenLogin();
     }
+    getSpecialRegionOption();
     isSpecialRegion.value = true;
     loading.value = true;
   }
