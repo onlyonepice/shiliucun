@@ -272,7 +272,6 @@ const userDetailInfo = ref({});
 const onGetUserInfo = async () => {
   const { resp_code, datas } = await getUserDetailInfo();
   if (resp_code === 0) {
-    console.log(datas);
     userDetailInfo.value = datas;
   }
 };
