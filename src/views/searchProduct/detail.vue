@@ -44,6 +44,31 @@
                   productDetail.models[0].coolingMethodName.join("，")
                 }}
               </p>
+              <div
+                :class="[ns.b('info-right-common')]"
+                v-if="productDetail.specificationDocumentFile"
+              >
+                产品说明书/产品文档：
+                <div>
+                  <div
+                    v-for="item in productDetail.specificationDocumentFile"
+                    :key="item"
+                  >
+                    {{ item.name }}
+                    <span
+                      style="margin-left: 8px"
+                      @click="onOptionUrl('check', item.path)"
+                      >查看</span
+                    >
+                    <span style="margin: 0 8px">|</span>
+                    <a
+                      :href="useUserStoreHook().$state.fileUrl + item.path"
+                      :download="item.name"
+                      >下载</a
+                    >
+                  </div>
+                </div>
+              </div>
             </template>
             <el-button
               :class="[ns.b('info-right-connect')]"
@@ -197,6 +222,12 @@ const getProductDetailList = async () => {
     productDetailList.value = datas;
   }
 };
+// 查看或下载产品文档
+const onOptionUrl = (type: string, url: string) => {
+  if (type === "check") {
+    window.open(useUserStoreHook().$state.fileUrl + url, "externalWindow");
+  }
+};
 // 跳转其他产品详情
 const goProductDetail = (id: string) => {
   // 跳转当前页
@@ -272,6 +303,14 @@ const onConnectCompany = (id: string) => {
 .es-searchProductDetail-info-right-common {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 20px);
   margin-bottom: 8px;
+  @include flex(flex-start, flex-start, wrap);
+  span {
+    @include font(12px, 400, #244bf1, 20px);
+    cursor: pointer;
+  }
+  a {
+    text-decoration: none;
+  }
 }
 .es-searchProductDetail-info-right-connect {
   @include absolute(1, none, none, 0, 0);

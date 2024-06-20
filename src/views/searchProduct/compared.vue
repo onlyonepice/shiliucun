@@ -5,7 +5,17 @@
       <el-table :data="tableData" style="width: 100%" :border="true">
         <el-table-column fixed prop="name" label="" width="124">
           <template #default="scope">
-            <p>{{ scope.row.name }}</p>
+            <p
+              :style="{
+                color: 'rgba(0, 0, 0, 0.9)',
+                'font-weight':
+                  scope.$index === 2 || scope.$index === 6 || scope.$index === 9
+                    ? 600
+                    : 400,
+              }"
+            >
+              {{ scope.row.name }}
+            </p>
           </template>
         </el-table-column>
         <el-table-column prop="info1" label="" width="244">
@@ -82,18 +92,21 @@ const breadcrumbList: Ref<Array<any>> = ref([
 const tableData: Ref<Array<any>> = ref([]); // 表格数据
 const tabNameList = ref([
   "",
-  "生产公司",
-  "产品名称",
   "产品型号",
+  "电池参数",
+  "电芯类型",
+  "电池系统能量/kWh",
+  "放电深度/%",
+  "PCS参数",
+  "标称电压/V",
+  "额定功率/kW",
+  "系统参数",
   "产品形态",
-  "额定功率",
-  "电池系统能量",
-  "标称电压",
-  "系统综合效率",
-  "放电深度",
-  "年衰减率",
+  "系统综合效率/%",
+  "年衰减率/%",
   "冷却方式",
-  "尺寸",
+  "尺寸/m'm",
+  "产品单价（元/kWh）",
 ]);
 const choseIndexList = ref([0, 0, 0, 0]);
 // 获取对比列表数据
@@ -111,7 +124,7 @@ const getComparedList = async () => {
     datas.forEach((item: any) => {
       item.show = true;
     });
-    for (let index = 0; index < 13; index++) {
+    for (let index = 0; index < 16; index++) {
       tableData.value.push({
         name: tabNameList.value[index],
         info: cloneDeep(datas),
