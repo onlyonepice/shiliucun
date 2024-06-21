@@ -12,16 +12,6 @@
     <div :class="[ns.b('content'), 'animate__animated animate__fadeIn']">
       <div :class="[ns.be('content', 'left')]">
         <div :class="ns.be('content', 'flex')">
-          <img
-            v-if="useUserStore().$state.userInfo.headImgUrl"
-            :class="ns.b('avatar')"
-            :src="
-              useUserStore().$state.fileUrl +
-              useUserStore().$state.userInfo.headImgUrl
-            "
-            alt=""
-          />
-          <img v-else :class="ns.b('avatar')" :src="PersonalAvatar" alt="" />
           <div :class="ns.be('item', 'head')">
             {{ modifyInfoFreeze.realName }}
             <template v-if="useUserStore().$state.userInfo.roles">
@@ -215,32 +205,11 @@
       title="编辑信息"
       :visible="visibleInfo"
       width="560px"
-      height="544px"
+      height="484px"
       @onHandleClose="onHandleCloseInfo"
       confirmText="保存"
     >
       <template #content>
-        <div
-          :class="[
-            ns.be('content', 'infoDialog'),
-            ns.be('content', 'infoDialog-img'),
-          ]"
-        >
-          <span required>用户头像</span>
-          <img
-            :src="
-              headImgUrlUpdate
-                ? useUserStore().fileUrl + headImgUrlUpdate
-                : PersonalAvatar
-            "
-            alt=""
-            @click="modifyAvatarDialog = true"
-          />
-          <img
-            src="@/assets/img/common/carama-icon.png"
-            @click="modifyAvatarDialog = true"
-          />
-        </div>
         <div :class="ns.be('content', 'infoDialog')">
           <span required>真实姓名</span>
           <Select
@@ -334,13 +303,6 @@
       </template>
     </Dialog>
   </div>
-  <ModifyAvatar
-    v-if="modifyAvatarDialog"
-    ref="avatar"
-    :dialogVisibleShow="modifyAvatarDialog"
-    @onClose="modifyAvatarDialog = false"
-    @onSuccessAvatar="avatarDialogConfirm"
-  />
 </template>
 
 <script lang="ts" setup>
@@ -349,9 +311,7 @@ import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
 import { NOOP } from "@vue/shared";
-import ModifyAvatar from "./ModifyAvatar.vue";
 import { regMobile, regEmail } from "@/utils/rule";
-import PersonalAvatar from "@/assets/img/common/personal-avatar.png";
 import PersonalVip from "@/assets/img/vip/personal-vip.png";
 import CompanyVip from "@/assets/img/vip/company-vip.png";
 import EESAOrdinaryVip from "@/assets/img/vip/eesa-ordinary-vip.png";
@@ -375,7 +335,6 @@ const visibleInfo: Ref<boolean> = ref(false); // 编辑信息弹窗
 const visibleInfoSet: Ref<boolean> = ref(false); // 编辑信息弹窗-延迟
 const btnDesc: Ref<string> = ref("获取验证码"); // 倒计时文案
 const areaList: Ref<any> = ref([]); // 地区数据
-const modifyAvatarDialog: Ref<boolean> = ref(false); // 修改头像弹窗
 const cascaderOption: Ref<any> = ref({
   expandTrigger: "hover",
   label: "name",
@@ -395,7 +354,6 @@ const modifyInfo: Ref<any> = ref({
 const modifyInfoFreeze: Ref<any> = ref({});
 const timer = ref(null); // 定时器
 const userDetailInfo: Ref<any> = ref(); // 用户详细信息
-const headImgUrlUpdate: Ref<string> = ref(""); // 头像
 const modifyMbForm: Ref<any> = ref({
   mobile: "",
   code: "",
@@ -426,15 +384,9 @@ onMounted(() => {
   showInfo.value.mobile = userInfo.value.mobileHide;
   showInfo.value.weChat = userInfo.value.wecatHide;
   showInfo.value.email = userInfo.value.emailHide;
-  headImgUrlUpdate.value = userInfo.value.headImgUrl;
   onGetUserInfo();
   onGetArea();
 });
-// 修改头像弹窗
-const avatarDialogConfirm = (imgUrl: string) => {
-  modifyAvatarDialog.value = false;
-  headImgUrlUpdate.value = imgUrl;
-};
 // 修改用户信息
 const onChangeInfo = (value: any, type: string) => {
   type === "regionCode" &&
@@ -446,7 +398,6 @@ const onHandleCloseInfo = async (type: boolean) => {
   const _modifyInfo = JSON.parse(JSON.stringify(modifyInfo.value));
   if (!type) {
     visibleInfo.value = false;
-    headImgUrlUpdate.value = userInfo.value.headImgUrl;
     return setTimeout(() => {
       visibleInfoSet.value = false;
     }, 200);
@@ -472,7 +423,6 @@ const onHandleCloseInfo = async (type: boolean) => {
   if (_modifyInfo.email === null || _modifyInfo.email === "") {
     delete _modifyInfo.email;
   }
-  _modifyInfo.headImgUrl = headImgUrlUpdate.value;
   delete _modifyInfo.region;
   const { resp_code }: any = await editUserInfoApi(_modifyInfo);
   if (resp_code === 0) {

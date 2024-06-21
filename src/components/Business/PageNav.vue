@@ -37,23 +37,16 @@
         <!-- 登录/注册 -->
         <div v-if="showLogin" @mouseleave="showAvatar = false">
           <div :class="ns.be('avatar', 'box')">
-            <img
-              v-if="useUserStoreHook().$state.userInfo.headImgUrl"
-              :class="ns.b('avatar')"
-              @mouseenter="showAvatar = true"
-              :src="
-                useUserStoreHook().$state.fileUrl +
-                useUserStoreHook().$state.userInfo.headImgUrl
-              "
-              alt=""
-            />
-            <img
-              v-else
-              :class="ns.b('avatar')"
-              @mouseenter="showAvatar = true"
-              :src="PersonalAvatar"
-              alt=""
-            />
+            <h4 @mouseenter="showAvatar = true" :class="ns.b('realName')">
+              Hi，{{ useUserStoreHook().$state.userInfo.realName }}
+              <div :class="ns.b('spread')">
+                <img
+                  :src="SpreadIcon"
+                  alt=""
+                  :style="{ transform: showAvatar ? 'rotate(180deg)' : '' }"
+                />
+              </div>
+            </h4>
             <template v-if="useUserStoreHook().$state.userInfo.roles">
               <img
                 v-if="
@@ -104,7 +97,6 @@ import { Ref, ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import LogoIcon from "@/assets/img/common/logo-icon.png";
 import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
-import PersonalAvatar from "@/assets/img/common/personal-avatar.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
 import PersonalVip from "@/assets/img/vip/personal-vip.png";
@@ -112,6 +104,7 @@ import CompanyVip from "@/assets/img/vip/company-vip.png";
 import EESAOrdinaryVip from "@/assets/img/vip/eesa-ordinary-vip.png";
 import ViceDirectorVip from "@/assets/img/vip/vice-director-vip.png";
 import DirectorVip from "@/assets/img/vip/director-vip.png";
+import SpreadIcon from "@/assets/img/common/spread-out-icon.png";
 const { VITE_INDUSTRIALMAP_URL, VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
 const router = useRouter();
@@ -395,7 +388,7 @@ const onLogin = () => {
 }
 .es-pageNav-extraAvatar {
   @include widthAndHeight(120px, 0);
-  @include absolute(2, 38px, 0, none, none);
+  @include absolute(2, 38px, 100px, none, none);
   background-image: url("@/assets/img/common/avatar-extra.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -541,22 +534,32 @@ const onLogin = () => {
   cursor: pointer;
 }
 .es-pageNav-avatar__box {
-  @include widthAndHeight(40px, 40px);
+  @include widthAndHeight(auto, 40px);
   margin-left: 16px;
-  @include relative(1);
+  @include flex(center, flex-start, nowrap);
 }
-.es-pageNav-content .es-pageNav-avatar {
-  @include widthAndHeight(40px, 40px);
+.es-pageNav-content .es-pageNav-realName {
   border-radius: 50%;
   cursor: pointer;
   background: #ffffff;
+  cursor: pointer;
+  @include flex(center, flex-start, nowrap);
+}
+.es-pageNav-content .es-pageNav-spread {
+  @include widthAndHeight(20px, 20px);
+  background: rgba(255, 255, 255, 0);
+  border-radius: 4px;
+  text-align: center;
+  line-height: 20px;
+  margin-left: 4px;
+  img {
+    @include widthAndHeight(16px, 16px);
+  }
 }
 .es-pageNav-content .es-pageNav-vip {
-  height: 12px;
-  width: auto;
+  @include widthAndHeight(88px, 20px);
   object-fit: contain;
-  @include absolute(11, none, none, 0, 50%);
-  transform: translateX(-50%);
+  margin-left: 10px;
 }
 
 .es-pageNav-extra {
