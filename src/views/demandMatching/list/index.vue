@@ -240,8 +240,8 @@
               ]"
             >
               <img :src="DemandReleaseIcon" alt="" />
-              <h3>暂无需求内容</h3>
-              <h5>报名需求寻求优秀合作伙伴</h5>
+              <h3>暂无报名内容</h3>
+              <h5>为客户提供解决方案，建立长久合作</h5>
             </div>
           </template>
         </div>
