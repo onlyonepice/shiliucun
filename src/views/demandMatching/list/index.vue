@@ -48,43 +48,61 @@
         >
       </div>
       <div :class="ns.b('data-box')">
-        <div
-          class="data-box_item"
-          @click="handleDetailClick(item)"
-          v-for="item in demandList"
-          :key="item.id"
-        >
-          <div class="data-box_item_top">
-            <p class="data-box_item_type">
-              {{ item.typeName }}
-            </p>
-            <p class="line" />
-            <p class="data-box_item_title">{{ item.title }}</p>
-            <template v-for="statusItem in demandStatus" :key="statusItem.name">
-              <p
-                class="tag"
-                v-if="statusItem.value == item.status"
-                :style="{
-                  background: statusItem.background,
-                  color: statusItem.color,
-                  borderColor: statusItem.color,
-                }"
-              >
-                {{ statusItem.name }}
+        <template v-if="demandList.length > 0">
+          <div
+            class="data-box_item animate__animated animate__fadeIn"
+            @click="handleDetailClick(item)"
+            v-for="item in demandList"
+            :key="item.id"
+          >
+            <div class="data-box_item_top">
+              <p class="data-box_item_type">
+                {{ item.typeName }}
               </p>
-            </template>
+              <p class="line" v-if="item.typeName" />
+              <p class="data-box_item_title">{{ item.title }}</p>
+              <template
+                v-for="statusItem in demandStatus"
+                :key="statusItem.name"
+              >
+                <p
+                  class="tag"
+                  v-if="statusItem.value == item.status"
+                  :style="{
+                    background: statusItem.background,
+                    color: statusItem.color,
+                    borderColor: statusItem.color,
+                  }"
+                >
+                  {{ statusItem.name }}
+                </p>
+              </template>
+            </div>
+            <div class="data-box_item_desc">
+              {{ item.description }}
+            </div>
           </div>
-          <div class="data-box_item_desc">
-            {{ item.description }}
+          <div class="Pagination">
+            <Pagination
+              :pageSize="filterParams.pageSize"
+              :total="total"
+              @onchangeCurrent="onchangeCurrent"
+            />
           </div>
-        </div>
-      </div>
-      <div class="Pagination">
-        <Pagination
-          :pageSize="filterParams.pageSize"
-          :total="total"
-          @onchangeCurrent="onchangeCurrent"
-        />
+        </template>
+        <!-- 搜索结果没有数据 -->
+        <template v-else>
+          <div
+            :class="[
+              ns.be('search', 'empty'),
+              'animate__animated animate__fadeIn',
+            ]"
+          >
+            <img :src="DemandHallIcon" alt="" />
+            <h3>暂无搜索结果</h3>
+            <h5>可以试试搜索其他关键词哦～</h5>
+          </div>
+        </template>
       </div>
     </div>
     <div :class="ns.b('demand-manage')" v-show="currentPage === 'manage'">
@@ -111,91 +129,121 @@
       <!-- 我发布的 -->
       <div style="width: 760px" v-show="currentManageTab === 'release'">
         <div :class="ns.b('data-box')">
-          <div
-            class="data-box_item"
-            @click="handleDetailClick(item)"
-            v-for="item in releaseList"
-            :key="item.id"
-          >
-            <div class="data-box_item_top">
-              <p class="data-box_item_type">
-                {{ item.typeName }}
-              </p>
-              <p class="line" />
-              <p class="data-box_item_title">{{ item.title }}</p>
-              <template
-                v-for="statusItem in demandStatus"
-                :key="statusItem.name"
-              >
-                <p
-                  class="tag"
-                  v-if="statusItem.value == item.status"
-                  :style="{
-                    background: statusItem.background,
-                    color: statusItem.color,
-                    borderColor: statusItem.color,
-                  }"
-                >
-                  {{ statusItem.name }}
+          <template v-if="releaseList.length > 0">
+            <div
+              class="data-box_item"
+              @click="handleDetailClick(item)"
+              v-for="item in releaseList"
+              :key="item.id"
+            >
+              <div class="data-box_item_top">
+                <p class="data-box_item_type">
+                  {{ item.typeName }}
                 </p>
-              </template>
+                <p class="line" />
+                <p class="data-box_item_title">{{ item.title }}</p>
+                <template
+                  v-for="statusItem in demandStatus"
+                  :key="statusItem.name"
+                >
+                  <p
+                    class="tag"
+                    v-if="statusItem.value == item.status"
+                    :style="{
+                      background: statusItem.background,
+                      color: statusItem.color,
+                      borderColor: statusItem.color,
+                    }"
+                  >
+                    {{ statusItem.name }}
+                  </p>
+                </template>
+              </div>
+              <div class="data-box_item_desc">
+                {{ item.description }}
+              </div>
             </div>
-            <div class="data-box_item_desc">
-              {{ item.description }}
+            <div class="Pagination">
+              <Pagination
+                :pageSize="releaseParams.pageSize"
+                :total="releaseTotal"
+                @onchangeCurrent="onchangeCurrentRelease"
+              />
             </div>
-          </div>
-        </div>
-        <div class="Pagination">
-          <Pagination
-            :pageSize="releaseParams.pageSize"
-            :total="releaseTotal"
-            @onchangeCurrent="onchangeCurrentRelease"
-          />
+          </template>
+          <!-- 我发布的没有数据 -->
+          <template v-else>
+            <div
+              :class="[
+                ns.be('search', 'empty'),
+                'animate__animated animate__fadeIn',
+              ]"
+            >
+              <img :src="DemandReleaseIcon" alt="" />
+              <h3>暂无需求内容</h3>
+              <h5>发布需求寻求优秀合作伙伴</h5>
+            </div>
+          </template>
         </div>
       </div>
       <!-- 我报名的 -->
       <div style="width: 760px" v-show="currentManageTab === 'apply'">
         <div :class="ns.b('data-box')">
-          <div
-            class="data-box_item"
-            @click="handleDetailClick(item)"
-            v-for="item in applyList"
-            :key="item.id"
-          >
-            <div class="data-box_item_top">
-              <p class="data-box_item_type">
-                {{ item.type }}
-              </p>
-              <p class="line" />
-              <p class="data-box_item_title">{{ item.needTitle }}</p>
-              <template
-                v-for="statusItem in applicationStatus"
-                :key="statusItem.name"
-              >
-                <p
-                  class="tag"
-                  v-if="statusItem.value == item.status"
-                  :style="{
-                    background: statusItem.background,
-                    color: statusItem.color,
-                    borderColor: statusItem.color,
-                  }"
-                >
-                  {{ statusItem.name }}
+          <template v-if="applyList.length > 0">
+            <div
+              class="data-box_item"
+              @click="handleDetailClick(item)"
+              v-for="item in applyList"
+              :key="item.id"
+            >
+              <div class="data-box_item_top">
+                <p class="data-box_item_type">
+                  {{ item.type }}
                 </p>
-              </template>
+                <p class="line" />
+                <p class="data-box_item_title">{{ item.needTitle }}</p>
+                <template
+                  v-for="statusItem in applicationStatus"
+                  :key="statusItem.name"
+                >
+                  <p
+                    class="tag"
+                    v-if="statusItem.value == item.status"
+                    :style="{
+                      background: statusItem.background,
+                      color: statusItem.color,
+                      borderColor: statusItem.color,
+                    }"
+                  >
+                    {{ statusItem.name }}
+                  </p>
+                </template>
+              </div>
+              <div class="data-box_item_desc">
+                {{ item.description }}
+              </div>
             </div>
-            <div class="data-box_item_desc">
-              {{ item.description }}
+            <div class="Pagination">
+              <Pagination
+                :pageSize="applyParams.limit"
+                :total="applyTotal"
+                @onchangeCurrent="onchangeCurrentApply"
+              />
             </div>
-          </div>
-        </div>
-        <div class="Pagination">
-          <Pagination
-            :pageSize="applyParams.limit"
-            :total="applyTotal"
-            @onchangeCurrent="onchangeCurrentApply"
-          />
+          </template>
+          <!-- 搜索结果没有数据 -->
+          <template v-else>
+            <div
+              :class="[
+                ns.be('search', 'empty'),
+                'animate__animated animate__fadeIn',
+              ]"
+            >
+              <img :src="DemandReleaseIcon" alt="" />
+              <h3>暂无需求内容</h3>
+              <h5>报名需求寻求优秀合作伙伴</h5>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -212,6 +260,8 @@
 import ReleaseDemand from "../releaseDemand.vue";
 import useNamespace from "@/utils/nameSpace";
 import businessCard from "@/views/demandMatching/detail/components/businessCard.vue";
+import DemandHallIcon from "@/assets/img/demand/demand-hall-icon.png";
+import DemandReleaseIcon from "@/assets/img/demand/demand-release-icon.png";
 const ns = useNamespace("demand-list");
 import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
@@ -244,7 +294,7 @@ const filterParams = ref({
   title: "",
 });
 const total = ref(0);
-const demandList = ref([]);
+const demandList = ref([{}]);
 const typeList = ref();
 const currentPage = ref("demand");
 const currentManageTab = ref("release");
@@ -498,6 +548,23 @@ onMounted(() => {
     width: 100%;
     display: flex;
     justify-content: flex-end;
+  }
+}
+.es-demand-list-search__empty {
+  @include widthAndHeight(182px, 174px);
+  margin: 64px auto 0;
+  @include flex(flex-start, center, wrap);
+  img {
+    @include widthAndHeight(120px, 120px);
+  }
+  h3 {
+    line-height: 28px;
+    margin-bottom: 4px;
+  }
+  h5 {
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.6);
+    line-height: 22px;
   }
 }
 </style>

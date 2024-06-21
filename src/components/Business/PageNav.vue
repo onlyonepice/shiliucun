@@ -388,9 +388,9 @@ const onLogin = () => {
 }
 .es-pageNav-extraAvatar {
   @include widthAndHeight(120px, 0);
-  @include absolute(2, 38px, 100px, none, none);
+  @include absolute(2, 28px, 100px, none, none);
   background-image: url("@/assets/img/common/avatar-extra.png");
-  background-size: 100% 100%;
+  background-size: 100% 170px;
   background-repeat: no-repeat;
   background-position: 0 10px;
   transition: all 0.2s linear;
@@ -471,9 +471,6 @@ const onLogin = () => {
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease-out;
-    // &:nth-of-type(7) {
-    //   width: auto;
-    // }
     .es-pageNav-underline {
       @include widthAndHeight(0, 2px);
       background-color: #244bf1;
@@ -539,11 +536,10 @@ const onLogin = () => {
   @include flex(center, flex-start, nowrap);
 }
 .es-pageNav-content .es-pageNav-realName {
-  border-radius: 50%;
-  cursor: pointer;
-  background: #ffffff;
   cursor: pointer;
   @include flex(center, flex-start, nowrap);
+  width: 150px;
+  @include textOverflow(1);
 }
 .es-pageNav-content .es-pageNav-spread {
   @include widthAndHeight(20px, 20px);
