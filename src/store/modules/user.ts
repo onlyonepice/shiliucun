@@ -1,7 +1,12 @@
 import { defineStore } from "pinia";
 import { store } from "@/store";
 import { userType } from "./types";
-import { getUserInfo, configListBefore, getPermissionApi } from "@/api/user";
+import {
+  getUserInfo,
+  configListBefore,
+  getPermissionApi,
+  getUserDetailInfo,
+} from "@/api/user";
 import { getPublicKeyApi } from "@/api/user";
 import { removeToken } from "@/utils/auth";
 import router from "@/router";
@@ -14,6 +19,7 @@ export const useUserStore = defineStore({
     fileUrl: "", // 文件路径
     imgUrl: {}, // i-report报告缓存
     userInfo: {}, // 用户信息
+    accountInfo: {}, // account用户信息
     publicKey: "", // 加密密钥 用于监听
     openLoginVisible: false, // 打开登录弹窗
     openVipVisible: false, // 打开vip弹窗
@@ -122,6 +128,20 @@ export const useUserStore = defineStore({
               this.getPermissionList();
               window.localStorage.setItem("VIP", data.roles[0].code);
             }
+            resolve(data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    // 获取account信息
+    async handleGetAccountInfo() {
+      return new Promise<void>((resolve, reject) => {
+        getUserDetailInfo()
+          .then((response) => {
+            const data = response["datas"];
+            this.accountInfo = data;
             resolve(data);
           })
           .catch((error) => {

@@ -33,6 +33,7 @@ export type userType = {
   username?: string;
   roles?: Array<string>;
   userInfo?: any;
+  accountInfo?: any;
   fileUrl?: any;
   imgUrl?: any;
   userAccount?: object;

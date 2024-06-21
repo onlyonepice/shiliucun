@@ -41,6 +41,12 @@
           </div>
         </div>
         <div :class="ns.be('content', 'item')">
+          <h5>岗位类型</h5>
+          <div :class="ns.be('item', 'value')">
+            {{ postTypeName }}
+          </div>
+        </div>
+        <div :class="ns.be('content', 'item')">
           <h5>所在地区</h5>
           <div :class="ns.be('item', 'value')">{{ onGetRegionInfo }}</div>
         </div>
@@ -205,7 +211,7 @@
       title="编辑信息"
       :visible="visibleInfo"
       width="560px"
-      height="484px"
+      height="524px"
       @onHandleClose="onHandleCloseInfo"
       confirmText="保存"
     >
@@ -242,6 +248,21 @@
             @onChange="
               (val) => {
                 return onChangeInfo(val, 'position');
+              }
+            "
+          />
+        </div>
+        <div :class="ns.be('content', 'infoDialog')">
+          <span required>岗位类型</span>
+          <Select
+            type="select"
+            :defaultValue="modifyInfoFreeze.postType"
+            :options="positionList"
+            labelKey="label"
+            valueKey="id"
+            @onChange="
+              (val) => {
+                return onChangeInfo(val, 'postType');
               }
             "
           />
@@ -323,9 +344,9 @@ import {
   modifyMbCode1,
   verifyMbCode,
   modifyMb,
-  getUserDetailInfo,
   getAreaApi,
   editUserInfoApi,
+  getPositionTypeApi,
 } from "@/api/user";
 import { getInnermostObject } from "@/utils/index";
 const ns = useNamespace("homePersonalInfo");
@@ -351,6 +372,7 @@ const modifyInfo: Ref<any> = ref({
   weCat: "",
   email: "",
 }); // 修改信息
+const positionList: Ref<Array<any>> = ref([]); // 岗位类型数组
 const modifyInfoFreeze: Ref<any> = ref({});
 const timer = ref(null); // 定时器
 const userDetailInfo: Ref<any> = ref(); // 用户详细信息
@@ -363,6 +385,14 @@ const showInfo: Ref<any> = ref({
   mobile: false,
   weChat: false,
   email: false,
+});
+// 获取岗位类型name
+const postTypeName = computed(() => {
+  const _code = useUserStore().$state.accountInfo.postType;
+  const _data: any = positionList.value.filter((item) => {
+    return item.id === _code;
+  });
+  return _data[0]?.label;
 });
 // 获取vip图标
 const getVIPIcon = computed(() => {
@@ -380,6 +410,7 @@ const getVIPIcon = computed(() => {
             : "";
 });
 onMounted(() => {
+  getPositionType();
   userInfo.value = useUserStore().$state.userInfo;
   showInfo.value.mobile = userInfo.value.mobileHide;
   showInfo.value.weChat = userInfo.value.wecatHide;
@@ -387,6 +418,13 @@ onMounted(() => {
   onGetUserInfo();
   onGetArea();
 });
+// 获取岗位类型数据
+const getPositionType = async () => {
+  const { datas, resp_code }: any = await getPositionTypeApi();
+  if (resp_code === 0) {
+    positionList.value = datas;
+  }
+};
 // 修改用户信息
 const onChangeInfo = (value: any, type: string) => {
   type === "regionCode" &&
@@ -432,21 +470,20 @@ const onHandleCloseInfo = async (type: boolean) => {
       visibleInfoSet.value = false;
     }, 200);
     useUserStore().handleGetUserInfo();
+    useUserStore().handleGetAccountInfo();
     onGetUserInfo();
   }
 };
 // 获取用户详细信息
 const onGetUserInfo = async () => {
-  const { resp_code, datas } = await getUserDetailInfo();
-  if (resp_code === 0) {
-    userDetailInfo.value = datas;
-    const _modifyInfo = modifyInfo.value;
-    // 重置用户信息
-    Object.assign(_modifyInfo, datas);
-    datas.region !== null &&
-      (_modifyInfo.regionCode = getInnermostObject(datas.region).code);
-    modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo));
-  }
+  const datas = useUserStore().$state.accountInfo;
+  userDetailInfo.value = datas;
+  const _modifyInfo = modifyInfo.value;
+  // 重置用户信息
+  Object.assign(_modifyInfo, datas);
+  datas.region !== null &&
+    (_modifyInfo.regionCode = getInnermostObject(datas.region).code);
+  modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo));
 };
 // 获取用户地区信息
 const onGetRegionInfo = computed(() => {
@@ -647,6 +684,8 @@ const onSendCode = async () => {
 }
 .es-homePersonalInfo-item__head {
   @include font(20px, 600, rgba(0, 0, 0, 0.9), 28px);
+  max-width: 400px;
+  @include textOverflowOne();
   .es-homePersonalInfo-vip {
     @include widthAndHeight(auto, 20px);
     object-fit: contain;

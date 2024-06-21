@@ -50,6 +50,7 @@ router.beforeEach(async (to, from, next) => {
   }
   if (getToken()) {
     await useUserStoreHook().handleGetUserInfo();
+    await useUserStoreHook().handleGetAccountInfo();
   } else {
     if (to.path === "/homePersonal") {
       next("/home");

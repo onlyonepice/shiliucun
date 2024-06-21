@@ -68,9 +68,10 @@ defineProps({
   background: #dbdce2;
   margin-bottom: 16px;
 }
-.es-demandMatching-businessCard-content__left {
+.es-demandMatchingDetail-card .es-demandMatching-businessCard-content__left {
   flex: 1;
   h4 {
+    margin-bottom: 6px;
     span {
       display: inline-block;
       width: 100px;
