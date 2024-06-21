@@ -10,6 +10,7 @@ interface ApplicationStatusType {
   value: string;
   background: string;
   color: string;
+  borderColor: string;
 }
 
 export const demandStatus: DemandStatusType[] = [
@@ -55,24 +56,28 @@ export const applicationStatus: ApplicationStatusType[] = [
     value: "1",
     background: "#FFF3EA",
     color: "#ED832E",
+    borderColor: "#FF892E",
   },
   {
     name: "已同意",
     value: "2",
-    background: "#E9F6F2",
-    color: "#25AB7B",
+    background: "#E6F8EA",
+    color: "#01B82B",
+    borderColor: "#01B82B",
   },
   {
     name: "已拒绝",
     value: "3",
     background: "#FEEFF0",
     color: "#F75964",
+    borderColor: "#F75964",
   },
   {
     name: "已查阅",
     value: "4",
-    background: "#ECF6FF",
-    color: "#39A7FD",
+    background: "#F2F3F5",
+    color: "rgba(0,0,0,0.9)",
+    borderColor: "#DBDCE2",
   },
 ];
 

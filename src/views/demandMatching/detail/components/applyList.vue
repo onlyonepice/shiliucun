@@ -22,7 +22,21 @@
         alt=""
       />
       <div>
-        <h3>{{ item.userInfo.realName }}｜{{ item.userInfo.position }}</h3>
+        <div :class="ns.b('title')">
+          <h3>{{ item.userInfo.realName }}｜{{ item.userInfo.position }}</h3>
+          <div
+            :class="ns.b('status')"
+            :style="{
+              border:
+                '1px solid ' +
+                searchApplicationStatus(item.status)?.borderColor,
+              color: searchApplicationStatus(item.status)?.color,
+              backgroundColor: searchApplicationStatus(item.status)?.background,
+            }"
+          >
+            {{ searchApplicationStatus(item.status).name }}
+          </div>
+        </div>
         <h5>{{ item.userInfo.company }}</h5>
         <h5>申请时间：{{ item.createTime }}</h5>
       </div>
@@ -80,6 +94,7 @@ import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import BusinessCard from "./businessCard.vue";
 import LamentIcon from "@/assets/img/common/lament_icon.png";
+import { searchApplicationStatus } from "../../config";
 import {
   agreeOrRefuseApplyApi,
   changeApplyStatusApi,
@@ -181,7 +196,15 @@ const onAgreeOrRefuse = async (type: number) => {
   }
 }
 .es-demandMatching-applyList-title {
+  width: 288px;
   margin: 16px 0 8px;
+  @include flex(center, space-between, nowrap);
+  div {
+    @include widthAndHeight(54px, 24px);
+    padding: 2px 8px;
+    border-radius: 4px;
+    @include font(12px, 400, #ff892e, 20px);
+  }
 }
 .es-demandMatching-applyList-desc {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);

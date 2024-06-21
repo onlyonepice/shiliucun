@@ -39,14 +39,14 @@
           <div :class="ns.be('avatar', 'box')">
             <h4 @mouseenter="showAvatar = true" :class="ns.b('realName')">
               Hi，{{ useUserStoreHook().$state.userInfo.realName }}
-              <div :class="ns.b('spread')">
-                <img
-                  :src="SpreadIcon"
-                  alt=""
-                  :style="{ transform: showAvatar ? 'rotate(180deg)' : '' }"
-                />
-              </div>
             </h4>
+            <div :class="ns.b('spread')">
+              <img
+                :src="SpreadIcon"
+                alt=""
+                :style="{ transform: showAvatar ? 'rotate(180deg)' : '' }"
+              />
+            </div>
             <template v-if="useUserStoreHook().$state.userInfo.roles">
               <img
                 v-if="
@@ -523,7 +523,6 @@ const onLogin = () => {
 .es-pageNav-login {
   @include widthAndHeight(95px, 32px);
   @include flex(center, center);
-  @include margin(0, 0, 0, 16px);
   @include font(14px, 400, rgba(255, 255, 255, 0.9), 22px);
   will-change: transform;
   transition: all 0.2s ease-out;
@@ -532,14 +531,12 @@ const onLogin = () => {
 }
 .es-pageNav-avatar__box {
   @include widthAndHeight(auto, 40px);
-  margin-left: 16px;
   @include flex(center, flex-start, nowrap);
 }
 .es-pageNav-content .es-pageNav-realName {
   cursor: pointer;
-  @include flex(center, flex-start, nowrap);
-  width: 150px;
-  @include textOverflow(1);
+  max-width: 120px;
+  @include textOverflowOne();
 }
 .es-pageNav-content .es-pageNav-spread {
   @include widthAndHeight(20px, 20px);

@@ -1,7 +1,10 @@
 <template>
   <div :class="ns.b('content')" :style="{ width: width }">
     <div :class="ns.be('content', 'left')">
-      <h4>{{ info.realName }}｜{{ info.position }}</h4>
+      <h4>
+        <span>{{ info.realName }}</span
+        ><span>｜{{ info.position }}</span>
+      </h4>
       <h6>{{ info.company }}</h6>
       <div :class="ns.be('content', 'line')" />
     </div>
@@ -67,6 +70,13 @@ defineProps({
 }
 .es-demandMatching-businessCard-content__left {
   flex: 1;
+  h4 {
+    span {
+      display: inline-block;
+      width: 100px;
+      @include textOverflowOne();
+    }
+  }
   h6 {
     margin-bottom: 15px;
   }
