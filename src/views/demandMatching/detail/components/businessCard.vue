@@ -40,13 +40,12 @@ defineProps({
   },
 });
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/style/mixin.scss";
 
 .es-demandMatching-businessCard-content {
   @include widthAndHeight(320px, 158px);
   background: linear-gradient(rgba(36, 75, 241, 0.1), #ffffff);
-  // filter: blur(30px);
   overflow: hidden;
   border-radius: 4px;
   border: 1px solid #dbdce2;
@@ -68,7 +67,7 @@ defineProps({
   background: #dbdce2;
   margin-bottom: 16px;
 }
-.es-demandMatchingDetail-card .es-demandMatching-businessCard-content__left {
+.es-demandMatching-businessCard-content__left {
   flex: 1;
   h4 {
     @include flex(center, flex-start, nowrap);
