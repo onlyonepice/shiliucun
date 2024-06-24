@@ -2,8 +2,8 @@
   <div :class="ns.b('content')" :style="{ width: width }">
     <div :class="ns.be('content', 'left')">
       <h4>
-        <span>{{ info.realName }}</span
-        ><span>｜{{ info.position }}</span>
+        <p>{{ info.realName }}</p>
+        <p>｜{{ info.position }}</p>
       </h4>
       <h6>{{ info.company }}</h6>
       <div :class="ns.be('content', 'line')" />
@@ -71,9 +71,8 @@ defineProps({
 .es-demandMatchingDetail-card .es-demandMatching-businessCard-content__left {
   flex: 1;
   h4 {
-    margin-bottom: 6px;
-    span {
-      display: inline-block;
+    @include flex(center, flex-start, nowrap);
+    p {
       width: 100px;
       @include textOverflowOne();
     }

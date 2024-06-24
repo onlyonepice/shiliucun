@@ -172,6 +172,7 @@ const onShare = async () => {
   @include flex(center, space-between, nowrap);
 }
 .es-demandMatching-detail-top__number {
+  width: 80px;
   @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
 }
 .es-demandMatching-detail-top__removed-head {
@@ -184,6 +185,7 @@ const onShare = async () => {
   background: #f2f3f5;
   border-radius: 4px;
   padding: 8px 16px;
+  margin-right: 24px;
   @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
   @include textOverflow(1);
   margin-right: 10px;
