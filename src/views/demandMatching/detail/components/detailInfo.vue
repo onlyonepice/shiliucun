@@ -181,15 +181,13 @@ const onShare = async () => {
   margin-top: 24px;
 }
 .es-demandMatching-detail-top__removed {
-  width: 100%;
-  height: 32px;
+  @include widthAndHeight(621px, 38px);
   background: #f2f3f5;
   border-radius: 4px;
   padding: 8px 16px;
   margin-right: 24px;
   @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
-  @include textOverflow(1);
-  margin-right: 10px;
+  @include textOverflowOne();
 }
 .es-demandMatching-detail-top__turnDown {
   @include widthAndHeight(100%, 38px);

@@ -1,34 +1,29 @@
 <template>
   <breadcrumb :breadcrumbList="breadcrumbList" />
   <div
-    :class="[ns.b(), 'animate__animated animate__fadeIn']"
+    :class="[ns.b(), 'es-commonPage animate__animated animate__fadeIn']"
     v-if="detailInfo.id"
   >
-    <div :class="[ns.b('box'), 'es-commonPage']">
-      <DetailInfo
-        :detailInfo="detailInfo"
-        :minePublish="minePublish"
-        :totalApply="totalApply"
-        @onApply="onOpenApplyDialog()"
-        @onDelete="deleteDialogVisible = true"
-        @onSolve="solveDialogVisible = true"
-        @onCheckApplyList="drawer = true"
-        @onResetApply="resetDialogVisible = true"
-        @onRevocation="onRevocation"
-      />
-      <div
-        :style="{ height: showExtra ? '256px' : '246px' }"
-        :class="ns.b('card')"
-      >
-        <h4>{{ minePublish ? "您的名片信息" : "需求方名片" }}</h4>
-        <BusinessCard
-          :info="detailInfo.accountInfo"
-          :minePublish="minePublish"
-        />
-        <div :class="ns.be('content', 'extra')" v-if="showExtra">
-          <img :src="LamentIcon" alt="" />
-          <p>需求方同意报名后将显示联系方式</p>
-        </div>
+    <DetailInfo
+      :detailInfo="detailInfo"
+      :minePublish="minePublish"
+      :totalApply="totalApply"
+      @onApply="onOpenApplyDialog()"
+      @onDelete="deleteDialogVisible = true"
+      @onSolve="solveDialogVisible = true"
+      @onCheckApplyList="drawer = true"
+      @onResetApply="resetDialogVisible = true"
+      @onRevocation="onRevocation"
+    />
+    <div
+      :style="{ height: showExtra ? '256px' : '246px' }"
+      :class="ns.b('card')"
+    >
+      <h4>{{ minePublish ? "您的名片信息" : "需求方名片" }}</h4>
+      <BusinessCard :info="detailInfo.accountInfo" :minePublish="minePublish" />
+      <div :class="ns.be('content', 'extra')" v-if="showExtra">
+        <img :src="LamentIcon" alt="" />
+        <p>需求方同意报名后将显示联系方式</p>
       </div>
     </div>
   </div>
@@ -185,9 +180,6 @@ const onchangeCurrent = (val: number) => {
 
 .es-demandMatchingDetail {
   @include flex(flex-start, center, nowrap);
-}
-.es-demandMatchingDetail-box {
-  @include flex(flex-start, space-between, nowrap);
 }
 .es-demandMatchingDetail-card {
   @include widthAndHeight(368px, 246px);
