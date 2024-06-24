@@ -3,7 +3,7 @@
     <div :class="ns.be('content', 'left')">
       <h4>
         <p>{{ info.realName }}</p>
-        <p>｜{{ info.position }}</p>
+        <p v-if="info.position">｜{{ info.position }}</p>
       </h4>
       <h6>{{ info.company }}</h6>
       <div :class="ns.be('content', 'line')" />
@@ -72,7 +72,7 @@ defineProps({
   h4 {
     @include flex(center, flex-start, nowrap);
     p {
-      width: 100px;
+      max-width: 100px;
       @include textOverflowOne();
     }
   }
