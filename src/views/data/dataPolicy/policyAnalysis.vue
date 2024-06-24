@@ -139,6 +139,7 @@ async function getYear() {
   getPolicyAnalysisData();
 }
 getYear();
+window.trackFunction("pc_Policy_SearchCalculation_click");
 </script>
 
 <style lang="scss">

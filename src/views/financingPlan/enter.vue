@@ -246,6 +246,7 @@ const submitFn = async () => {
 };
 
 getAreaFn();
+window.trackFunction("pc_FinancingScheme_click");
 </script>
 
 <style lang="scss" scoped>

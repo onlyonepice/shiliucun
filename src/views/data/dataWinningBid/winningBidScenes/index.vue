@@ -218,6 +218,7 @@ const selectChange = (row, index, val) => {
     });
   }
 };
+window.trackFunction("pc_Winbid_ScenceAnalysis_click");
 </script>
 
 <style lang="scss">

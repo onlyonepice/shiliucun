@@ -139,6 +139,7 @@ const onChangeFilter = (id: any, type: string) => {
 };
 
 onMounted(() => {
+  window.trackFunction("pc_Bidding_ScenceAnalysis_click");
   props.unitFilter.forEach((item) => {
     item.defaultValue && (unit.value = item.paramValue);
   });

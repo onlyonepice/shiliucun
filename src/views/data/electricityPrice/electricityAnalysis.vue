@@ -401,6 +401,7 @@ onMounted(() => {
   loading.value = true;
   // 获取所有数据
   Promise.all([onGetRegionalData(), onGetPeakAndValley()]);
+  window.trackFunction("pc_Elecprice_analysis_click");
 });
 </script>
 

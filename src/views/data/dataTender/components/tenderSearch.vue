@@ -174,6 +174,7 @@ const showOpen = (data) => {
 };
 const pageData = ref([]);
 const getData = async () => {
+  window.trackFunction("pc_Bidding_Search_click");
   loading.value = true;
   const requestData = Object.assign(
     {

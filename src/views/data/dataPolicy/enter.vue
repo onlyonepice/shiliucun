@@ -31,6 +31,7 @@ const tabsList: Ref<Array<TabsList>> = ref([
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
 };
+window.trackFunction("pc_Policy_Search_click");
 </script>
 <style lang="scss" scoped>
 .es-policy {

@@ -435,6 +435,7 @@ onUnmounted(() => {
 onMounted(() => {
   getTypeNotNull();
   getNeed();
+  window.trackFunction("pc_RequestConnect_click");
 });
 </script>
 <style scoped lang="scss">

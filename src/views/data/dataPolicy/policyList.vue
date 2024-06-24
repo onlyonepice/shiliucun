@@ -269,6 +269,7 @@ function handleHiddenDetailClick(index, rowIndex) {
 }
 
 async function handleItemClick(index, rowIndex) {
+  window.trackFunction("pc_Policy_SearchFile_click");
   if (!pageData.value[index].data[rowIndex].showDetail) {
     if (!getToken()) {
       useUserStore().openLogin(true);

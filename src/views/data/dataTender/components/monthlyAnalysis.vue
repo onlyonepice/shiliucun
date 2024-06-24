@@ -90,6 +90,7 @@ watch(
 );
 onMounted(() => {
   getElectricityTypeOneName();
+  window.trackFunction("pc_Bidding_MonthlyAnalysis_click");
 });
 // 获取 eCharts 数据
 async function getElectricityTypeOneName() {

@@ -158,6 +158,13 @@ const handleSkip = () => {
 };
 const handleClick = (item) => {
   const _id = item.id;
+  window.trackFunction(
+    _id === 0
+      ? "pc_OrdinaryMember_click"
+      : _id === 1
+        ? "pc_IndividualMember_click"
+        : "pc_CorporateMember_click",
+  );
   if (_id !== 0 && !getToken()) {
     return useUserStore().openLogin(true);
   }

@@ -253,6 +253,7 @@ function exportResult() {
 }
 
 onMounted(() => {
+  window.trackFunction("pc_Bidding_AeraAnalysis_click");
   getRegionColor();
 });
 getReleaseTime();

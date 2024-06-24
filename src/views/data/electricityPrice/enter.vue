@@ -1,6 +1,6 @@
 <template>
   <div id="electricity-price" class="es-commonPage electricity-price page">
-    <ElectricityImage />
+    <ElectricityImage @click="onImage()" />
     <div class="price-type">
       <div
         class="price-type__item"
@@ -32,6 +32,9 @@ const priceTypeList: Ref<Array<{ id: number; text: string }>> = ref([
   { id: 2, text: "电价分析" },
   { id: 3, text: "各省峰谷时段" },
 ]);
+const onImage = () => {
+  window.trackFunction("pc_Elecprice_Banner_click");
+};
 </script>
 
 <style scoped lang="scss">

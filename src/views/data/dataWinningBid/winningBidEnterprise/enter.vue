@@ -614,6 +614,7 @@ const selectChange = (row, index, val) => {
     });
   }
 };
+window.trackFunction("pc_Winbid_CompanyAnalysis_click");
 </script>
 
 <style lang="scss">

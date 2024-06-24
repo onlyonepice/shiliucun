@@ -347,7 +347,7 @@ function handleSelectPriceType(id) {
   else if (choseSpecific.value === 2) handleMonthData();
   else handlePriceDifferenceData();
 }
-/* 
+/*
   getData
 */
 // 获取放电策略
@@ -1246,6 +1246,7 @@ onMounted(() => {
   onGetRegionalData();
   // 监听窗口大小变化
   window.addEventListener("resize", reSizeEchart);
+  window.trackFunction("pc_Elecprice_MonthlyPrice_click");
 });
 
 // 在组件销毁前移除事件监听器

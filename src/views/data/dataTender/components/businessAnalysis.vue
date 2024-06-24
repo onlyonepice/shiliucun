@@ -92,6 +92,7 @@ const props = defineProps({
 const contentDict: Ref<string | number> = ref(props.contentFilter[0].id); // 筛选项结果
 const releaseTime: Ref<string | number> = ref("");
 onMounted(() => {
+  window.trackFunction("pc_Bidding_Companyanalysis_click");
   getElectricityTypeOneName();
 });
 const getReleaseTime = () => {

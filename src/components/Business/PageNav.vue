@@ -253,6 +253,15 @@ const onChoseChildTab = (item: any) => {
     setTimeout(() => {
       optionChildren.value = false;
     }, 100);
+    if (item.text === "行业数据库") {
+      window.trackFunction("pc_IndustrialDatabase_click");
+    }
+    if (item.text === "电价API") {
+      window.trackFunction("pc_ElecpriceAPI_click");
+    }
+    if (item.text === "产业链地图") {
+      window.trackFunction("pc_EnterpriseMap_click");
+    }
     return window.open(item.path, "externalWindow");
   } else if (item.path !== "") {
     onChildrenPath(item.path);
@@ -262,6 +271,16 @@ const onChoseChildTab = (item: any) => {
 };
 // 跳转个人中心
 const onPersonal = (path: string) => {
+  const _id = path.split("id=")[1];
+  window.trackFunction(
+    _id === "1"
+      ? "pc_BasicInfor_click"
+      : _id === "2"
+        ? "pc_Collection_click"
+        : _id === "3"
+          ? "pc_Order_click"
+          : "pc_Password_click",
+  );
   if (path !== "") {
     router.push(path);
   } else {

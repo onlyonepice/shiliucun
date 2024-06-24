@@ -222,6 +222,7 @@ function setStyle(item) {
 }
 
 getData();
+window.trackFunction("pc_Elecprice_PeakValley_click");
 </script>
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";

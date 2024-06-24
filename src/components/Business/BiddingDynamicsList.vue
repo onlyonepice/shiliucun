@@ -316,6 +316,7 @@ const handleSetDetailShowClick = async () => {
     } else {
       const data = await getBidFinderDetail({ id: currentData.value.id });
       if (props.source === "dataTenderSearch") {
+        window.trackFunction("pc_Bidding_SearchFile_click");
         const _datas: any = await getTimesApi({
           moduleName: "TENDER_DETAILS",
         });

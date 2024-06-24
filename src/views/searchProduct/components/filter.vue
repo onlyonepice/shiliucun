@@ -110,6 +110,7 @@ const getEnterpriseId = (id: string) => {
 };
 // 产品入驻
 function handleProductCheckIn() {
+  window.trackFunction("pc_Product_ProductEntry_click");
   if (!getToken()) {
     return useUserStoreHook().openLogin(true);
   }

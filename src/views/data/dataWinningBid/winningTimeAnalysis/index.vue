@@ -213,6 +213,7 @@ function handleChange(val, key) {
     });
   }
 }
+window.trackFunction("pc_Winbid_TimeAnalysis_click");
 </script>
 
 <style lang="scss" scoped>

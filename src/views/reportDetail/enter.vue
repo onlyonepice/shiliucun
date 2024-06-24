@@ -18,6 +18,7 @@
               :detail="reportDetail"
               @onBuy="onBuy(true)"
               :is-need-buy="reportDetail.needToBuy"
+              :trackData="getTrackCode()"
             />
             <ReportRecommend @getInfo="getReportDetail()" />
           </div>
@@ -268,18 +269,18 @@ const trackConfig: Ref<any> = ref([
     collectTrack: "pc_Report_WhitePaper_Collect_click",
   },
 ]);
-const getTrackCode = (type: string) => {
-  let _code = "";
+const getTrackCode = () => {
+  let _data = {};
   trackConfig.value.forEach((item) => {
-    item.moduleName === route.query.moduleName && (_code = item[type]);
+    item.moduleName === route.query.moduleName && (_data = item);
   });
-  return _code;
+  return _data;
 };
 // 埋点
 watch(
   () => residenceTime.value,
   (val) => {
-    val === 60 && window.trackFunction(getTrackCode("showTrack"));
+    val === 60 && window.trackFunction(getTrackCode()["showTrack"]);
   },
   { immediate: true },
 );

@@ -157,6 +157,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  trackData: {
+    type: Object,
+    default: () => {},
+  },
 });
 const ns = useNamespace("reportDetailOption");
 const { toClipboard } = useClipboard();
@@ -230,6 +234,7 @@ const onHandleClose = async (type: boolean) => {
       ElMessage.success("内容纠错上传成功");
       showDialog.value = false;
     }
+    window.trackFunction(props.trackData["scoreTrack"]);
   }
   errorContent.value = {};
   fileList.value = [];
@@ -251,6 +256,7 @@ const onBuyReport = async () => {
 
 // 获取报告链接
 const getReportLink = async () => {
+  window.trackFunction(props.trackData["downloadTrack"]);
   const { fileId, reportName, moduleName } = props.detail;
   const { resp_code, datas }: any = await getFilePathApi({
     fileId,
@@ -295,12 +301,15 @@ const onCollection = async () => {
     );
     storageDetail.value.isCollected = !storageDetail.value.isCollected;
   }
+  storageDetail.value.isCollected &&
+    window.trackFunction(props.trackData["collectTrack"]);
 };
 
 // 分享按钮
 const onShare = async () => {
   await toClipboard(window.location.href);
   ElMessage.success("分享成功");
+  window.trackFunction(props.trackData["shareTrack"]);
 };
 
 // 鼠标移入选择

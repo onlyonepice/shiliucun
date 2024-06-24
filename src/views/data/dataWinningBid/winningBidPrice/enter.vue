@@ -479,6 +479,7 @@ const selectChange = (row, index, val) => {
     });
   }
 };
+window.trackFunction("pc_Winbid_PriceAnalysis_click");
 </script>
 
 <style lang="scss" scoped>

@@ -303,7 +303,7 @@
               </el-image>
               <div class="product-desc__info__btn">
                 <div @click="onLinkTo()">联系企业</div>
-                <div @click="productVisible = true">产品入驻</div>
+                <div @click="onProduct()">产品入驻</div>
               </div>
             </div>
           </div>
@@ -399,6 +399,10 @@ const onPatternAnalysis = (id: number) => {
   filterData.value.patternAnalysis = id;
   disabledUser.value = false;
 };
+const onProduct = () => {
+  productVisible.value = true;
+  window.trackFunction("pc_Calculation_ProductEntry_click");
+};
 watch(
   () => addAreaType.value,
   (val) => {
@@ -430,6 +434,7 @@ const addArea = () => {
 
 // 开始分析
 const onAnalysis = () => {
+  window.trackFunction("pc_Calculation_start_click");
   if (!getToken()) {
     return useUserStore().openLogin(true);
   }
