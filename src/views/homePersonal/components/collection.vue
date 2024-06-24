@@ -154,6 +154,7 @@ const onToDetail = (item: any) => {
   const { moduleName, reportId } = item;
   router.push(`/reportDetail?id=${reportId}&moduleName=${moduleName}`);
 };
+window.trackFunction("pc_Collection_click");
 </script>
 
 <style lang="scss" scoped>

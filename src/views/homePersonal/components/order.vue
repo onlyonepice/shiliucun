@@ -94,6 +94,7 @@ getOrderList();
 const onPay = () => {
   useUserStore().$state.showMembersBuy = true;
 };
+window.trackFunction("pc_Order_click");
 </script>
 
 <style lang="scss" scoped>

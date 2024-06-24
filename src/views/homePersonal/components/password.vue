@@ -192,6 +192,7 @@ const countDown = () => {
     }
   }, 1000);
 };
+window.trackFunction("pc_Password_click");
 </script>
 
 <style lang="scss" scoped>

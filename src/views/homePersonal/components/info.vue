@@ -417,6 +417,7 @@ onMounted(() => {
   showInfo.value.email = userInfo.value.emailHide;
   onGetUserInfo();
   onGetArea();
+  window.trackFunction("pc_BasicInfor_click");
 });
 // 获取岗位类型数据
 const getPositionType = async () => {

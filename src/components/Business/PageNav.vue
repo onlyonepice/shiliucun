@@ -271,16 +271,6 @@ const onChoseChildTab = (item: any) => {
 };
 // 跳转个人中心
 const onPersonal = (path: string) => {
-  const _id = path.split("id=")[1];
-  window.trackFunction(
-    _id === "1"
-      ? "pc_BasicInfor_click"
-      : _id === "2"
-        ? "pc_Collection_click"
-        : _id === "3"
-          ? "pc_Order_click"
-          : "pc_Password_click",
-  );
   if (path !== "") {
     router.push(path);
   } else {
