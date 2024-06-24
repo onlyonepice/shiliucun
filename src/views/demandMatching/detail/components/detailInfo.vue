@@ -160,7 +160,8 @@ const onShare = async () => {
 @import "@/style/mixin.scss";
 
 .es-demandMatching-detail {
-  width: 100%;
+  max-width: 760px;
+  min-width: 620px;
   padding: 0 24px 208px 24px;
   background: #ffffff;
   border-radius: 4px;
