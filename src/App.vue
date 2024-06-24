@@ -59,12 +59,27 @@ import { useRoute } from "vue-router";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 import { useUserStore } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
+import { trackApi } from "@/api/user";
+import { generateUUID } from "@/utils/richText";
 const opacityBg: Ref<boolean> = ref(true); // 是否展示透明背景
 const route = useRoute();
 const showNavBar: Ref<boolean> = ref(true);
 const lastScrollY: Ref<number> = ref(0);
 const openLoginAnimate: Ref<boolean> = ref(false); // 登录动画执行完毕弹窗
 const showMembersBuy: Ref<boolean> = ref(false); //订阅会员弹框状态
+
+// 埋点方法
+window.trackFunction = (eventId: string) => {
+  // 埋点
+  const _data = {
+    eventId,
+    recordId: generateUUID(),
+  };
+  getToken() &&
+    Object.assign(_data, { userId: useUserStore().$state.userInfo.id });
+  trackApi(_data);
+};
+
 onMounted(() => {
   useUserStore().token === "" &&
     getToken() &&

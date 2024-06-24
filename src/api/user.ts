@@ -220,3 +220,12 @@ export function getPositionTypeApi() {
     `/api-user/sysDict/front/V1.0/frontSelectTreeByType/positionType`,
   );
 }
+
+// 埋点
+export function trackApi(data: any) {
+  return http.request<responseType>(
+    "post",
+    `/eesa-data-center/event/back/V1.0/creat`,
+    { data },
+  );
+}
