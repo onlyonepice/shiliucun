@@ -60,6 +60,7 @@ const onSearch = () => {
     name: "HomeSearchDetail",
     params: { searchContent: searchContent.value },
   });
+  window.trackFunction("pc_Home_Search_click");
 };
 </script>
 

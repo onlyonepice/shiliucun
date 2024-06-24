@@ -69,7 +69,7 @@ import {
 
 import QRCode from "qrcode";
 import Skeleton from "./components/skeleton.vue";
-import { ref, Ref, onMounted, watch } from "vue";
+import { ref, Ref, onMounted, watch, onUnmounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useRoute, useRouter } from "vue-router";
 import { reportStore } from "@/store/modules/report";
@@ -207,8 +207,12 @@ const getPayResultFn = async (orderNo: string) => {
 };
 
 getReportDetail();
-
+const residenceTimer: Ref<any> = ref(null); // 停留时间定时器
+const residenceTime: Ref<number> = ref(0); // 停留时间
 onMounted(() => {
+  residenceTimer.value = setInterval(() => {
+    residenceTime.value++;
+  }, 1000);
   const _router = router.options.history.state.back as string;
   if (
     _router &&
@@ -229,6 +233,58 @@ onMounted(() => {
     breadcrumbList.value[0].text = _data.ch;
     breadcrumbList.value[0].path = _data.path;
   }
+});
+const trackConfig: Ref<any> = ref([
+  {
+    moduleName: "INTERVIEW_EXPERT",
+    showTrack: "pc_Report_Expert_File_stay",
+    downloadTrack: "pc_Report_Expert_Download_click",
+    shareTrack: "pc_Report_Expert_Share_click",
+    scoreTrack: "pc_Report_Expert_Score_click",
+    collectTrack: "pc_Report_Expert_Collect_click",
+  },
+  {
+    moduleName: "QUARTERLY_AND_MONTHLY_REPORTS",
+    showTrack: "pc_Report_PeriodicReport_File_stay",
+    downloadTrack: "pc_Report_PeriodicReport_Download_click",
+    shareTrack: "pc_Report_PeriodicReport_Share_click",
+    scoreTrack: "pc_Report_PeriodicReport_Score_click",
+    collectTrack: "pc_Report_PeriodicReport_Collect_click",
+  },
+  {
+    moduleName: "ONLINE_REPORT",
+    showTrack: "pc_Report_OnlineReport_File_stay",
+    downloadTrack: "pc_Report_OnlineReport_Download_click",
+    shareTrack: "pc_Report_OnlineReport_Share_click",
+    scoreTrack: "pc_Report_OnlineReport_Score_click",
+    collectTrack: "pc_Report_OnlineReport_Collect_click",
+  },
+  {
+    moduleName: "WHITE_PAPER",
+    showTrack: "pc_Report_WhitePaper_File_stay",
+    downloadTrack: "pc_Report_WhitePaper_Download_click",
+    shareTrack: "pc_Report_WhitePaper_Share_click",
+    scoreTrack: "pc_Report_WhitePaper_Score_click",
+    collectTrack: "pc_Report_WhitePaper_Collect_click",
+  },
+]);
+const getTrackCode = (type: string) => {
+  let _code = "";
+  trackConfig.value.forEach((item) => {
+    item.moduleName === route.query.moduleName && (_code = item[type]);
+  });
+  return _code;
+};
+// 埋点
+watch(
+  () => residenceTime.value,
+  (val) => {
+    val === 60 && window.trackFunction(getTrackCode("showTrack"));
+  },
+  { immediate: true },
+);
+onUnmounted(() => {
+  clearInterval(residenceTimer.value);
 });
 </script>
 

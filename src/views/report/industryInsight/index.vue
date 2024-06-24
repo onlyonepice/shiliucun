@@ -7,6 +7,7 @@
           v-for="(item, index) in industryInsightList"
           :key="`industry${index}`"
           :pageData="item"
+          source="reportIndustryInsight"
         />
       </div>
       <div :class="ns.b('paging')">
@@ -62,6 +63,7 @@ const getReNewsInfoList = async () => {
     industryInsightList.value = res.datas.records;
     industryTotal.value = res.datas.total;
   }
+  window.trackFunction("pc_Report_Insight_click");
 };
 onMounted(() => {
   getReNewsInfoList();

@@ -70,7 +70,6 @@ const showMembersBuy: Ref<boolean> = ref(false); //订阅会员弹框状态
 
 // 埋点方法
 window.trackFunction = (eventId: string) => {
-  // 埋点
   const _data = {
     eventId,
     recordId: generateUUID(),

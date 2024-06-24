@@ -12,9 +12,13 @@
     <div class="right">
       <div class="name-box">
         <p v-if="pageData.isTopping === 1" class="toping">置顶</p>
-        <a class="name" :href="pageData.link || '/'" target="_blank">{{
-          pageData.reportName
-        }}</a>
+        <a
+          class="name"
+          @click="onClickUrl()"
+          :href="pageData.link || '/'"
+          target="_blank"
+          >{{ pageData.reportName }}</a
+        >
       </div>
       <p class="info">{{ pageData.contentOverview ?? "-" }}</p>
     </div>
@@ -25,12 +29,20 @@
 import useNamespace from "@/utils/nameSpace";
 import quotationMark from "@/assets/img/quotation-mark.png";
 const ns = useNamespace("industryInsightList");
-defineProps({
+const props = defineProps({
   pageData: {
     type: Object,
     default: () => ({}),
   },
+  source: {
+    type: String,
+    default: "",
+  },
 });
+const onClickUrl = () => {
+  props.source === "reportIndustryInsight" &&
+    window.trackFunction("pc_Report_Insight_File_click");
+};
 </script>
 
 <style lang="scss" scoped>

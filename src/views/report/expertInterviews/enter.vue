@@ -97,6 +97,7 @@ function handleCurrentChange(val: number) {
 }
 async function getExpertInterviews() {
   loading.value = true;
+  window.trackFunction("pc_Report_Expert_click");
   try {
     const {
       datas: { total, records },
@@ -114,6 +115,7 @@ async function getExpertInterviews() {
   }
 }
 function handleOpenReport(item: any) {
+  window.trackFunction("pc_Report_Expert_File_click");
   // 用户未登录则打开登录弹窗
   if (!getToken()) {
     return useUserStore().openLogin(true);
