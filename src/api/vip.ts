@@ -29,3 +29,11 @@ export function getPayResult(data) {
     params: data,
   });
 }
+
+// 获取vip列表配置
+export function getVipConfigListApi() {
+  return http.request(
+    "get",
+    "/api-user/system/openApi/front/v1.0/getPermissionChart",
+  );
+}

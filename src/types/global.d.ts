@@ -42,6 +42,16 @@ declare global {
   }
 
   /**
+   * 接口返回值类型
+   */
+  interface ApiType {
+    datas?: any;
+    resp_code?: number;
+    resp_msg?: string;
+    resp_code?: number;
+  }
+
+  /**
    * 打包压缩格式的类型声明
    */
   type ViteCompression =

@@ -2,9 +2,65 @@
   <div :class="[ns.b(), 'es-commonPage']">
     <p class="title">会员中心</p>
     <div class="wrapper">
-      <div class="item" v-for="item in accountList" :key="item.name">
-        <img :src="item.bgImg" alt="" />
-        <p @click="handleClick(item)" class="item_btn" />
+      <div class="item" v-for="item in accountList" :key="item.id">
+        <img class="item_log" :src="item.topIcon" alt="" />
+        <div :class="ns.b('content')">
+          <div :class="ns.b('price')">
+            <span v-if="item.price.number" style="font-size: 20px">¥</span>
+            <span
+              :style="{
+                color: item.price.color,
+                'font-size': '32px',
+                'font-weight': 600,
+              }"
+              >{{
+                item.price.number === null ? "免费" : item.price.number
+              }}</span
+            >
+            <template v-if="item.price.number">
+              <span style="font-size: 20px">{{ item.price.unit }}</span>
+              <span
+                style="
+                  font-size: 16px;
+                  color: rgba(0, 0, 0, 0.6);
+                  margin-left: 16px;
+                "
+                >{{ item.price.extraPrice }}</span
+              >
+            </template>
+          </div>
+          <div
+            @click="handleClick(item)"
+            class="item_btn"
+            :style="{
+              border: `1px solid ${item.btnConfig.borderColor}`,
+              color: item.btnConfig.color,
+              background: item.btnConfig.bgColor,
+            }"
+          >
+            {{ item.btnConfig.text }}
+          </div>
+          <div
+            :class="ns.b('module')"
+            v-for="_item in item.list"
+            :key="_item.moduleCode"
+          >
+            <h5 :class="ns.be('module', 'title')">{{ _item.moduleCode }}</h5>
+            <div
+              v-for="__item in _item.modulePermissions"
+              :key="__item.moduleName"
+              :class="ns.be('module', 'content')"
+            >
+              <div>
+                <img :src="__item.isPermission ? VipTick : VipFork" alt="" />
+                <h5 :class="ns.be('module_item', 'title')">
+                  {{ __item.moduleName }}
+                </h5>
+              </div>
+              <p>{{ __item.conditions }}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div
@@ -18,7 +74,6 @@
     >
       <div class="dialog">
         <img class="QR" :src="PayQR" />
-
         <img class="cancel" :src="cancel_icon" @click="handleSkip()" alt="" />
       </div>
     </div>
@@ -26,23 +81,76 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import cancel_icon from "@/assets/img/common/icon_clear.png";
-import account_business_bg from "@/assets/img/vip/account-business-bg.png"; // 企业会员
-import account_ordinary_bg from "@/assets/img/vip/account-ordinary-bg.png"; // 普通会员
-import account_standard_bg from "@/assets/img/vip/account-standard-bg.png"; // 个人会员
+import VipTopNormal from "@/assets/img/vip/vip-top-normal.png"; // 普通会员
+import VipTopPersonal from "@/assets/img/vip/vip-top-personal.png"; // 个人会员
+import VipTopCompany from "@/assets/img/vip/vip-top-company.png"; // 企业会员
+import VipTick from "@/assets/img/vip/vip-tick.png";
+import VipFork from "@/assets/img/vip/vip-fork.png";
 import PayQR from "@/assets/img/vip/pay-member-qr.png";
+import { getVipConfigListApi } from "@/api/vip";
 import { getToken } from "@/utils/auth";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/modules/user";
 const router = useRouter();
 const ns = useNamespace("vip");
 const QRvisible = ref(false);
+const vipConfigList: Ref<Array<any>> = ref([]); // vip列表配置
 const accountList = ref([
-  { id: 0, name: "普通账户", bgImg: account_ordinary_bg },
-  { id: 1, name: "标准账户", bgImg: account_standard_bg },
-  { id: 2, name: "企业账户", bgImg: account_business_bg },
+  {
+    id: 0,
+    topIcon: VipTopNormal,
+    code: "PERSON_ORDINARY_USER",
+    btnConfig: {
+      color: "rgba(0,0,0,0.9)",
+      bgColor: "#ffffff",
+      borderColor: "#DBDCE2",
+      text: "立即体验",
+    },
+    price: {
+      color: "#5B6985",
+      number: null,
+    },
+    list: [],
+  },
+  {
+    id: 1,
+    topIcon: VipTopPersonal,
+    code: "PERSON_MEMBER_USER",
+    btnConfig: {
+      color: "rgba(255,255,255,0.9)",
+      bgColor: "#244BF1",
+      borderColor: "#244BF1",
+      text: "立即开通",
+    },
+    price: {
+      number: 299,
+      color: "#244BF1",
+      unit: "/月",
+      extraPrice: "￥879/季 ￥3399/年",
+    },
+    list: [],
+  },
+  {
+    id: 2,
+    topIcon: VipTopCompany,
+    code: "ENTERPRISE_MEMBER_USER",
+    btnConfig: {
+      color: "#E5BC68",
+      bgColor: "#412F1B",
+      borderColor: "#412F1B",
+      text: "立即开通",
+    },
+    price: {
+      number: 10000,
+      color: "#412F1B",
+      unit: "/3账号/年",
+      extraPrice: "",
+    },
+    list: [],
+  },
 ]);
 // 账户信息
 const handleSkip = () => {
@@ -60,6 +168,21 @@ const handleClick = (item) => {
     _id === 2 && (QRvisible.value = true);
   }
 };
+// 获取vip配置
+const getVipConfigList = async () => {
+  const { datas, resp_code }: ApiType = await getVipConfigListApi();
+  if (resp_code === 0) {
+    vipConfigList.value = datas;
+    accountList.value.forEach((item) => {
+      datas.forEach((_item) => {
+        if (item.code === _item.permissionCode) {
+          item.list = _item.moduleTypes;
+        }
+      });
+    });
+  }
+};
+getVipConfigList();
 </script>
 
 <style lang="scss">
@@ -75,14 +198,19 @@ const handleClick = (item) => {
     display: flex;
     justify-content: space-between;
     .item {
-      @include widthAndHeight(368px, 1802px);
+      width: 368px;
       position: relative;
-      img {
-        @include widthAndHeight(100%, 100%);
+      border: 1px solid #dbdce2;
+      border-radius: 8px;
+      .item_log {
+        @include widthAndHeight(100%, 104px);
       }
       .item_btn {
-        @include widthAndHeight(324px, 40px);
-        @include absolute(2, 200px, 0, 0, 22px);
+        @include widthAndHeight(320px, 40px);
+        border-radius: 4px;
+        @include font(16px, 400, rgba(0, 0, 0), 40px);
+        text-align: center;
+        margin-bottom: 32px;
         cursor: pointer;
       }
     }
@@ -133,6 +261,40 @@ const handleClick = (item) => {
         transform: translateY(0px);
       }
     }
+  }
+}
+.es-vip-content {
+  padding: 40px 24px 28px 24px;
+}
+.es-vip-price {
+  margin: 0 auto 16px;
+}
+.es-vip-module__title {
+  color: rgba(0, 0, 0, 0.6);
+  line-height: 22px;
+  margin-bottom: 8px;
+}
+.es-vip-module_item__title {
+  color: rgba(0, 0, 0, 0.6);
+  line-height: 22px;
+}
+.es-vip-module__content {
+  height: 22px;
+  margin-bottom: 10px;
+  @include flex(center, space-between, nowrap);
+  img {
+    @include widthAndHeight(18px, 18px);
+    flex: 0;
+    margin-right: 5px;
+  }
+  div {
+    @include flex(center, flex-start, nowrap);
+    h5 {
+      font-weight: 400;
+    }
+  }
+  p {
+    @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
   }
 }
 </style>
