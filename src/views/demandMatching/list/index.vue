@@ -406,6 +406,9 @@ const getReleaseNeed = async () => {
   if (data.resp_code === 0) {
     releaseTotal.value = data.datas.total;
     releaseList.value = data.datas.records;
+    releaseList.value.forEach((item) => {
+      item.enabled === 2 && (item.status = 99);
+    });
   }
 };
 const onchangeCurrentRelease = (number: number) => {
