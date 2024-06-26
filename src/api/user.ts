@@ -229,3 +229,20 @@ export function trackApi(data: any) {
     { data },
   );
 }
+
+// 获取是否需要评分
+export function isNpsMarkApi(moduleName: string) {
+  return http.request<responseType>(
+    "get",
+    `/api-user/satisfaction/front/openApi/V1.0/getSatisfactionQuestionnaire?moduleName=${moduleName}`,
+  );
+}
+
+// 打分接口
+export function scoreMarkApi(data: any) {
+  return http.request<responseType>(
+    "post",
+    `/api-user/satisfaction/front/openApi/V1.0/getSatisfaction`,
+    { data },
+  );
+}

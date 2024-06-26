@@ -33,6 +33,7 @@
       v-if="currentTab === 'duration'"
     />
   </div>
+  <NpsMark module="中标追踪" title="「查中标」" />
 </template>
 
 <script setup lang="ts">

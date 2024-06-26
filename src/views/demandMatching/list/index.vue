@@ -555,7 +555,7 @@ onMounted(() => {
   }
 }
 .es-demand-list-search__empty {
-  @include widthAndHeight(182px);
+  @include widthAndHeight(232px);
   margin: 64px auto 0;
   @include flex(flex-start, center, wrap);
   img {

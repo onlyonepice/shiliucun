@@ -35,6 +35,7 @@
       />
     </template>
   </div>
+  <NpsMark module="招标追踪" title="「查招标」" />
 </template>
 
 <script lang="ts" setup>
