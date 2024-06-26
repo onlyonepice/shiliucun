@@ -75,6 +75,7 @@ import {
 } from "@/api/user";
 import { ElMessage } from "element-plus";
 import { useUserStore } from "@/store/modules/user";
+import { getToken } from "@/utils/auth";
 const ns = useNamespace("npsMark");
 const dialogVisible: Ref<boolean> = ref(false);
 const props = defineProps({
@@ -139,10 +140,14 @@ const getNpsConfig = async () => {
   }
 };
 onMounted(async () => {
-  const { datas, resp_code } = await isNpsMarkApi(props.module);
-  if (resp_code === 0) {
-    dialogVisible.value = datas;
-    getNpsConfig();
+  if (getToken()) {
+    const { datas, resp_code } = await isNpsMarkApi(props.module);
+    if (resp_code === 0) {
+      dialogVisible.value = datas;
+      getNpsConfig();
+    }
+  } else {
+    dialogVisible.value = false;
   }
 });
 </script>
