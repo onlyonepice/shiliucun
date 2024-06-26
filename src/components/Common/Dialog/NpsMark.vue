@@ -98,7 +98,8 @@ const onChoseScore = async (data: number) => {
   score.value = data;
   reasonList.value = [];
   allReasonList.value.forEach((item) => {
-    item.label.includes(data) && (reasonList.value = item.children);
+    const _list = item.label.split(",");
+    _list.includes(String(data)) && (reasonList.value = item.children);
   });
 };
 // 选择原因
