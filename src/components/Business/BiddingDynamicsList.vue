@@ -83,22 +83,22 @@
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">项目类别</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.contentName }}
+                {{ detailData.categoryName }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">招标内容</p>
               <p class="detail_content_item_value_item_value">
-                {{ detailData.categoryName }}
+                {{ detailData.contentName }}
               </p>
             </div>
             <div class="detail_content_item_value_item">
               <p class="detail_content_item_value_item_label">功率</p>
               <p class="detail_content_item_value_item_value">
                 {{
-                  detailData.powerScale === 0
-                    ? "未知"
-                    : detailData.powerScale + "MW"
+                  !!detailData.powerScale
+                    ? detailData.powerScale + "MW"
+                    : "未知"
                 }}
               </p>
             </div>
@@ -106,9 +106,9 @@
               <p class="detail_content_item_value_item_label">能量</p>
               <p class="detail_content_item_value_item_value">
                 {{
-                  detailData.energyScale === 0
-                    ? "未知"
-                    : detailData.energyScale + "MWh"
+                  !!detailData.energyScale
+                    ? detailData.energyScale + "MWh"
+                    : "未知"
                 }}
               </p>
             </div>
