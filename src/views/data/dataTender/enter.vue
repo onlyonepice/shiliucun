@@ -35,7 +35,12 @@
       />
     </template>
   </div>
-  <NpsMark module="查招标" title="「查招标」" />
+  <NpsMark
+    module="查招标"
+    title="「查招标」"
+    apiText="checkBiddingNpsFeedBack"
+    npsConfigCode="FIND_BIDDING"
+  />
 </template>
 
 <script lang="ts" setup>

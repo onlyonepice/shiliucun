@@ -33,7 +33,12 @@
       v-if="currentTab === 'duration'"
     />
   </div>
-  <NpsMark module="查中标" title="「查中标」" />
+  <NpsMark
+    module="查中标"
+    title="「查中标」"
+    apiText="checkWinningNpsFeedBack"
+    npsConfigCode="FIND_WINNINGBIDS"
+  />
 </template>
 
 <script setup lang="ts">

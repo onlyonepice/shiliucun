@@ -246,3 +246,18 @@ export function scoreMarkApi(data: any) {
     { data },
   );
 }
+
+// 获取nps配置
+export function getNpsConfigInfoApi(params: string) {
+  return http.request<responseType>(
+    "post",
+    `/eesa-data-center/sysDict/openApi/v1.0/backSelectTreeByType/${params}`,
+  );
+}
+
+// 上报打分接口
+export function scoreMarkApi2(data: any) {
+  return http.request<responseType>("post", `/eesa-data-center/nps/save`, {
+    data,
+  });
+}
