@@ -173,7 +173,6 @@ const onShare = async () => {
   @include flex(center, space-between, nowrap);
 }
 .es-demandMatching-detail-top__number {
-  width: 80px;
   @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
 }
 .es-demandMatching-detail-top__removed-head {
