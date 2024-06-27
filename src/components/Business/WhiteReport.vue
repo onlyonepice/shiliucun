@@ -37,6 +37,7 @@ import RightArrow from "@/assets/img/common/right-arrow.png";
 import { useRouter } from "vue-router";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
+const emits = defineEmits(["onDetail"]);
 const router = useRouter();
 defineProps({
   pageData: {
@@ -46,6 +47,7 @@ defineProps({
 });
 // 跳转白皮书详情
 const onDetail = (data: any) => {
+  emits("onDetail");
   if (!getToken()) {
     return useUserStoreHook().openLogin(true);
   }

@@ -1,6 +1,6 @@
 <template>
   <div :class="['es-commonPage', ns.b()]">
-    <WhiteReport :page-data="paperList" @click="onDetail()" />
+    <WhiteReport :page-data="paperList" @onDetail="onDetail()" />
   </div>
 </template>
 
