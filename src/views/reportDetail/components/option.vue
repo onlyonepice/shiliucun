@@ -234,7 +234,6 @@ const onHandleClose = async (type: boolean) => {
       ElMessage.success("内容纠错上传成功");
       showDialog.value = false;
     }
-    window.trackFunction(props.trackData["scoreTrack"]);
   }
   errorContent.value = {};
   fileList.value = [];
@@ -325,6 +324,7 @@ const onMouseleave = () => {
 // 打分
 const onScore = async (item: number) => {
   score.value = item - 1;
+  window.trackFunction(props.trackData["scoreTrack"]);
   const { resp_code }: any = await setReportScoreApi({
     level: scoreTextList.value[score.value - 1],
     moduleName: props.detail.moduleName,
