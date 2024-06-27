@@ -1,6 +1,6 @@
 <template>
   <div :class="['es-commonPage', ns.b()]">
-    <WhiteReport :page-data="paperList" />
+    <WhiteReport :page-data="paperList" @click="onDetail()" />
   </div>
 </template>
 
@@ -18,6 +18,10 @@ const getWhitePaperList = async () => {
 onMounted(() => {
   getWhitePaperList();
 });
+const onDetail = () => {
+  window.trackFunction("pc_Report_WhitePaper_File_click");
+};
+window.trackFunction("pc_Report_WhitePaper_click");
 </script>
 
 <style lang="scss" scoped>

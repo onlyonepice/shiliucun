@@ -143,6 +143,7 @@ const dropdownLoading = async (type) => {
 };
 // 跳转报告详情
 const onDetailReport = async (item: any) => {
+  window.trackFunction("pc_Report_PeriodicReport_File_click");
   if (!getToken()) {
     return useUserStoreHook().openLogin(true);
   }
@@ -154,6 +155,7 @@ onMounted(() => {
     getReportList(1, "MONTHLY_REPORT"),
     getReportList(2, "QUARTERLY_REPORT"),
   ]);
+  window.trackFunction("pc_Report_PeriodicReport_click");
 });
 </script>
 

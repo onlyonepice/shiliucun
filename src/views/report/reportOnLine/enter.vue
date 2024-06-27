@@ -48,6 +48,7 @@
               v-for="(item, index) in topReportList"
               :page-data="item"
               :key="`topReport${index}`"
+              @click="onDetail()"
             />
           </div>
           <p class="title">会员专区</p>
@@ -57,6 +58,7 @@
               v-for="item in freeReportList"
               :page-data="item"
               :key="`freeReport${item.id}`"
+              @click="onDetail()"
             />
           </div>
         </div>
@@ -89,7 +91,9 @@ const checkedYearIds = ref(["all"]);
 const filterData: any = ref({});
 
 const skeletonScreen = ref(true);
-
+const onDetail = () => {
+  window.trackFunction("pc_Report_OnlineReport_File_click");
+};
 const getReportTagListFn = async () => {
   const data = await getOnlineReportFilters();
   if (data.resp_code === 0) {
@@ -198,6 +202,7 @@ const getPageData = () => {
 };
 getReportTagListFn();
 getPageData();
+window.trackFunction("pc_Report_OnlineReport_click");
 </script>
 
 <style lang="scss" scoped>
