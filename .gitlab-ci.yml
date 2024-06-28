@@ -127,15 +127,9 @@ post_build_task:
   image: $DOCKER_REGISTRY/op/aliyun-cli:latest
   script:
   - |  
-    aliyun cdn RefreshObjectCaches \  
-      --ObjectPath "$PROD_URL" \  
-      --ObjectType Directory \  
-      --Force true  
+    aliyun cdn RefreshObjectCaches --ObjectPath "$PROD_URL" --ObjectType Directory --Force true  
   - |  
-    aliyun cdn BatchSetCdnDomainConfig \  
-      --region cn-shanghai \  
-      --Functions '[{"functionArgs": [{"argName": "key","argValue": "Cache-Control"},{"argName": "value","argValue": "no-cache, no-store"}],"functionName": "set_resp_header", "parentId": 355497228443648}]' \  
-      --DomainNames 'data-report.eesaenergy.com'
+    aliyun cdn BatchSetCdnDomainConfig --region cn-shanghai --Functions '[{"functionArgs": [{"argName": "key","argValue": "Cache-Control"},{"argName": "value","argValue": "no-cache, no-store"}],"functionName": "set_resp_header", "parentId": 355497228443648} ] ' --DomainNames 'data-report.eesaenergy.com'
   tags:
     - data-report
   only:
