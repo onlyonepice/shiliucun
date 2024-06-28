@@ -292,6 +292,9 @@ function optimizeData() {
 }
 
 function handleSaveDraft() {
+  if (!form.value.productName) {
+    return ElMessage.warning("请填写产品名称");
+  }
   optimizeData();
   emits("saveDraft", form.value);
 }
