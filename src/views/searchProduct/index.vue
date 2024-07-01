@@ -30,6 +30,7 @@
               :product="item"
               :comparedList="comparedList"
               :cardType="cardType"
+              :productType="tabsList[choseTabs].code"
             />
           </div>
         </template>
@@ -43,6 +44,7 @@
         @onDelComputed="onDelComputed"
         @onCloseCompared="onCloseCompared"
         @onEmptyCompared="comparedList = []"
+        :productType="tabsList[choseTabs].code"
       />
     </template>
     <Pagination
@@ -74,8 +76,8 @@ import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash";
 const ns = useNamespace("searchProduct");
 const tabsList: Ref<Array<TabsList>> = ref([
-  { id: 1, name: "工商业一体机", code: "INDUSTRY_ENERGY_STORAGE" },
-  { id: 2, name: "电芯", code: "INDUSTRY_ENERGY_STORAGE" },
+  { id: 0, name: "工商业一体机", code: "INDUSTRY_ENERGY_STORAGE" },
+  { id: 1, name: "电芯", code: "ELECTRIC_CORE" },
   // { id: 3, name: "储能变流器" },
   // { id: 4, name: "大型储能柜" },
 ]);
@@ -100,7 +102,7 @@ const filterList: Ref<Array<any>> = ref([
   { id: 1, type: "txt", title: "冷却方式", data: [] },
   { id: 2, type: "img", title: "品牌选择", data: [] },
 ]);
-const choseTabs: Ref<number> = ref(1); // 选中的tabs
+const choseTabs: Ref<number> = ref(0); // 选中的tabs
 watch(
   () => comparedList.value,
   (val) => {
@@ -111,6 +113,8 @@ watch(
 // 选择标签栏
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
+  filterInfo.value.page = 1;
+  getProductList();
 };
 // 修改卡片展示样式
 const changeArrangement = (type: string) => {
@@ -171,7 +175,7 @@ const getProductFilter = async () => {
   const _data = tabsList.value.filter((item) => {
     return item.id === choseTabs.value;
   });
-  const { datas } = await getProductFilterApi({
+  const { datas }: any = await getProductFilterApi({
     energyStorageProductCode: _data[0].code,
   });
   const _list: any = [];
@@ -211,6 +215,7 @@ const getProductList = async () => {
   _data.enterpriseIds.length === 0
     ? (_data.enterpriseIds = null)
     : _data.enterpriseIds;
+  _data.productType = tabsList.value[choseTabs.value].code;
   const { datas, resp_code } = await getProductListApi(Object.assign(_data));
   if (resp_code === 0) {
     productList.value = datas.content;

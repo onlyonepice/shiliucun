@@ -132,6 +132,10 @@ const props = defineProps({
     type: String,
     default: "card",
   },
+  productType: {
+    type: String,
+    default: "INDUSTRY_ENERGY_STORAGE",
+  },
 });
 const onCompared = () => {
   emits("onCompared", props.product);
@@ -148,7 +152,9 @@ const onOpenWindow = (id: number) => {
   );
 };
 const onDetail = () => {
-  router.push(`/searchProductDetail?id=${props.product.id}`);
+  router.push(
+    `/searchProductDetail?id=${props.product.id}&productType=${props.productType}`,
+  );
 };
 </script>
 

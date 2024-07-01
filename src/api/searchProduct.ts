@@ -22,7 +22,7 @@ export const getProductFilterApi = (params: any) => {
 export const getProductListApi = (data: any) => {
   return http.request<void>(
     "post",
-    "/eesa-report/energyStorageProduct/productIndustrialEnergyStorage/openApi/V1.0/list",
+    "/eesa-report/energyStorageProduct/energyStorageProduct/openApi/v1.0/list",
     { data },
   );
 };
@@ -31,7 +31,7 @@ export const getProductListApi = (data: any) => {
 export const getProductDetailApi = (params: any) => {
   return http.request<void>(
     "get",
-    "/eesa-report/energyStorageProduct/productIndustrialEnergyStorage/openApi/v1.0/detail",
+    "/eesa-report/energyStorageProduct/energyStorageProduct/openApi/v1.0/detail",
     { params },
   );
 };
@@ -39,16 +39,16 @@ export const getProductDetailApi = (params: any) => {
 export const getProductDetailListApi = (params: any) => {
   return http.request<void>(
     "get",
-    "/eesa-report/energyStorageProduct/productIndustrialEnergyStorage/front/v1.0/queryIndustrialEnergyStorageOtherProduct",
+    `/eesa-report/energyStorageProduct/energyStorageProduct/front/v1.0/queryOtherProduct`,
     { params },
   );
 };
 
 // 获取产品对比
-export const getProductComparedApi = (ids: any) => {
+export const getProductComparedApi = (params: any) => {
   return http.request<void>(
     "get",
-    `/eesa-report/energyStorageProduct/productIndustrialEnergyStorage/front/v1.0/contrast?ids=${ids}`,
+    `/eesa-report/energyStorageProduct/energyStorageProduct/front/v1.0/contrast?ids=${params.ids}&productType=${params.productType}`,
   );
 };
 
@@ -56,7 +56,7 @@ export const getProductComparedApi = (ids: any) => {
 export const getProductDetailsApi = (id) => {
   return http.request<{ resp_code: number; datas: any }>(
     "get",
-    "/eesa-report/energyStorageProduct/productIndustrialEnergyStorage/openApi/v1.0/detail",
+    "/eesa-report/energyStorageProduct/energyStorageProduct/openApi/v1.0/detail",
     { params: { id } },
   );
 };

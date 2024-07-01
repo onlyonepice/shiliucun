@@ -19,10 +19,11 @@
             @check="(data, keys) => handleCheckChange(keys, value)"
             ref="treeRefFilter"
             :data="[value]"
-            default-expand-all
+            :default-expanded-keys="defaultExpandedKeys"
             highlight-current
             :props="defaultProps"
             node-key="paramValue"
+            render-after-expand
             show-checkbox
             :default-checked-keys="filterParams[value.paramValue].split(',')"
           >
@@ -211,7 +212,7 @@ import {
   getPolicyByFiltrateNoPagination,
 } from "@/api/data";
 import { cloneDeep } from "lodash";
-import { ref, computed } from "vue";
+import { ref, computed, Ref } from "vue";
 import { useRoute } from "vue-router";
 import { getToken } from "@/utils/auth";
 import { getTimesApi } from "@/api/user";
@@ -223,7 +224,7 @@ const route = useRoute();
 const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
 const ns = useNamespace("policyList");
-
+const defaultExpandedKeys: Ref<Array<any>> = ref([]);
 const paging = ref({
   limit: 15,
   page: 1,
@@ -493,6 +494,7 @@ async function handleCheckChange(select: any, row: any) {
 const filterOptionsData = computed(() => {
   const _data = cloneDeep(filterOptions.value);
   const newVal = _data.map((item) => {
+    defaultExpandedKeys.value.push(item.paramValue);
     if (item.dropDownBoxResp.length > 5 && !item.showAll) {
       item.dropDownBoxResp = item.dropDownBoxResp.slice(0, 5);
     }

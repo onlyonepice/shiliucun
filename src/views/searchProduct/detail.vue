@@ -198,6 +198,7 @@ const productDetailList: Ref<any> = ref({});
 const getProductDetail = async () => {
   const { datas, resp_code }: any = await getProductDetailApi({
     id: route.query.id,
+    productType: route.query.productType,
   });
   if (resp_code === 0) {
     productDetail.value = datas;
@@ -214,6 +215,7 @@ const getProductDetail = async () => {
 const getProductDetailList = async () => {
   const { datas, resp_code }: any = await getProductDetailListApi({
     id: route.query.id,
+    productType: route.query.productType,
   });
   if (resp_code === 0) {
     productDetailList.value = datas;

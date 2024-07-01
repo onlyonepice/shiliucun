@@ -74,6 +74,10 @@ const props = defineProps({
     type: Array as any,
     default: () => [],
   },
+  productType: {
+    type: String,
+    default: "INDUSTRY_ENERGY_STORAGE",
+  },
 });
 // 删除对比产品
 const onDelComputed = (id: string) => {
@@ -96,7 +100,9 @@ const onCompared = () => {
   if (_data.length < 2) {
     return ElMessage.warning("请选择两个产品进行对比");
   }
-  router.push(`/searchProductCompared?ids=${_data.join(",")}`);
+  router.push(
+    `/searchProductCompared?ids=${_data.join(",")}&productType=${props.productType}`,
+  );
 };
 </script>
 

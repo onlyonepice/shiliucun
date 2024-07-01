@@ -82,8 +82,9 @@ import { getProductComparedApi } from "@/api/searchProduct";
 import compardTable from "./components/compardTable.vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { cloneDeep } from "lodash";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
+const route = useRoute();
 const ns = useNamespace("searchProductCompared");
 const breadcrumbList: Ref<Array<any>> = ref([
   { text: "查产品", path: "/searchProduct" },
@@ -115,10 +116,13 @@ const getComparedList = async () => {
     return;
   }
   tableData.value = [];
-  const _data: any = [];
+  const _data: any = {
+    ids: [],
+  };
   useUserStoreHook().comparedList.forEach((item) => {
-    _data.push(item.id);
+    _data.ids.push(item.id);
   });
+  _data.productType = route.query.productType;
   const { resp_code, datas }: any = await getProductComparedApi(_data);
   if (resp_code === 0) {
     datas.forEach((item: any) => {
