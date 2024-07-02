@@ -12,7 +12,9 @@
         默认
       </div>
       <div
-        v-for="item in sortingList"
+        v-for="item in productType === 'INDUSTRY_ENERGY_STORAGE'
+          ? sortingList
+          : sortingList2"
         :key="item.id"
         :class="[
           ns.b('common'),
@@ -77,6 +79,12 @@ const emits = defineEmits(["onChangeSorting", "onChangeArrangement"]);
 const choseTabs: Ref<number> = ref(0); // 0: 默认 1: 价格 2: 额定功率 3: 系统容量
 const upOrDown: Ref<boolean> = ref(false); // false升序/true降序
 const arrangementType: Ref<String> = ref("card"); // 卡片排列还是列表
+defineProps({
+  productType: {
+    type: String,
+    default: "INDUSTRY_ENERGY_STORAGE",
+  },
+});
 const sortingList: Ref<Array<any>> = ref([
   {
     id: 1,
@@ -91,6 +99,18 @@ const sortingList: Ref<Array<any>> = ref([
   {
     id: 2,
     text: "系统容量",
+    desc: "inPriceSort",
+  },
+]);
+const sortingList2: Ref<Array<any>> = ref([
+  {
+    id: 1,
+    text: "价格",
+    desc: "inPriceSort",
+  },
+  {
+    id: 2,
+    text: "容量",
     desc: "inPriceSort",
   },
 ]);

@@ -15,6 +15,7 @@
     <SearchProductSorting
       @onChangeSorting="onChangeSorting"
       @onChangeArrangement="changeArrangement"
+      :productType="tabsList[choseTabs].code"
     />
     <div :class="ns.b('content')">
       <Loading v-if="loading" />
@@ -99,8 +100,8 @@ const loading: Ref<boolean> = ref(false); // 加载状态
 const cardType: Ref<string> = ref("card"); // 卡片展示方式
 // 筛选项数组
 const filterList: Ref<Array<any>> = ref([
-  { id: 1, type: "txt", title: "冷却方式", data: [] },
-  { id: 2, type: "img", title: "品牌选择", data: [] },
+  { id: 1, show: true, type: "txt", title: "冷却方式", data: [] },
+  { id: 2, show: true, type: "img", title: "品牌选择", data: [] },
 ]);
 const choseTabs: Ref<number> = ref(0); // 选中的tabs
 watch(
@@ -113,6 +114,8 @@ watch(
 // 选择标签栏
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
+  // 筛选想发生改变
+  filterList.value[0].show = id !== 1;
   filterInfo.value.page = 1;
   getProductList();
 };

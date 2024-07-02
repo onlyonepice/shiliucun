@@ -14,7 +14,7 @@
       />
     </div>
     <p :class="ns.b('price')">
-      参考价<span>{{ product.price }}/kWh起</span>
+      参考价<span>{{ !!product.price ? product.price : "-" }}/kWh起</span>
     </p>
     <h4 :class="ns.b('name')">{{ product.name }}</h4>
     <p :class="ns.b('company')">{{ product.enterprise }}</p>
@@ -58,39 +58,12 @@
       </div>
       <div :class="ns.be('list-right', 'info')">
         <div :class="ns.be('list-right', 'info-list')">
-          <p>
-            形式：{{
-              !!product.productFormName ? product.productFormName : "-"
-            }}
-          </p>
-          <p>
-            冷却方式：{{
-              !!product.coolingMethodName ? product.coolingMethodName : "-"
-            }}
-          </p>
-          <p>
-            电池系统能量：{{
-              !!product.batterySystemEnergy
-                ? product.batterySystemEnergy + "kwh"
-                : "-"
-            }}
-          </p>
-          <p>
-            额定功率：{{
-              !!product.ratedPower ? product.ratedPower + "kW" : "-"
-            }}
-          </p>
-          <p>
-            系统综合效率：{{
-              !!product.systemOverallEfficiency
-                ? product.systemOverallEfficiency + "%"
-                : "-"
-            }}
-          </p>
-          <p>
-            年衰减率：{{
-              !!product.annualDecayRate ? product.annualDecayRate + "%" : "-"
-            }}
+          <p
+            v-for="item in productInfo"
+            :key="item.label"
+            :style="{ width: item.width ? item.width : '50%' }"
+          >
+            {{ item.label }}{{ item.value }}
           </p>
         </div>
         <div :class="ns.b('btn')">
@@ -140,6 +113,58 @@ const props = defineProps({
 const onCompared = () => {
   emits("onCompared", props.product);
 };
+const productInfo = computed(() => {
+  const _data = [];
+  if (props.productType === "INDUSTRY_ENERGY_STORAGE") {
+    _data.push(
+      {
+        label: "形式：",
+        value: props.product.productFormName || "-",
+      },
+      {
+        label: "冷却方式：",
+        value: props.product.coolingMethodName || "-",
+      },
+      {
+        label: "电池系统能量：",
+        value: props.product.batterySystemEnergy || "-",
+      },
+      {
+        label: "额定功率：",
+        value: props.product.ratedPower || "-",
+      },
+      {
+        label: "系统综合效率：",
+        value: props.product.systemOverallEfficiency || "-",
+      },
+      {
+        label: "年衰减率：",
+        value: props.product.annualDecayRate || "-",
+      },
+    );
+  } else {
+    _data.push(
+      {
+        label: "形态：",
+        value: props.product.shapeName || "-",
+      },
+      {
+        label: "循环寿命：",
+        value: props.product.cycleLife || "-",
+      },
+      {
+        width: "100%",
+        label: "能量密度：",
+        value: "≥" + props.product.energyDensity + "Wh/kg" || "-",
+      },
+      {
+        label: "容量：",
+        value: props.product.batteryCapacity + "Ah" || "-",
+      },
+    );
+  }
+  return _data;
+});
 const getType = computed(() => {
   return props.comparedList.some((item: any) => item.id === props.product.id)
     ? true
@@ -275,7 +300,7 @@ const onDetail = () => {
   }
 }
 .es-searchProduct-card-list-right__info-list {
-  width: 504px;
+  width: 564px;
   @include flex(flex-end, space-between, wrap);
 }
 </style>

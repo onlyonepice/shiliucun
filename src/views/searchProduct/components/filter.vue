@@ -12,55 +12,60 @@
       v-for="item in filterList"
       :key="item.id"
     >
-      <h5>{{ item.title }}</h5>
-      <div
-        :class="[
-          ns.be('filter', 'box'),
-          item.type === 'img' && !showMore
-            ? ns.bem('filter', 'box', 'img')
-            : '',
-        ]"
-      >
-        <template v-if="item.type === 'txt'">
-          <p
-            v-for="_item in item.data"
-            @click="onChoseFilter(_item, item.title)"
-            :key="_item.id"
-            :class="[
-              ns.be('filter', 'txt'),
-              getCoolingMethodIds(_item.id) ? ns.is('active') : '',
-            ]"
-          >
-            {{ _item.label }}
-          </p>
-        </template>
-        <template v-else-if="item.type === 'img'">
-          <div
-            v-for="_item in !showMore ? item.data.slice(0, 16) : item.data"
-            :key="_item.id"
-            @click="onChoseFilter(_item, item.title)"
-            :class="[
-              ns.be('filter', 'img'),
-              getEnterpriseId(_item.id) ? ns.is('active') : '',
-            ]"
-          >
-            <img :src="useUserStoreHook().$state.fileUrl + _item.data" alt="" />
+      <template v-if="item.show">
+        <h5>{{ item.title }}</h5>
+        <div
+          :class="[
+            ns.be('filter', 'box'),
+            item.type === 'img' && !showMore
+              ? ns.bem('filter', 'box', 'img')
+              : '',
+          ]"
+        >
+          <template v-if="item.type === 'txt'">
+            <p
+              v-for="_item in item.data"
+              @click="onChoseFilter(_item, item.title)"
+              :key="_item.id"
+              :class="[
+                ns.be('filter', 'txt'),
+                getCoolingMethodIds(_item.id) ? ns.is('active') : '',
+              ]"
+            >
+              {{ _item.label }}
+            </p>
+          </template>
+          <template v-else-if="item.type === 'img'">
+            <div
+              v-for="_item in !showMore ? item.data.slice(0, 16) : item.data"
+              :key="_item.id"
+              @click="onChoseFilter(_item, item.title)"
+              :class="[
+                ns.be('filter', 'img'),
+                getEnterpriseId(_item.id) ? ns.is('active') : '',
+              ]"
+            >
+              <img
+                :src="useUserStoreHook().$state.fileUrl + _item.data"
+                alt=""
+              />
+              <img
+                :class="ns.be('filter', 'img-active')"
+                :src="SearchProductIcon"
+                v-if="getEnterpriseId(_item.id)"
+              />
+            </div>
             <img
-              :class="ns.be('filter', 'img-active')"
-              :src="SearchProductIcon"
-              v-if="getEnterpriseId(_item.id)"
+              :class="[
+                ns.be('filter', 'more'),
+                showMore ? ns.bem('filter', 'more', 'show') : '',
+              ]"
+              :src="MoreData"
+              @click="showMore = !showMore"
             />
-          </div>
-          <img
-            :class="[
-              ns.be('filter', 'more'),
-              showMore ? ns.bem('filter', 'more', 'show') : '',
-            ]"
-            :src="MoreData"
-            @click="showMore = !showMore"
-          />
-        </template>
-      </div>
+          </template>
+        </div>
+      </template>
     </div>
   </div>
   <!-- <MiniAppNeed
@@ -95,6 +100,10 @@ const props = defineProps({
   filterList: {
     type: Array as any,
     default: () => [],
+  },
+  productType: {
+    type: String,
+    default: "INDUSTRY_ENERGY_STORAGE",
   },
 });
 const onChoseFilter = (item: any, type: string) => {
