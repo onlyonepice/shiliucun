@@ -119,6 +119,7 @@ const onHandleClick = (id: number) => {
   // 清除产品对比
   comparedList.value = [];
   filterInfo.value.page = 1;
+  getProductFilter();
   getProductList();
 };
 // 修改卡片展示样式
@@ -182,6 +183,7 @@ const getProductFilter = async () => {
   });
   const { datas }: any = await getProductFilterApi({
     energyStorageProductCode: _data[0].code,
+    productType: tabsList.value[choseTabs.value].code,
   });
   const _list: any = [];
   for (const key in datas) {
