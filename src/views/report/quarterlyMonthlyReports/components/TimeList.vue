@@ -7,7 +7,11 @@
     <div :class="ns.bm('item', 'header')">
       <img :src="list.pic" alt="" />
     </div>
-    <div :class="ns.b('body')" v-infinite-scroll="handleDropdownLoading">
+    <div
+      :class="ns.b('body')"
+      v-infinite-scroll="handleDropdownLoading"
+      :infinite-scroll-distance="100"
+    >
       <div
         :class="ns.bm('body', 'item')"
         v-for="(item, index) in list.list"
