@@ -116,6 +116,8 @@ const onHandleClick = (id: number) => {
   choseTabs.value = id;
   // 筛选想发生改变
   filterList.value[0].show = id !== 1;
+  // 清除产品对比
+  comparedList.value = [];
   filterInfo.value.page = 1;
   getProductList();
 };

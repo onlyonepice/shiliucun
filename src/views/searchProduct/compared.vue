@@ -6,6 +6,7 @@
         <el-table-column fixed prop="name" label="" width="124">
           <template #default="scope">
             <p
+              v-if="route.query.productType === 'INDUSTRY_ENERGY_STORAGE'"
               :style="{
                 color: 'rgba(0, 0, 0, 0.9)',
                 'font-weight':
@@ -14,6 +15,9 @@
                     : 400,
               }"
             >
+              {{ scope.row.name }}
+            </p>
+            <p v-else style="color: rgba(0, 0, 0, 0.9)">
               {{ scope.row.name }}
             </p>
           </template>
@@ -25,6 +29,7 @@
               :index="scope.$index"
               :info="scope.row.info[0] || {}"
               :choseIndex="choseIndexList[0]"
+              :productType="route.query.productType"
               @onChoseProduct="choseIndexList[0] = $event"
               @onDeleteCompared="onDeleteCompared(0)"
             />
@@ -38,6 +43,7 @@
               :index="scope.$index"
               :info="scope.row.info[1] || {}"
               :choseIndex="choseIndexList[1]"
+              :productType="route.query.productType"
               @onChoseProduct="choseIndexList[1] = $event"
               @onDeleteCompared="onDeleteCompared(1)"
             />
@@ -51,6 +57,7 @@
               :index="scope.$index"
               :info="scope.row.info[2] || {}"
               :choseIndex="choseIndexList[2]"
+              :productType="route.query.productType"
               @onChoseProduct="choseIndexList[2] = $event"
               @onDeleteCompared="onDeleteCompared(2)"
             />
@@ -64,6 +71,7 @@
               :index="scope.$index"
               :info="scope.row.info[3] || {}"
               :choseIndex="choseIndexList[3]"
+              :productType="route.query.productType"
               @onChoseProduct="choseIndexList[3] = $event"
               @onDeleteCompared="onDeleteCompared(3)"
             />
@@ -109,6 +117,18 @@ const tabNameList = ref([
   "尺寸/m'm",
   "产品单价（元/kWh）",
 ]);
+const tabNameList2 = ref([
+  "",
+  "产品名称",
+  "产品型号",
+  "产品形态",
+  "容量/Ah",
+  "充/放电倍率/P",
+  "能量密度/Wh/kg",
+  "循环寿命",
+  "尺寸/m*m*m",
+  "产品单价/元/Wh",
+]);
 const choseIndexList = ref([0, 0, 0, 0]);
 // 获取对比列表数据
 const getComparedList = async () => {
@@ -128,11 +148,20 @@ const getComparedList = async () => {
     datas.forEach((item: any) => {
       item.show = true;
     });
-    for (let index = 0; index < 16; index++) {
-      tableData.value.push({
-        name: tabNameList.value[index],
-        info: cloneDeep(datas),
-      });
+    if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
+      for (let index = 0; index < 16; index++) {
+        tableData.value.push({
+          name: tabNameList.value[index],
+          info: cloneDeep(datas),
+        });
+      }
+    } else {
+      for (let index = 0; index < 10; index++) {
+        tableData.value.push({
+          name: tabNameList2.value[index],
+          info: cloneDeep(datas),
+        });
+      }
     }
   }
 };

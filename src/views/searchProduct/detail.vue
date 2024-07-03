@@ -1,7 +1,7 @@
 <template>
   <div :class="[ns.b()]">
     <breadcrumb :breadcrumbList="breadcrumbList" />
-    <div :class="[ns.b('content'), 'es-commonPage']">
+    <div :class="[ns.b('content'), 'es-commonPage']" v-if="productDetail.id">
       <div :class="[ns.b('content-top')]">
         <div :class="[ns.b('content-top-title')]">
           <div :class="[ns.be('info-left', 'bigImg-box')]">
@@ -19,30 +19,15 @@
               {{ productDetail.enterprise }}
             </p>
             <p :class="[ns.b('info-right-price')]">
-              参考价<span>{{ productDetail.price }}/kWh起</span>
+              参考价<span>{{ productDetail.price || "-" }}/kWh起</span>
             </p>
             <template v-if="productDetail.models">
-              <p :class="[ns.b('info-right-common')]">
-                额定功率：{{
-                  !!productDetail.models[0].ratedPower
-                    ? productDetail.models[0].ratedPower + "kW"
-                    : "-"
-                }}
-              </p>
-              <p :class="[ns.b('info-right-common')]">
-                电池系统能量：{{
-                  productDetail.models[0].batterySystemEnergy
-                }}kWh
-              </p>
-              <p :class="[ns.b('info-right-common')]">
-                系统综合效率：{{
-                  productDetail.models[0].systemOverallEfficiency
-                }}%
-              </p>
-              <p :class="[ns.b('info-right-common')]">
-                冷却方式：{{
-                  productDetail.models[0].coolingMethodName.join("，")
-                }}
+              <p
+                :class="[ns.b('info-right-common')]"
+                v-for="item in productDetailInfo"
+                :key="item.label"
+              >
+                {{ item.label }}{{ item.value }}
               </p>
               <div
                 :class="[ns.b('info-right-common')]"
@@ -82,6 +67,7 @@
             <el-table-column fixed prop="name" label="" width="160">
               <template #default="scope">
                 <p
+                  v-if="route.query.productType === 'INDUSTRY_ENERGY_STORAGE'"
                   :style="{
                     'text-align': 'right',
                     color: 'rgba(0, 0, 0, 0.9)',
@@ -92,6 +78,15 @@
                         ? 600
                         : 400,
                   }"
+                >
+                  {{ scope.row.name }}
+                </p>
+                <p
+                  v-else
+                  style="
+                    text-align: right;
+                    color: &quot;rgba(0, 0, 0, 0.9)&quot;;
+                  "
                 >
                   {{ scope.row.name }}
                 </p>
@@ -113,6 +108,7 @@
                   v-if="scope.row.info[item - 1]"
                   :index="scope.$index"
                   :info="scope.row.info[item - 1] || {}"
+                  :productType="route.query.productType"
                 />
               </template>
             </el-table-column>
@@ -156,7 +152,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref } from "vue";
+import { Ref, ref, computed } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import {
   getProductDetailApi,
@@ -190,10 +186,76 @@ const tabNameList = ref([
   "尺寸/m*m*m",
   "产品单价/元/kWh",
 ]);
+const tabNameList2 = ref([
+  "产品型号",
+  "形态",
+  "容量/Ah",
+  "充/放电倍率/P",
+  "能量密度/Wh/kg",
+  "循环寿命",
+  "尺寸/m*m*m",
+  "产品单价（元/Wh）",
+]);
 const tableData: Ref<any> = ref([]);
 const route = useRoute();
 const productDetail: Ref<any> = ref({}); // 产品详情
 const productDetailList: Ref<any> = ref({});
+const productDetailInfo = computed(() => {
+  const _data = [];
+  if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
+    _data.push(
+      {
+        label: "额定功率：",
+        value: productDetail.value.models[0].ratedPower + "kW" || "-",
+      },
+      {
+        label: "电池系统能量：",
+        value: productDetail.value.models[0].batterySystemEnergy
+          ? productDetail.value.models[0].batterySystemEnergy + "kWh"
+          : "-",
+      },
+      {
+        label: "系统综合效率：",
+        value: productDetail.value.models[0].systemOverallEfficiency
+          ? productDetail.value.models[0].systemOverallEfficiency + "%"
+          : "-",
+      },
+      {
+        label: "冷却方式：",
+        value:
+          productDetail.value.models[0].coolingMethodName.join("，") || "-",
+      },
+    );
+  } else {
+    _data.push(
+      {
+        label: "形态：",
+        value: productDetail.value.models[0].shapeName
+          ? productDetail.value.models[0].shapeName
+          : "-",
+      },
+      {
+        label: "能量密度：",
+        value: productDetail.value.models[0].energyDensity
+          ? "≥" + productDetail.value.models[0].energyDensity + "Wh/kg"
+          : "-",
+      },
+      {
+        label: "容量：",
+        value: productDetail.value.models[0].batteryCapacity
+          ? productDetail.value.models[0].batteryCapacity + "Ah"
+          : "-",
+      },
+      {
+        label: "循环寿命：",
+        value: productDetail.value.models[0].cycleLife
+          ? productDetail.value.models[0].cycleLife
+          : "-",
+      },
+    );
+  }
+  return _data;
+});
 // 获取产品详情
 const getProductDetail = async () => {
   const { datas, resp_code }: any = await getProductDetailApi({
@@ -203,11 +265,20 @@ const getProductDetail = async () => {
   if (resp_code === 0) {
     productDetail.value = datas;
     breadcrumbList.value[1].text = datas.name;
-    for (let index = 0; index < 15; index++) {
-      tableData.value.push({
-        name: tabNameList.value[index],
-        info: cloneDeep(datas.models),
-      });
+    if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
+      for (let index = 0; index < 15; index++) {
+        tableData.value.push({
+          name: tabNameList.value[index],
+          info: cloneDeep(datas.models),
+        });
+      }
+    } else {
+      for (let index = 0; index < 8; index++) {
+        tableData.value.push({
+          name: tabNameList2.value[index],
+          info: cloneDeep(datas.models),
+        });
+      }
     }
   }
 };

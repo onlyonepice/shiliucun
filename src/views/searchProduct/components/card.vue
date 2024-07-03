@@ -13,9 +13,10 @@
         alt=""
       />
     </div>
-    <p :class="ns.b('price')">
-      参考价<span>{{ !!product.price ? product.price : "-" }}/kWh起</span>
+    <p :class="ns.b('price')" v-if="!!product.price">
+      参考价<span>{{ !!product.price ? product.price + "/kWh起" : "-" }}</span>
     </p>
+    <p :class="ns.b('price')" v-else />
     <h4 :class="ns.b('name')">{{ product.name }}</h4>
     <p :class="ns.b('company')">{{ product.enterprise }}</p>
     <div :class="ns.b('btn')">
@@ -217,6 +218,7 @@ const onDetail = () => {
   object-fit: contain;
 }
 .es-searchProduct-card-price {
+  height: 28px;
   margin: 16px 0 0 8px;
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
   span {
@@ -227,6 +229,9 @@ const onDetail = () => {
       @include font(14px, 600, #f75964, 22px);
       margin-left: 4px;
     }
+  }
+  p {
+    @include font(20px, 600, #f75964, 28px);
   }
 }
 .es-searchProduct-card-name {

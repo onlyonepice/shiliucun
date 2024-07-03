@@ -17,7 +17,7 @@
           alt=""
           @click="onDeleteCompared()"
         />
-        <p :class="ns.be('info', 'price')">
+        <p :class="ns.be('info', 'price')" v-if="info.price">
           参考价<span>{{ info.price }}/kWh起</span>
         </p>
         <p
@@ -30,75 +30,122 @@
       </div>
     </template>
   </div>
-  <div v-if="index === 1" :class="ns.b('common')" name="产品型号">
-    <Select
-      v-if="info.models.length > 1"
-      title=""
-      :options="info.models"
-      valueKey="modelName"
-      labelKey="modelName"
-      width="100%"
-      :defaultValue="info.models[0].modelName"
-      @onChange="
-        ($event) => {
-          onChoseProduct($event);
-        }
-      "
-    />
-    <p v-else>{{ showData.modelName ? showData.modelName : "-" }}</p>
-  </div>
-  <div v-if="index === 2" :class="ns.b('enterprise')" name="电池参数" />
-  <div v-if="index === 3" :class="ns.b('common')" name="电芯类型">
-    {{ showData.batteryTypeName ? showData.batteryTypeName : "-" }}
-  </div>
-  <div v-if="index === 4" :class="ns.b('common')" name="电池系统能量/kWh">
-    {{
-      showData.batterySystemEnergy ? showData.batterySystemEnergy + "kWh" : "-"
-    }}
-  </div>
-  <div v-if="index === 5" :class="ns.b('common')" name="放电深度/%">
-    {{ showData.dischargeDepth ? showData.dischargeDepth + "%" : "-" }}
-  </div>
-  <div v-if="index === 6" :class="ns.b('common')" name="PCS参数" />
-  <div v-if="index === 7" :class="ns.b('common')" name="标称电压/V">
-    {{
-      showData.nominalVoltage && showData.nominalVoltage.length !== 0
-        ? showData.nominalVoltage.join("-")
-        : "-"
-    }}
-  </div>
-  <div v-if="index === 8" :class="ns.b('common')" name="额定功率/kW">
-    {{ showData.ratedPower ? showData.ratedPower + "kW" : "-" }}
-  </div>
-  <div v-if="index === 9" :class="ns.b('common')" name="系统参数" />
-  <div v-if="index === 10" :class="ns.b('common')" name="产品形态">
-    {{ showData.productFormName ? showData.productFormName : "-" }}
-  </div>
-  <div v-if="index === 11" :class="ns.b('common')" name="系统综合效率/%">
-    {{
-      showData.systemOverallEfficiency
-        ? showData.systemOverallEfficiency + "%"
-        : "-"
-    }}
-  </div>
-  <div v-if="index === 12" :class="ns.b('common')" name="年衰减率/%">
-    {{ showData.annualDecayRate ? showData.annualDecayRate + "%" : "-" }}
-  </div>
-  <div v-if="index === 13" :class="ns.b('common')" name="冷却方式">
-    {{
-      showData.coolingMethodName ? showData.coolingMethodName.join(",") : "-"
-    }}
-  </div>
-  <div v-if="index === 14" :class="ns.b('common')" name="尺寸/m*m*m">
-    {{ showData.size ? showData.size : "-" }}
-  </div>
-  <div v-if="index === 15" :class="ns.b('common')" name="产品单价/元/kWh">
-    {{
-      showData.energyStorageSystemProductUnitPrice
-        ? showData.energyStorageSystemProductUnitPrice
-        : "-"
-    }}
-  </div>
+  <template v-if="productType === 'INDUSTRY_ENERGY_STORAGE'">
+    <div v-if="index === 1" :class="ns.b('common')" name="产品型号">
+      <Select
+        v-if="info.models.length > 1"
+        title=""
+        :options="info.models"
+        valueKey="modelName"
+        labelKey="modelName"
+        width="100%"
+        :defaultValue="info.models[0].modelName"
+        @onChange="
+          ($event) => {
+            onChoseProduct($event);
+          }
+        "
+      />
+      <p v-else>{{ showData.modelName ? showData.modelName : "-" }}</p>
+    </div>
+    <div v-if="index === 2" :class="ns.b('enterprise')" name="电池参数" />
+    <div v-if="index === 3" :class="ns.b('common')" name="电芯类型">
+      {{ showData.batteryTypeName ? showData.batteryTypeName : "-" }}
+    </div>
+    <div v-if="index === 4" :class="ns.b('common')" name="电池系统能量/kWh">
+      {{
+        showData.batterySystemEnergy
+          ? showData.batterySystemEnergy + "kWh"
+          : "-"
+      }}
+    </div>
+    <div v-if="index === 5" :class="ns.b('common')" name="放电深度/%">
+      {{ showData.dischargeDepth ? showData.dischargeDepth + "%" : "-" }}
+    </div>
+    <div v-if="index === 6" :class="ns.b('common')" name="PCS参数" />
+    <div v-if="index === 7" :class="ns.b('common')" name="标称电压/V">
+      {{
+        showData.nominalVoltage && showData.nominalVoltage.length !== 0
+          ? showData.nominalVoltage.join("-")
+          : "-"
+      }}
+    </div>
+    <div v-if="index === 8" :class="ns.b('common')" name="额定功率/kW">
+      {{ showData.ratedPower ? showData.ratedPower + "kW" : "-" }}
+    </div>
+    <div v-if="index === 9" :class="ns.b('common')" name="系统参数" />
+    <div v-if="index === 10" :class="ns.b('common')" name="产品形态">
+      {{ showData.productFormName ? showData.productFormName : "-" }}
+    </div>
+    <div v-if="index === 11" :class="ns.b('common')" name="系统综合效率/%">
+      {{
+        showData.systemOverallEfficiency
+          ? showData.systemOverallEfficiency + "%"
+          : "-"
+      }}
+    </div>
+    <div v-if="index === 12" :class="ns.b('common')" name="年衰减率/%">
+      {{ showData.annualDecayRate ? showData.annualDecayRate + "%" : "-" }}
+    </div>
+    <div v-if="index === 13" :class="ns.b('common')" name="冷却方式">
+      {{
+        showData.coolingMethodName ? showData.coolingMethodName.join(",") : "-"
+      }}
+    </div>
+    <div v-if="index === 14" :class="ns.b('common')" name="尺寸/m*m*m">
+      {{ showData.size ? showData.size : "-" }}
+    </div>
+    <div v-if="index === 15" :class="ns.b('common')" name="产品单价/元/kWh">
+      {{
+        showData.energyStorageSystemProductUnitPrice
+          ? showData.energyStorageSystemProductUnitPrice
+          : "-"
+      }}
+    </div>
+  </template>
+  <template v-else>
+    <div v-if="index === 1" :class="ns.b('common')" name="产品名称">
+      {{ showData.modelName ? showData.modelName : "-" }}
+    </div>
+    <div v-if="index === 2" :class="ns.b('common')" name="产品型号">
+      <Select
+        v-if="info.models.length > 1"
+        title=""
+        :options="info.models"
+        valueKey="modelName"
+        labelKey="modelName"
+        width="100%"
+        :defaultValue="info.models[0].modelName"
+        @onChange="
+          ($event) => {
+            onChoseProduct($event);
+          }
+        "
+      />
+      <p v-else>{{ showData.modelName ? showData.modelName : "-" }}</p>
+    </div>
+    <div v-if="index === 3" :class="ns.b('common')" name="产品形态">
+      {{ showData.shape ? showData.shape : "-" }}
+    </div>
+    <div v-if="index === 4" :class="ns.b('common')" name="容量/Ah">
+      {{ showData.batteryCapacity ? showData.batteryCapacity : "-" }}
+    </div>
+    <div v-if="index === 5" :class="ns.b('common')" name="充/放电倍率/P">
+      {{ showData.chargeDischargeRate ? showData.chargeDischargeRate : "-" }}
+    </div>
+    <div v-if="index === 6" :class="ns.b('common')" name="能量密度/Wh/kg">
+      {{ showData.energyDensity ? showData.energyDensity : "-" }}
+    </div>
+    <div v-if="index === 7" :class="ns.b('common')" name="循环寿命">
+      {{ showData.cycleLife ? showData.cycleLife : "-" }}
+    </div>
+    <div v-if="index === 8" :class="ns.b('common')" name="尺寸/m*m*m">
+      {{ showData.size ? showData.size : "-" }}
+    </div>
+    <div v-if="index === 9" :class="ns.b('common')" name="产品单价/元/Wh">
+      {{ showData.productPrice ? showData.productPrice : "-" }}
+    </div>
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -121,6 +168,10 @@ const props = defineProps({
   choseIndex: {
     type: Number,
     default: 0,
+  },
+  productType: {
+    type: String,
+    default: "INDUSTRY_ENERGY_STORAGE",
   },
 });
 watch(
