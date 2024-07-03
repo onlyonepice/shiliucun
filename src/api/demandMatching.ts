@@ -65,7 +65,7 @@ export const closeDemandApi = (data: any) => {
 export const deleteDemandApi = (id: number) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    `/eesa-industrial-map/need/need/front/V1.0/deleteNeedById?needId=${id}`,
+    `/eesa-industrial-map/need/need/front/v1.0/closeNeedById?needId=${id}`,
   );
 };
 
