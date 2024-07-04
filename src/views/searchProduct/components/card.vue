@@ -159,7 +159,7 @@ const productInfo = computed(() => {
       {
         width: "100%",
         label: "能量密度：",
-        value: "≥" + props.product.energyDensity + "Wh/kg" || "-",
+        value: props.product.energyDensity + "Wh/kg" || "-",
       },
       {
         label: "容量：",
