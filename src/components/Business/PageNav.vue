@@ -69,6 +69,7 @@
             :class="[
               ns.b('extraAvatar'),
               showAvatar ? ns.bm('extraAvatar', 'show') : '',
+              getVIPIcon === '' ? ns.bm('extraAvatar', 'position') : '',
             ]"
           >
             <p
@@ -436,6 +437,10 @@ const onLogin = () => {
 .es-pageNav-extraAvatar--show {
   @include widthAndHeight(120px, 180px);
 }
+.es-pageNav-extraAvatar--position {
+  right: 0;
+}
+
 .es-pageNav--open {
   background-color: #ffffff;
   .es-pageNav-list {

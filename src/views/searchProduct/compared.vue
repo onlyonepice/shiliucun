@@ -147,6 +147,8 @@ const getComparedList = async () => {
   if (resp_code === 0) {
     datas.forEach((item: any) => {
       item.show = true;
+      route.query.productType !== "INDUSTRY_ENERGY_STORAGE" &&
+        (item.image = item.models[0].image);
     });
     if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
       for (let index = 0; index < 16; index++) {

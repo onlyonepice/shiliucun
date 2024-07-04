@@ -5,6 +5,7 @@
       <div style="position: relative">
         <div :class="ns.be('info', 'bigImg-box')">
           <img
+            v-if="info.image"
             :class="ns.be('info', 'bigImg')"
             :src="useUserStoreHook().$state.fileUrl + info.image[0]"
             alt=""
@@ -105,7 +106,7 @@
   </template>
   <template v-else>
     <div v-if="index === 1" :class="ns.b('common')" name="产品名称">
-      {{ showData.modelName ? showData.modelName : "-" }}
+      {{ info.name ? info.name : "-" }}
     </div>
     <div v-if="index === 2" :class="ns.b('common')" name="产品型号">
       <Select

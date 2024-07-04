@@ -7,7 +7,7 @@
           <div :class="[ns.be('info-left', 'bigImg-box')]">
             <img
               :class="[ns.be('info-left', 'bigImg')]"
-              v-if="productDetail.image > 0"
+              v-if="productDetail.image"
               :src="useUserStoreHook().$state.fileUrl + productDetail.image[0]"
               alt=""
             />
@@ -276,6 +276,7 @@ const getProductDetail = async () => {
         });
       }
     } else {
+      productDetail.value.image = datas.models[0].image || "";
       for (let index = 0; index < 8; index++) {
         tableData.value.push({
           name: tabNameList2.value[index],
