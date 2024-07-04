@@ -70,9 +70,16 @@ const showMembersBuy: Ref<boolean> = ref(false); //订阅会员弹框状态
 
 // 埋点方法
 window.trackFunction = (eventId: string) => {
+  let _uuid = "";
+  if (!localStorage.getItem("uuid")) {
+    _uuid = generateUUID();
+    localStorage.setItem("uuid", _uuid);
+  } else {
+    _uuid = localStorage.getItem("uuid");
+  }
   const _data = {
     eventId,
-    recordId: generateUUID(),
+    recordId: _uuid,
   };
   getToken() &&
     Object.assign(_data, { userId: useUserStore().$state.userInfo.id });
