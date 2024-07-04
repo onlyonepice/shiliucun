@@ -83,11 +83,7 @@
       {{ info.size ? info.size : "-" }}
     </div>
     <div v-if="index === 7" :class="ns.b('common')" name="产品单价（元/Wh）">
-      {{
-        info.energyStorageSystemProductUnitPrice
-          ? info.energyStorageSystemProductUnitPrice
-          : "-"
-      }}
+      {{ info.productPrice ? info.productPrice : "-" }}
     </div>
   </template>
 </template>

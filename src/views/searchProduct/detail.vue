@@ -240,7 +240,7 @@ const productDetailInfo = computed(() => {
       {
         label: "能量密度：",
         value: productDetail.value.models[0].energyDensity
-          ? "≥" + productDetail.value.models[0].energyDensity + "Wh/kg"
+          ? productDetail.value.models[0].energyDensity + "Wh/kg"
           : "-",
       },
       {

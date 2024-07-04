@@ -131,18 +131,22 @@ defineProps({
 });
 // 获取vip图标
 const getVIPIcon = computed(() => {
-  const _code = useUserStoreHook().$state.userInfo.roles[0].code;
-  return _code === "PERSON_MEMBER_USER"
-    ? PersonalVip
-    : _code === "ENTERPRISE_MEMBER_USER"
-      ? CompanyVip
-      : _code === "ENTERPRISE_EESA_MEMBER_USER"
-        ? EESAOrdinaryVip
-        : _code === "VICE_CHAIRMAN_MEMBER"
-          ? ViceDirectorVip
-          : _code === "CHAIRMAN_MEMBER"
-            ? DirectorVip
-            : "";
+  if (useUserStoreHook().$state.userInfo.roles) {
+    const _code = useUserStoreHook().$state.userInfo.roles[0].code;
+    return _code === "PERSON_MEMBER_USER"
+      ? PersonalVip
+      : _code === "ENTERPRISE_MEMBER_USER"
+        ? CompanyVip
+        : _code === "ENTERPRISE_EESA_MEMBER_USER"
+          ? EESAOrdinaryVip
+          : _code === "VICE_CHAIRMAN_MEMBER"
+            ? ViceDirectorVip
+            : _code === "CHAIRMAN_MEMBER"
+              ? DirectorVip
+              : "";
+  } else {
+    return "";
+  }
 });
 const extraAvatar: Ref<any> = ref([
   { id: 1, text: "基本信息", path: "/homePersonal?id=1" },
