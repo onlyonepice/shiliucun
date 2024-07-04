@@ -37,15 +37,20 @@
         <!-- 登录/注册 -->
         <div v-if="showLogin" @mouseleave="showAvatar = false">
           <div :class="ns.be('avatar', 'box')">
-            <h4 @mouseenter="showAvatar = true" :class="ns.b('realName')">
-              Hi，{{ useUserStoreHook().$state.userInfo.realName }}
-            </h4>
-            <div :class="ns.b('spread')">
-              <img
-                :src="SpreadIcon"
-                alt=""
-                :style="{ transform: showAvatar ? 'rotate(180deg)' : '' }"
-              />
+            <div
+              :class="ns.be('avatar', 'box')"
+              @mouseenter="showAvatar = true"
+            >
+              <h4 :class="ns.b('realName')">
+                Hi，{{ useUserStoreHook().$state.userInfo.realName }}
+              </h4>
+              <div :class="ns.b('spread')">
+                <img
+                  :src="SpreadIcon"
+                  alt=""
+                  :style="{ transform: showAvatar ? 'rotate(180deg)' : '' }"
+                />
+              </div>
             </div>
             <template v-if="useUserStoreHook().$state.userInfo.roles">
               <img
@@ -554,6 +559,7 @@ const onLogin = () => {
   text-align: center;
   line-height: 20px;
   margin-left: 4px;
+  cursor: pointer;
   img {
     @include widthAndHeight(16px, 16px);
   }
