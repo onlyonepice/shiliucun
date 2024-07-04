@@ -7,6 +7,7 @@
           <div :class="[ns.be('info-left', 'bigImg-box')]">
             <img
               :class="[ns.be('info-left', 'bigImg')]"
+              v-if="productDetail.image > 0"
               :src="useUserStoreHook().$state.fileUrl + productDetail.image[0]"
               alt=""
             />
@@ -18,9 +19,11 @@
             <p :class="[ns.b('info-right-company')]">
               {{ productDetail.enterprise }}
             </p>
-            <p :class="[ns.b('info-right-price')]">
-              参考价<span>{{ productDetail.price || "-" }}/kWh起</span>
-            </p>
+            <div :class="[ns.b('info-right-price')]">
+              <p v-if="productDetail.price">
+                参考价<span>{{ productDetail.price || "-" }}/kWh起</span>
+              </p>
+            </div>
             <template v-if="productDetail.models">
               <p
                 :class="[ns.b('info-right-common')]"
