@@ -90,6 +90,8 @@ import ComparedIcon from "@/assets/img/common/compared-icon.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
 import { useRouter } from "vue-router";
+import { getToken } from "@/utils/auth";
+import { useUserStore } from "@/store/modules/user";
 const router = useRouter();
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const ns = useNamespace("searchProduct-card");
@@ -179,6 +181,10 @@ const onOpenWindow = (id: number) => {
   );
 };
 const onDetail = () => {
+  if (!getToken()) {
+    useUserStore().openLogin(true);
+    return;
+  }
   router.push(
     `/searchProductDetail?id=${props.product.id}&productType=${props.productType}`,
   );
