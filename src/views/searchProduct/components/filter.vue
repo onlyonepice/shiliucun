@@ -17,7 +17,8 @@
         <div
           :class="[
             ns.be('filter', 'box'),
-            item.type === 'img' && !showMore
+            item.data.length < 16 ? ns.be('filter', 'little') : '',
+            item.type === 'img' && !showMore && item.data.length > 16
               ? ns.bem('filter', 'box', 'img')
               : '',
           ]"
@@ -159,6 +160,7 @@ function handleProductCheckIn() {
     @include flex(flex-start, flex-start, wrap);
   }
 }
+
 .es-searchProduct-filter-filter__box {
   @include flex(flex-start, flex-start, wrap);
   height: auto;
@@ -177,11 +179,17 @@ function handleProductCheckIn() {
     @include absolute(1, none, 0, 0, none);
   }
 }
+.es-searchProduct-filter-filter__little {
+  height: auto;
+}
 .es-searchProduct-filter-filter__more {
   @include widthAndHeight(16px, 16px);
   @include absolute(1, 0, 0, none, none);
   cursor: pointer;
   transition: all 0.3s;
+}
+.es-searchProduct-filter-filter__little {
+  height: auto;
 }
 .es-searchProduct-filter-filter__more--show {
   transform: rotate(180deg);
