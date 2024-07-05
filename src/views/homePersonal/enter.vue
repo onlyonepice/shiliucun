@@ -45,10 +45,12 @@
           v-if="useUserStoreHook().$state.userInfo.id !== undefined"
         >
           <infoComponent v-if="choseTab === 1" />
-          <collectionComponent v-if="choseTab === 2" />
-          <orderComponent v-if="choseTab === 3" />
-          <passwordComponent v-if="choseTab === 4" />
+          <companyComponent v-if="choseTab === 2" />
+          <needComponent v-if="choseTab === 3" />
+          <collectionComponent v-if="choseTab === 4" />
+          <orderComponent v-if="choseTab === 5" />
           <MyUploadsBox v-if="choseTab === 6" />
+          <passwordComponent v-if="choseTab === 7" />
         </div>
       </div>
     </div>
@@ -65,6 +67,10 @@ import Info from "@/assets/img/homePersonal/info.png";
 import InfoChose from "@/assets/img/homePersonal/info-chose.png";
 import Collection from "@/assets/img/homePersonal/collection.png";
 import CollectionChose from "@/assets/img/homePersonal/collection-chose.png";
+import Need from "@/assets/img/homePersonal/need.png";
+import NeedChose from "@/assets/img/homePersonal/need-chose.png";
+import Company from "@/assets/img/homePersonal/company.png";
+import CompanyChose from "@/assets/img/homePersonal/company-chose.png";
 import Order from "@/assets/img/homePersonal/order.png";
 import OrderChose from "@/assets/img/homePersonal/order-chose.png";
 import Password from "@/assets/img/homePersonal/password.png";
@@ -77,6 +83,8 @@ import ClassRoomIcon from "@/assets/img/common/classroom-logo.png";
 import { useUserStoreHook } from "@/store/modules/user";
 import infoComponent from "./components/info.vue";
 import collectionComponent from "./components/collection.vue";
+import companyComponent from "./components/company.vue";
+import needComponent from "./components/need.vue";
 import orderComponent from "./components/order.vue";
 import passwordComponent from "./components/password.vue";
 import MyUploadsBox from "./components/myUploads.vue";
@@ -106,11 +114,13 @@ const breadcrumbList: Ref<Array<any>> = ref([
 ]);
 const tabList: Ref<Array<any>> = ref([
   { id: 1, text: "我的名片", iconChose: InfoChose, icon: Info },
-  { id: 2, text: "我的收藏", iconChose: CollectionChose, icon: Collection },
-  { id: 3, text: "我的订单", iconChose: OrderChose, icon: Order },
+  { id: 2, text: "我的企业", iconChose: CompanyChose, icon: Company },
+  { id: 3, text: "我的需求", iconChose: NeedChose, icon: Need },
+  { id: 4, text: "我的收藏", iconChose: CollectionChose, icon: Collection },
+  { id: 5, text: "我的订单", iconChose: OrderChose, icon: Order },
   { id: 6, text: "我的上传", iconChose: MyUploadsChose, icon: MyUploads },
-  { id: 4, text: "修改密码", iconChose: PasswordChose, icon: Password },
-  { id: 5, text: "退出登录", icon: LogoutImg },
+  { id: 7, text: "修改密码", iconChose: PasswordChose, icon: Password },
+  { id: 8, text: "退出登录", icon: LogoutImg },
 ]);
 const choseTab: Ref<number> = ref(1);
 const visible: Ref<boolean> = ref(false);
@@ -140,7 +150,7 @@ const getSeries = async () => {
 };
 // 点击左侧边栏
 const onClickTab = (id: number) => {
-  if (id !== 5) {
+  if (id !== 8) {
     // choseTab.value = id;
     router.replace(`/homePersonal?id=${id}`);
   } else {
@@ -224,7 +234,7 @@ onMounted(() => {
   flex: 1;
 }
 .es-homePersonal-left__tab {
-  @include widthAndHeight(100%, 320px);
+  @include widthAndHeight(100%, auto);
   background: #ffffff;
   border-radius: 8px;
   display: flex;
@@ -242,9 +252,8 @@ onMounted(() => {
       @include margin(0, 8px, 0, 0);
     }
     &:nth-last-of-type(1) {
-      // @include margin(40px, 0, 0, 0);
       margin: 0;
-      margin-top: auto;
+      margin-top: 24px;
     }
   }
   .es-homePersonal-left__tab--chose {
