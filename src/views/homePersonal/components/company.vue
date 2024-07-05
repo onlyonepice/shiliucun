@@ -15,8 +15,10 @@ const ns = useNamespace("homePersonalCompany");
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .es-homePersonalCompany-top {
-  @include flex(center, space-between, nowrap);
-  @include padding(0, 0, 24px, 0);
+  @include flex(center, space-between);
+  @include padding(0, 0, 19px, 0);
+  border-bottom: 1px solid #dbdce2;
+  @include margin(0, 0, 24px, 0);
   h3 {
     line-height: 56px;
   }

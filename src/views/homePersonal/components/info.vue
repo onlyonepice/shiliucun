@@ -6,7 +6,7 @@
         type="primary"
         :class="ns.be('top', 'button')"
         @click="(visibleInfo = true), (visibleInfoSet = true), onGetUserInfo()"
-        >编辑信息</el-button
+        >编辑名片</el-button
       >
     </div>
     <div :class="[ns.b('content'), 'animate__animated animate__fadeIn']">
@@ -212,7 +212,7 @@
     </Dialog>
     <Dialog
       v-if="visibleInfoSet"
-      title="编辑信息"
+      title="编辑名片"
       :visible="visibleInfo"
       width="560px"
       height="524px"
@@ -357,8 +357,8 @@ import { getInnermostObject } from "@/utils/index";
 const ns = useNamespace("homePersonalInfo");
 const userInfo: Ref<any> = ref({});
 const visibleMobile: Ref<boolean> = ref(false); // 修改手机号弹窗
-const visibleInfo: Ref<boolean> = ref(false); // 编辑信息弹窗
-const visibleInfoSet: Ref<boolean> = ref(false); // 编辑信息弹窗-延迟
+const visibleInfo: Ref<boolean> = ref(false); // 编辑名片弹窗
+const visibleInfoSet: Ref<boolean> = ref(false); // 编辑名片弹窗-延迟
 const btnDesc: Ref<string> = ref("获取验证码"); // 倒计时文案
 const areaList: Ref<any> = ref([]); // 地区数据
 const cascaderOption: Ref<any> = ref({
@@ -444,7 +444,7 @@ const onChangeInfo = (value: any, type: string) => {
     (modifyInfo.value.regionCode = value[value.length - 1]);
   type !== "regionCode" && (modifyInfo.value[type] = value);
 };
-// 关闭编辑信息
+// 关闭编辑名片
 const onHandleCloseInfo = async (type: boolean) => {
   const _modifyInfo = JSON.parse(JSON.stringify(modifyInfo.value));
   if (!type) {
