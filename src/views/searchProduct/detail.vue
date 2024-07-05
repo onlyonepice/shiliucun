@@ -16,7 +16,10 @@
             <h3 :class="[ns.b('info-right-title')]">
               {{ productDetail.name }}
             </h3>
-            <p :class="[ns.b('info-right-company')]">
+            <p
+              :class="[ns.b('info-right-company')]"
+              @click="onConnectCompany(productDetail.enterpriseId)"
+            >
               {{ productDetail.enterprise }}
             </p>
             <div :class="[ns.b('info-right-price')]">
@@ -354,6 +357,7 @@ const onConnectCompany = (id: string) => {
 }
 .es-searchProductDetail-info-right-company {
   @include font(14px, 400, #244bf1, 22px);
+  cursor: pointer;
 }
 .es-searchProductDetail-info-right-price {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);

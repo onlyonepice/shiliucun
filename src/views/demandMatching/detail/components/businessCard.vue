@@ -5,10 +5,13 @@
         <p>{{ info.realName }}</p>
         <p v-if="info.position">｜{{ info.position }}</p>
       </h4>
-      <h6>{{ info.company }}</h6>
+      <h6 @click="onOpenCompany(useUserStore().$state.accountInfo.companyId)">
+        {{ info.company }}
+      </h6>
       <div :class="ns.be('content', 'line')" />
     </div>
     <img
+      @click="onOpenCompany(useUserStore().$state.accountInfo.companyId)"
       :class="ns.be('content', 'right')"
       :src="
         !!info.companyLogo
@@ -25,6 +28,7 @@
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 const ns = useNamespace("demandMatching-businessCard");
+const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 defineProps({
   info: {
     type: Object,
@@ -39,6 +43,13 @@ defineProps({
     default: "320px",
   },
 });
+// 跳转企业
+const onOpenCompany = (id: string) => {
+  window.open(
+    `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
+    "externalWindow",
+  );
+};
 </script>
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
