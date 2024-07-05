@@ -196,13 +196,13 @@ const navList: Ref<Array<NavList>> = ref([
         text: "政策",
         path: ["/policy"],
       },
+      // {
+      //   id: 5,
+      //   text: "行业数据库",
+      //   path: `${VITE_DATABASE_URL}/#/home`,
+      // },
       {
         id: 5,
-        text: "行业数据库",
-        path: `${VITE_DATABASE_URL}/#/home`,
-      },
-      {
-        id: 6,
         text: "电价API",
         path: `${VITE_DATABASE_URL}/#/ApiPage`,
       },
