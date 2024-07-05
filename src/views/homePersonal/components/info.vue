@@ -1,7 +1,7 @@
 <template>
   <div :class="[ns.b()]">
     <div :class="[ns.b('top')]">
-      <h3>基本信息</h3>
+      <h3>我的名片</h3>
       <el-button
         type="primary"
         :class="ns.be('top', 'button')"

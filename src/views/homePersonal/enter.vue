@@ -105,7 +105,7 @@ const breadcrumbList: Ref<Array<any>> = ref([
   { text: "个人中心", path: "" },
 ]);
 const tabList: Ref<Array<any>> = ref([
-  { id: 1, text: "基本信息", iconChose: InfoChose, icon: Info },
+  { id: 1, text: "我的名片", iconChose: InfoChose, icon: Info },
   { id: 2, text: "我的收藏", iconChose: CollectionChose, icon: Collection },
   { id: 3, text: "我的订单", iconChose: OrderChose, icon: Order },
   { id: 6, text: "我的上传", iconChose: MyUploadsChose, icon: MyUploads },
