@@ -114,6 +114,12 @@ const pageInfo: Ref<any> = ref({
   limit: 10,
 });
 onMounted(() => {
+  if (route.query.source) {
+    breadcrumbList.value[0] = {
+      text: "个人中心",
+      path: "/homePersonal?id=3",
+    };
+  }
   getDemandDetail();
   getApplyList();
 });

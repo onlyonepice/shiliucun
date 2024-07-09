@@ -2,6 +2,9 @@
   <div :class="[ns.b()]">
     <div :class="[ns.b('top')]">
       <h3>我的需求</h3>
+      <el-button type="primary" @click="releaseDemandShow = true"
+        >发布需求</el-button
+      >
     </div>
     <div :class="[ns.b('tab')]">
       <div
@@ -20,6 +23,7 @@
       v-for="item in needList"
       :key="item.id"
       :class="[ns.b('list'), 'animate__animated animate__fadeIn']"
+      @click="handleDetailClick(item)"
     >
       <div :class="[ns.be('list', 'top')]">
         <h3>{{ item.title || item.needTitle }}</h3>
@@ -32,7 +36,11 @@
             backgroundColor: searchDemandStatus(item.status)?.background,
           }"
         >
-          {{ searchDemandStatus(item.status).name }}
+          {{
+            searchDemandStatus(item.status)
+              ? searchDemandStatus(item.status).name
+              : ""
+          }}
         </div>
         <div
           v-if="choseTab === 2"
@@ -44,13 +52,22 @@
             backgroundColor: searchApplicationStatus(item.status)?.background,
           }"
         >
-          {{ searchApplicationStatus(item.status).name }}
+          {{
+            searchApplicationStatus(item.status)
+              ? searchApplicationStatus(item.status).name
+              : ""
+          }}
         </div>
       </div>
       <h5>{{ item.description }}</h5>
     </div>
     <Pagination :total="total" @onchangeCurrent="onchangeCurrent" />
   </div>
+  <ReleaseDemand
+    @close="releaseDemandClose"
+    @success="releaseDemandSuccess"
+    :show="releaseDemandShow"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -61,7 +78,11 @@ import {
   searchDemandStatus,
 } from "../../demandMatching/config";
 import { getReleaseNeedApi, getApplyNeedApi } from "@/api/demandList";
+import ReleaseDemand from "../../demandMatching/releaseDemand.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const ns = useNamespace("homePersonalNeed");
+const releaseDemandShow: Ref<boolean> = ref(false); // 发布需求弹窗
 const pageInfo: Ref<any> = ref({
   pageNumber: 1,
   pageSize: 10,
@@ -95,6 +116,22 @@ const getNeedList = async () => {
   }
 };
 getNeedList();
+const handleDetailClick = (row) => {
+  router.push({
+    path: `/demandMatching/detail`,
+    query: {
+      id: row.id || row.needId,
+      source: "homePersonal",
+    },
+  });
+};
+const releaseDemandSuccess = () => {
+  getNeedList();
+  releaseDemandClose();
+};
+const releaseDemandClose = () => {
+  releaseDemandShow.value = false;
+};
 </script>
 
 <style lang="scss" scoped>

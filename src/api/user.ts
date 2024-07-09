@@ -216,8 +216,16 @@ export function getSelectByTypeApi(data: { type: string }) {
 // 获取岗位类型
 export function getPositionTypeApi() {
   return http.request<responseType>(
-    "post",
-    `/api-user/sysDict/front/V1.0/frontSelectTreeByType/positionType`,
+    "get",
+    `/eesa-report/user/enterprise/front/v1.0/getCurrentUserEnterpriseInfo`,
+  );
+}
+
+// 获取企业信息
+export function getCompanyInfoApi() {
+  return http.request<responseType>(
+    "get",
+    `/api-user/company/front/v1.0/getCompanyInfo`,
   );
 }
 

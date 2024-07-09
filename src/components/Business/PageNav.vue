@@ -150,9 +150,10 @@ const getVIPIcon = computed(() => {
 });
 const extraAvatar: Ref<any> = ref([
   { id: 1, text: "我的名片", path: "/homePersonal?id=1" },
-  { id: 2, text: "我的收藏", path: "/homePersonal?id=2" },
-  { id: 3, text: "我的订单", path: "/homePersonal?id=3" },
-  { id: 4, text: "修改密码", path: "/homePersonal?id=4" },
+  { id: 2, text: "我的企业", path: "/homePersonal?id=2" },
+  { id: 3, text: "我的需求", path: "/homePersonal?id=3" },
+  { id: 3, text: "我的上传", path: "/homePersonal?id=6" },
+  { id: 4, text: "修改密码", path: "/homePersonal?id=7" },
   { id: 5, text: "退出登录", path: "" },
 ]);
 // 导航栏数组
@@ -409,7 +410,7 @@ const onLogin = () => {
   @include widthAndHeight(120px, 0);
   @include absolute(2, 28px, 100px, none, none);
   background-image: url("@/assets/img/common/avatar-extra.png");
-  background-size: 100% 170px;
+  background-size: 100% 190px;
   background-repeat: no-repeat;
   background-position: 0 10px;
   transition: all 0.2s linear;
@@ -439,7 +440,7 @@ const onLogin = () => {
   color: rgba(0, 0, 0, 0.9);
 }
 .es-pageNav-extraAvatar--show {
-  @include widthAndHeight(120px, 180px);
+  @include widthAndHeight(120px, 200px);
 }
 .es-pageNav-extraAvatar--position {
   right: 0;
