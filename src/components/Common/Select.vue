@@ -67,6 +67,18 @@
         :show-all-levels="props.showAllLevels"
       />
     </div>
+    <div v-if="props.type === 'cascader'" class="select__input select__content">
+      <el-cascader
+        v-model="value"
+        placeholder="请选择"
+        :options="options"
+        :props="cascaderOption"
+        :disabled="props.disabled"
+        @change="handleChange"
+        @visible-change="handleVerifyLogin"
+        :show-all-levels="props.showAllLevels"
+      />
+    </div>
   </div>
 </template>
 

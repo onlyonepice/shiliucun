@@ -188,11 +188,16 @@ const navList: Ref<Array<NavList>> = ref([
       { id: 2, text: "中标", path: "/dataWinningBid" },
       {
         id: 3,
+        text: "项目",
+        path: "/dataProject",
+      },
+      {
+        id: 4,
         text: "电价",
         path: "/electricityPrice",
       },
       {
-        id: 4,
+        id: 5,
         text: "政策",
         path: ["/policy"],
       },
@@ -202,7 +207,7 @@ const navList: Ref<Array<NavList>> = ref([
       //   path: `${VITE_DATABASE_URL}/#/home`,
       // },
       {
-        id: 5,
+        id: 6,
         text: "电价API",
         path: `${VITE_DATABASE_URL}/#/ApiPage`,
       },

@@ -9,6 +9,16 @@ export default {
   },
   children: [
     {
+      path: "/dataProject",
+      name: "DataProject",
+      components: {
+        default: () => import("@/views/data/dataProject/enter.vue"),
+      },
+      meta: {
+        title: "项目",
+      },
+    },
+    {
       path: "/dataTender",
       name: "DataTender",
       components: {
