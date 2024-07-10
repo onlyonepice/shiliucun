@@ -67,16 +67,18 @@
         :show-all-levels="props.showAllLevels"
       />
     </div>
-    <div v-if="props.type === 'cascader'" class="select__input select__content">
-      <el-cascader
+    <div v-if="props.type === 'date'" class="select__input select__content">
+      <el-date-picker
         v-model="value"
-        placeholder="请选择"
-        :options="options"
-        :props="cascaderOption"
-        :disabled="props.disabled"
+        :type="props.dateType"
+        :range-separator="props.rangeSeparator"
+        :editable="false"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
         @change="handleChange"
         @visible-change="handleVerifyLogin"
-        :show-all-levels="props.showAllLevels"
+        :clearable="false"
+        :disabled-date="disabledDate"
       />
     </div>
   </div>
@@ -156,6 +158,20 @@ const props = defineProps({
   multiple: {
     type: Boolean,
     default: false,
+  },
+  // 选择范围时的分隔符
+  rangeSeparator: {
+    type: String,
+    default: "至",
+  },
+  // date 显示类型
+  dateType: {
+    type: String,
+    default: "monthrange",
+  },
+  disabledDate: {
+    type: Function,
+    default: null,
   },
 });
 const value: any = ref("" || []); // 选中值

@@ -1,18 +1,12 @@
 export const operationProjectFormOptions = () => {
   return [
     {
-      type: "select",
-      title: "中标内容",
-      model: "biddingContent",
-      bind: {
-        placeholder: "请选择",
-        options: [],
-        cascaderOption: {
-          label: "paramDesc",
-          value: "paramName",
-          emitPath: false,
-        },
-      },
+      type: "date",
+      title: "时间",
+      model: "yearTimeFrame",
+      dateType: "monthrange",
+      rangeSeparator: "至",
+      defaultValue: [],
     },
     {
       type: "cascader",
@@ -23,8 +17,8 @@ export const operationProjectFormOptions = () => {
         placeholder: "请选择",
         options: [],
         cascaderOption: {
-          label: "paramDesc",
-          value: "paramName",
+          label: "label",
+          value: "id",
           emitPath: false,
         },
       },

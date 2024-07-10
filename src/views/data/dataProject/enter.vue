@@ -33,19 +33,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-  winingBidTime,
-  getUnitListApi,
-  durationData_V2,
-  technologyType_V2,
-  getBiddingAreaApi,
-  getTenderTimeFilterApi,
-  applicationScenariosBox,
-  bidWinningContentData_V2,
-} from "@/api/data";
-import { ref } from "vue";
+import { yearDefaultApi, areaTypeApi } from "@/api/data";
+import { ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import operationProject from "./operationProject/enter.vue";
+import { useUserStoreHook } from "@/store/modules/user";
 
 const ns = useNamespace("dataProject");
 const tabList = ref([
@@ -65,22 +57,21 @@ interface response {
 }
 const formOptions = ref([]);
 const getSelectData = () => {
-  Promise.all([
-    bidWinningContentData_V2(),
-    technologyType_V2(),
-    durationData_V2(),
-    applicationScenariosBox("all"),
-    winingBidTime(),
-    getTenderTimeFilterApi(),
-    getUnitListApi(),
-    getBiddingAreaApi(),
-  ]).then((res) => {
+  Promise.all([yearDefaultApi(), areaTypeApi()]).then((res) => {
     formOptions.value = res.filter((item: response) => {
       return item.resp_code === 0;
     });
   });
 };
 getSelectData();
+// 监听登录
+watch(
+  () => useUserStoreHook().$state.token,
+  () => {
+    getSelectData();
+  },
+  // { immediate: true },
+);
 </script>
 
 <style lang="scss">

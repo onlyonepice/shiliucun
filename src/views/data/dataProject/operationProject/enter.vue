@@ -2,36 +2,27 @@
 <template>
   <div :class="ns.b()">
     <div :class="ns.b('filter')">
-      <!-- <Select
+      <Select
         :width="'33%'"
         v-for="(item, index) in options"
         :key="item.title"
+        :type="item.type"
         v-model="requestData[item.model]"
-        :options="item.bind.options"
+        :options="item.bind && item.bind['options']"
         :title="item.title"
-        :labelKey="item.bind.cascaderOption.label"
-        :valueKey="item.bind.cascaderOption.value"
         :defaultValue="requestData[item.model]"
-        @onChange="(val) => selectChange(item, index, val)"
-      /> -->
-      <Select
-        :title="'地区'"
-        :options="areaList"
-        :defaultValue="modifyInfoFreeze.regionCode"
-        :cascaderOption="cascaderOption"
-        type="cascader"
-        @onChange="
-          (val) => {
-            return onChangeInfo(val, 'regionCode');
-          }
+        :cascaderOption="
+          item.type === 'cascader' && item.bind['cascaderOption']
         "
+        @onChange="(val) => selectChange(item, index, val)"
+        :disabledDate="item.type === 'date' && disabledDate"
       />
     </div>
     <el-button type="primary" @click="exportResult" style="float: right"
       >下载图片</el-button
     >
     <div :class="ns.b('eCharts-box')" v-if="!isEmptyData">
-      <div v-loading="loading" id="eChart-winningBidPrice" ref="eChartsDom" />
+      <div v-loading="loading" id="eChart-operationProject" ref="eChartsDom" />
       <div
         class="echarts-mask animate__animated animate__fadeIn"
         v-if="echartsMask"
@@ -46,7 +37,7 @@
     <ExportCanvasDialog
       :visible="exportVisible"
       :img-url="exportImgUrl"
-      :img-title="`储能月度中标单价/容量分析-${requestData.biddingContent}（${requestData.technologyType}）`"
+      :img-title="`储能项目投运规模`"
       @close="exportVisible = false"
     />
   </div>
@@ -54,20 +45,21 @@
 </template>
 
 <script setup lang="ts">
-import { get } from "lodash";
 import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
 import { getToken } from "@/utils/auth";
 import { operationProjectFormOptions } from "../data";
 import useNamespace from "@/utils/nameSpace";
 import { ref, watch, Ref, nextTick } from "vue";
-import { capacityAnalysis_V2, maskPermissions } from "@/api/data";
+import { operationProjectApi, maskPermissions } from "@/api/data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
 import { useRouter } from "vue-router";
+import dayjs from "dayjs";
+
 const router = useRouter();
 const { VITE_DATABASE_URL } = import.meta.env;
-const ns = useNamespace("winningBidPrice");
+const ns = useNamespace("operationProject");
 const EChartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
@@ -82,16 +74,19 @@ const props = defineProps({
   },
 });
 const requestData = ref({
-  biddingContent: "",
-  technologyType: "",
-  applicationScenarios: "",
+  endYear: "",
+  region: "",
+  startYear: "",
 });
 const isEmptyData = ref(false);
 const options = ref(operationProjectFormOptions());
 interface response {
   datas: any;
 }
-
+const _yearTimeFrame = ref([]);
+const _region = ref("");
+const timeFrame = ref({ start: null, end: null });
+// 获取筛选项options
 watch(
   () => props.formOptions,
   (res: response[]) => {
@@ -99,39 +94,32 @@ watch(
       nextTick(() => {
         options.value.forEach((item) => {
           switch (item.model) {
-            case "biddingContent":
-              item.bind.options = res[0].datas;
+            case "yearTimeFrame":
+              requestData.value["yearTimeFrame"] = [
+                res[0].datas.min,
+                res[0].datas.max,
+              ];
+              _yearTimeFrame.value = cloneDeep(
+                requestData.value["yearTimeFrame"],
+              );
+              timeFrame.value.start = getTimeStamp(res[0].datas.min);
+              timeFrame.value.end = getTimeStamp(res[0].datas.max);
               break;
-            case "technologyType":
+            case "region":
               item.bind.options = res[1].datas;
-              break;
-            case "applicationScenarios":
-              item.bind.options = res[3].datas;
+              requestData.value.region =
+                res[1].datas[0].children.find((child) => child.isDefaultValue)
+                  .id || res[1].datas[0].children[0].id;
+              _region.value = cloneDeep(requestData.value.region);
               break;
           }
         });
         res.forEach((item, index) => {
           switch (index) {
-            case 0:
-              requestData.value.biddingContent = get(
-                item.datas.find((item) => item.defaultValue),
-                "paramDesc",
-                "2",
-              );
-              break;
             case 1:
-              requestData.value.technologyType = get(
-                item.datas.find((item) => item.defaultValue),
-                "paramDesc",
-                "1",
-              );
-              break;
-            case 3:
-              requestData.value.applicationScenarios = get(
-                item.datas.find((item) => item.defaultValue),
-                "paramName",
-                "2",
-              );
+              requestData.value.region = item.datas[0].children.find(
+                (child) => child.isDefaultValue,
+              ).id;
               break;
           }
         });
@@ -145,11 +133,36 @@ watch(
     immediate: true,
   },
 );
+// 获取时间戳
+function getTimeStamp(time) {
+  const [year, month] = time.split("-").map((part) => parseInt(part));
+  new Date(year, month).getTime();
+  return new Date(year, month - 1).getTime();
+}
+
+// 限制时间选择范围
+function disabledDate(time) {
+  const { start, end } = timeFrame.value;
+  const currentTime = time.getTime();
+  if (currentTime >= start && currentTime <= end) {
+    // return true;
+  } else {
+    return true;
+  }
+}
+
+// 获取图表数据--储能项目投运规模
 const getData = async () => {
   loading.value = true;
   isEmptyData.value = false;
   try {
-    const data = await capacityAnalysis_V2(requestData.value);
+    requestData.value.startYear = dayjs(
+      requestData.value["yearTimeFrame"][0],
+    ).format("YYYY-MM");
+    requestData.value.endYear = dayjs(
+      requestData.value["yearTimeFrame"][1],
+    ).format("YYYY-MM");
+    const data = await operationProjectApi(requestData.value);
     const { datas, resp_code } = data;
     const textStyle = {
       fontSize: 14,
@@ -158,69 +171,72 @@ const getData = async () => {
       color: "#5B6985",
     };
     if (resp_code === 0 && datas.length) {
-      let barSeries = [];
-      let lineSeries = [];
+      let barSeries = []; // 容量数据
+      let lineSeries = []; // 功率数据
+      const priority = ["源网侧储能", "工商业储能", "户用储能"];
       barSeries = datas[0].data.map((item) => {
         return {
           type: "bar",
-          name: item.hour,
-          value: item.hour,
+          name: item.applicationScenes,
+          value: item.applicationScenes,
           yAxisIndex: 0,
           barWidth: 16,
           stack: "total",
           itemStyle: {
-            color: colorEnum[item.hour],
+            color: colorEnum[item.applicationScenes],
           },
+          connectNulls: true,
           data: [],
         };
+      });
+      barSeries.sort((a, b) => {
+        return priority.indexOf(a.name) - priority.indexOf(b.name);
       });
       lineSeries = cloneDeep(barSeries).map((item) => {
         const result = {
           ...item,
-          type: "line",
-          name: `${item.name}中标均价`,
+          type: "bar",
+          name: `${item.name}`,
           yAxisIndex: 1,
-          lineStyle: {
-            width: 2,
-          },
-          symbolSize: 6,
           connectNulls: true,
         };
         delete result.stack;
+        result.stack = "Ad";
         return result;
       });
       EChartOptions.value.xAxis.data = [];
       datas.forEach((item) => {
-        EChartOptions.value.xAxis.data.push(item.month);
+        EChartOptions.value.xAxis.data.push(item.year);
 
         item.data.forEach((barItem, barIndex) => {
           const bar_target = barSeries.find(
-            (item) => item.name === barItem.hour,
+            (item) => item.name === barItem.applicationScenes,
           );
           const line_target = lineSeries.find(
-            (item) => item.name === `${barItem.hour}中标均价`,
+            (item) => item.name === `${barItem.applicationScenes}`,
           );
 
-          const energyScale = isNaN(+item.data[barIndex].energyScale)
-            ? item.data[barIndex].energyScale
-            : (+item.data[barIndex].energyScale).toFixed(1);
+          const capacity = isNaN(+item.data[barIndex].capacity)
+            ? item.data[barIndex].capacity
+            : (+item.data[barIndex].capacity).toFixed(1);
 
-          const winningUnitPrice = isNaN(+item.data[barIndex].winningUnitPrice)
-            ? item.data[barIndex].winningUnitPrice
-            : (+item.data[barIndex].winningUnitPrice).toFixed(2);
+          const power = isNaN(+item.data[barIndex].power)
+            ? item.data[barIndex].power
+            : (+item.data[barIndex].power).toFixed(2);
 
           bar_target.data.push({
-            value: energyScale,
-            energyScale,
-            winningUnitPrice,
+            value: capacity,
+            capacity,
+            power,
           });
           line_target.data.push({
-            value: winningUnitPrice,
-            energyScale,
-            winningUnitPrice,
+            value: power,
+            capacity,
+            power,
           });
         });
       });
+      // 色块展示
       const legend = [
         {
           x: "center",
@@ -233,19 +249,10 @@ const getData = async () => {
             };
           }),
         },
-        {
-          x: "center",
-          y: "95%",
-          textStyle,
-          data: lineSeries.map((item) => {
-            return {
-              name: item.name,
-              icon: "path://M-0.000,-0.000 L10.000,-0.000 L10.000,1.000 L-0.000,1.000 L-0.000,-0.000 Z",
-            };
-          }),
-        },
       ];
-      EChartOptions.value.series = barSeries.reverse().concat(lineSeries);
+      EChartOptions.value.series = barSeries
+        .reverse()
+        .concat(lineSeries.reverse());
       EChartOptions.value.legend = legend;
       initECharts();
     } else if (!datas.length) {
@@ -259,9 +266,8 @@ const getData = async () => {
 
 const initECharts = async () => {
   const myChart = echarts.init(
-    document.getElementById("eChart-winningBidPrice"),
+    document.getElementById("eChart-operationProject"),
   );
-  // 地图鼠标移入，没有数据不高亮显示
   myChart.on("mouseover", (params): any => {
     if (params.data === undefined) {
       myChart.dispatchAction({
@@ -270,22 +276,22 @@ const initECharts = async () => {
     }
   });
   if (getToken()) {
-    const res = await maskPermissions({ moduleName: "中标价格分析" });
+    const res = await maskPermissions({ moduleName: "储能项目投运规模" });
     echartsMask.value = res.datas.isCovered;
   }
   myChart.setOption(EChartOptions.value);
 };
 const colorEnum = {
-  "4小时及以上": "#B8C4FB",
-  "2到4小时（含2小时）": "#6F89F6",
-  "2小时以内": "#244BF1",
+  源网侧储能: "#244BF1",
+  工商业储能: "#6F89F6",
+  户用储能: "#B8C4FB",
 };
 const initData = () => {
   EChartOptions.value = {
     color: ["#165DFF", "#2FAEFF", "#FF7D00"],
     title: {
       show: true,
-      text: `储能月度中标单价/容量分析-${requestData.value.biddingContent}（${requestData.value.technologyType}）`,
+      text: `储能项目投运规模`,
       left: "center",
     },
     graphic: [chartWatermark],
@@ -303,28 +309,20 @@ const initData = () => {
       className: "custom-tooltip",
       extraCssText: "padding: 16px; border-radius: 8px;",
       formatter: (params) => {
-        const barList = params
-          .filter((item) => item.seriesType === "bar")
-          .reverse();
-        const total = barList
-          .map((item) => item.data.energyScale)
-          .reduce((a, c) => a + (c === "-" ? 0 : +c), 0);
+        params = params.slice(0, 3);
 
         var htmlStr = `<div style="width: 368px;" >
               <div style="line-height:24px; font-width: 400; display: flex; justify-content: space-between;">
                 <span style="font-weight: 600; font-size: 16px; color:#000;">${params[0].name}</span>
-                <span style="font-weight: 600; font-size: 16px; color:#000;">合计：${total.toFixed(1)}MWh</span>
               </div>
             `;
-        params.forEach((item) => {
-          const energyScale =
-            item.data.energyScale === "-" ? "" : `${item.data.energyScale}MWh`;
-          const winningUnitPrice =
-            item.data.winningUnitPrice === "-"
-              ? ""
-              : ` | ${item.data.winningUnitPrice}元/Wh`;
-          const _noData =
-            item.data.energyScale === "-" && item.data.winningUnitPrice === "-";
+        const _params = params.reverse();
+        _params.forEach((item) => {
+          const capacity =
+            item.data.capacity === "-" ? "" : `${item.data.capacity}MWh`;
+          const power =
+            item.data.power === "-" ? "" : ` | ${item.data.power}MW`;
+          const _noData = item.data.capacity === "-" && item.data.power === "-";
 
           htmlStr += `<div
               style="
@@ -360,7 +358,7 @@ const initData = () => {
                   <span style="font-size: 14px; color: #5B6985;">${item.seriesName}</span>
                 </div>
                 <span style="font-size: 14px; color: #000; font-weight: 600;">
-                  ${!_noData ? energyScale + winningUnitPrice : "暂无数据"}
+                  ${!_noData ? capacity + power : "暂无数据"}
                 </span>
               </div>`;
         });
@@ -395,7 +393,7 @@ const initData = () => {
     yAxis: [
       {
         type: "value",
-        name: "MWh",
+        name: "容量/MWh",
         position: "left",
         alignTicks: true,
         nameTextStyle: {
@@ -413,7 +411,7 @@ const initData = () => {
       },
       {
         type: "value",
-        name: "元/Wh",
+        name: "功率/MW",
         position: "right",
         alignTicks: true,
         nameTextStyle: {
@@ -454,7 +452,7 @@ const initData = () => {
       },
       {
         name: "中标单价（元/Wh）",
-        type: "line",
+        type: "bar",
         yAxisIndex: 1,
         data: [],
       },
@@ -473,15 +471,15 @@ function exportResult() {
 }
 
 const selectChange = (row, index, val) => {
-  if (useUserStore().checkPermission("BID_PRICE_ANALYSIS")) {
+  if (
+    useUserStore().checkPermission("ENERGY_STORAGE_PROJECT_COMMISSIONING_SCALE")
+  ) {
     requestData.value[row.model] = val;
     getData();
   } else {
     nextTick(() => {
       requestData.value[row.model] =
-        options[index].bind.options[0][
-          options[index].bind.cascaderOption.value
-        ];
+        row.model === "yearTimeFrame" ? _yearTimeFrame.value : _region.value;
     });
   }
 };
@@ -490,7 +488,7 @@ window.trackFunction("pc_Winbid_PriceAnalysis_click");
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-.es-winningBidPrice {
+.es-operationProject {
   width: 100%;
 }
 .echarts-mask {
@@ -505,7 +503,7 @@ window.trackFunction("pc_Winbid_PriceAnalysis_click");
     margin-bottom: 14px;
   }
 }
-.es-winningBidPrice-filter {
+.es-operationProject-filter {
   width: 100%;
   display: flex;
   align-items: center;
@@ -525,30 +523,12 @@ window.trackFunction("pc_Winbid_PriceAnalysis_click");
     margin-right: 15px;
   }
 }
-.es-winningBidPrice-hint {
-  width: 100%;
-  margin: 8px 0 32px 0;
-  background-color: #eff4ff;
-  height: 32px;
-  padding: 6px 8px;
-  display: flex;
-  align-items: center;
-  img {
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
-  }
-  span {
-    font-weight: 400;
-    @include font(12px, 400, rgba(0, 0, 0, 0.6), 20px);
-  }
-}
-.es-winningBidPrice-eCharts-box {
+.es-operationProject-eCharts-box {
   width: 100%;
   @include relative();
   margin-top: 80px;
 
-  #eChart-winningBidPrice {
+  #eChart-operationProject {
     width: 100%;
     height: 642px;
   }
