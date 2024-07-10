@@ -164,7 +164,7 @@ const releaseDemandClose = () => {
   padding-bottom: 16px;
   border-bottom: 1px solid #dbdce2;
   margin-bottom: 16px;
-  &:nth-last-of-type(1) {
+  &:last-of-type(1) {
     border-bottom: none;
   }
   h5 {

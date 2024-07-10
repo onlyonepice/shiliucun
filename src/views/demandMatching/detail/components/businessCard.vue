@@ -1,17 +1,17 @@
 <template>
-  <div :class="ns.b('content')" :style="{ width: width }">
+  <div :class="ns.b('content')" :style="{ width: width }" v-if="info !== null">
     <div :class="ns.be('content', 'left')">
       <h4>
         <p>{{ info.realName }}</p>
         <p v-if="info.position">｜{{ info.position }}</p>
       </h4>
-      <h6 @click="onOpenCompany(useUserStore().$state.accountInfo.companyId)">
+      <h6 @click="onOpenCompany(info.companyId)">
         {{ info.company }}
       </h6>
       <div :class="ns.be('content', 'line')" />
     </div>
     <img
-      @click="onOpenCompany(useUserStore().$state.accountInfo.companyId)"
+      @click="onOpenCompany(info.companyId)"
       :class="ns.be('content', 'right')"
       :src="
         !!info.companyLogo
@@ -89,6 +89,7 @@ const onOpenCompany = (id: string) => {
   }
   h6 {
     margin-bottom: 15px;
+    cursor: pointer;
   }
 }
 .es-demandMatching-businessCard-content__right {
@@ -97,5 +98,6 @@ const onOpenCompany = (id: string) => {
   border-radius: 4px;
   @include absolute(1, 16px, 16px, none, none);
   object-fit: contain;
+  cursor: pointer;
 }
 </style>

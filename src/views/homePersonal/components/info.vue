@@ -401,10 +401,13 @@ const onOpenCompany = (id: string) => {
 // 获取岗位类型name
 const postTypeName = computed(() => {
   const _code = useUserStore().$state.accountInfo.postType;
-  const _data: any = positionList.value.filter((item) => {
-    return item.id === _code;
-  });
-  return _data[0]?.label;
+  if (positionList.value.length > 0) {
+    const _data: any = positionList.value.filter((item) => {
+      return item.id === _code;
+    });
+    return _data[0]?.label;
+  }
+  return "";
 });
 // 获取vip图标
 const getVIPIcon = computed(() => {

@@ -138,7 +138,10 @@
               :src="useUserStoreHook().$state.fileUrl + item.logoUrl"
               alt=""
             />
-            <div :class="[ns.be('item', 'logo-box')]">
+            <div
+              :class="[ns.be('item', 'logo-box')]"
+              v-if="item.image.length > 0"
+            >
               <img
                 :class="[ns.be('item', 'logo')]"
                 :src="useUserStoreHook().$state.fileUrl + item.image[0]"
