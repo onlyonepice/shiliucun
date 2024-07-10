@@ -308,7 +308,9 @@ const goProductDetail = (id: string) => {
   if (route.query.id === id) {
     return;
   }
-  router.replace(`/searchProductDetail?id=${id}`);
+  router.replace(
+    `/searchProductDetail?id=${id}&productType=${route.query.productType}`,
+  );
   setTimeout(() => {
     router.go(0);
   }, 200);
