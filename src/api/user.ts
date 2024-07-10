@@ -225,7 +225,7 @@ export function getPositionTypeApi() {
 export function getCompanyInfoApi() {
   return http.request<responseType>(
     "get",
-    `/api-user/company/front/v1.0/getCompanyInfo`,
+    `/eesa-report/user/enterprise/front/v1.0/getCurrentUserEnterpriseInfo`,
   );
 }
 

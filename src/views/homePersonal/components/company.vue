@@ -113,7 +113,7 @@
 <script lang="ts" setup>
 import { ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import { getPositionTypeApi } from "@/api/user";
+import { getCompanyInfoApi } from "@/api/user";
 import CopyIcon from "@/assets/img/common/copy_icon.png";
 import useClipboard from "vue-clipboard3";
 import { ElMessage } from "element-plus";
@@ -122,7 +122,7 @@ const { toClipboard } = useClipboard();
 const ns = useNamespace("homePersonalCompany");
 const companyInfo: Ref<any> = ref({}); // 获取企业信息
 const getCompanyInfo = async () => {
-  const { datas, resp_code } = await getPositionTypeApi();
+  const { datas, resp_code } = await getCompanyInfoApi();
   if (resp_code === 0) {
     console.log(datas);
     companyInfo.value = datas;
