@@ -15,7 +15,7 @@
       />
     </div>
     <p :class="ns.b('price')" v-if="!!product.price">
-      参考价<span>{{ !!product.price ? product.price + "/kWh起" : "-" }}</span>
+      参考价<span>{{ product.price + "/kWh起" }}</span>
     </p>
     <p :class="ns.b('price')" v-else />
     <h4 :class="ns.b('name')">{{ product.name }}</h4>
@@ -54,6 +54,7 @@
         </h4>
         <div
           :class="['es-searchProduct-card-price', ns.be('list-right', 'price')]"
+          v-if="!!product.price"
         >
           参考价<span>{{ product.price }}/kWh起</span>
         </div>
@@ -163,7 +164,9 @@ const productInfo = computed(() => {
       },
       {
         label: "容量：",
-        value: props.product.batteryCapacity + "Ah" || "-",
+        value: props.product.batteryCapacity
+          ? props.product.batteryCapacity + "Ah"
+          : "-",
       },
     );
   }
