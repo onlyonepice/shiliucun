@@ -120,10 +120,7 @@
           <h3 :class="ns.be('right', 'title')">
             {{ modifyInfoFreeze.realName }} | {{ modifyInfoFreeze.position }}
           </h3>
-          <h5
-            :class="ns.be('right', 'company')"
-            @click="onOpenCompany(modifyInfo.companyId)"
-          >
+          <h5 :class="ns.be('right', 'company')">
             {{ modifyInfoFreeze.company }}
           </h5>
           <h5
@@ -157,7 +154,6 @@
         <img
           :class="ns.be('right', 'headImgUrl')"
           :src="useUserStore().fileUrl + modifyInfo.companyLogo"
-          @click="onOpenCompany(modifyInfo.companyId)"
           alt=""
         />
       </div>
@@ -342,7 +338,6 @@ import CompanyVip from "@/assets/img/vip/company-vip.png";
 import EESAOrdinaryVip from "@/assets/img/vip/eesa-ordinary-vip.png";
 import ViceDirectorVip from "@/assets/img/vip/vice-director-vip.png";
 import DirectorVip from "@/assets/img/vip/director-vip.png";
-const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 import {
   updateUserInfo,
   modifyMbCode,
@@ -391,13 +386,6 @@ const showInfo: Ref<any> = ref({
   weChat: false,
   email: false,
 });
-// 跳转企业
-const onOpenCompany = (id: string) => {
-  window.open(
-    `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
-    "externalWindow",
-  );
-};
 // 获取岗位类型name
 const postTypeName = computed(() => {
   const _code = useUserStore().$state.accountInfo.postType;
