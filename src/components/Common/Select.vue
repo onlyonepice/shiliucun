@@ -67,6 +67,20 @@
         :show-all-levels="props.showAllLevels"
       />
     </div>
+    <div v-if="props.type === 'date'" class="select__input select__content">
+      <el-date-picker
+        v-model="value"
+        :type="props.dateType"
+        :range-separator="props.rangeSeparator"
+        :editable="false"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        @change="handleChange"
+        @visible-change="handleVerifyLogin"
+        :clearable="false"
+        :disabled-date="disabledDate"
+      />
+    </div>
   </div>
 </template>
 
@@ -144,6 +158,20 @@ const props = defineProps({
   multiple: {
     type: Boolean,
     default: false,
+  },
+  // 选择范围时的分隔符
+  rangeSeparator: {
+    type: String,
+    default: "至",
+  },
+  // date 显示类型
+  dateType: {
+    type: String,
+    default: "monthrange",
+  },
+  disabledDate: {
+    type: Function,
+    default: null,
   },
 });
 const value: any = ref("" || []); // 选中值

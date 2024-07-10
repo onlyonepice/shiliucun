@@ -276,3 +276,27 @@ export const maskPermissions = (params: any) => {
     { params },
   );
 };
+
+/** 储能项目投运规模 **/
+// 时间默认值
+export const yearDefaultApi = () => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/operationScaleEnergyStorageProjects/energyStorageProjects/openApi/v1.0/getItemModuleTimeFrame",
+  );
+};
+// 地区下拉框
+export const areaTypeApi = () => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/operationScaleEnergyStorageProjects/energyStorageProjects/openApi/v1.0/getDistrict",
+  );
+};
+// 储能项目投运规模数据
+export const operationProjectApi = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/operationScaleEnergyStorageProjects/energyStorageProjects/openApi/v1.0/getEnergyStorageProjectCommissioningScale",
+    { data },
+  );
+};
