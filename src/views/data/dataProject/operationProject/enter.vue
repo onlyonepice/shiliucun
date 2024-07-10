@@ -101,7 +101,7 @@ watch(
                 res[0].datas.min,
                 res[0].datas.max,
               ); // 获取后端返回时间区间月份差
-              if (intervalDurationNum.value > 12) {
+              if (intervalDurationNum.value >= 12) {
                 requestData.value["yearTimeFrame"] = [
                   getStartMonthFromEnd(res[0].datas.max),
                   res[0].datas.max,
@@ -149,7 +149,7 @@ watch(
 // 获取特定时间往前推12个月的时间
 function getStartMonthFromEnd(endDateString) {
   const endDate = new Date(endDateString);
-  endDate.setMonth(endDate.getMonth() - 12);
+  endDate.setMonth(endDate.getMonth() - 11);
   return `${endDate.getFullYear()}-${("0" + (endDate.getMonth() + 1)).slice(-2)}`;
 }
 // 计算两个时间之间的月份差
@@ -519,7 +519,7 @@ const selectChange = (row, index, val) => {
         dayjs(val[1]).format("YYYY-MM"),
       ];
       const monthNum = getMonthDifference(nowCheckVal[0], nowCheckVal[1]);
-      if (monthNum > 12) {
+      if (monthNum >= 12) {
         requestData.value["yearTimeFrame"] =
           lastSelectedTime.value.length === 0
             ? _yearTimeFrame.value
