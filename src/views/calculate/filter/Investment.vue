@@ -113,25 +113,13 @@ investmentProgramFn("测算周期");
 
 const onChangeFilter = (value: any, type: string) => {
   if (type === "annualDays") {
-    return emits(
-      "onChangeFilter",
-      yearList.value[Number(value) - 1].paramDesc,
-      type,
-    );
+    return emits("onChangeFilter", value, type);
   }
   if (type === "bankRate") {
-    return emits(
-      "onChangeFilter",
-      rateList.value[Number(value) - 1].paramDesc,
-      type,
-    );
+    return emits("onChangeFilter", value, type);
   }
   if (type === "calculationPeriod") {
-    return emits(
-      "onChangeFilter",
-      periodList.value[Number(value) - 1].paramDesc,
-      type,
-    );
+    return emits("onChangeFilter", value, type);
   }
   emits("onChangeFilter", value, type);
 };
