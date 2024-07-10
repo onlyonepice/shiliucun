@@ -70,7 +70,6 @@ watch(
   () => {
     getSelectData();
   },
-  // { immediate: true },
 );
 </script>
 
