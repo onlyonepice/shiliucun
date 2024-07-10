@@ -199,5 +199,6 @@ const handleClick = (link: string) => {
 .es-homePersonalCompany-copy__icon {
   @include widthAndHeight(16px, 16px);
   margin-left: 8px;
+  cursor: pointer;
 }
 </style>
