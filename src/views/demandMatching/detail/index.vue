@@ -132,7 +132,7 @@ const getDemandDetail = async () => {
   const { datas, resp_code } = await getDemandDetailApi({ id: route.query.id });
   if (resp_code === 0) {
     detailInfo.value = datas;
-    detailInfo.value.companyId = datas.enterpriseId;
+    detailInfo.value.accountInfo.companyId = datas.enterpriseId;
     minePublish.value = datas.userId === useUserStore().userInfo.id;
     showExtra.value = minePublish.value ? false : datas.applyStatus !== 2;
     detailInfo.value.enabled === 2 && (detailInfo.value.status = 99);
