@@ -216,8 +216,8 @@ export function getSelectByTypeApi(data: { type: string }) {
 // 获取岗位类型
 export function getPositionTypeApi() {
   return http.request<responseType>(
-    "get",
-    `/eesa-report/user/enterprise/front/v1.0/getCurrentUserEnterpriseInfo`,
+    "post",
+    `/api-user/sysDict/front/V1.0/frontSelectTreeByType/positionType`,
   );
 }
 
