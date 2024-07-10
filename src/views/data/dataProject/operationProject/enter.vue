@@ -56,6 +56,7 @@ import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
 import { useRouter } from "vue-router";
 import dayjs from "dayjs";
+import { ElMessage } from "element-plus";
 
 const router = useRouter();
 const { VITE_DATABASE_URL } = import.meta.env;
@@ -86,6 +87,7 @@ interface response {
 const _yearTimeFrame = ref([]);
 const _region = ref("");
 const timeFrame = ref({ start: null, end: null });
+const intervalDurationNum = ref(0); // 区间时长
 // 获取筛选项options
 watch(
   () => props.formOptions,
@@ -95,10 +97,21 @@ watch(
         options.value.forEach((item) => {
           switch (item.model) {
             case "yearTimeFrame":
-              requestData.value["yearTimeFrame"] = [
+              intervalDurationNum.value = getMonthDifference(
                 res[0].datas.min,
                 res[0].datas.max,
-              ];
+              ); // 获取后端返回时间区间月份差
+              if (intervalDurationNum.value > 12) {
+                requestData.value["yearTimeFrame"] = [
+                  getStartMonthFromEnd(res[0].datas.max),
+                  res[0].datas.max,
+                ];
+              } else {
+                requestData.value["yearTimeFrame"] = [
+                  res[0].datas.min,
+                  res[0].datas.max,
+                ];
+              }
               _yearTimeFrame.value = cloneDeep(
                 requestData.value["yearTimeFrame"],
               );
@@ -133,6 +146,27 @@ watch(
     immediate: true,
   },
 );
+// 获取特定时间往前推12个月的时间
+function getStartMonthFromEnd(endDateString) {
+  const endDate = new Date(endDateString);
+  endDate.setMonth(endDate.getMonth() - 12);
+  return `${endDate.getFullYear()}-${("0" + (endDate.getMonth() + 1)).slice(-2)}`;
+}
+// 计算两个时间之间的月份差
+function getMonthDifference(startDateStr, endDateStr) {
+  const startDate = new Date(startDateStr);
+  const endDate = new Date(endDateStr);
+
+  const startYear = startDate.getFullYear();
+  const startMonth = startDate.getMonth(); // 注意：月份是从0开始的
+  const endYear = endDate.getFullYear();
+  const endMonth = endDate.getMonth();
+
+  // 计算月份差
+  let monthDifference = (endYear - startYear) * 12 + (endMonth - startMonth);
+
+  return Math.abs(monthDifference);
+}
 // 获取时间戳
 function getTimeStamp(time) {
   const [year, month] = time.split("-").map((part) => parseInt(part));
@@ -162,6 +196,10 @@ const getData = async () => {
     requestData.value.endYear = dayjs(
       requestData.value["yearTimeFrame"][1],
     ).format("YYYY-MM");
+    lastSelectedTime.value = [
+      requestData.value.startYear,
+      requestData.value.endYear,
+    ];
     const data = await operationProjectApi(requestData.value);
     const { datas, resp_code } = data;
     const textStyle = {
@@ -218,7 +256,7 @@ const getData = async () => {
 
           const capacity = isNaN(+item.data[barIndex].capacity)
             ? item.data[barIndex].capacity
-            : (+item.data[barIndex].capacity).toFixed(1);
+            : (+item.data[barIndex].capacity).toFixed(2);
 
           const power = isNaN(+item.data[barIndex].power)
             ? item.data[barIndex].power
@@ -469,12 +507,31 @@ function exportResult() {
   });
   exportVisible.value = true;
 }
+const lastSelectedTime = ref([]); // 记录上次选择时间
 
 const selectChange = (row, index, val) => {
   if (
     useUserStore().checkPermission("ENERGY_STORAGE_PROJECT_COMMISSIONING_SCALE")
   ) {
-    requestData.value[row.model] = val;
+    if (row.model === "yearTimeFrame") {
+      const nowCheckVal = [
+        dayjs(val[0]).format("YYYY-MM"),
+        dayjs(val[1]).format("YYYY-MM"),
+      ];
+      const monthNum = getMonthDifference(nowCheckVal[0], nowCheckVal[1]);
+      if (monthNum > 12) {
+        requestData.value["yearTimeFrame"] =
+          lastSelectedTime.value.length === 0
+            ? _yearTimeFrame.value
+            : lastSelectedTime.value;
+        ElMessage.warning("最多选择12个月！请重新选择");
+        return;
+      } else {
+        requestData.value["yearTimeFrame"] = val;
+      }
+    } else {
+      requestData.value[row.model] = val;
+    }
     getData();
   } else {
     nextTick(() => {

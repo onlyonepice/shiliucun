@@ -175,7 +175,6 @@ const props = defineProps({
   },
 });
 const value: any = ref("" || []); // 选中值
-const model = defineModel();
 const selectDom = ref(); // 获取select组件
 watch(
   () => props.defaultValue,
@@ -187,7 +186,6 @@ watch(
 // 通过onChange事件传递值给父组件
 function handleChange(data) {
   emit("onChange", data);
-  model.value = data;
 }
 function handleVerifyLogin(data: any) {
   if (data) {
