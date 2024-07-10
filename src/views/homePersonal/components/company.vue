@@ -94,12 +94,12 @@
             >|</span
           >
           <span v-if="item.positionTitle">{{ item.positionTitle }}</span>
-          <div :class="[ns.be('title', 'copy')]" v-if="item.landlineNumber">
-            {{ item.landlineNumber }}
+          <div :class="[ns.be('title', 'copy')]" v-if="item.phone">
+            {{ item.phone }}
             <img
               :class="[ns.be('copy', 'icon')]"
               :src="CopyIcon"
-              @click="toClipboardFn(item.landlineNumber)"
+              @click="toClipboardFn(item.phone)"
             />
           </div>
         </div>
