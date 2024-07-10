@@ -14,7 +14,9 @@
           <h3>{{ companyInfo.nameCn }}</h3>
           <h5 :class="[ns.be('content', 'link')]">
             企业官网：
-            <p>{{ companyInfo.siteUrl }}</p>
+            <p @click="handleClick(companyInfo.siteUrl)">
+              {{ companyInfo.siteUrl }}
+            </p>
           </h5>
           <template
             v-for="(item, index) in companyInfo.socialMediaJsonArray"
