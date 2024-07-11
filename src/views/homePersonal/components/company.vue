@@ -124,7 +124,6 @@ const companyInfo: Ref<any> = ref({}); // 获取企业信息
 const getCompanyInfo = async () => {
   const { datas, resp_code } = await getCompanyInfoApi();
   if (resp_code === 0) {
-    console.log(datas);
     companyInfo.value = datas;
   }
 };
