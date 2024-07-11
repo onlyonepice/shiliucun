@@ -45,10 +45,12 @@ defineProps({
 });
 // 跳转企业
 const onOpenCompany = (id: string) => {
-  window.open(
-    `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
-    "externalWindow",
-  );
+  if (id) {
+    window.open(
+      `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
+      "externalWindow",
+    );
+  }
 };
 </script>
 <style lang="scss" scoped>
