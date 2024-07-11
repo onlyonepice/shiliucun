@@ -69,56 +69,66 @@
         <!-- 产品参数 -->
         <div :class="[ns.b('content-detail')]">
           <h3>产品参数</h3>
-          <el-table :data="tableData" style="width: 100%" :border="true">
-            <el-table-column fixed prop="name" label="" width="160">
-              <template #default="scope">
-                <p
-                  v-if="route.query.productType === 'INDUSTRY_ENERGY_STORAGE'"
-                  :style="{
-                    'text-align': 'right',
-                    color: 'rgba(0, 0, 0, 0.9)',
-                    'font-weight':
-                      scope.$index === 1 ||
-                      scope.$index === 5 ||
-                      scope.$index === 8
-                        ? 600
-                        : 400,
-                  }"
-                >
-                  {{ scope.row.name }}
-                </p>
-                <p
-                  v-else
-                  style="
-                    text-align: right;
-                    color: &quot;rgba(0, 0, 0, 0.9)&quot;;
-                  "
-                >
-                  {{ scope.row.name }}
-                </p>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="info1"
-              v-for="item in tableData[0].info.length"
-              :key="item"
-              label=""
-              :width="
-                943 / tableData[0].info.length < 300
-                  ? 300
-                  : 943 / tableData[0].info.length
-              "
-            >
-              <template #default="scope">
-                <detailTable
-                  v-if="scope.row.info[item - 1]"
-                  :index="scope.$index"
-                  :info="scope.row.info[item - 1] || {}"
-                  :productType="route.query.productType"
-                />
-              </template>
-            </el-table-column>
-          </el-table>
+          <Tabs
+            :tabsList="tabsList"
+            @onHandleClick="onHandleClick"
+            :defaultId="choseTabs"
+          />
+          <template v-if="choseTabs === 0">
+            <el-table :data="tableData" style="width: 100%" :border="true">
+              <el-table-column fixed prop="name" label="" width="160">
+                <template #default="scope">
+                  <p
+                    v-if="route.query.productType === 'INDUSTRY_ENERGY_STORAGE'"
+                    :style="{
+                      'text-align': 'right',
+                      color: 'rgba(0, 0, 0, 0.9)',
+                      'font-weight':
+                        scope.$index === 1 ||
+                        scope.$index === 5 ||
+                        scope.$index === 8
+                          ? 600
+                          : 400,
+                    }"
+                  >
+                    {{ scope.row.name }}
+                  </p>
+                  <p
+                    v-else
+                    style="
+                      text-align: right;
+                      color: &quot;rgba(0, 0, 0, 0.9)&quot;;
+                    "
+                  >
+                    {{ scope.row.name }}
+                  </p>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="info1"
+                v-for="item in tableData[0].info.length"
+                :key="item"
+                label=""
+                :width="
+                  943 / tableData[0].info.length < 300
+                    ? 300
+                    : 943 / tableData[0].info.length
+                "
+              >
+                <template #default="scope">
+                  <detailTable
+                    v-if="scope.row.info[item - 1]"
+                    :index="scope.$index"
+                    :info="scope.row.info[item - 1] || {}"
+                    :productType="route.query.productType"
+                  />
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
+          <template>
+            <div>111111</div>
+          </template>
         </div>
       </div>
       <div
@@ -177,6 +187,11 @@ const ns = useNamespace("searchProductDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
   { text: "查产品", path: "/searchProduct" },
   { text: "", path: "" },
+]);
+const choseTabs: Ref<number> = ref(0); // 默认选中tab
+const tabsList: Ref<Array<any>> = ref([
+  { id: 0, name: "产品参数" },
+  { id: 1, name: "企业信息" },
 ]);
 const tabNameList = ref([
   "产品型号",
@@ -265,6 +280,9 @@ const productDetailInfo = computed(() => {
   }
   return _data;
 });
+const onHandleClick = (id: number) => {
+  choseTabs.value = id;
+};
 // 获取产品详情
 const getProductDetail = async () => {
   const { datas, resp_code }: any = await getProductDetailApi({
