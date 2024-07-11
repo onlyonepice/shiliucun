@@ -211,7 +211,7 @@ const getData = async () => {
     if (resp_code === 0 && datas.length) {
       let barSeries = []; // 容量数据
       let lineSeries = []; // 功率数据
-      const priority = ["源网侧储能", "工商业储能", "户用储能"];
+      const priority = ["电源侧储能", "电网侧储能", "工商业储能", "户用储能"];
       barSeries = datas[0].data.map((item) => {
         return {
           type: "bar",
@@ -320,9 +320,10 @@ const initECharts = async () => {
   myChart.setOption(EChartOptions.value);
 };
 const colorEnum = {
-  源网侧储能: "#244BF1",
-  工商业储能: "#6F89F6",
-  户用储能: "#B8C4FB",
+  电源侧储能: "#244BF1",
+  电网侧储能: "#5B78F5",
+  工商业储能: "#91A5F8",
+  户用储能: "#C8D2FB",
 };
 const initData = () => {
   EChartOptions.value = {
@@ -347,7 +348,7 @@ const initData = () => {
       className: "custom-tooltip",
       extraCssText: "padding: 16px; border-radius: 8px;",
       formatter: (params) => {
-        params = params.slice(0, 3);
+        params = params.slice(0, 4);
 
         var htmlStr = `<div style="width: 368px;" >
               <div style="line-height:24px; font-width: 400; display: flex; justify-content: space-between;">
