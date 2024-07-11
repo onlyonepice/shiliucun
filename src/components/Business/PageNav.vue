@@ -111,7 +111,7 @@ import EESAOrdinaryVip from "@/assets/img/vip/eesa-ordinary-vip.png";
 import ViceDirectorVip from "@/assets/img/vip/vice-director-vip.png";
 import DirectorVip from "@/assets/img/vip/director-vip.png";
 import SpreadIcon from "@/assets/img/common/spread-out-icon.png";
-const { VITE_INDUSTRIALMAP_URL, VITE_DATABASE_URL } = import.meta.env;
+const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
 const router = useRouter();
 const route = useRoute();
@@ -200,7 +200,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 5,
         text: "政策",
-        path: ["/policy"],
+        path: "/policy",
       },
       // {
       //   id: 5,
@@ -210,7 +210,7 @@ const navList: Ref<Array<NavList>> = ref([
       {
         id: 6,
         text: "电价API",
-        path: `${VITE_DATABASE_URL}/#/ApiPage`,
+        path: "/electricityApi",
       },
     ],
   },

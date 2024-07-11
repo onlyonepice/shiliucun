@@ -59,5 +59,15 @@ export default {
         title: "政策",
       },
     },
+    {
+      path: "/electricityApi",
+      name: "ElectricityApi",
+      components: {
+        default: () => import("@/views/data/electricityApi/index.vue"),
+      },
+      meta: {
+        title: "电价Api",
+      },
+    },
   ],
 };
