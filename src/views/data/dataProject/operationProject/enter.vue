@@ -209,8 +209,8 @@ const getData = async () => {
       color: "#5B6985",
     };
     if (resp_code === 0 && datas.length) {
-      let barSeries = []; // 容量数据
       let lineSeries = []; // 功率数据
+      let barSeries = []; // 容量数据
       const priority = ["户用储能", "工商业储能", "电网侧储能", "电源侧储能"];
       barSeries = datas[0].data.map((item) => {
         return {
@@ -289,9 +289,9 @@ const getData = async () => {
           }),
         },
       ];
-      EChartOptions.value.series = barSeries
+      EChartOptions.value.series = lineSeries
         .reverse()
-        .concat(lineSeries.reverse());
+        .concat(barSeries.reverse());
       EChartOptions.value.legend = legend;
       initECharts();
     } else if (!datas.length) {
@@ -433,7 +433,7 @@ const initData = () => {
       {
         type: "value",
         name: "容量/MWh",
-        position: "left",
+        position: "right",
         alignTicks: true,
         nameTextStyle: {
           fontSize: 14,
@@ -451,7 +451,7 @@ const initData = () => {
       {
         type: "value",
         name: "功率/MW",
-        position: "right",
+        position: "left",
         alignTicks: true,
         nameTextStyle: {
           fontSize: 14,
