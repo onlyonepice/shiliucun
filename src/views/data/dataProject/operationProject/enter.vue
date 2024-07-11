@@ -211,7 +211,7 @@ const getData = async () => {
     if (resp_code === 0 && datas.length) {
       let barSeries = []; // 容量数据
       let lineSeries = []; // 功率数据
-      const priority = ["电源侧储能", "电网侧储能", "工商业储能", "户用储能"];
+      const priority = ["户用储能", "工商业储能", "电网侧储能", "电源侧储能"];
       barSeries = datas[0].data.map((item) => {
         return {
           type: "bar",
@@ -274,13 +274,14 @@ const getData = async () => {
           });
         });
       });
+      const _barSeries = cloneDeep(barSeries).reverse();
       // 色块展示
       const legend = [
         {
           x: "center",
           y: "90%",
           textStyle,
-          data: barSeries.map((item) => {
+          data: _barSeries.map((item) => {
             return {
               name: item.name,
               icon: "rect",
@@ -358,9 +359,8 @@ const initData = () => {
         const _params = params.reverse();
         _params.forEach((item) => {
           const capacity =
-            item.data.capacity === "-" ? "-" : `${item.data.capacity}MWh`;
-          const power =
-            item.data.power === "-" ? "" : ` | ${item.data.power}MW`;
+            item.data.capacity === "-" ? "-" : ` | ${item.data.capacity}MWh`;
+          const power = item.data.power === "-" ? "" : `${item.data.power}MW`;
           const _noData = item.data.capacity === "-" && item.data.power === "-";
 
           htmlStr += `<div
@@ -397,7 +397,7 @@ const initData = () => {
                   <span style="font-size: 14px; color: #5B6985;">${item.seriesName}</span>
                 </div>
                 <span style="font-size: 14px; color: #000; font-weight: 600;">
-                  ${!_noData ? capacity + power : "暂无数据"}
+                  ${!_noData ? power + capacity : "暂无数据"}
                 </span>
               </div>`;
         });
