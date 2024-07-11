@@ -207,6 +207,8 @@ const onSearch = () => {
   currentTab.value = "All";
   searchFn();
 };
+const searchData = ref({}); // 存放globalSearch接口返回数据
+const allData = ref([]); // 存放getByKeyword接口返回数据
 const searchFn = async () => {
   loading.value = true;
   showNull.value = false;
@@ -220,8 +222,11 @@ const searchFn = async () => {
     const data = await globalSearch({ keyword: searchContent.value });
     if (_data.resp_code === 0) {
       pageOptions.value.All.data.Energy_Storage_Frontier = _data.datas;
+      allData.value = _data.datas;
     }
+
     if (data.resp_code === 0) {
+      searchData.value = data.datas;
       for (const key in data.datas) {
         if (data.datas[key].length > 0) {
           isNull = false;
@@ -271,6 +276,13 @@ const searchFn = async () => {
 };
 const handleTabChange = (key: string | number) => {
   currentTab.value = key;
+  // 2024-07-11 修复搜索结果页bug
+  if (key !== "All") {
+    pageOptions.value.All.data[key] = searchData.value[key];
+  } else {
+    pageOptions.value.All.data = [];
+    pageOptions.value.All.data.Energy_Storage_Frontier = allData.value;
+  }
 };
 const handleClearTap = () => {
   searchContent.value = "";
