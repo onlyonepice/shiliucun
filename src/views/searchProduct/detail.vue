@@ -134,6 +134,7 @@
             @click="goProductDetail(item.id)"
           >
             <img
+              v-if="item.logoUrl"
               :class="[ns.be('item', 'icon')]"
               :src="useUserStoreHook().$state.fileUrl + item.logoUrl"
               alt=""
@@ -148,9 +149,11 @@
                 alt=""
               />
             </div>
-            <p :class="[ns.be('item', 'price')]">
-              参考价<span>1200/kWh起</span>
-            </p>
+            <div :class="[ns.be('item', 'price')]" v-if="item.price">
+              <p>
+                参考价<span>{{ item.price }}/kWh起</span>
+              </p>
+            </div>
             <p :class="[ns.be('item', 'product')]">{{ item.name }}</p>
             <p :class="[ns.be('item', 'company')]">{{ item.enterprise }}</p>
           </div>
@@ -442,6 +445,7 @@ const onConnectCompany = (id: string) => {
 .es-searchProductDetail-item__price {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
   margin-bottom: 16px;
+  height: 28px;
   span {
     @include font(20px, 600, #f75964, 28px);
     &::before {
