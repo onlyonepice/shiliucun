@@ -75,7 +75,7 @@
         :editable="false"
         start-placeholder="开始时间"
         end-placeholder="结束时间"
-        @change="handleChange"
+        @change="handleDateChange"
         @visible-change="handleVerifyLogin"
         :clearable="false"
         :disabled-date="disabledDate"
@@ -176,6 +176,7 @@ const props = defineProps({
 });
 const value: any = ref("" || []); // 选中值
 const selectDom = ref(); // 获取select组件
+const model = defineModel();
 watch(
   () => props.defaultValue,
   (val) => {
@@ -185,6 +186,10 @@ watch(
 );
 // 通过onChange事件传递值给父组件
 function handleChange(data) {
+  emit("onChange", data);
+  model.value = data;
+}
+function handleDateChange(data) {
   emit("onChange", data);
 }
 function handleVerifyLogin(data: any) {
