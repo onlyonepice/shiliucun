@@ -88,6 +88,37 @@ const _yearTimeFrame = ref([]);
 const _region = ref("");
 const timeFrame = ref({ start: null, end: null });
 const intervalDurationNum = ref(0); // 区间时长
+const regionName = ref("");
+const foundLabel = ref(""); // 使用递归根据region id查询所选地区label
+const regionList = ref([]); // 地区下拉框数据
+// 获取默认地区数据
+function findDefaultRegions(regions) {
+  let result = [];
+
+  regions.forEach((region) => {
+    if (region.children && region.children.length > 0) {
+      result = result.concat(findDefaultRegions(region.children));
+    }
+    if (region.isDefaultValue) {
+      result.push(region);
+    }
+  });
+
+  return result;
+}
+// 使用递归函数查找id为某值的项
+function findLabelById(array, targetId) {
+  for (let item of array) {
+    if (item.id === targetId) {
+      foundLabel.value = item.label;
+      return;
+    }
+    if (item.children && item.children.length > 0) {
+      findLabelById(item.children, targetId);
+    }
+  }
+}
+
 // 获取筛选项options
 watch(
   () => props.formOptions,
@@ -119,20 +150,18 @@ watch(
               timeFrame.value.end = getTimeStamp(res[0].datas.max);
               break;
             case "region":
-              item.bind.options = res[1].datas;
+              regionList.value = res[1].datas;
+              item.bind["options"] = res[1].datas;
               requestData.value.region =
-                res[1].datas[0].children.find((child) => child.isDefaultValue)
-                  .id || res[1].datas[0].children[0].id;
+                findDefaultRegions(res[1].datas).length > 0
+                  ? findDefaultRegions(res[1].datas)[0].id
+                  : res[1].datas[0].children[0].id;
+              regionName.value =
+                findDefaultRegions(res[1].datas).length > 0
+                  ? findDefaultRegions(res[1].datas)[0].label
+                  : res[1].datas[0].children[0].label;
               _region.value = cloneDeep(requestData.value.region);
-              break;
-          }
-        });
-        res.forEach((item, index) => {
-          switch (index) {
-            case 1:
-              requestData.value.region = item.datas[0].children.find(
-                (child) => child.isDefaultValue,
-              ).id;
+
               break;
           }
         });
@@ -211,7 +240,13 @@ const getData = async () => {
     if (resp_code === 0 && datas.length) {
       let lineSeries = []; // 功率数据
       let barSeries = []; // 容量数据
-      const priority = ["户用储能", "工商业储能", "电网侧储能", "电源侧储能"];
+      const priority = [
+        "户用储能",
+        "工商业储能",
+        "电网侧储能",
+        "电源侧储能",
+        "源网侧储能",
+      ];
       barSeries = datas[0].data.map((item) => {
         return {
           type: "bar",
@@ -276,7 +311,7 @@ const getData = async () => {
       });
       const _barSeries = cloneDeep(barSeries).reverse();
       // 色块展示
-      const legend = [
+      let legend = [
         {
           x: "center",
           y: "90%",
@@ -292,6 +327,16 @@ const getData = async () => {
       EChartOptions.value.series = lineSeries
         .reverse()
         .concat(barSeries.reverse());
+      // 根据国家动态改变色块
+      if (regionName.value === "中国") {
+        legend[0].data = legend[0]["data"].filter(
+          (item) => item.name !== "源网侧储能",
+        );
+      } else {
+        legend[0].data = legend[0]["data"].filter(
+          (item) => item.name !== "电源侧储能" && item.name !== "电网侧储能",
+        );
+      }
       EChartOptions.value.legend = legend;
       initECharts();
     } else if (!datas.length) {
@@ -321,6 +366,7 @@ const initECharts = async () => {
   myChart.setOption(EChartOptions.value);
 };
 const colorEnum = {
+  源网侧储能: "#244BF1",
   电源侧储能: "#244BF1",
   电网侧储能: "#5B78F5",
   工商业储能: "#91A5F8",
@@ -349,7 +395,17 @@ const initData = () => {
       className: "custom-tooltip",
       extraCssText: "padding: 16px; border-radius: 8px;",
       formatter: (params) => {
-        params = params.slice(0, 4);
+        params = params.slice(0, 5);
+
+        if (regionName.value === "中国") {
+          params = params.filter((item) => item.seriesName !== "源网侧储能");
+        } else {
+          params = params.filter(
+            (item) =>
+              item.seriesName !== "电源侧储能" &&
+              item.seriesName !== "电网侧储能",
+          );
+        }
 
         var htmlStr = `<div style="width: 368px;" >
               <div style="line-height:24px; font-width: 400; display: flex; justify-content: space-between;">
@@ -532,6 +588,8 @@ const selectChange = (row, index, val) => {
       }
     } else {
       requestData.value[row.model] = val;
+      findLabelById(regionList.value, val);
+      regionName.value = foundLabel.value;
     }
     getData();
   } else {
