@@ -300,3 +300,19 @@ export const operationProjectApi = (data) => {
     { data },
   );
 };
+
+// 开通电价获取验证码
+export const getVerificationCode = (data: any) => {
+  return http.request<responseType>(
+    "post",
+    "/api-user/sms/openApi/v1.0/sendAVerificationCodeSMS",
+    { data },
+  );
+};
+// 校验验证码对不对
+// export const checkVerificationCode = (data: any) => {
+//   return http.request<responseType>(
+//     "post",
+//     "/api-user/sms/openApi/v1.0/checkVerificationCode",
+//   );
+// };

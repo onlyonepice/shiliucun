@@ -566,7 +566,6 @@ const onChangeSwitch = async (val: boolean, type: string) => {
   resp_code === 0 && ElMessage.success("修改成功");
 };
 // 倒计时
-
 const countDown = () => {
   btnDesc.value = "60s 后可重发";
   timer.value = setInterval(() => {
