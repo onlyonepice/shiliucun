@@ -59,6 +59,12 @@
         />
       </h5>
     </div>
+    <div :class="[ns.b('title')]" v-if="companyInfo.abbreviation">
+      <h5>企业中文简称</h5>
+      <h5 :class="[ns.be('title', 'desc')]">
+        {{ companyInfo.abbreviation }}
+      </h5>
+    </div>
     <div :class="[ns.b('title')]" v-if="companyInfo.landline">
       <h5>座机号码</h5>
       <h5 :class="[ns.be('title', 'desc')]">
@@ -178,11 +184,16 @@ const toClipboardFn = (content: string) => {
   margin: 8px 8px 0 0;
   cursor: pointer;
 }
-
+.es-searchProduct-detailCompany-content__icon-detail {
+  @include widthAndHeight(150px, 120px);
+  img {
+    @include widthAndHeight(120px, 120px);
+  }
+}
 .es-searchProduct-detailCompany-content__icon-detail-card {
   @include widthAndHeight(368px, 176px);
   background: linear-gradient(rgba(36, 75, 241, 0.1), #ffffff);
-  padding: 0 24px;
+  padding: 24px;
   box-sizing: border-box;
 }
 .es-searchProduct-detailCompany-empty-line {
