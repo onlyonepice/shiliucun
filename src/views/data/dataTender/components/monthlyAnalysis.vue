@@ -10,6 +10,7 @@
           valueKey="id"
           title="招标内容"
           :defaultValue="contentDict"
+          @on-change="(val) => handleChange(val)"
         />
       </div>
       <div :class="ns.be('top', 'right')">
@@ -47,7 +48,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, Ref, watch, nextTick } from "vue";
+import { onMounted, ref, Ref, nextTick } from "vue";
 import { getToken } from "@/utils/auth";
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
@@ -76,18 +77,16 @@ const props = defineProps({
   },
 });
 const contentDict: Ref<number> = ref(props.contentFilter[0].id); // 筛选项结果
-watch(
-  () => contentDict.value,
-  () => {
-    if (useUserStore().checkPermission("MONTHLY_ANALYSIS_BIDDING")) {
-      getElectricityTypeOneName();
-    } else {
-      nextTick(() => {
-        contentDict.value = props.contentFilter[0].id;
-      });
-    }
-  },
-);
+function handleChange(val) {
+  contentDict.value = val;
+  if (useUserStore().checkPermission("MONTHLY_ANALYSIS_BIDDING")) {
+    getElectricityTypeOneName();
+  } else {
+    nextTick(() => {
+      contentDict.value = props.contentFilter[0].id;
+    });
+  }
+}
 onMounted(() => {
   getElectricityTypeOneName();
   window.trackFunction("pc_Bidding_MonthlyAnalysis_click");
