@@ -85,7 +85,7 @@ import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import cancel_icon from "@/assets/img/common/icon_clear.png";
 import VipTopNormal from "@/assets/img/vip/vip-top-normal.png"; // 普通会员
-import VipTopPersonal from "@/assets/img/vip/vip-top-personal.png"; // 个人会员
+// import VipTopPersonal from "@/assets/img/vip/vip-top-personal.png"; // 个人会员
 import VipTopCompany from "@/assets/img/vip/vip-top-company.png"; // 企业会员
 import VipTick from "@/assets/img/vip/vip-tick.png";
 import VipFork from "@/assets/img/vip/vip-fork.png";
@@ -115,24 +115,24 @@ const accountList = ref([
     },
     list: [],
   },
-  {
-    id: 1,
-    topIcon: VipTopPersonal,
-    code: "PERSON_MEMBER_USER",
-    btnConfig: {
-      color: "rgba(255,255,255,0.9)",
-      bgColor: "#244BF1",
-      borderColor: "#244BF1",
-      text: "立即开通",
-    },
-    price: {
-      number: 299,
-      color: "#244BF1",
-      unit: "/月",
-      extraPrice: "￥879/季 ￥3399/年",
-    },
-    list: [],
-  },
+  // {
+  //   id: 1,
+  //   topIcon: VipTopPersonal,
+  //   code: "PERSON_MEMBER_USER",
+  //   btnConfig: {
+  //     color: "rgba(255,255,255,0.9)",
+  //     bgColor: "#244BF1",
+  //     borderColor: "#244BF1",
+  //     text: "立即开通",
+  //   },
+  //   price: {
+  //     number: 299,
+  //     color: "#244BF1",
+  //     unit: "/月",
+  //     extraPrice: "￥879/季 ￥3399/年",
+  //   },
+  //   list: [],
+  // },
   {
     id: 2,
     topIcon: VipTopCompany,
@@ -203,12 +203,13 @@ getVipConfigList();
   .wrapper {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     .item {
       width: 368px;
       position: relative;
       border: 1px solid #dbdce2;
       border-radius: 8px;
+      margin-right: 20px;
       .item_log {
         @include widthAndHeight(100%, 104px);
       }

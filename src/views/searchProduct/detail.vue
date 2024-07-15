@@ -126,8 +126,8 @@
               </el-table-column>
             </el-table>
           </template>
-          <template>
-            <div>111111</div>
+          <template v-else>
+            <DetailCompany :companyInfo="companyInfo" />
           </template>
         </div>
       </div>
@@ -182,8 +182,11 @@ import {
 } from "@/api/searchProduct";
 import { useRoute, useRouter } from "vue-router";
 import detailTable from "./components/detailTable.vue";
+import DetailCompany from "./components/detailCompany.vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { cloneDeep } from "lodash";
+import { getCompanyInfoApi } from "@/api/user";
+const companyInfo: Ref<any> = ref({}); // 获取企业信息
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const router = useRouter();
 const ns = useNamespace("searchProductDetail");
@@ -286,6 +289,13 @@ const productDetailInfo = computed(() => {
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
 };
+const getCompanyInfo = async () => {
+  const { datas, resp_code } = await getCompanyInfoApi();
+  if (resp_code === 0) {
+    companyInfo.value = datas;
+  }
+};
+getCompanyInfo();
 // 获取产品详情
 const getProductDetail = async () => {
   const { datas, resp_code }: any = await getProductDetailApi({

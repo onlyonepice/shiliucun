@@ -57,10 +57,10 @@
         <span required>真实姓名</span>
         <Select
           type="input"
-          :defaultValue="activateInfo.realName"
+          :defaultValue="activateInfo.userName"
           @onChange="
             (val) => {
-              return onChangeInfo(val, 'realName');
+              return onChangeInfo(val, 'userName');
             }
           "
         />
@@ -70,6 +70,7 @@
         <Select
           type="input"
           :defaultValue="activateInfo.mobile"
+          :maxlength="11"
           @onChange="
             (val) => {
               return onChangeInfo(val, 'mobile');
@@ -81,10 +82,11 @@
         <span required>验证码</span>
         <Select
           type="input"
-          :defaultValue="activateInfo.position"
+          :defaultValue="activateInfo.verificationCode"
+          :maxlength="6"
           @onChange="
             (val) => {
-              return onChangeInfo(val, 'position');
+              return onChangeInfo(val, 'verificationCode');
             }
           "
         />
@@ -102,10 +104,10 @@
         <span>公司名称</span>
         <Select
           type="input"
-          :defaultValue="activateInfo.position"
+          :defaultValue="activateInfo.company"
           @onChange="
             (val) => {
-              return onChangeInfo(val, 'position');
+              return onChangeInfo(val, 'company');
             }
           "
         />
@@ -137,13 +139,19 @@ import useNamespace from "@/utils/nameSpace";
 import { NOOP } from "@vue/shared";
 import { ElMessage } from "element-plus";
 import ElectricityApiImage from "@/assets/img/dataBase/electricity-api-img.png";
-import { getVerificationCode } from "@/api/data";
-import { getToken } from "@/utils/auth";
+import { getVerificationCode, openApiApi } from "@/api/data";
+import { login } from "@/api/user";
 import { useUserStore } from "@/store/modules/user";
+import { setToken } from "@/utils/auth";
 const ns = useNamespace("electricityApi");
 const visibleInfo: Ref<boolean> = ref(false); // 开通弹窗
 const activateInfo: Ref<any> = ref({
+  source: "Api接口",
+  userName: "",
   mobile: "",
+  verificationCode: "",
+  company: "",
+  position: "",
 }); // 开通弹窗信息
 // 开通弹窗信息修改
 const onChangeInfo = (value: any, type: string) => {
@@ -152,10 +160,6 @@ const onChangeInfo = (value: any, type: string) => {
 const btnDesc: Ref<string> = ref("获取验证码");
 const timer: Ref<any> = ref(null); // 定时器
 const onOpen = () => {
-  if (!getToken()) {
-    useUserStore().openLogin(true);
-    return;
-  }
   visibleInfo.value = true;
 };
 const countDown = () => {
@@ -189,6 +193,35 @@ const onSendCode = async () => {
     }
   } catch (error) {
     NOOP();
+  }
+};
+// 点击提交
+const handleClose = async (flag: boolean) => {
+  const { userName, mobile, verificationCode } = activateInfo.value;
+  if (userName === "" || mobile === "" || verificationCode === "") {
+    return ElMessage.error("请输入完整信息");
+  }
+  if (flag) {
+    const { datas, resp_code } = await login({
+      grant_type: "sms_code",
+      smsCode: verificationCode,
+      mobile: mobile,
+    });
+    if (resp_code === 0) {
+      setToken(datas);
+      useUserStore().$state.token = datas.access_token;
+      useUserStore().handleGetUserInfo();
+      openApiFn();
+    }
+  } else {
+    visibleInfo.value = false;
+  }
+};
+const openApiFn = async () => {
+  const { resp_code } = await openApiApi(activateInfo.value);
+  if (resp_code === 0) {
+    ElMessage.success("信息已提交，24小时内会有工作人员与您联系");
+    visibleInfo.value = false;
   }
 };
 const info: Ref<Array<any>> = ref([

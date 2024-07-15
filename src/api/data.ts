@@ -309,10 +309,12 @@ export const getVerificationCode = (data: any) => {
     { data },
   );
 };
-// 校验验证码对不对
-// export const checkVerificationCode = (data: any) => {
-//   return http.request<responseType>(
-//     "post",
-//     "/api-user/sms/openApi/v1.0/checkVerificationCode",
-//   );
-// };
+
+// 开通api接口
+export const openApiApi = (data: any) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-data-center/vipForm/front/v1.0/loginCreat",
+    { data },
+  );
+};
