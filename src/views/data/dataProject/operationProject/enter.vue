@@ -415,8 +415,9 @@ const initData = () => {
         const _params = params.reverse();
         _params.forEach((item) => {
           const capacity =
-            item.data.capacity === "-" ? "-" : ` | ${item.data.capacity}MWh`;
-          const power = item.data.power === "-" ? "" : `${item.data.power}MW`;
+            item.data.capacity === "-" ? "-" : `${item.data.capacity}MWh`;
+          const power =
+            item.data.power === "-" ? "- | " : `${item.data.power}MW | `;
           const _noData = item.data.capacity === "-" && item.data.power === "-";
 
           htmlStr += `<div
