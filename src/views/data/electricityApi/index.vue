@@ -139,7 +139,7 @@ import useNamespace from "@/utils/nameSpace";
 import { NOOP } from "@vue/shared";
 import { ElMessage } from "element-plus";
 import ElectricityApiImage from "@/assets/img/dataBase/electricity-api-img.png";
-import { getVerificationCode, openApiApi } from "@/api/data";
+import { getVerificationCode, openApiApi, getApiTime } from "@/api/data";
 import { login } from "@/api/user";
 import { useUserStore } from "@/store/modules/user";
 import { setToken } from "@/utils/auth";
@@ -195,6 +195,22 @@ const onSendCode = async () => {
     NOOP();
   }
 };
+// 获取最新api时间
+const getApiTimeFn = async () => {
+  const { resp_code, datas } = await getApiTime();
+  if (resp_code === 0) {
+    const _data = datas.filter((item) => {
+      return item.name === "电价库";
+    });
+    info.value[1].desc = [
+      _data[0].lastUpdateTime.split("-")[0] +
+        "年" +
+        _data[0].lastUpdateTime.split("-")[1] +
+        "月",
+    ];
+  }
+};
+getApiTimeFn();
 // 点击提交
 const handleClose = async (flag: boolean) => {
   const { userName, mobile, verificationCode } = activateInfo.value;

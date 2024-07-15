@@ -318,3 +318,11 @@ export const openApiApi = (data: any) => {
     { data },
   );
 };
+
+// 获取api接口最新时间
+export const getApiTime = () => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-data-center/statistics/openApi/v1.0/getLastUpdateTime",
+  );
+};
