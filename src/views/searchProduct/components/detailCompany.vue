@@ -98,14 +98,25 @@
               <div :class="[ns.be('content', 'icon-detail-card')]">
                 <div :class="[ns.be('icon-detail', 'top')]">
                   <div :class="[ns.be('icon-detail', 'top-left')]">
-                    <h4>1231231</h4>
-                    <p :class="[ns.b('text')]">阳光电源股份有限公司</p>
+                    <h4>
+                      {{ item.contactName
+                      }}{{
+                        item.positionTypeName
+                          ? " | " + item.positionTypeName
+                          : ""
+                      }}
+                    </h4>
+                    <p :class="[ns.b('text')]">{{ item.enterpriseName }}</p>
                     <div :class="[ns.b('empty-line')]" />
                   </div>
-                  <img src="" alt="" />
+                  <img
+                    :src="useUserStore().fileUrl + companyInfo.logoUrl"
+                    alt=""
+                    :class="[ns.be('icon-detail', 'top-right')]"
+                  />
                 </div>
-                <p :class="[ns.b('text')]">手机：123131</p>
-                <p :class="[ns.b('text')]">邮箱：123131</p>
+                <p :class="[ns.b('text')]">手机：{{ item.phone || "-" }}</p>
+                <p :class="[ns.b('text')]">邮箱：{{ item.email || "-" }}</p>
               </div>
             </template>
           </el-popover>
@@ -167,12 +178,7 @@ const toClipboardFn = (content: string) => {
   margin: 8px 8px 0 0;
   cursor: pointer;
 }
-.es-searchProduct-detailCompany-content__icon-detail {
-  @include widthAndHeight(150px, 120px);
-  img {
-    @include widthAndHeight(120px, 120px);
-  }
-}
+
 .es-searchProduct-detailCompany-content__icon-detail-card {
   @include widthAndHeight(368px, 176px);
   background: linear-gradient(rgba(36, 75, 241, 0.1), #ffffff);
@@ -187,12 +193,14 @@ const toClipboardFn = (content: string) => {
 .es-searchProduct-detailCompany-text {
   @include font(12px, 400, rgba(0, 0, 0, 0.6), 20px);
 }
-.es-searchProduct-detailCompany__icon-detail__top {
+.es-searchProduct-detailCompany-icon-detail__top {
   @include flex(center, flex-start);
-  img {
-    @include widthAndHeight(96px, 96px);
-    border-radius: 4px;
-  }
+}
+.es-searchProduct-detailCompany-icon-detail__top-right {
+  @include widthAndHeight(96px, 96px);
+  border-radius: 4px;
+  object-fit: contain;
+  margin-left: 8px;
 }
 .es-searchProduct-detailCompany-content__link {
   @include flex(center, flex-start);
