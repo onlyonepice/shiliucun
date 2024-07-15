@@ -182,7 +182,7 @@ const toClipboardFn = (content: string) => {
 .es-searchProduct-detailCompany-content__icon-detail-card {
   @include widthAndHeight(368px, 176px);
   background: linear-gradient(rgba(36, 75, 241, 0.1), #ffffff);
-  padding: 24px;
+  padding: 0 24px;
   box-sizing: border-box;
 }
 .es-searchProduct-detailCompany-empty-line {
