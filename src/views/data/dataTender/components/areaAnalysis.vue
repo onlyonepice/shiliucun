@@ -103,6 +103,7 @@ const onChangeFilter = (id: string | number, type: string) => {
       }
     }
     getElectricityTypeOneName();
+    getRegionColor();
   } else {
     nextTick(() => {
       contentDict.value = props.contentFilter[0].id;
@@ -235,8 +236,11 @@ const getRegionColor = async () => {
             item === 0 && datas[index + 1] === 0 ? "#F1F2F6" : _color[index],
         });
     });
-    eChartsOption.value.dataRange.splitList = _data;
-    getElectricityTypeOneName();
+    eChartsOption.value.dataRange.splitList = _data.concat({
+      start: datas[datas.length - 1],
+      end: 99999999,
+      color: "#244BF1",
+    });
   }
 };
 
@@ -255,6 +259,7 @@ function exportResult() {
 onMounted(() => {
   window.trackFunction("pc_Bidding_AeraAnalysis_click");
   getRegionColor();
+  getElectricityTypeOneName();
 });
 getReleaseTime();
 </script>
