@@ -77,7 +77,6 @@ const props = defineProps({
   },
 });
 const contentDict: Ref<number> = ref(props.contentFilter[0].id); // 筛选项结果
-// 筛选项发生变化时
 function handleChange(val) {
   contentDict.value = val;
   if (useUserStore().checkPermission("MONTHLY_ANALYSIS_BIDDING")) {
