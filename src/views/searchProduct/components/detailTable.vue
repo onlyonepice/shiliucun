@@ -70,16 +70,16 @@
     <div v-if="index === 2" :class="ns.b('common')" name="容量/Ah">
       {{ info.batteryCapacity ? info.batteryCapacity : "-" }}
     </div>
-    <div v-if="index === 3" :class="ns.b('common')" name="充/放电倍率/P">
+    <div v-if="index === 3" :class="ns.b('common')" name="充/放电倍率">
       {{ info.chargeDischargeRate ? info.chargeDischargeRate : "-" }}
     </div>
-    <div v-if="index === 4" :class="ns.b('common')" name="能量密度/Wh/kg">
+    <div v-if="index === 4" :class="ns.b('common')" name="能量密度">
       {{ info.energyDensity ? info.energyDensity : "-" }}
     </div>
     <div v-if="index === 5" :class="ns.b('common')" name="循环寿命">
       {{ info.cycleLife ? info.cycleLife : "-" }}
     </div>
-    <div v-if="index === 6" :class="ns.b('common')" name="尺寸/m*m*m">
+    <div v-if="index === 6" :class="ns.b('common')" name="尺寸">
       {{ info.size ? info.size : "-" }}
     </div>
     <div v-if="index === 7" :class="ns.b('common')" name="产品单价（元/Wh）">

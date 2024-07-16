@@ -220,10 +220,10 @@ const tabNameList2 = ref([
   "产品型号",
   "形态",
   "容量/Ah",
-  "充/放电倍率/P",
-  "能量密度/Wh/kg",
+  "充/放电倍率",
+  "能量密度",
   "循环寿命",
-  "尺寸/m*m*m",
+  "尺寸",
   "产品单价（元/Wh）",
 ]);
 const tableData: Ref<any> = ref([]);
@@ -267,7 +267,7 @@ const productDetailInfo = computed(() => {
       {
         label: "能量密度：",
         value: productDetail.value.models[0].energyDensity
-          ? productDetail.value.models[0].energyDensity + "Wh/kg"
+          ? productDetail.value.models[0].energyDensity
           : "-",
       },
       {
