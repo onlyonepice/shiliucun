@@ -600,7 +600,7 @@ const selectChange = (row, index, val) => {
     });
   }
 };
-window.trackFunction("pc_Winbid_PriceAnalysis_click");
+window.trackFunction("pc_Project_click");
 </script>
 
 <style lang="scss" scoped>
