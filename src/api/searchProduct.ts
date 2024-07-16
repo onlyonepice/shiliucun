@@ -98,3 +98,12 @@ export const getEnterpriseListApi = (params: any) => {
     { params },
   );
 };
+
+// 查询企业详情
+export const getEnterpriseDetailApi = (data: any) => {
+  return http.request<void>(
+    "post",
+    "/eesa-industrial-map/tEnterprise/openApi/v1.0/wxAppDetails",
+    { data },
+  );
+};

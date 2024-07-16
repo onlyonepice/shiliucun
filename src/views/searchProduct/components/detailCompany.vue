@@ -1,11 +1,19 @@
 <template>
   <div :class="ns.b('compared')">
     <div :class="[ns.be('content', 'top')]">
-      <img
-        :class="[ns.be('content', 'log')]"
-        :src="useUserStore().fileUrl + companyInfo.logoUrl"
-        alt=""
-      />
+      <template v-if="companyInfo.logoUrl">
+        <img
+          :class="[ns.be('content', 'log')]"
+          :src="useUserStore().fileUrl + companyInfo.logoUrl"
+          alt=""
+        />
+      </template>
+      <template v-else>
+        <div :class="[ns.be('content', 'log-empty')]">
+          <img :src="EmptyIcon" alt="" />
+          <p>暂无Logo</p>
+        </div>
+      </template>
       <div>
         <h3>{{ companyInfo.nameCn }}</h3>
         <h5 :class="[ns.be('content', 'link')]">
@@ -83,11 +91,14 @@
         {{ companyInfo.mainBusiness }}
       </h5>
     </div>
-    <div :class="[ns.b('title')]" v-if="companyInfo.mainBusiness">
+    <div
+      :class="[ns.b('title')]"
+      v-if="companyInfo.tenterpriseContactsRespList.length !== 0"
+    >
       <h5>联系人</h5>
       <div style="display: flex; margin-top: 8px">
         <div
-          v-for="(item, index) in companyInfo.enterpriseContactDTOList"
+          v-for="(item, index) in companyInfo.tenterpriseContactsRespList"
           :key="index"
         >
           <el-popover
@@ -143,6 +154,7 @@
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import CopyIcon from "@/assets/img/common/copy_icon.png";
+import EmptyIcon from "@/assets/img/common/empty-icon-company.png";
 import { ElMessage } from "element-plus";
 import useClipboard from "vue-clipboard3";
 const ns = useNamespace("searchProduct-detailCompany");
@@ -225,6 +237,21 @@ const toClipboardFn = (content: string) => {
   @include widthAndHeight(120px, 120px);
   margin-right: 16px;
   object-fit: contain;
+}
+.es-searchProduct-detailCompany-content__log-empty {
+  @include widthAndHeight(120px, 120px);
+  margin-right: 16px;
+  background: #ffffff;
+  border-radius: 4px;
+  text-align: center;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+  img {
+    @include widthAndHeight(32px, 32px);
+    margin-top: 40px;
+  }
+  p {
+    width: 100%;
+  }
 }
 .es-searchProduct-detailCompany-title {
   margin: 24px 0 0;

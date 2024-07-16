@@ -185,7 +185,7 @@ import detailTable from "./components/detailTable.vue";
 import DetailCompany from "./components/detailCompany.vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { cloneDeep } from "lodash";
-import { getCompanyInfoApi } from "@/api/user";
+import { getEnterpriseDetailApi } from "@/api/searchProduct";
 const companyInfo: Ref<any> = ref({}); // 获取企业信息
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const router = useRouter();
@@ -289,13 +289,16 @@ const productDetailInfo = computed(() => {
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
 };
-const getCompanyInfo = async () => {
-  const { datas, resp_code } = await getCompanyInfoApi();
+const getCompanyInfo = async (id: string) => {
+  const { datas, resp_code }: any = await getEnterpriseDetailApi({
+    id,
+    isVagueSearch: false,
+  });
   if (resp_code === 0) {
     companyInfo.value = datas;
   }
 };
-getCompanyInfo();
+
 // 获取产品详情
 const getProductDetail = async () => {
   const { datas, resp_code }: any = await getProductDetailApi({
@@ -303,6 +306,7 @@ const getProductDetail = async () => {
     productType: route.query.productType,
   });
   if (resp_code === 0) {
+    getCompanyInfo(datas.enterpriseId);
     productDetail.value = datas;
     breadcrumbList.value[1].text = datas.name;
     if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
