@@ -10,10 +10,11 @@
   <title>掌上储能网页版</title>
   <link rel="icon" href="/logo.ico" />
   <script>
+    const env = import.meta.env.VITE_ENV;
     var _hmt = _hmt || [];
     (function() {
       var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?1334de19664027739970f62f9bac088b";
+      hm.src = import.meta.env.VITE_ENV === "prod" ? "https://hm.baidu.com/hm.js?394477eeaad4252dcfd9158793d152ab" : "https://hm.baidu.com/hm.js?1334de19664027739970f62f9bac088b";
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
