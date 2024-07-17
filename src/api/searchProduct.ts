@@ -53,11 +53,11 @@ export const getProductComparedApi = (params: any) => {
 };
 
 // 获取产品详情
-export const getProductDetailsApi = (id) => {
+export const getProductDetailsApi = (params) => {
   return http.request<{ resp_code: number; datas: any }>(
     "get",
     "/eesa-report/energyStorageProduct/energyStorageProduct/openApi/v1.0/detail",
-    { params: { id } },
+    { params },
   );
 };
 // 表单回填详情接口

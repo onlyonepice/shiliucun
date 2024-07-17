@@ -244,7 +244,10 @@ async function getProductCheckInList() {
   }
 }
 async function handelViewAttribute(row) {
-  const { resp_code, datas } = await getProductDetailsApi(row.id);
+  const { resp_code, datas } = await getProductDetailsApi({
+    id: row.id,
+    productType: "INDUSTRY_ENERGY_STORAGE",
+  });
   if (resp_code === 0) {
     detailsData.value = datas;
   }

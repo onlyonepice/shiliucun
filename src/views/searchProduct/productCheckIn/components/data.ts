@@ -183,6 +183,6 @@ export const step3Field = [
     label: "产品单价/元/kWh",
     showProp: "energyStorageSystemProductUnitPrice",
     prop: "energyStorageSystemProductUnitPrice",
-    type: "input",
+    type: "number",
   },
 ];

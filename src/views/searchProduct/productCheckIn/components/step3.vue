@@ -35,6 +35,13 @@
                   v-model="tableForm[index][stepField[scope.$index].prop]"
                   placeholder="请输入"
                 />
+                <el-input-number
+                  v-if="stepField[scope.$index].type === 'number'"
+                  v-model="tableForm[index][stepField[scope.$index].prop]"
+                  placeholder="请输入"
+                  controls-position="right"
+                  :controls="false"
+                />
                 <el-select
                   v-if="stepField[scope.$index].type === 'select'"
                   v-model="tableForm[index][stepField[scope.$index].prop]"
