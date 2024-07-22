@@ -5,22 +5,18 @@ variables:
   TEST_PATH: "test-i-reportV3"
   OSS_PATH: "eesa-data-report"
   PROD_URL: "https://data-report.eesaenergy.com/"
-  Cache_Branch: ''
 
-
+stages:
+  - install 
+  - build
+  - deploy
+  - post_build_task
 
 test_install:
   stage: install
   image: $DOCKER_REGISTRY/front/node:v2
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "test"'
-      variables:
-        Cache_Branch: "test"
-    - if: '$CI_COMMIT_REF_NAME =~ /^Rel/'
-      variables:
-        Cache_Branch: "prod"
   cache:  # 缓存
-    - key: eesa-$Cache_Branch
+    - key: eesa-$CI_COMMIT_REF_NAME
       paths:
         - ./node_modules
       policy: push
@@ -39,7 +35,7 @@ prod_install:
   stage: install
   image: $DOCKER_REGISTRY/front/node:v2
   cache:  # 缓存
-    - key: eesa-$Cache_Branch
+    - key: eesa-$CI_COMMIT_REF_NAME
       paths:
         - ./node_modules
       policy: push
@@ -59,9 +55,9 @@ test_build:
   image: $DOCKER_REGISTRY/front/node:v2
   cache: # 缓存
     - untracked: true
-      key: eesa-$Cache_Branch
+      key: eesa-$CI_COMMIT_REF_NAME
       policy: pull
-    - key: eesa-$Cache_Branch-dist
+    - key: eesa-$CI_COMMIT_REF_NAME-dist
       paths:
         - dist
       policy: push  
@@ -77,9 +73,9 @@ prod_build:
   image: $DOCKER_REGISTRY/front/node:v2
   cache: # 缓存
     - untracked: true
-      key: eesa-$Cache_Branch
+      key: eesa-$CI_COMMIT_REF_NAME
       policy: pull
-    - key: eesa-$Cache_Branch-dist
+    - key: eesa-$CI_COMMIT_REF_NAME-dist
       paths:
         - dist
       policy: push  
@@ -95,7 +91,7 @@ test_deploy:
   image: $DOCKER_REGISTRY/front/node:v2
   cache: # 缓存
     - untracked: true
-      key: eesa-$Cache_Branch-dist
+      key: eesa-$CI_COMMIT_REF_NAME-dist
       policy: pull
   script:
      - mkdir -p ~/.ssh
@@ -115,7 +111,7 @@ prod_deploy:
   image: $DOCKER_REGISTRY/op/ossutil:latest
   cache: # 缓存
     - untracked: true
-      key: eesa-$Cache_Branch-dist
+      key: eesa-$CI_COMMIT_REF_NAME-dist
       policy: pull
   script:
     - ossutil rm oss://eesa-data-report/ --exclude "*.py" -rf
