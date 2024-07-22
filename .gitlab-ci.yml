@@ -5,6 +5,15 @@ variables:
   TEST_PATH: "test-i-reportV3"
   OSS_PATH: "eesa-data-report"
   PROD_URL: "https://data-report.eesaenergy.com/"
+  ENV_CACHE: ''
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "test"
+      variables:
+        ENV_CACHE: "test"
+    - if: '$CI_COMMIT_REF_NAME =~ /^Rel-.*/'
+      variables:
+        ENV_CACHE: "prod"
 
 stages:
   - install 
@@ -16,7 +25,7 @@ test_install:
   stage: install
   image: $DOCKER_REGISTRY/front/node:v2
   cache:  # 缓存
-    - key: eesa-$CI_COMMIT_REF_NAME
+    - key: eesa-$ENV_CACHE
       paths:
         - ./node_modules
       policy: push
@@ -35,7 +44,7 @@ prod_install:
   stage: install
   image: $DOCKER_REGISTRY/front/node:v2
   cache:  # 缓存
-    - key: eesa-$CI_COMMIT_REF_NAME
+    - key: eesa-$ENV_CACHE
       paths:
         - ./node_modules
       policy: push
@@ -48,16 +57,16 @@ prod_install:
   tags:   #runner标签
     - data-report
   only:   #分支
-    - /^Rel-.*$/
+    - /^Rel-.*/
 
 test_build:
   stage: build
   image: $DOCKER_REGISTRY/front/node:v2
   cache: # 缓存
     - untracked: true
-      key: eesa-$CI_COMMIT_REF_NAME
+      key: eesa-$ENV_CACHE
       policy: pull
-    - key: eesa-$CI_COMMIT_REF_NAME-dist
+    - key: eesa-$ENV_CACHE-dist
       paths:
         - dist
       policy: push  
@@ -73,9 +82,9 @@ prod_build:
   image: $DOCKER_REGISTRY/front/node:v2
   cache: # 缓存
     - untracked: true
-      key: eesa-$CI_COMMIT_REF_NAME
+      key: eesa-$ENV_CACHE
       policy: pull
-    - key: eesa-$CI_COMMIT_REF_NAME-dist
+    - key: eesa-$ENV_CACHE-dist
       paths:
         - dist
       policy: push  
@@ -84,14 +93,14 @@ prod_build:
   tags:
     - data-report
   only:
-    - /^Rel-.*$/
+    - /^Rel-.*/
 
 test_deploy:
   stage: deploy
   image: $DOCKER_REGISTRY/front/node:v2
   cache: # 缓存
     - untracked: true
-      key: eesa-$CI_COMMIT_REF_NAME-dist
+      key: eesa-$ENV_CACHE-dist
       policy: pull
   script:
      - mkdir -p ~/.ssh
@@ -111,7 +120,7 @@ prod_deploy:
   image: $DOCKER_REGISTRY/op/ossutil:latest
   cache: # 缓存
     - untracked: true
-      key: eesa-$CI_COMMIT_REF_NAME-dist
+      key: eesa-$ENV_CACHE-dist
       policy: pull
   script:
     - ossutil rm oss://eesa-data-report/ --exclude "*.py" -rf
@@ -119,7 +128,7 @@ prod_deploy:
   tags:
     - data-report
   only:
-    - /^Rel-.*$/
+    - /^Rel-.*/
   when: manual  #手动触发
 
 post_build_task:
@@ -133,6 +142,6 @@ post_build_task:
   tags:
     - data-report
   only:
-    - /^Rel-.*$/
+    - /^Rel-.*/
   needs: ['prod_deploy']
 
