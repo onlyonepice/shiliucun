@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
+import { ElMessage } from "element-plus";
 const ns = useNamespace("demandMatching-businessCard");
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 defineProps({
@@ -50,6 +51,13 @@ const onOpenCompany = (id: string) => {
       `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
       "externalWindow",
     );
+  } else {
+    ElMessage({
+      message: `<div style="display: flex;align-items: center;"><img width="17.5" height="17.5" style="margin-right: 9px;" src="https://eesa-mini-app.oss-rg-china-mainland.aliyuncs.com/i-report/v1.0/iReport3_icon_comment.png" /><span>当前企业暂未入驻</span></div>`,
+      type: "info",
+      dangerouslyUseHTMLString: true,
+      duration: 2000,
+    });
   }
 };
 </script>
@@ -92,6 +100,7 @@ const onOpenCompany = (id: string) => {
   h6 {
     margin-bottom: 15px;
     cursor: pointer;
+    color: #244bf1;
   }
 }
 .es-demandMatching-businessCard-content__right {

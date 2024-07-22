@@ -20,11 +20,16 @@
       :class="ns.b('card')"
     >
       <h4>{{ minePublish ? "您的名片信息" : "需求方名片" }}</h4>
-      <BusinessCard :info="detailInfo.accountInfo" :minePublish="minePublish" />
-      <div :class="ns.be('content', 'extra')" v-if="showExtra">
-        <img :src="LamentIcon" alt="" />
-        <p>需求方同意报名后将显示联系方式</p>
-      </div>
+      <template v-if="detailInfo.accountInfo">
+        <BusinessCard
+          :info="detailInfo.accountInfo"
+          :minePublish="minePublish"
+        />
+        <div :class="ns.be('content', 'extra')" v-if="showExtra">
+          <img :src="LamentIcon" alt="" />
+          <p>需求方同意报名后将显示联系方式</p>
+        </div>
+      </template>
     </div>
   </div>
   <ApplyDialog
@@ -132,7 +137,9 @@ const getDemandDetail = async () => {
   const { datas, resp_code } = await getDemandDetailApi({ id: route.query.id });
   if (resp_code === 0) {
     detailInfo.value = datas;
-    detailInfo.value.accountInfo.companyId = datas.enterpriseId;
+    if (detailInfo.value.accountInfo) {
+      detailInfo.value.accountInfo.companyId = datas.enterpriseId || null;
+    }
     minePublish.value = datas.userId === useUserStore().userInfo.id;
     showExtra.value = minePublish.value ? false : datas.applyStatus !== 2;
     detailInfo.value.enabled === 2 && (detailInfo.value.status = 99);

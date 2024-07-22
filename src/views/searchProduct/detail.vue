@@ -58,12 +58,16 @@
                 </div>
               </div>
             </template>
-            <el-button
-              :class="[ns.b('info-right-connect')]"
-              type="primary"
-              @click="onConnectCompany(productDetail.enterpriseId)"
-              >联系厂商</el-button
-            >
+            <div :class="[ns.b('info-right-connect')]">
+              <el-button
+                type="primary"
+                @click="onConnectCompany(productDetail.enterpriseId)"
+                >联系厂商</el-button
+              >
+              <el-button @click="productConnectVisible = true"
+                >修改信息</el-button
+              >
+            </div>
           </div>
         </div>
         <!-- 产品参数 -->
@@ -171,6 +175,10 @@
       </div>
     </div>
   </div>
+  <ProductConnect
+    :visible="productConnectVisible"
+    @onHandleClose="productConnectVisible = false"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -188,6 +196,7 @@ import { cloneDeep } from "lodash";
 import { getEnterpriseDetailApi } from "@/api/searchProduct";
 const companyInfo: Ref<any> = ref({}); // 获取企业信息
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
+const productConnectVisible: Ref<boolean> = ref(false); // 修改企业弹窗
 const router = useRouter();
 const ns = useNamespace("searchProductDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
