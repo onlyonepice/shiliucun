@@ -63,3 +63,14 @@ export const getHomeOnlineReportSelected = (params) => {
     },
   );
 };
+
+// 修改企业名称
+export const updateCompanyName = (params) => {
+  return http.request<{ resp_code: number; paramss: any }>(
+    "get",
+    `/api-user/front/v1.0/updateCompanyName`,
+    {
+      params,
+    },
+  );
+};

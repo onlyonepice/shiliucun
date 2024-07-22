@@ -2,6 +2,17 @@
   <div :class="[ns.b()]">
     <div :class="[ns.b('top')]">
       <h3>我的企业</h3>
+      <div v-if="JSON.stringify(companyInfo) !== '{}'">
+        <template v-if="companyInfo.address">
+          <el-button type="primary" @click="reviseCompanyVisible = true"
+            >修改信息</el-button
+          >
+        </template>
+        <template v-else>
+          <el-button @click="visibleCompany = true">更换企业</el-button>
+          <el-button type="primary" @click="onSettlement()">企业入驻</el-button>
+        </template>
+      </div>
     </div>
     <div :class="[ns.b('content'), 'animate__animated animate__fadeIn']">
       <div :class="[ns.be('content', 'top')]">
@@ -15,7 +26,7 @@
           <h5 :class="[ns.be('content', 'link')]">
             企业官网：
             <p @click="handleClick(companyInfo.siteUrl)">
-              {{ companyInfo.siteUrl }}
+              {{ companyInfo.siteUrl || "信息暂无" }}
             </p>
           </h5>
           <template
@@ -48,40 +59,40 @@
           </template>
         </div>
       </div>
-      <div :class="[ns.b('title')]" v-if="companyInfo.introduction">
+      <div :class="[ns.b('title')]">
         <h5>企业简介</h5>
         <h5 :class="[ns.be('title', 'desc')]">
-          {{ companyInfo.introduction }}
+          {{ companyInfo.introduction || "信息暂无" }}
         </h5>
       </div>
-      <div :class="[ns.b('title')]" v-if="companyInfo.abbreviation">
+      <div :class="[ns.b('title')]">
         <h5>企业中文简称</h5>
         <h5 :class="[ns.be('title', 'desc')]">
-          {{ companyInfo.abbreviation }}
+          {{ companyInfo.abbreviation || "信息暂无" }}
         </h5>
       </div>
-      <div :class="[ns.b('title')]" v-if="companyInfo.nameEn">
+      <div :class="[ns.b('title')]">
         <h5>企业英文名称</h5>
         <h5 :class="[ns.be('title', 'desc')]">
-          {{ companyInfo.nameEn }}
+          {{ companyInfo.nameEn || "信息暂无" }}
         </h5>
       </div>
-      <div :class="[ns.b('title')]" v-if="companyInfo.landline">
+      <div :class="[ns.b('title')]">
         <h5>座机号码</h5>
         <h5 :class="[ns.be('title', 'desc')]">
-          {{ companyInfo.landline }}
+          {{ companyInfo.landline || "信息暂无" }}
         </h5>
       </div>
-      <div :class="[ns.b('title')]" v-if="companyInfo.address">
+      <div :class="[ns.b('title')]">
         <h5>企业地址</h5>
         <h5 :class="[ns.be('title', 'desc')]">
-          {{ companyInfo.address }}
+          {{ companyInfo.address || "信息暂无" }}
         </h5>
       </div>
-      <div :class="[ns.b('title')]" v-if="companyInfo.mainBusiness">
+      <div :class="[ns.b('title')]">
         <h5>产业链环节</h5>
         <h5 :class="[ns.be('title', 'desc')]">
-          {{ companyInfo.mainBusiness }}
+          {{ companyInfo.mainBusiness || "信息暂无" }}
         </h5>
       </div>
       <div :class="[ns.b('title')]" v-if="companyInfo.enterpriseContactDTOList">
@@ -108,6 +119,29 @@
       </div>
     </div>
   </div>
+  <Dialog
+    title="更改企业"
+    :visible="visibleCompany"
+    width="560px"
+    height="176px"
+    @onHandleClose="onHandleClose"
+  >
+    <template #content>
+      <div :class="ns.be('content', 'mbDialog')">
+        <span required>企业名称</span>
+        <Select
+          type="input"
+          :defaultValue="companyName"
+          @onChange="onChange"
+          style="width: 100%"
+        />
+      </div>
+    </template>
+  </Dialog>
+  <ReviseCompany
+    :visible="reviseCompanyVisible"
+    @onHandleClose="reviseCompanyVisible = false"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -117,14 +151,20 @@ import { getCompanyInfoApi } from "@/api/user";
 import CopyIcon from "@/assets/img/common/copy_icon.png";
 import useClipboard from "vue-clipboard3";
 import { ElMessage } from "element-plus";
+import { updateCompanyName } from "@/api/home";
+const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 import { useUserStore } from "@/store/modules/user";
 const { toClipboard } = useClipboard();
 const ns = useNamespace("homePersonalCompany");
+const visibleCompany: Ref<boolean> = ref(false); // 更改企业弹窗
+const companyName: Ref<any> = ref({}); // 更改企业弹窗数据
 const companyInfo: Ref<any> = ref({}); // 获取企业信息
+const reviseCompanyVisible: Ref<boolean> = ref(false); // 修改企业弹窗
 const getCompanyInfo = async () => {
   const { datas, resp_code } = await getCompanyInfoApi();
   if (resp_code === 0) {
     companyInfo.value = datas;
+    companyName.value = datas.nameCn;
   }
 };
 getCompanyInfo();
@@ -134,6 +174,26 @@ const toClipboardFn = (content: string) => {
 };
 const handleClick = (link: string) => {
   window.open(link, "externalWindow");
+};
+// 企业入驻
+const onSettlement = () => {
+  window.open(`${VITE_INDUSTRIALMAP_URL}/uploadEnterprise`, "externalWindow");
+};
+// 关闭弹窗
+const onHandleClose = async (type: boolean) => {
+  visibleCompany.value = false;
+  if (type) {
+    const { resp_code }: any = await updateCompanyName({
+      companyName: companyName.value,
+    });
+    if (resp_code === 0) {
+      ElMessage.success("修改成功");
+      getCompanyInfo();
+    }
+  }
+};
+const onChange = (val: string) => {
+  companyName.value = val;
 };
 </script>
 
@@ -201,5 +261,25 @@ const handleClick = (link: string) => {
   @include widthAndHeight(16px, 16px);
   margin-left: 8px;
   cursor: pointer;
+}
+.es-homePersonalCompany-content__mbDialog {
+  @include flex(center, flex-start, nowrap);
+  @include margin(0, 0, 16px, 0);
+  &:nth-last-child(1) {
+    @include margin(0, 0, 0, 0);
+  }
+  span {
+    display: inline-block;
+    @include widthAndHeight(90px, 22px);
+    @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+    @include margin(0, 8px, 0, 0);
+    text-align: right;
+  }
+  span[required]::before {
+    content: "*"; /* 添加一个星号作为标识符 */
+    color: red; /* 可以根据需要设置颜色 */
+    display: inline-block;
+    margin-right: 4px;
+  }
 }
 </style>
