@@ -52,6 +52,7 @@
   <ConsultationNav />
   <!-- 会员支付弹窗 -->
   <MembersBuy v-if="showMembersBuy" />
+  <NewUserVip v-if="showNewUserVip" />
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, Ref, computed, watch } from "vue";
@@ -133,6 +134,16 @@ const onLogin = () => {
 
 const getBg = computed(() => {
   return route.meta.backgroundColor ? route.meta.backgroundColor : "#ffffff";
+});
+const showNewUserVip = computed(() => {
+  console.log(
+    +new Date(useUserStore().$state.userInfo.createTime),
+    new Date().getTime(),
+  );
+  return (
+    +new Date(useUserStore().$state.userInfo.createTime) ===
+    new Date().getTime()
+  );
 });
 const onScroll = ({ scrollTop }: any) => {
   showNavBar.value = scrollTop < lastScrollY.value;

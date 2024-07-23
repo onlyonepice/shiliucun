@@ -49,14 +49,15 @@ watch(
 );
 const handleClose = (type: boolean) => {
   useUserStore().openVip(false);
-  useUserStore().$state.openVipSubmitTitle = "开通会员";
-  if (type) {
-    if (router.currentRoute.value.path === "/reportDetail") {
-      useUserStore().$state.showMembersBuy = true;
-    } else {
-      router.push("/vip");
-    }
-  }
+  // useUserStore().$state.openVipSubmitTitle = "开通会员";
+  // if (type) {
+  //   if (router.currentRoute.value.path === "/reportDetail") {
+  //     useUserStore().$state.showMembersBuy = true;
+  //   } else {
+  //     router.push("/vip");
+  //   }
+  // }
+  type && router.push("/vip");
 };
 </script>
 

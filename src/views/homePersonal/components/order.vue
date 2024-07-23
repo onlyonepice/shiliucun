@@ -57,7 +57,9 @@ import { ref, Ref } from "vue";
 import { myOrderListApi } from "@/api/user";
 import useNamespace from "@/utils/nameSpace";
 import InvoicingDesc from "@/assets/img/homePersonal/invoicing-desc.png";
-import { useUserStore } from "@/store/modules/user";
+// import { useUserStore } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const ns = useNamespace("homePersonalOrder");
 const tableData: Ref<any> = ref([]);
 const loading: Ref<boolean> = ref(false); // 加载数据
@@ -92,7 +94,8 @@ const getOrderList = async () => {
 getOrderList();
 // 支付
 const onPay = () => {
-  useUserStore().$state.showMembersBuy = true;
+  // useUserStore().$state.showMembersBuy = true;
+  router.push("/vip");
 };
 window.trackFunction("pc_Order_click");
 </script>

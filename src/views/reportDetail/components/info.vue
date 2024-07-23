@@ -43,16 +43,17 @@
 <script lang="ts" setup>
 import { ref, Ref } from "vue";
 import { toType } from "@/utils";
-import { getToken } from "@/utils/auth";
 import { ElMessage } from "element-plus";
 import useNamespace from "@/utils/nameSpace";
-import { useUserStore } from "@/store/modules/user";
+// import { getToken } from "@/utils/auth";
+// import { useUserStore } from "@/store/modules/user";
 import NumberUp from "@/assets/img/common/number-up.png";
 import RightMore from "@/assets/img/common/right-more.png";
 import BuyReport from "@/assets/img/common/buy-report.png";
 import NumberDown from "@/assets/img/common/number-down.png";
 import { getFilePathApi, getFileApi } from "@/api/reportDetail";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const emit = defineEmits(["onBuy"]);
 const ns = useNamespace("reportDetailInfo");
 const pdfPage: Ref<number> = ref(1); // pdf页码
@@ -89,10 +90,11 @@ const onBuyReport = () => {
 };
 // 订阅会员
 const onOpenVip = () => {
-  if (!getToken()) {
-    return useUserStore().openLogin(true);
-  }
-  useUserStore().$state.showMembersBuy = true;
+  // if (!getToken()) {
+  //   return useUserStore().openLogin(true);
+  // }
+  // useUserStore().$state.showMembersBuy = true;
+  router.push("/vip");
 };
 // 获取pdf地址
 const getFile = async () => {
