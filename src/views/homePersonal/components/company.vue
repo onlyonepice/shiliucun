@@ -18,7 +18,11 @@
       <div :class="[ns.be('content', 'top')]">
         <img
           :class="[ns.be('content', 'log')]"
-          :src="useUserStore().fileUrl + companyInfo.logoUrl"
+          :src="
+            companyInfo.logoUrl
+              ? useUserStore().fileUrl + companyInfo.logoUrl
+              : 'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/no_img.png'
+          "
           alt=""
         />
         <div>
@@ -173,7 +177,7 @@ const toClipboardFn = (content: string) => {
   ElMessage.success("复制成功");
 };
 const handleClick = (link: string) => {
-  window.open(link, "externalWindow");
+  link && window.open(link, "externalWindow");
 };
 // 企业入驻
 const onSettlement = () => {

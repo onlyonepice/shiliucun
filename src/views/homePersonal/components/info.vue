@@ -153,7 +153,11 @@
         </div>
         <img
           :class="ns.be('right', 'headImgUrl')"
-          :src="useUserStore().fileUrl + modifyInfo.companyLogo"
+          :src="
+            modifyInfo.companyLogo
+              ? useUserStore().fileUrl + modifyInfo.companyLogo
+              : 'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/no_img.png'
+          "
           alt=""
         />
       </div>
@@ -475,7 +479,9 @@ const onHandleCloseInfo = async (type: boolean) => {
     }, 200);
     useUserStore().handleGetUserInfo();
     useUserStore().handleGetAccountInfo();
-    onGetUserInfo();
+    setTimeout(() => {
+      onGetUserInfo();
+    }, 300);
   }
 };
 // 获取用户详细信息

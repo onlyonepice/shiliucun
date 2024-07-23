@@ -61,6 +61,11 @@
               </p>
               <p class="line" v-if="item.typeName" />
               <p class="data-box_item_title">{{ item.title }}</p>
+            </div>
+            <div class="data-box_item_desc">
+              {{ item.description }}
+            </div>
+            <div class="time">
               <template
                 v-for="statusItem in demandStatus"
                 :key="statusItem.name"
@@ -77,9 +82,7 @@
                   {{ statusItem.name }}
                 </p>
               </template>
-            </div>
-            <div class="data-box_item_desc">
-              {{ item.description }}
+              <h5 style="font-weight: 400">报名时间：{{ item.releaseTime }}</h5>
             </div>
           </div>
           <div class="Pagination">
@@ -530,13 +533,7 @@ onMounted(() => {
       .data-box_item_title {
         @include font(20px, 400, rgba(0, 0, 0, 0.9), 28px);
       }
-      .tag {
-        border-radius: 4px;
-        padding: 2px 8px;
-        @include font(12px, 400, none, 20px);
-        margin-left: 16px;
-        border: 1px solid #ff892e;
-      }
+
       .line {
         width: 2px;
         height: 20px;
@@ -553,6 +550,17 @@ onMounted(() => {
     display: flex;
     justify-content: flex-end;
   }
+}
+.time {
+  width: 100%;
+  @include flex(center, space-between);
+  margin-top: 16px;
+}
+.tag {
+  border-radius: 4px;
+  padding: 2px 8px;
+  @include font(12px, 400, none, 20px);
+  border: 1px solid #ff892e;
 }
 .es-demand-list-search__empty {
   @include widthAndHeight(232px);
