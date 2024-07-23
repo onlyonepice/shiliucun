@@ -102,7 +102,7 @@ watch(
 );
 
 const breadcrumbList: Ref<Array<any>> = ref([
-  { text: "周/月/季报", path: "/quarterlyMonthlyReports" },
+  { text: "周月季报", path: "/quarterlyMonthlyReports" },
   { text: "", path: "" },
 ]);
 const payInfo: Ref<any> = ref([
