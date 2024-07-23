@@ -82,7 +82,7 @@
                   {{ statusItem.name }}
                 </p>
               </template>
-              <h5 style="font-weight: 400">报名时间：{{ item.releaseTime }}</h5>
+              <h5 style="font-weight: 400">发布时间：{{ item.releaseTime }}</h5>
             </div>
           </div>
           <div class="Pagination">
@@ -167,7 +167,7 @@
                   </p>
                 </template>
                 <h5 style="font-weight: 400">
-                  报名时间：{{ item.releaseTime }}
+                  发布时间：{{ item.releaseTime }}
                 </h5>
               </div>
             </div>
@@ -233,9 +233,9 @@
                 </template>
                 <h5 style="font-weight: 400">
                   报名时间：{{
-                    item.releaseTime.indexOf(" ") > -1
-                      ? item.releaseTime.split(" ")[0]
-                      : item.releaseTime
+                    item.applyTime.indexOf(" ") > -1
+                      ? item.applyTime.split(" ")[0]
+                      : item.applyTime
                   }}
                 </h5>
               </div>

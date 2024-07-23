@@ -57,12 +57,12 @@
         >
       </div>
     </div>
-    <h5
+    <!-- <h5
       v-if="detailInfo.applyTime"
       style="margin: 0 0 15px; color: rgba(0, 0, 0, 0.6)"
     >
       报名时间：{{ detailInfo.applyTime }}
-    </h5>
+    </h5> -->
     <div
       v-if="detailInfo.status === 1 || detailInfo.status === 2"
       :class="ns.be('top', 'line')"
@@ -77,7 +77,7 @@
       </div>
     </div>
     <!-- 驳回原因 -->
-    <div v-if="detailInfo.status === 3">
+    <div v-if="detailInfo.status === 3" style="margin-bottom: 24px">
       <div :class="ns.be('top', 'turnDown')" :title="detailInfo.auditRemark">
         未通过原因：{{ detailInfo.auditRemark }}
       </div>
@@ -166,8 +166,8 @@ const onShare = async () => {
 @import "@/style/mixin.scss";
 
 .es-demandMatching-detail {
-  max-width: 760px;
-  min-width: 620px;
+  width: 66%;
+  // min-width: 760px;
   padding: 24px 24px 208px 24px;
   background: #ffffff;
   border-radius: 4px;
@@ -180,20 +180,23 @@ const onShare = async () => {
   margin-bottom: 16px;
 }
 .es-demandMatching-detail-top__number {
+  min-width: 140px;
   @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
 }
 .es-demandMatching-detail-top__removed-head {
   @include flex(center, space-between, nowrap);
-  margin-top: 24px;
+  margin-bottom: 24px;
 }
 .es-demandMatching-detail-top__removed {
-  @include widthAndHeight(567px, 38px);
+  // @include widthAndHeight(auto, 38px);
+  height: 38px;
   background: #f2f3f5;
   border-radius: 4px;
   padding: 8px 16px;
   margin-right: 24px;
   @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
   @include textOverflowOne();
+  flex: 1;
 }
 .es-demandMatching-detail-top__turnDown {
   @include widthAndHeight(100%, 38px);
@@ -206,9 +209,9 @@ const onShare = async () => {
 .es-demandMatching-detail-top__line {
   @include widthAndHeight(712px, 1px);
   background: #dbdce2;
+  margin-bottom: 24px;
 }
 .es-demandMatching-detail-info__head {
-  margin-top: 24px;
   @include flex(center, space-between, nowrap);
   h3 {
     margin-right: 8px;
