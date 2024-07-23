@@ -171,7 +171,7 @@ const navList: Ref<Array<NavList>> = ref([
     children: [
       { id: 1, text: "行业洞察", path: "/industryInsight" },
       { id: 1, text: "专家访谈", path: "/expertInterviews" },
-      { id: 2, text: "周/月/季报", path: "/quarterlyMonthlyReports" },
+      { id: 2, text: "周月季报", path: "/quarterlyMonthlyReports" },
       { id: 3, text: "在线报告", path: "/reportOnLine?source=在线报告" },
       { id: 4, text: "白皮书", path: "/reportWhitePaper" },
     ],
