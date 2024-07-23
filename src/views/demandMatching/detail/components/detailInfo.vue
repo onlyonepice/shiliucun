@@ -48,7 +48,7 @@
         <template v-if="detailInfo.status === 99" />
       </div>
       <div :class="ns.be('top', 'number')">
-        <span>{{ totalApply }}人已报名</span>
+        <span>{{ totalApply }}人已报名 · {{ detailInfo.views }}浏览</span>
         <el-button
           style="margin-left: 8px"
           v-if="minePublish"
@@ -57,6 +57,12 @@
         >
       </div>
     </div>
+    <h5
+      v-if="detailInfo.applyTime"
+      style="margin: 0 0 15px; color: rgba(0, 0, 0, 0.6)"
+    >
+      报名时间：{{ detailInfo.applyTime }}
+    </h5>
     <div
       v-if="detailInfo.status === 1 || detailInfo.status === 2"
       :class="ns.be('top', 'line')"
@@ -67,7 +73,7 @@
         下架原因：{{ detailInfo.unEnableReason }}
       </div>
       <div :class="ns.be('top', 'number')">
-        <span>{{ totalApply }}人已报名</span>
+        <span>{{ totalApply }}人已报名 · {{ detailInfo.views }}浏览</span>
       </div>
     </div>
     <!-- 驳回原因 -->
@@ -97,7 +103,7 @@
         </div>
       </div>
       <div :class="ns.be('top', 'number')" v-if="detailInfo.status === 4">
-        <span>{{ totalApply }}人已报名</span>
+        <span>{{ totalApply }}人已报名 · {{ detailInfo.views }}浏览</span>
       </div>
     </div>
     <h4 :class="ns.be('info', 'description')">{{ detailInfo.description }}</h4>
@@ -162,15 +168,16 @@ const onShare = async () => {
 .es-demandMatching-detail {
   max-width: 760px;
   min-width: 620px;
-  padding: 0 24px 208px 24px;
+  padding: 24px 24px 208px 24px;
   background: #ffffff;
   border-radius: 4px;
   margin-right: 24px;
   margin-bottom: 80px;
 }
 .es-demandMatching-detail-top {
-  @include widthAndHeight(100%, 79px);
+  @include widthAndHeight(100%, 32px);
   @include flex(center, space-between, nowrap);
+  margin-bottom: 16px;
 }
 .es-demandMatching-detail-top__number {
   @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
@@ -180,7 +187,7 @@ const onShare = async () => {
   margin-top: 24px;
 }
 .es-demandMatching-detail-top__removed {
-  @include widthAndHeight(621px, 38px);
+  @include widthAndHeight(567px, 38px);
   background: #f2f3f5;
   border-radius: 4px;
   padding: 8px 16px;

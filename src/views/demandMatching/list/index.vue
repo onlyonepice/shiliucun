@@ -145,6 +145,11 @@
                 </p>
                 <p class="line" />
                 <p class="data-box_item_title">{{ item.title }}</p>
+              </div>
+              <div class="data-box_item_desc">
+                {{ item.description }}
+              </div>
+              <div class="time">
                 <template
                   v-for="statusItem in demandStatus"
                   :key="statusItem.name"
@@ -161,9 +166,9 @@
                     {{ statusItem.name }}
                   </p>
                 </template>
-              </div>
-              <div class="data-box_item_desc">
-                {{ item.description }}
+                <h5 style="font-weight: 400">
+                  报名时间：{{ item.releaseTime }}
+                </h5>
               </div>
             </div>
             <div class="Pagination">
@@ -205,6 +210,11 @@
                 </p>
                 <p class="line" />
                 <p class="data-box_item_title">{{ item.needTitle }}</p>
+              </div>
+              <div class="data-box_item_desc">
+                {{ item.description }}
+              </div>
+              <div class="time">
                 <template
                   v-for="statusItem in applicationStatus"
                   :key="statusItem.name"
@@ -221,9 +231,13 @@
                     {{ statusItem.name }}
                   </p>
                 </template>
-              </div>
-              <div class="data-box_item_desc">
-                {{ item.description }}
+                <h5 style="font-weight: 400">
+                  报名时间：{{
+                    item.releaseTime.indexOf(" ") > -1
+                      ? item.releaseTime.split(" ")[0]
+                      : item.releaseTime
+                  }}
+                </h5>
               </div>
             </div>
             <div class="Pagination">
