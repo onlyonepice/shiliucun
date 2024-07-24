@@ -9,6 +9,7 @@
   >
     <img :src="NewUserVip" :class="ns.b('img')" />
     <div :class="ns.b('empty')" @click="handleClose" />
+    <div :class="ns.b('btn')" @click="handleClose" />
   </el-dialog>
 </template>
 
@@ -69,6 +70,11 @@ const handleClose = (type: boolean) => {
 .es-newUserVip-empty {
   @include widthAndHeight(30px, 30px);
   @include absolute(1, 10px, 10px, none, none);
+  cursor: pointer;
+}
+.es-newUserVip-btn {
+  @include widthAndHeight(180px, 40px);
+  @include absolute(1, none, 110px, 32px, none);
   cursor: pointer;
 }
 </style>

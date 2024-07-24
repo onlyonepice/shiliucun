@@ -52,7 +52,10 @@
   <ConsultationNav />
   <!-- 会员支付弹窗 -->
   <MembersBuy v-if="showMembersBuy" />
-  <NewUserVip v-if="showNewUserVip" />
+  <NewUserVip
+    :visible="showNewUserVip"
+    @onHandleClose="showNewUserVip = false"
+  />
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, Ref, computed, watch } from "vue";
@@ -68,7 +71,7 @@ const showNavBar: Ref<boolean> = ref(true);
 const lastScrollY: Ref<number> = ref(0);
 const openLoginAnimate: Ref<boolean> = ref(false); // 登录动画执行完毕弹窗
 const showMembersBuy: Ref<boolean> = ref(false); //订阅会员弹框状态
-
+const showNewUserVip: Ref<boolean> = ref(false); // 新用户弹框状态
 // 埋点方法
 window.trackFunction = (eventId: string) => {
   let _uuid = "";
@@ -122,6 +125,17 @@ watch(useUserStore().$state, (val: any) => {
       showMembersBuy.value = false;
     }, 500);
   }
+  if (useUserStore().$state.userInfo.createTime) {
+    console.log(
+      +new Date(useUserStore().$state.userInfo.createTime) / 1000,
+      "||||||||||||",
+      new Date().getTime() / 1000,
+    );
+    showNewUserVip.value =
+      new Date().getTime() / 1000 -
+        +new Date(useUserStore().$state.userInfo.createTime) / 1000 <=
+      10;
+  }
 
   val.publicKey !== "" &&
     useUserStore().$state.fileUrl === "" &&
@@ -134,16 +148,6 @@ const onLogin = () => {
 
 const getBg = computed(() => {
   return route.meta.backgroundColor ? route.meta.backgroundColor : "#ffffff";
-});
-const showNewUserVip = computed(() => {
-  console.log(
-    +new Date(useUserStore().$state.userInfo.createTime),
-    new Date().getTime(),
-  );
-  return (
-    +new Date(useUserStore().$state.userInfo.createTime) ===
-    new Date().getTime()
-  );
 });
 const onScroll = ({ scrollTop }: any) => {
   showNavBar.value = scrollTop < lastScrollY.value;
