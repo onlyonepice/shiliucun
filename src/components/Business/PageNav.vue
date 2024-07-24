@@ -595,6 +595,6 @@ const onLogin = () => {
 }
 
 .es-pageNav-extra--open {
-  @include widthAndHeight(100vw, 376px);
+  @include widthAndHeight(100vw, 386px);
 }
 </style>

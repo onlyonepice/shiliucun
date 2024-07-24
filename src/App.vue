@@ -126,11 +126,6 @@ watch(useUserStore().$state, (val: any) => {
     }, 500);
   }
   if (useUserStore().$state.userInfo.createTime) {
-    console.log(
-      +new Date(useUserStore().$state.userInfo.createTime) / 1000,
-      "||||||||||||",
-      new Date().getTime() / 1000,
-    );
     showNewUserVip.value =
       new Date().getTime() / 1000 -
         +new Date(useUserStore().$state.userInfo.createTime) / 1000 <=
