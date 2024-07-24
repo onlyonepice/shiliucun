@@ -118,7 +118,10 @@
         <div :class="[ns.be('right', 'bg')]" />
         <div>
           <h3 :class="ns.be('right', 'title')">
-            {{ modifyInfoFreeze.realName }} | {{ modifyInfoFreeze.position }}
+            {{ modifyInfoFreeze.realName }}
+            {{
+              modifyInfoFreeze.position ? " | " + modifyInfoFreeze.position : ""
+            }}
           </h3>
           <h5 :class="ns.be('right', 'company')">
             {{ modifyInfoFreeze.company }}
