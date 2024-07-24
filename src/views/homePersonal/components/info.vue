@@ -31,19 +31,19 @@
         <div :class="ns.be('content', 'item')">
           <h5>企业名称</h5>
           <div :class="ns.be('item', 'value')">
-            {{ modifyInfoFreeze.company }}
+            {{ modifyInfoFreeze.company || "信息暂无" }}
           </div>
         </div>
         <div :class="ns.be('content', 'item')">
           <h5>岗位头衔</h5>
           <div :class="ns.be('item', 'value')">
-            {{ modifyInfoFreeze.position }}
+            {{ modifyInfoFreeze.position || "信息暂无" }}
           </div>
         </div>
         <div :class="ns.be('content', 'item')">
           <h5>岗位类型</h5>
           <div :class="ns.be('item', 'value')">
-            {{ postTypeName }}
+            {{ postTypeName || "信息暂无" }}
           </div>
         </div>
         <div :class="ns.be('content', 'item')">
@@ -80,7 +80,7 @@
           <div>
             <h5>微信号码</h5>
             <div :class="ns.be('item', 'value')">
-              {{ modifyInfoFreeze.weCat }}
+              {{ modifyInfoFreeze.weCat || "信息暂无" }}
             </div>
           </div>
           <el-switch
@@ -101,7 +101,7 @@
           <div>
             <h5>常用邮箱</h5>
             <div :class="ns.be('item', 'value')">
-              {{ modifyInfoFreeze.email }}
+              {{ modifyInfoFreeze.email || "信息暂无" }}
             </div>
           </div>
           <el-switch

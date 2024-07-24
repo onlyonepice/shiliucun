@@ -29,7 +29,12 @@
           <h3>{{ companyInfo.nameCn }}</h3>
           <h5 :class="[ns.be('content', 'link')]">
             企业官网：
-            <p @click="handleClick(companyInfo.siteUrl)">
+            <p
+              @click="handleClick(companyInfo.siteUrl)"
+              :style="{
+                color: companyInfo.siteUrl ? '#244bf1' : 'rgba(0, 0, 0, 0.6)',
+              }"
+            >
               {{ companyInfo.siteUrl || "信息暂无" }}
             </p>
           </h5>
