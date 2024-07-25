@@ -53,8 +53,8 @@
   <!-- 会员支付弹窗 -->
   <MembersBuy v-if="showMembersBuy" />
   <NewUserVip
-    :visible="showNewUserVip"
-    @onHandleClose="showNewUserVip = false"
+    :visible="useUserStore().$state.showNewUserVip"
+    @onHandleClose="useUserStore().$state.showNewUserVip = false"
   />
 </template>
 <script lang="ts" setup>
@@ -71,7 +71,7 @@ const showNavBar: Ref<boolean> = ref(true);
 const lastScrollY: Ref<number> = ref(0);
 const openLoginAnimate: Ref<boolean> = ref(false); // 登录动画执行完毕弹窗
 const showMembersBuy: Ref<boolean> = ref(false); //订阅会员弹框状态
-const showNewUserVip: Ref<boolean> = ref(false); // 新用户弹框状态
+
 // 埋点方法
 window.trackFunction = (eventId: string) => {
   let _uuid = "";
@@ -124,12 +124,6 @@ watch(useUserStore().$state, (val: any) => {
     setTimeout(() => {
       showMembersBuy.value = false;
     }, 500);
-  }
-  if (useUserStore().$state.userInfo.createTime) {
-    showNewUserVip.value =
-      new Date().getTime() / 1000 -
-        +new Date(useUserStore().$state.userInfo.createTime) / 1000 <=
-      10;
   }
 
   val.publicKey !== "" &&

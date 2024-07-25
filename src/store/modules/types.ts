@@ -50,4 +50,5 @@ export type userType = {
   openVipSubmitTitle: string;
   comparedList: Array<any>;
   showConsultationNav: boolean;
+  showNewUserVip: boolean;
 };

@@ -116,7 +116,13 @@
 
 <script lang="ts" setup>
 import { Ref, ref } from "vue";
-import { getQrCode, pollLogin, sendCode, login } from "@/api/user";
+import {
+  getQrCode,
+  pollLogin,
+  sendCode,
+  login,
+  getMessageApi,
+} from "@/api/user";
 import { setToken } from "@/utils/auth";
 import { regMobile } from "@/utils/rule";
 import { ElMessage } from "element-plus";
@@ -150,6 +156,11 @@ const props = defineProps({
 });
 const onCloseDialog = () => {
   emit("onCancel");
+  getMessageApi({ type: 1 }).then((res) => {
+    if (res.resp_code === 0) {
+      useUserStore().$state.showNewUserVip = res.datas !== null;
+    }
+  });
 };
 const handleSwitchProtocol = (type: string) => {
   protocolShow.value = type;

@@ -269,3 +269,12 @@ export function scoreMarkApi2(data: any) {
     data,
   });
 }
+
+// 消息查询
+export function getMessageApi(params: any) {
+  return http.request<responseType>(
+    "get",
+    `/api-user/user/userMessage/front/v1.0/getUserMessage`,
+    { params },
+  );
+}

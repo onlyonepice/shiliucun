@@ -29,6 +29,7 @@ export const useUserStore = defineStore({
     showMembersBuy: false, //订阅会员弹框
     comparedList: [], // 产品对比列表
     showConsultationNav: true, // 展示产品二维码
+    showNewUserVip: false, // 新用户开通会员
   }),
   getters: {
     getFileUrl(): string {
