@@ -351,7 +351,7 @@ async function getElectricityTypeOneName() {
   });
   eChartsOption.value.title.text =
     titleText.value.years + "各省市代理购电价峰谷价差排名";
-  eChartsOption.value.title.subtext = `·${titleText.value.electricityTypeOneName}·${titleText.value.tariffLevelId}·${titleText.value.differencePrice}`;
+  eChartsOption.value.title.subtext = `${titleText.value.electricityTypeOneName}·${titleText.value.tariffLevelId}·${titleText.value.differencePrice}`;
   eChartsOption.value.series[0].data = datas.map(
     (item) => item.electrovalenceDifference,
   );

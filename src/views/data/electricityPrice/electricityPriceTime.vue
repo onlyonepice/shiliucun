@@ -611,8 +611,8 @@ const getSubTitle = () => {
   let subtitle = "";
   if (isSpecialRegion.value) {
     const voltagePart = titleText.value.specialVoltageLevelId
-      ? `·${titleText.value.specialElectricityTypeName}·${titleText.value.specialVoltageLevelId}·${titleText.value.specialSubVoltageLevelId}`
-      : `${isSpecialRegion.value ? `·${titleText.value.specialElectricityTypeName}` : ""}`;
+      ? `${titleText.value.specialElectricityTypeName}·${titleText.value.specialVoltageLevelId}·${titleText.value.specialSubVoltageLevelId}`
+      : `${isSpecialRegion.value ? `${titleText.value.specialElectricityTypeName}` : ""}`;
 
     const defaultPart = isSpecialRegion.value
       ? ""
@@ -620,7 +620,7 @@ const getSubTitle = () => {
 
     subtitle = `${voltagePart}${defaultPart}`;
   } else {
-    subtitle = `·${titleText.value.electricityTypeOneName}·${titleText.value.electricityTypeTwoName}·${titleText.value.tariffLevelId}`;
+    subtitle = `${titleText.value.electricityTypeOneName}·${titleText.value.electricityTypeTwoName}·${titleText.value.tariffLevelId}`;
   }
   return subtitle;
 };
