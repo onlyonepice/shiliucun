@@ -93,7 +93,7 @@
                   />
                 </div>
               </template>
-              <!-- 周/月/季报 -->
+              <!-- 周月季报 -->
               <template v-if="key === 'QUARTERLY_AND_MONTHLY_REPORTS'">
                 <div
                   class="text-item"
@@ -189,7 +189,7 @@ const pageOptions = ref<any>({
   INTERVIEW_EXPERT: { name: "专家访谈", show: false },
   Energy_Storage_Frontier: { name: "储能前沿", show: false },
   REAL_TIME_INFORMATION: { name: "行业洞察", show: false },
-  QUARTERLY_AND_MONTHLY_REPORTS: { name: "周/月/季报", show: false },
+  QUARTERLY_AND_MONTHLY_REPORTS: { name: "周月季报", show: false },
   WHITE_PAPER: { name: "白皮书", show: false },
   ONLINE_REPORT: { name: "在线报告", show: false },
 }) as any;

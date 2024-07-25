@@ -17,7 +17,7 @@ export const reportStore = defineStore({
       },
       {
         en: "QUARTERLY_AND_MONTHLY_REPORTS",
-        ch: "周/月/季报",
+        ch: "周月季报",
         path: "/quarterlyMonthlyReports",
       },
       { en: "WHITE_PAPER", ch: "白皮书", path: "/reportWhitePaper" },
