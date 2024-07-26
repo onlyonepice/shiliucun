@@ -151,8 +151,8 @@ const getVIPIcon = computed(() => {
 const extraAvatar: Ref<any> = ref([
   { id: 1, text: "我的名片", path: "/homePersonal?id=1" },
   { id: 2, text: "我的企业", path: "/homePersonal?id=2" },
+  { id: 3, text: "我的产品", path: "/homePersonal?id=6" },
   { id: 3, text: "我的需求", path: "/homePersonal?id=3" },
-  { id: 3, text: "我的上传", path: "/homePersonal?id=6" },
   { id: 4, text: "修改密码", path: "/homePersonal?id=7" },
   { id: 5, text: "退出登录", path: "" },
 ]);

@@ -1,7 +1,10 @@
 <template>
   <div :class="ns.b()">
     <template v-if="pageStatus === 1">
-      <div :class="ns.b('title')">我的上传</div>
+      <div :class="[ns.b('top')]">
+        <h3>我的产品</h3>
+        <el-button type="primary" @click="onSettlement()">产品入驻</el-button>
+      </div>
       <el-table :data="mainData" style="width: 810px">
         <el-table-column label="产品名称" prop="name" />
         <el-table-column label="企业名称" prop="enterprise" min-width="120px" />
@@ -243,6 +246,10 @@ async function getProductCheckInList() {
     mainData.value = datas.content;
   }
 }
+// 产品入驻
+function onSettlement() {
+  router.push("/searchProductProductCheckIn");
+}
 async function handelViewAttribute(row) {
   const { resp_code, datas } = await getProductDetailsApi({
     id: row.id,
@@ -280,7 +287,15 @@ function handleCurrentChange(val: number) {
 </script>
 <style scoped lang="scss">
 @import "@/style/mixin.scss";
-
+.es-MyUploads-top {
+  @include flex(center, space-between);
+  @include padding(0, 0, 19px, 0);
+  border-bottom: 1px solid #dbdce2;
+  @include margin(0, 0, 24px, 0);
+  h3 {
+    line-height: 56px;
+  }
+}
 .es-MyUploads {
   min-height: 495px;
 

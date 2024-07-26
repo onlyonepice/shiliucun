@@ -14,22 +14,52 @@
       @onCheckApplyList="drawer = true"
       @onResetApply="resetDialogVisible = true"
       @onRevocation="onRevocation"
-    />
-    <div
-      :style="{ height: showExtra ? '256px' : '246px' }"
-      :class="ns.b('card')"
     >
-      <h4>{{ minePublish ? "您的名片信息" : "需求方名片" }}</h4>
-      <template v-if="detailInfo.accountInfo">
-        <BusinessCard
-          :info="detailInfo.accountInfo"
-          :minePublish="minePublish"
-        />
-        <div :class="ns.be('content', 'extra')" v-if="showExtra">
-          <img :src="LamentIcon" alt="" />
-          <p>需求方同意报名后将显示联系方式</p>
-        </div>
-      </template>
+      <div :class="ns.be('left', 'evaluate')">
+        <h5>真实度评价</h5>
+        <template v-if="false">
+          <div
+            :class="[ns.be('left', 'reviews'), ns.be('left', 'goodReviews')]"
+          >
+            <div :class="ns.be('left', 'reviews-head')">
+              <img :src="GoodReviewsImg" alt="" />
+              <span>+38</span>
+            </div>
+            <span>｜</span>
+            <span>资源不错 +12、态度良好 +24</span>
+          </div>
+          <div :class="[ns.be('left', 'reviews'), ns.be('left', 'badReviews')]">
+            <div :class="ns.be('left', 'reviews-head')">
+              <img :src="BadReviewsImg" alt="" />
+              <span>+38</span>
+            </div>
+            <span>｜</span>
+            <span>态度恶劣 +24</span>
+          </div>
+        </template>
+        <template v-else>
+          <span :class="ns.be('left', 'reviews-none')">暂无评价</span>
+        </template>
+      </div>
+    </DetailInfo>
+    <div>
+      <div
+        :style="{ height: showExtra ? '256px' : '246px' }"
+        :class="ns.b('card')"
+      >
+        <h4>{{ minePublish ? "您的名片信息" : "需求方名片" }}</h4>
+        <template v-if="detailInfo.accountInfo">
+          <BusinessCard
+            :info="detailInfo.accountInfo"
+            :minePublish="minePublish"
+          />
+          <div :class="ns.be('content', 'extra')" v-if="showExtra">
+            <img :src="LamentIcon" alt="" />
+            <p>需求方同意报名后将显示联系方式</p>
+          </div>
+        </template>
+      </div>
+      <Reviews />
     </div>
   </div>
   <ApplyDialog
@@ -82,8 +112,11 @@ import ApplyDialog from "./dialog/apply.vue";
 import DeleteDialog from "./dialog/delete.vue";
 import SolveDialog from "./dialog/solve.vue";
 import ReleaseDemand from "../releaseDemand.vue";
+import Reviews from "./components/reviews.vue";
 import { useUserStore } from "@/store/modules/user";
 import { useRoute, useRouter } from "vue-router";
+import GoodReviewsImg from "@/assets/img/common/good-reviews.png";
+import BadReviewsImg from "@/assets/img/common/bad-reviews.png";
 import {
   getDemandDetailApi,
   getApplyListApi,
@@ -194,6 +227,7 @@ const onchangeCurrent = (val: number) => {
 
 .es-demandMatchingDetail {
   @include flex(flex-start, center, nowrap);
+  padding-bottom: 46px;
 }
 .es-demandMatchingDetail-card {
   @include widthAndHeight(368px, 246px);
@@ -221,5 +255,38 @@ const onchangeCurrent = (val: number) => {
   background: #ffffff;
   border-radius: 4px;
   margin-right: 24px;
+}
+.es-demandMatchingDetail-left__evaluate {
+  h5 {
+    line-height: 22px;
+    margin-bottom: 8px;
+  }
+}
+.es-demandMatchingDetail-left__reviews {
+  height: 32px;
+  margin-bottom: 8px;
+  @include flex(center, flex-start, nowrap);
+  @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+  img {
+    @include widthAndHeight(24px, 24px);
+    margin-right: 4px;
+  }
+  .es-demandMatchingDetail-left__reviews-head {
+    @include widthAndHeight(80px, 32px);
+    padding: 4px 8px;
+    border-radius: 4px;
+    @include flex(center, flex-start, nowrap);
+  }
+  &:nth-of-type(1) .es-demandMatchingDetail-left__reviews-head {
+    background: linear-gradient(90deg, #eaedfe 0%, rgba(234, 237, 254, 0) 100%);
+    @include font(16px, 400, #244bf1, 24px);
+  }
+  &:nth-of-type(2) .es-demandMatchingDetail-left__reviews-head {
+    background: linear-gradient(90deg, #feeff0 0%, rgba(254, 239, 240, 0) 100%);
+    @include font(16px, 400, #f75964, 24px);
+  }
+}
+.es-demandMatchingDetail-left__reviews-none {
+  @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
 }
 </style>

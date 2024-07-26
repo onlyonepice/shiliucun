@@ -78,7 +78,7 @@ export const productCheckInSaveOrUpdateApi = (data: any) => {
     { data },
   );
 };
-// 个人中心_我的上传
+// 个人中心_我的产品
 export const getProductCheckInListApi = (data: {
   limit: number;
   page: number;

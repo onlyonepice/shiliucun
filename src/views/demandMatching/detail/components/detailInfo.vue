@@ -115,6 +115,7 @@
       :preview-src-list="[useUserStore().fileUrl + item]"
       fit="cover"
     />
+    <slot />
   </div>
 </template>
 

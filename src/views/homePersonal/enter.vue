@@ -115,10 +115,10 @@ const breadcrumbList: Ref<Array<any>> = ref([
 const tabList: Ref<Array<any>> = ref([
   { id: 1, text: "我的名片", iconChose: InfoChose, icon: Info },
   { id: 2, text: "我的企业", iconChose: CompanyChose, icon: Company },
+  { id: 6, text: "我的产品", iconChose: MyUploadsChose, icon: MyUploads },
   { id: 3, text: "我的需求", iconChose: NeedChose, icon: Need },
   { id: 4, text: "我的收藏", iconChose: CollectionChose, icon: Collection },
   { id: 5, text: "我的订单", iconChose: OrderChose, icon: Order },
-  { id: 6, text: "我的上传", iconChose: MyUploadsChose, icon: MyUploads },
   { id: 7, text: "修改密码", iconChose: PasswordChose, icon: Password },
   { id: 8, text: "退出登录", icon: LogoutImg },
 ]);
