@@ -311,11 +311,6 @@
       </div>
     </div>
   </div>
-  <MiniAppNeed
-    :visible="productVisible"
-    type="product"
-    @onHandleClose="productVisible = false"
-  />
 </template>
 
 <script lang="ts" setup>
@@ -329,6 +324,8 @@ import { useUserStore } from "@/store/modules/user";
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 import { getToken } from "@/utils/auth";
 import { cloneDeep } from "lodash";
+import { useRouter } from "vue-router";
+const router = useRouter();
 import {
   apiAreaData,
   apiStrategy,
@@ -338,7 +335,6 @@ import {
 } from "@/api/investment";
 const emit = defineEmits(["onAnalysis", "onReset", "getDesc"]);
 const addAreaType: Ref<boolean> = ref(false); // 添加地区对比开关
-const productVisible: Ref<boolean> = ref(false);
 const filterData: Ref<FILTERDATA> = ref({
   patternAnalysis: 0,
 });
@@ -400,7 +396,7 @@ const onPatternAnalysis = (id: number) => {
   disabledUser.value = false;
 };
 const onProduct = () => {
-  productVisible.value = true;
+  router.push("/searchProductProductCheckIn");
   window.trackFunction("pc_Calculation_ProductEntry_click");
 };
 watch(
