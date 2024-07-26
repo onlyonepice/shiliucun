@@ -101,9 +101,11 @@ async function getElectricityTypeOneName() {
     isEmptyData.value = true;
     return;
   }
-
   eChartsOption.value.title.text = "储能月度招标分析";
-  eChartsOption.value.title.subtext = `储能系统`;
+  const _textData = props.contentFilter.filter((item) => {
+    return item.id === contentDict.value;
+  });
+  eChartsOption.value.title.subtext = _textData[0].paramDesc;
   eChartsOption.value.color = ["#244BF1", "#34BCF4"];
   const _y1 = [];
   const _y2 = [];

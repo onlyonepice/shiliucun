@@ -143,9 +143,13 @@ async function getElectricityTypeOneName() {
     releaseTime: releaseTime.value,
   });
   if (datas && datas.length && resp_code === 0) {
+    const _textData = props.contentFilter.filter((item) => {
+      return item.id === contentDict.value;
+    });
+    console.log(_textData);
     const _data = datas.slice(0, 20);
     eChartsOption.value.title.text = releaseTime.value + "储能招标企业分析";
-    eChartsOption.value.title.subtext = `储能系统`;
+    eChartsOption.value.title.subtext = _textData[0].paramDesc;
     eChartsOption.value.color = ["#244BF1", "#34BCF4"];
     eChartsOption.value.grid = {
       top: "15%",
