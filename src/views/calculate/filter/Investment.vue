@@ -2,7 +2,9 @@
   <div class="common-title common-title-margin">投资方案</div>
   <div class="filter__content investment-filter__check">
     <Select
-      width="19.5%"
+      width="33%"
+      textAlign="left"
+      :titleWidth="100"
       title="年利用天数"
       :options="yearList"
       valueKey="paramName"
@@ -15,7 +17,9 @@
       "
     />
     <Select
-      width="19.5%"
+      width="33%"
+      textAlign="left"
+      :titleWidth="100"
       title="贴现率"
       :options="rateList"
       valueKey="paramName"
@@ -28,7 +32,9 @@
       "
     />
     <Select
-      width="19.5%"
+      width="33%"
+      textAlign="left"
+      :titleWidth="100"
       title="测算周期"
       :options="periodList"
       valueKey="paramName"
@@ -42,7 +48,9 @@
     />
     <Select
       v-if="showInfoList[0][0].value === 'EMC合同能源'"
-      width="19.5%"
+      width="33%"
+      textAlign="left"
+      :titleWidth="100"
       title="业主分成"
       type="number"
       :defaultValue="searchParams.ownersShare"
@@ -54,7 +62,9 @@
     />
     <Select
       v-if="showInfoList[0][0].value === 'EMC合同能源'"
-      width="19.5%"
+      width="33%"
+      textAlign="left"
+      :titleWidth="100"
       title="投资方分成"
       type="number"
       :defaultValue="searchParams.dividedByInvestors"
@@ -65,15 +75,17 @@
       "
     />
     <Select
-      width="19.5%"
-      title="EMC综合税率"
-      :options="periodList"
-      valueKey="paramName"
-      labelKey="paramDesc"
-      :defaultValue="searchParams.calculationPeriod"
+      v-if="showInfoList[0][0].value === 'EMC合同能源'"
+      width="33%"
+      textAlign="left"
+      :titleWidth="100"
+      title="EMC综合税率%"
+      type="number"
+      :defaultValue="searchParams.EMCComprehensiveTaxRate"
+      :precision="0"
       @onChange="
         ($event) => {
-          onChangeFilter($event, 'calculationPeriod');
+          onChangeFilter($event, 'EMCComprehensiveTaxRate');
         }
       "
     />
@@ -141,7 +153,7 @@ const onChangeFilter = (value: any, type: string) => {
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .filter__content {
-  @include flex(center, space-between, nowrap);
+  @include flex(center, space-between, wrap);
 }
 
 .common-title {
@@ -155,5 +167,12 @@ const onChangeFilter = (value: any, type: string) => {
 }
 .common-title-margin {
   @include margin(24px, 0, 16px, 0);
+}
+</style>
+<style lang="scss">
+.filter__content {
+  .select {
+    margin-bottom: 16px;
+  }
 }
 </style>

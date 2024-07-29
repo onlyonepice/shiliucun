@@ -200,7 +200,9 @@ const titleSkip = ref({
   show: false,
 });
 // 查询参数
-const searchParamsA: Ref<any> = ref({});
+const searchParamsA: Ref<any> = ref({
+  EMCComprehensiveTaxRate: 87,
+});
 const searchParamsB: Ref<any> = ref({});
 const addAreaType: Ref<boolean> = ref(false); // 添加地区对比
 const scrollTop: Ref<number> = ref(0); // 页面滚动距离

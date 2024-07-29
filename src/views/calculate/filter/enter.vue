@@ -231,12 +231,12 @@
               type="input"
               textAlign="left"
               inputText="元/度"
-              :defaultValue="searchParams.systemUnitPrice"
+              :defaultValue="searchParams.additionalEPCCosts"
               width="100%"
               :titleWidth="90"
               @onChange="
                 ($event) => {
-                  onChangeData($event, 'systemUnitPrice', 'AB');
+                  onChangeData($event, 'additionalEPCCosts', 'AB');
                 }
               "
             />
@@ -371,6 +371,7 @@ const searchParams: Ref<any> = ref({
   choseProduct: "", // 选择产品
   number: null, // 配置数量
   systemUnitPrice: "", // 系统单价
+  additionalEPCCosts: "", // EPC额外支出
   systemEnergyCapacity: "", // 系统容量
   systemEfficiency: "", // 系统综合效率
   dischargeDepth: "", // 放电深度
@@ -527,6 +528,8 @@ const getDesc = () => {
     });
     _searchParamsShow.number = _searchParams.number + "台";
     _searchParamsShow.systemUnitPrice = _searchParams.systemUnitPrice + "元/度";
+    _searchParamsShow.additionalEPCCosts =
+      _searchParams.additionalEPCCosts + "元/度";
     _searchParamsShow.systemEnergyCapacity =
       _searchParams.systemEnergyCapacity + "度";
     _searchParamsShow.systemEfficiency = _searchParams.systemEfficiency + "%";
@@ -669,6 +672,7 @@ async function onChoseProduct(data: any, type: string) {
     const _data = {
       number: 1,
       systemUnitPrice: datas.systemUnitPrice,
+      additionalEPCCosts: 200,
       systemEnergyCapacity: datas.systemEnergyCapacity,
       systemEfficiency: datas.systemEfficiency,
       dischargeDepth: datas.dischargeDepth,
@@ -803,7 +807,7 @@ async function onChangeData(data: string, type: string, compare = "A") {
     text-align: right;
   }
   .product-desc__img {
-    @include widthAndHeight(224px, 224px);
+    @include widthAndHeight(272px, 272px);
     @include margin(0, 16px);
     background: #f2f3f5;
     border-radius: 8px;

@@ -51,6 +51,7 @@
         placeholder="请输入"
         controls-position="right"
         :disabled="props.disabled"
+        :precision="precision"
         @focus="handleFocusVerifyLogin"
         @input="handleChange"
       />
@@ -99,9 +100,14 @@ const props = defineProps({
     type: Number,
     default: 70,
   },
+  // 标题对其方式
   textAlign: {
     type: String,
     default: "right",
+  },
+  precision: {
+    type: Number,
+    default: 2,
   },
   // 输入框/选择器标题
   title: {
