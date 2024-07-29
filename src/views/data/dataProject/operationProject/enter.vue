@@ -18,7 +18,7 @@
         :disabledDate="item.type === 'date' && disabledDate"
       />
     </div>
-    <el-button type="primary" @click="exportResult" style="float: right"
+    <el-button type="primary" @click="exportResult(1)" style="float: right"
       >下载图片</el-button
     >
     <div :class="ns.b('eCharts-box')" v-if="!isEmptyData">
@@ -33,7 +33,7 @@
         >
       </div>
     </div>
-    <el-button type="primary" @click="exportResult" style="float: right"
+    <el-button type="primary" @click="exportResult(2)" style="float: right"
       >下载图片</el-button
     >
     <div :class="ns.b('eCharts-box')" v-if="!isEmptyData">
@@ -559,8 +559,10 @@ const initData = (type = 1) => {
   };
 };
 // 导出图片
-function exportResult() {
-  const _echarts = echarts.getInstanceByDom(eChartsDom.value);
+function exportResult(type) {
+  const _echarts = echarts.getInstanceByDom(
+    type === 1 ? eChartsDom.value : eChartsDom2.value,
+  );
   exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });
   exportImgUrl.value.jpg = _echarts.getDataURL({
     type: "jpeg",
