@@ -188,6 +188,7 @@
           <Select
             title="选择产品"
             type="cascader"
+            textAlign="left"
             :options="productList"
             :cascaderOption="cascaderOption"
             @onChange="
@@ -200,6 +201,7 @@
           <Select
             title="配置数量"
             type="input"
+            textAlign="left"
             inputText="台"
             :defaultValue="searchParams.number"
             @onChange="
@@ -214,6 +216,7 @@
             <Select
               title="系统单价"
               type="input"
+              textAlign="left"
               inputText="元/度"
               :defaultValue="searchParams.systemUnitPrice"
               width="100%"
@@ -224,8 +227,23 @@
               "
             />
             <Select
+              title="EPC额外支出"
+              type="input"
+              textAlign="left"
+              inputText="元/度"
+              :defaultValue="searchParams.systemUnitPrice"
+              width="100%"
+              :titleWidth="90"
+              @onChange="
+                ($event) => {
+                  onChangeData($event, 'systemUnitPrice', 'AB');
+                }
+              "
+            />
+            <Select
               title="系统容量"
               type="input"
+              textAlign="left"
               inputText="度"
               :defaultValue="searchParams.systemEnergyCapacity"
               width="100%"
@@ -238,8 +256,9 @@
             <Select
               title="系统综合效率"
               type="input"
+              textAlign="left"
               inputText="%"
-              titleWidth="84px"
+              :titleWidth="90"
               :defaultValue="searchParams.systemEfficiency"
               width="100%"
               @onChange="
@@ -251,6 +270,7 @@
             <Select
               title="放电深度"
               type="input"
+              textAlign="left"
               inputText="%"
               :defaultValue="searchParams.dischargeDepth"
               width="100%"
@@ -263,6 +283,7 @@
             <Select
               title="年衰减率"
               type="input"
+              textAlign="left"
               inputText="%"
               :defaultValue="searchParams.annualDecay"
               width="100%"
@@ -275,7 +296,9 @@
             <Select
               title="年维护费用"
               type="input"
+              textAlign="left"
               inputText="元"
+              :titleWidth="80"
               :defaultValue="searchParams.annualMaintenance"
               width="100%"
               @onChange="

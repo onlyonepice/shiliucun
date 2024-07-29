@@ -3,7 +3,7 @@
     <span
       v-if="props.title !== ''"
       class="select__title"
-      :style="{ width: titleWidth + 'px' }"
+      :style="{ width: titleWidth + 'px', textAlign: textAlign }"
       >{{ props.title }}</span
     >
     <el-select
@@ -98,6 +98,10 @@ const props = defineProps({
   titleWidth: {
     type: Number,
     default: 70,
+  },
+  textAlign: {
+    type: String,
+    default: "right",
   },
   // 输入框/选择器标题
   title: {
@@ -222,7 +226,7 @@ defineExpose({
   width: 84px;
   @include margin(0, 16px, 0, 0);
   @include font(14px, 400, rgba(0, 0, 00.6), 22px);
-  text-align: right;
+  text-align: left;
 }
 .select__key {
   @include flex(center, flex-start);

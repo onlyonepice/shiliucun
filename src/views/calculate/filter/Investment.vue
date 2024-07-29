@@ -64,6 +64,19 @@
         }
       "
     />
+    <Select
+      width="19.5%"
+      title="EMC综合税率"
+      :options="periodList"
+      valueKey="paramName"
+      labelKey="paramDesc"
+      :defaultValue="searchParams.calculationPeriod"
+      @onChange="
+        ($event) => {
+          onChangeFilter($event, 'calculationPeriod');
+        }
+      "
+    />
   </div>
 </template>
 <script lang="ts" setup>

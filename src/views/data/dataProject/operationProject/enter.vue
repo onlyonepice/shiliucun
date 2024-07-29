@@ -33,6 +33,25 @@
         >
       </div>
     </div>
+    <el-button type="primary" @click="exportResult" style="float: right"
+      >下载图片</el-button
+    >
+    <div :class="ns.b('eCharts-box')" v-if="!isEmptyData">
+      <div
+        v-loading="loading"
+        id="eChart-operationProject2"
+        ref="eChartsDom2"
+      />
+      <div
+        class="echarts-mask animate__animated animate__fadeIn"
+        v-if="echartsMask"
+      >
+        <h4>开通企业VIP查看完整数据</h4>
+        <el-button type="primary" @click="router.push('/vip')"
+          >立即开通</el-button
+        >
+      </div>
+    </div>
     <EmptyData v-else />
     <ExportCanvasDialog
       :visible="exportVisible"
@@ -62,12 +81,14 @@ const router = useRouter();
 const { VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("operationProject");
 const EChartOptions: Ref<any> = ref({});
+const EChartOptions2: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const echartsMask: Ref<boolean> = ref(false); // echarts蒙层
 // 获取eCharts节点
 const eChartsDom = ref(null);
+const eChartsDom2 = ref(null);
 const props = defineProps({
   formOptions: {
     type: Array,
@@ -165,8 +186,10 @@ watch(
               break;
           }
         });
-        initData();
-        getData();
+        initData(1);
+        initData(2);
+        getData(1);
+        getData(2);
       });
     }
   },
@@ -215,7 +238,8 @@ function disabledDate(time) {
 }
 
 // 获取图表数据--储能项目投运规模
-const getData = async () => {
+const getData = async (type = 1) => {
+  const _EChartOptions = type === 1 ? EChartOptions : EChartOptions2;
   loading.value = true;
   isEmptyData.value = false;
   try {
@@ -277,16 +301,13 @@ const getData = async () => {
         result.stack = "Ad";
         return result;
       });
-      EChartOptions.value.xAxis.data = [];
+      _EChartOptions.value.xAxis.data = [];
       datas.forEach((item) => {
-        EChartOptions.value.xAxis.data.push(item.year);
+        _EChartOptions.value.xAxis.data.push(item.year);
 
         item.data.forEach((barItem, barIndex) => {
-          const bar_target = barSeries.find(
+          const data = barSeries.find(
             (item) => item.name === barItem.applicationScenes,
-          );
-          const line_target = lineSeries.find(
-            (item) => item.name === `${barItem.applicationScenes}`,
           );
 
           const capacity = isNaN(+item.data[barIndex].capacity)
@@ -297,16 +318,17 @@ const getData = async () => {
             ? item.data[barIndex].power
             : (+item.data[barIndex].power).toFixed(2);
 
-          bar_target.data.push({
-            value: capacity,
-            capacity,
-            power,
-          });
-          line_target.data.push({
-            value: power,
-            capacity,
-            power,
-          });
+          if (type === 1) {
+            data.data.push({
+              value: capacity,
+              capacity,
+            });
+          } else {
+            data.data.push({
+              value: power,
+              power,
+            });
+          }
         });
       });
       const _barSeries = cloneDeep(barSeries).reverse();
@@ -324,7 +346,7 @@ const getData = async () => {
           }),
         },
       ];
-      EChartOptions.value.series = lineSeries
+      _EChartOptions.value.series = lineSeries
         .reverse()
         .concat(barSeries.reverse());
       // 根据国家动态改变色块
@@ -337,8 +359,8 @@ const getData = async () => {
           (item) => item.name !== "电源侧储能" && item.name !== "电网侧储能",
         );
       }
-      EChartOptions.value.legend = legend;
-      initECharts();
+      _EChartOptions.value.legend = legend;
+      initECharts(type);
     } else if (!datas.length) {
       isEmptyData.value = true;
     }
@@ -348,9 +370,11 @@ const getData = async () => {
   }
 };
 
-const initECharts = async () => {
+const initECharts = async (type) => {
   const myChart = echarts.init(
-    document.getElementById("eChart-operationProject"),
+    type === 1
+      ? document.getElementById("eChart-operationProject")
+      : document.getElementById("eChart-operationProject2"),
   );
   myChart.on("mouseover", (params): any => {
     if (params.data === undefined) {
@@ -363,7 +387,7 @@ const initECharts = async () => {
     const res = await maskPermissions({ moduleName: "储能项目投运规模" });
     echartsMask.value = res.datas.isCovered;
   }
-  myChart.setOption(EChartOptions.value);
+  myChart.setOption(type === 1 ? EChartOptions.value : EChartOptions2.value);
 };
 const colorEnum = {
   源网侧储能: "#244BF1",
@@ -372,12 +396,13 @@ const colorEnum = {
   工商业储能: "#91A5F8",
   户用储能: "#C8D2FB",
 };
-const initData = () => {
-  EChartOptions.value = {
+const initData = (type = 1) => {
+  let _EChartOptions = type === 1 ? EChartOptions : EChartOptions2;
+  _EChartOptions.value = {
     color: ["#165DFF", "#2FAEFF", "#FF7D00"],
     title: {
       show: true,
-      text: `储能项目投运规模`,
+      text: `储能项目投运规模-${type === 1 ? "功率" : "容量"}`,
       left: "center",
     },
     graphic: [chartWatermark],
@@ -489,36 +514,13 @@ const initData = () => {
     yAxis: [
       {
         type: "value",
-        name: "容量/MWh",
-        position: "right",
-        alignTicks: true,
-        nameTextStyle: {
-          fontSize: 14,
-          fontWeight: "bold",
-        },
-        splitLine: {
-          show: true,
-          lineStyle: {
-            type: "dashed",
-            color: "#E5E6EA",
-            width: 1,
-          },
-        },
-      },
-      {
-        type: "value",
-        name: "功率/MW",
+        name: type === 1 ? "容量/MWh" : "功率/MW",
         position: "left",
         alignTicks: true,
         nameTextStyle: {
           fontSize: 14,
           fontWeight: "bold",
         },
-        axisLabel: {
-          formatter: function (value) {
-            return parseFloat(value.toFixed(1));
-          },
-        },
         splitLine: {
           show: true,
           lineStyle: {
@@ -528,6 +530,7 @@ const initData = () => {
           },
         },
       },
+      {},
     ],
     series: [
       {
@@ -592,7 +595,8 @@ const selectChange = (row, index, val) => {
       findLabelById(regionList.value, val);
       regionName.value = foundLabel.value;
     }
-    getData();
+    getData(1);
+    getData(2);
   } else {
     nextTick(() => {
       requestData.value[row.model] =
@@ -646,6 +650,10 @@ window.trackFunction("pc_Project_click");
   margin-top: 80px;
 
   #eChart-operationProject {
+    width: 100%;
+    height: 642px;
+  }
+  #eChart-operationProject2 {
     width: 100%;
     height: 642px;
   }
