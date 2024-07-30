@@ -28,18 +28,34 @@
         />
       </div>
       <div :class="ns.b('type-list')">
-        <p
-          :class="
-            filterParams.type === item.code
-              ? 'type-item-active type-item'
-              : 'type-item'
-          "
-          v-for="item in typeList"
-          :key="item.label"
-          @click="changeType(item.code)"
-        >
-          {{ item.label }}
-        </p>
+        <div :class="ns.b('type-search')">
+          <Select
+            title="排序"
+            :options="sortTypeList"
+            valueKey="value"
+            labelKey="label"
+            width="260px"
+            :defaultValue="filterParams.sortType"
+            @onChange="
+              ($event) => {
+                onChangeType($event, 'sortType');
+              }
+            "
+          />
+          <Select
+            title="类型"
+            :options="typeList"
+            valueKey="code"
+            labelKey="label"
+            width="260px"
+            :defaultValue="filterParams.type"
+            @onChange="
+              ($event) => {
+                onChangeType($event, 'type');
+              }
+            "
+          />
+        </div>
         <el-button
           @click="handleReleaseClick"
           class="release-demand"
@@ -291,6 +307,7 @@ import {
   getNeedApi,
   getReleaseNeedApi,
   getApplyNeedApi,
+  getNeedEvaluateApi,
 } from "@/api/demandList";
 import { getUserDetailInfo } from "@/api/user";
 const isLogin = ref(getToken());
@@ -307,8 +324,8 @@ const tabList = ref([
 const filterParams = ref({
   pageNumber: 1,
   pageSize: 10,
-  type: "",
-  title: "",
+  type: null,
+  sortType: null,
 });
 const total = ref(0);
 const demandList = ref([{}]);
@@ -378,11 +395,6 @@ const changeTab = (value) => {
   }
   currentPage.value = value;
 };
-const changeType = (value) => {
-  filterParams.value.type = value;
-  filterParams.value.pageNumber = 1;
-  getNeed();
-};
 const handleDetailClick = (row) => {
   router.push({
     path: `/demandMatching/detail`,
@@ -405,6 +417,7 @@ const getTypeNotNull = async () => {
     typeList.value = data.datas;
   }
 };
+// 获取需求大厅列表数据
 const getNeed = async () => {
   const data = await getNeedApi(filterParams.value);
   if (data.resp_code === 0) {
@@ -452,9 +465,28 @@ const onchangeCurrentApply = (number: number) => {
 onUnmounted(() => {
   releaseDemandShow.value = false;
 });
+const sortTypeList: Ref<Array<any>> = ref([]);
+// 获取排序筛选项
+const getSortTypeList = async () => {
+  const { datas, resp_code } = await getNeedEvaluateApi({
+    type: "NEED_HOMEPAGE_SORT",
+  });
+  if (resp_code === 0) {
+    sortTypeList.value = datas[0].subset;
+    filterParams.value.sortType = datas[0].subset[0].value;
+    getNeed();
+  }
+};
+const onChangeType = (value, key) => {
+  console.log(key, value);
+  filterParams.value[key] = value;
+  if (currentPage.value === "demand") {
+    getNeed();
+  }
+};
 onMounted(() => {
   getTypeNotNull();
-  getNeed();
+  getSortTypeList();
   window.trackFunction("pc_RequestConnect_click");
 });
 </script>
@@ -494,6 +526,9 @@ onMounted(() => {
       left: 0;
     }
   }
+}
+.es-demand-list-type-search {
+  @include flex(center, flex-start, nowrap);
 }
 .es-demand-list-search {
   width: 100%;

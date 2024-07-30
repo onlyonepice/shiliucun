@@ -5,7 +5,7 @@ import { responseType } from "@/utils/type";
 export const getTypeNotNullApi = (data) => {
   return http.request<responseType>(
     "post",
-    "/eesa-industrial-map/need/need/openApi/v1.0/getTypeNotNull",
+    "/eesa-data-center/need/need/openApi/v1.0/getTypeNotNull",
     { data },
   );
 };
@@ -13,7 +13,7 @@ export const getTypeNotNullApi = (data) => {
 export const getNeedApi = (data) => {
   return http.request<responseType>(
     "post",
-    "/eesa-industrial-map/need/need/openApi/v1.0/getNeed",
+    "/eesa-data-center/need/need/openApi/v1.0/getNeed",
     { data },
   );
 };
@@ -21,7 +21,7 @@ export const getNeedApi = (data) => {
 export const getReleaseNeedApi = (params) => {
   return http.request<responseType>(
     "get",
-    "/eesa-industrial-map/need/need/front/V1.0/getReleaseNeed",
+    "/eesa-data-center/need/need/front/V1.0/getReleaseNeed",
     { params },
   );
 };
@@ -29,7 +29,7 @@ export const getReleaseNeedApi = (params) => {
 export const getApplyNeedApi = (data) => {
   return http.request<responseType>(
     "post",
-    "/eesa-industrial-map/need/apply/front/V1.0/apply/need",
+    "/eesa-data-center/need/apply/front/V1.0/apply/need",
     { data },
   );
 };
@@ -37,14 +37,14 @@ export const getApplyNeedApi = (data) => {
 export const getNeedTypeApi = () => {
   return http.request<responseType>(
     "get",
-    "/eesa-industrial-map/openApi/needType/front/V1.0/getNeedType",
+    "/eesa-data-center/need/need/openApi/v1.0/getNeedType",
   );
 };
 // 需求列表-发布需求
 export const releaseNeedApi = (data) => {
   return http.request<responseType>(
     "post",
-    "/eesa-industrial-map/need/need/front/V1.0/releaseNeed",
+    "/eesa-data-center/need/need/front/V1.0/releaseNeed",
     { data },
   );
 };
@@ -53,7 +53,16 @@ export const releaseNeedApi = (data) => {
 export const updateNeedApi = (data) => {
   return http.request<responseType>(
     "post",
-    "/eesa-industrial-map/need/need/front/V1.0/updateNeed",
+    "/eesa-data-center/need/need/front/V1.0/updateNeed",
+    { data },
+  );
+};
+
+// 获取需求评价信息
+export const getNeedEvaluateApi = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-data-center/sysDict/openApi/v1.0/queryByTypeAndSuperiorId",
     { data },
   );
 };
