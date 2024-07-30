@@ -39,6 +39,7 @@ test_install:
     - data-report
   only:   #分支
     - test
+  when: manual  #手动触发
 
 prod_install:
   stage: install
@@ -58,6 +59,7 @@ prod_install:
     - data-report
   only:   #分支
     - /^Rel-.*/
+  when: manual  #手动触发
 
 test_build:
   stage: build
