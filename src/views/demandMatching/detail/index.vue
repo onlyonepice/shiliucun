@@ -49,17 +49,12 @@
             <span
               v-for="(_item, _index) in item.applyEvaluateResponseList"
               :key="_index"
-              >{{ _item.feedback }} +{{ _item.count }}</span
+              >{{ _item.feedback }} +{{ _item.count
+              }}{{
+                _index === item.applyEvaluateResponseList.length - 1 ? "" : "、"
+              }}</span
             >
           </div>
-          <!-- <div :class="[ns.be('left', 'reviews'), ns.be('left', 'badReviews')]">
-            <div :class="ns.be('left', 'reviews-head')">
-              <img :src="BadReviewsImg" alt="" />
-              <span>+38</span>
-            </div>
-            <span>｜</span>
-            <span>态度恶劣 +24</span>
-          </div> -->
         </template>
         <template v-else>
           <span :class="ns.be('left', 'reviews-none')">暂无评价</span>
