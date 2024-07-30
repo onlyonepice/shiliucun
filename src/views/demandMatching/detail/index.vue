@@ -17,25 +17,49 @@
     >
       <div :class="ns.be('left', 'evaluate')">
         <h5>真实度评价</h5>
-        <template v-if="false">
+        <template v-if="detailInfo.applyEvaluateVOList.length !== 0">
           <div
-            :class="[ns.be('left', 'reviews'), ns.be('left', 'goodReviews')]"
+            :class="[
+              ns.be('left', 'reviews'),
+              item.code === 'FAVORABLE_COMMENT'
+                ? ns.be('left', 'goodReviews')
+                : ns.be('left', 'badReviews'),
+            ]"
+            v-for="item in detailInfo.applyEvaluateVOList"
+            :key="item.code"
           >
             <div :class="ns.be('left', 'reviews-head')">
-              <img :src="GoodReviewsImg" alt="" />
-              <span>+38</span>
+              <img
+                :src="
+                  item.code === 'FAVORABLE_COMMENT'
+                    ? GoodReviewsImg
+                    : BadReviewsImg
+                "
+                alt=""
+              />
+              <span
+                >+{{
+                  item.code === "FAVORABLE_COMMENT"
+                    ? detailInfo.likes
+                    : detailInfo.unlike
+                }}</span
+              >
             </div>
             <span>｜</span>
-            <span>资源不错 +12、态度良好 +24</span>
+            <span
+              v-for="(_item, _index) in item.applyEvaluateResponseList"
+              :key="_index"
+              >{{ _item.feedback }} +{{ _item.count }}</span
+            >
           </div>
-          <div :class="[ns.be('left', 'reviews'), ns.be('left', 'badReviews')]">
+          <!-- <div :class="[ns.be('left', 'reviews'), ns.be('left', 'badReviews')]">
             <div :class="ns.be('left', 'reviews-head')">
               <img :src="BadReviewsImg" alt="" />
               <span>+38</span>
             </div>
             <span>｜</span>
             <span>态度恶劣 +24</span>
-          </div>
+          </div> -->
         </template>
         <template v-else>
           <span :class="ns.be('left', 'reviews-none')">暂无评价</span>
@@ -59,7 +83,10 @@
           </div>
         </template>
       </div>
-      <Reviews />
+      <Reviews
+        v-if="detailInfo.isApply && !detailInfo.isEvaluate"
+        @onSubmit="onSubmit"
+      />
     </div>
   </div>
   <ApplyDialog
@@ -123,6 +150,7 @@ import {
   cancelApplyApi,
 } from "@/api/demandMatching";
 import LamentIcon from "@/assets/img/common/lament_icon.png";
+import { ElMessage } from "element-plus";
 const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("demandMatchingDetail");
@@ -161,6 +189,11 @@ onMounted(() => {
   getDemandDetail();
   getApplyList();
 });
+// 提交评价
+const onSubmit = () => {
+  ElMessage.success("评价成功");
+  getDemandDetail();
+};
 const releaseDemandSuccess = () => {
   getDemandDetail();
   resetDialogVisible.value = false;
@@ -193,6 +226,7 @@ const onDelete = async (type: boolean) => {
     router.go(-1);
   }
 };
+
 const onSolve = async (type: boolean) => {
   solveDialogVisible.value = false;
   if (type) {

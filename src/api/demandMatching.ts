@@ -93,3 +93,12 @@ export const solveDemandApi = (id: number) => {
     `/eesa-data-center/need/need/front/v1.0/finishNeedById?needId=${id}`,
   );
 };
+
+// 提交评价
+export const submitEvaluateApi = (data: any) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    "/eesa-data-center/need/applyEvaluate/front/v1.0/SubmitEvaluate",
+    { data },
+  );
+};
