@@ -32,7 +32,7 @@
           <Select
             title="排序"
             :options="sortTypeList"
-            valueKey="value"
+            valueKey="code"
             labelKey="label"
             width="260px"
             :defaultValue="filterParams.sortType"
@@ -300,7 +300,7 @@ import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
 const router = useRouter();
 import { getToken } from "@/utils/auth";
-import { ref, onUnmounted, onMounted } from "vue";
+import { ref, onUnmounted, onMounted, Ref } from "vue";
 import { demandStatus, applicationStatus } from "../config";
 import {
   getTypeNotNullApi,
@@ -473,7 +473,7 @@ const getSortTypeList = async () => {
   });
   if (resp_code === 0) {
     sortTypeList.value = datas[0].subset;
-    filterParams.value.sortType = datas[0].subset[0].value;
+    filterParams.value.sortType = datas[0].subset[0].code;
     getNeed();
   }
 };

@@ -201,7 +201,7 @@ const titleSkip = ref({
 });
 // 查询参数
 const searchParamsA: Ref<any> = ref({
-  EMCComprehensiveTaxRate: 87,
+  emcComprehensiveTaxRate: 87,
 });
 const searchParamsB: Ref<any> = ref({});
 const addAreaType: Ref<boolean> = ref(false); // 添加地区对比
