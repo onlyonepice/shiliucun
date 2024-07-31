@@ -82,3 +82,11 @@ export const getRoleConfigApi = () => {
     "/eesa-data-center/need/label/front/v1.0/listForChooseIdentity",
   );
 };
+
+// 选择身份
+export const selectIdentityApi = (list) => {
+  return http.request<responseType>(
+    "get",
+    `/eesa-data-center/need/userLabel/front/v1.0/chooseIdentity?labelIds=${list}`,
+  );
+};

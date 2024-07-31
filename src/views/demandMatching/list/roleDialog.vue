@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import { getRoleConfigApi } from "@/api/demandList";
+import { getRoleConfigApi, selectIdentityApi } from "@/api/demandList";
 const ns = useNamespace("roleConfig");
 const dialogVisible: Ref<boolean> = ref(false);
 const emits = defineEmits(["onHandleClose"]);
@@ -84,8 +84,15 @@ const onChoseLike = (id: number) => {
     choseLike.value.push(id);
   }
 };
-const handleClose = (type: boolean) => {
-  emits("onHandleClose", type);
+const handleClose = async (type: boolean) => {
+  const _data = choseLike.value.concat(
+    roleConfig.value[0].needLabelResponseList[choseRole.value].id,
+  );
+  console.log(_data);
+  const { resp_code } = await selectIdentityApi(_data);
+  if (resp_code === 0) {
+    emits("onHandleClose", type);
+  }
 };
 </script>
 

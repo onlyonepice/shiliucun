@@ -1,7 +1,7 @@
 <template>
   <div :class="['es-commonPage', ns.b()]">
-    <p :class="ns.b('identity')">
-      当前身份：业主<span @click="roleDialogVisible = true">修改</span>
+    <p :class="[ns.b('identity'), 'animate__animated animate__fadeIn']">
+      当前身份：{{ getRole }}<span @click="roleDialogVisible = true">修改</span>
     </p>
     <div :class="ns.b('tab-list')">
       <div
@@ -290,10 +290,17 @@
       :show="releaseDemandShow"
     />
   </div>
-  <RoleDialog :visible="roleDialogVisible" />
+  <RoleDialog
+    :visible="roleDialogVisible"
+    @onHandleClose="
+      roleDialogVisible = false;
+      getIdentity();
+    "
+  />
 </template>
 
 <script setup lang="ts">
+import { ref, onUnmounted, onMounted, Ref, computed } from "vue";
 import ReleaseDemand from "../releaseDemand.vue";
 import useNamespace from "@/utils/nameSpace";
 import businessCard from "@/views/demandMatching/detail/components/businessCard.vue";
@@ -305,7 +312,6 @@ import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
 const router = useRouter();
 import { getToken } from "@/utils/auth";
-import { ref, onUnmounted, onMounted, Ref } from "vue";
 import { demandStatus, applicationStatus } from "../config";
 import {
   getTypeNotNullApi,
@@ -351,6 +357,14 @@ const manageTabArr = ref([
     isShowRed: false,
   },
 ]);
+const getRole = computed(() => {
+  let _role = "";
+  roleList.value.map((item) => {
+    item.labelType === "customer_group" &&
+      (_role = item.needLabelResponseList[0].labelName);
+  });
+  return _role;
+});
 const handleReleaseClick = () => {
   isLogin.value = getToken();
   if (!getToken()) {
@@ -432,10 +446,12 @@ const getNeed = async () => {
     total.value = data.datas.total;
   }
 };
+const roleList: Ref<any[]> = ref([]); // 角色列表
 // 获取身份
 const getIdentity = async () => {
   const { datas, resp_code } = await getIdentityApi();
   if (resp_code === 0) {
+    roleList.value = datas;
     roleDialogVisible.value = datas.length === 0;
   }
 };
