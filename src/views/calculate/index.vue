@@ -423,6 +423,7 @@ async function onSearch(type? = false, source?: string) {
       : "";
   delete _search.choseProduct;
   _search.systemUnitPrice = Number(_search.systemUnitPrice);
+  _search.additionalEPCCosts = 200;
   const { datas, resp_code }: any = await apiAnalyzeSearch(_search);
   if (_search.callingMode) {
     const _datas: any = await getTimesApi({
@@ -539,6 +540,7 @@ async function onAnalysis(data: any, type: string) {
     searchParamsB.value.annualDays = 300;
     searchParamsB.value.bankRate = "5%";
     searchParamsB.value.calculationPeriod = "10年";
+    searchParamsB.value.emcComprehensiveTaxRate = 87;
   }
   nextTick(() => {
     showInvestment.value = true;

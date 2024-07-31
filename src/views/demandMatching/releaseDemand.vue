@@ -271,6 +271,21 @@
               "
             />
           </div>
+          <div :class="ns.be('content', 'infoDialog')">
+            <span required>寻求资源</span>
+            <Select
+              type="select"
+              :defaultValue="needData.type"
+              :options="roleList"
+              labelKey="labelName"
+              valueKey="id"
+              @onChange="
+                (val) => {
+                  return onChangeNeed(val, 'type');
+                }
+              "
+            />
+          </div>
           <div
             :class="ns.be('content', 'infoDialog')"
             style="margin-bottom: 58px"
@@ -368,6 +383,7 @@ import {
   getNeedTypeApi,
   releaseNeedApi,
   updateNeedApi,
+  getRoleConfigApi,
 } from "@/api/demandList";
 import { getInnermostObject } from "@/utils/index";
 const uploadToken: Ref<any> = ref({
@@ -432,7 +448,21 @@ const step = ref(1);
 const handleConfirmUserInfo = () => {
   isConfirmUserInfo.value = !isConfirmUserInfo.value;
 };
-
+const roleList: Ref<Array<any>> = ref([]); // 角色列表
+const tabList: Ref<Array<any>> = ref([]); // tab列表
+// 获取角色配置
+const getRoleConfig = async () => {
+  const { resp_code, datas } = await getRoleConfigApi();
+  if (resp_code === 0) {
+    datas.forEach((item) => {
+      if (item.labelType === "customer_group") {
+        roleList.value = item.needLabelResponseList;
+      } else if (item.labelType === "content") {
+        tabList.value = item.needLabelResponseList;
+      }
+    });
+  }
+};
 onMounted(() => {
   userInfo.value = useUserStore().$state.userInfo;
   showInfo.value.mobile = userInfo.value.mobileHide;
@@ -442,6 +472,7 @@ onMounted(() => {
   onGetArea();
   getPositionType();
   getNeedType();
+  getRoleConfig();
 });
 const onChangeNeed = (value: any, type: string) => {
   needData.value[type] = value;
