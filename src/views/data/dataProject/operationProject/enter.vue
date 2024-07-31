@@ -402,7 +402,7 @@ const initData = (type = 1) => {
     color: ["#165DFF", "#2FAEFF", "#FF7D00"],
     title: {
       show: true,
-      text: `储能项目投运规模-${type === 1 ? "功率" : "容量"}`,
+      text: `储能项目投运规模-${type === 1 ? "容量" : "功率"}`,
       left: "center",
     },
     graphic: [chartWatermark],
@@ -516,7 +516,7 @@ const initData = (type = 1) => {
     yAxis: [
       {
         type: "value",
-        name: type === 2 ? "容量/MWh" : "功率/MW",
+        name: type === 1 ? "容量/MWh" : "功率/MW",
         position: "left",
         alignTicks: true,
         nameTextStyle: {
