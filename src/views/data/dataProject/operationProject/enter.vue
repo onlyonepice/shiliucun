@@ -439,11 +439,13 @@ const initData = (type = 1) => {
             `;
         const _params = params.reverse();
         _params.forEach((item) => {
-          const capacity =
-            item.data.capacity === "-" ? "-" : `${item.data.capacity}MWh`;
-          const power =
-            item.data.power === "-" ? "- | " : `${item.data.power}MW | `;
-          const _noData = item.data.capacity === "-" && item.data.power === "-";
+          let _data = null;
+          if (type === 1) {
+            _data =
+              item.data.capacity === "-" ? "-" : `${item.data.capacity}MWh`;
+          } else {
+            _data = item.data.power === "-" ? "-" : `${item.data.power}MW`;
+          }
 
           htmlStr += `<div
               style="
@@ -479,7 +481,7 @@ const initData = (type = 1) => {
                   <span style="font-size: 14px; color: #5B6985;">${item.seriesName}</span>
                 </div>
                 <span style="font-size: 14px; color: #000; font-weight: 600;">
-                  ${!_noData ? power + capacity : "暂无数据"}
+                  ${_data}
                 </span>
               </div>`;
         });
@@ -514,7 +516,7 @@ const initData = (type = 1) => {
     yAxis: [
       {
         type: "value",
-        name: type === 1 ? "容量/MWh" : "功率/MW",
+        name: type === 2 ? "容量/MWh" : "功率/MW",
         position: "left",
         alignTicks: true,
         nameTextStyle: {
