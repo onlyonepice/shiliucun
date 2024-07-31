@@ -534,6 +534,7 @@ async function onAnalysis(data: any, type: string) {
     searchParamsA.value.annualDays = 300;
     searchParamsA.value.bankRate = "5%";
     searchParamsA.value.calculationPeriod = "10年";
+    searchParamsA.value.emcComprehensiveTaxRate = 87;
   } else {
     titleB.value = data.regionName;
     searchParamsB.value = Object.assign(searchParamsB.value, cloneDeep(data));
@@ -542,6 +543,12 @@ async function onAnalysis(data: any, type: string) {
     searchParamsB.value.calculationPeriod = "10年";
     searchParamsB.value.emcComprehensiveTaxRate = 87;
   }
+  console.log(
+    "-------",
+    searchParamsA.value,
+    "++++++++++++++++++",
+    searchParamsB.value,
+  );
   nextTick(() => {
     showInvestment.value = true;
     onSearch(true, type);

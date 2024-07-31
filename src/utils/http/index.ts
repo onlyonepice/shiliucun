@@ -49,7 +49,7 @@ const exportList = [
 ];
 // 取消重复请求接口数组
 const cancelTokenList = [
-  "/eesa-report/investmentIndustryCommerce/front/v1.1/search",
+  // "/eesa-report/investmentIndustryCommerce/front/v1.1/search",
 ];
 
 class PureHttp {
