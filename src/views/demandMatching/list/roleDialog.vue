@@ -10,18 +10,18 @@
     <h4>请选择身份和感兴趣的内容,以便我们更好的向您推送</h4>
     <h5 required>我是<span>（必填且单选）</span></h5>
     <div
-      v-for="(item, index) in roleConfig[0].needLabelResponseList"
+      v-for="item in roleConfig[0].needLabelResponseList"
       :key="item.id"
-      @click="onChoseRole(index)"
+      @click="onChoseRole(item.id)"
       :class="[
         ns.b('role'),
-        choseRole === index ? ns.bm('role', 'active') : '',
+        choseRole === item.id ? ns.bm('role', 'active') : '',
       ]"
     >
       {{ item.labelName }}
     </div>
     <p v-if="choseRole !== -1" :class="ns.b('desc')">
-      {{ roleConfig[0].needLabelResponseList[choseRole].description }}
+      {{ getDescription }}
     </p>
     <h5>我喜欢<span>（非必填且多选）</span></h5>
     <div
@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, watch } from "vue";
+import { Ref, ref, watch, computed } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { getRoleConfigApi, selectIdentityApi } from "@/api/demandList";
 const ns = useNamespace("roleConfig");
@@ -56,14 +56,42 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  roleList: {
+    type: Array as any,
+    default: () => [],
+  },
 });
 watch(
   () => props.visible,
-  () => {
-    dialogVisible.value = props.visible;
+  (val) => {
+    dialogVisible.value = val;
+    if (val) {
+      props.roleList.map((item) => {
+        if (item.labelType === "customer_group") {
+          choseRole.value = item.needLabelResponseList[0].id;
+        } else if (item.labelType === "content") {
+          item.needLabelResponseList.map((_item) => {
+            choseLike.value = choseLike.value.concat(_item.id);
+          });
+        }
+      });
+    }
   },
   { immediate: true },
 );
+const getDescription = computed(() => {
+  let _text = "";
+  roleConfig.value.map((item) => {
+    if (item.labelType === "customer_group") {
+      item.needLabelResponseList.map((_item) => {
+        if (_item.id === choseRole.value) {
+          _text = _item.description;
+        }
+      });
+    }
+  });
+  return _text;
+});
 // 获取身份配置
 const getAssignConfig = async () => {
   const { datas, resp_code } = await getRoleConfigApi();
@@ -85,10 +113,7 @@ const onChoseLike = (id: number) => {
   }
 };
 const handleClose = async (type: boolean) => {
-  const _data = choseLike.value.concat(
-    roleConfig.value[0].needLabelResponseList[choseRole.value].id,
-  );
-  console.log(_data);
+  const _data = choseLike.value.concat(choseRole.value);
   const { resp_code } = await selectIdentityApi(_data);
   if (resp_code === 0) {
     emits("onHandleClose", type);

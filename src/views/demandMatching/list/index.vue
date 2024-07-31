@@ -75,33 +75,35 @@
             :key="item.id"
           >
             <div class="data-box_item_top">
-              <p class="data-box_item_type">
-                {{ item.typeName }}
-              </p>
-              <p class="line" v-if="item.typeName" />
-              <p class="data-box_item_title">{{ item.title }}</p>
+              <div style="display: flex">
+                <p class="data-box_item_type">
+                  {{ item.typeName }}
+                </p>
+                <p class="line" v-if="item.typeName" />
+                <p class="data-box_item_title">{{ item.title }}</p>
+                <template
+                  v-for="statusItem in demandStatus"
+                  :key="statusItem.name"
+                >
+                  <p
+                    class="tag"
+                    v-if="statusItem.value == item.status"
+                    :style="{
+                      background: statusItem.background,
+                      color: statusItem.color,
+                      borderColor: statusItem.color,
+                    }"
+                  >
+                    {{ statusItem.name }}
+                  </p>
+                </template>
+              </div>
+              <h5 style="font-weight: 400; float: right">
+                发布时间：{{ item.releaseTime }}
+              </h5>
             </div>
             <div class="data-box_item_desc">
               {{ item.description }}
-            </div>
-            <div class="time">
-              <template
-                v-for="statusItem in demandStatus"
-                :key="statusItem.name"
-              >
-                <p
-                  class="tag"
-                  v-if="statusItem.value == item.status"
-                  :style="{
-                    background: statusItem.background,
-                    color: statusItem.color,
-                    borderColor: statusItem.color,
-                  }"
-                >
-                  {{ statusItem.name }}
-                </p>
-              </template>
-              <h5 style="font-weight: 400">发布时间：{{ item.releaseTime }}</h5>
             </div>
           </div>
           <div class="Pagination">
@@ -159,35 +161,35 @@
               :key="item.id"
             >
               <div class="data-box_item_top">
-                <p class="data-box_item_type">
-                  {{ item.typeName }}
-                </p>
-                <p class="line" />
-                <p class="data-box_item_title">{{ item.title }}</p>
-              </div>
-              <div class="data-box_item_desc">
-                {{ item.description }}
-              </div>
-              <div class="time">
-                <template
-                  v-for="statusItem in demandStatus"
-                  :key="statusItem.name"
-                >
-                  <p
-                    class="tag"
-                    v-if="statusItem.value == item.status"
-                    :style="{
-                      background: statusItem.background,
-                      color: statusItem.color,
-                      borderColor: statusItem.color,
-                    }"
-                  >
-                    {{ statusItem.name }}
+                <div style="display: flex">
+                  <p class="data-box_item_type">
+                    {{ item.typeName }}
                   </p>
-                </template>
+                  <p class="line" />
+                  <p class="data-box_item_title">{{ item.title }}</p>
+                  <template
+                    v-for="statusItem in demandStatus"
+                    :key="statusItem.name"
+                  >
+                    <p
+                      class="tag"
+                      v-if="statusItem.value == item.status"
+                      :style="{
+                        background: statusItem.background,
+                        color: statusItem.color,
+                        borderColor: statusItem.color,
+                      }"
+                    >
+                      {{ statusItem.name }}
+                    </p>
+                  </template>
+                </div>
                 <h5 style="font-weight: 400">
                   发布时间：{{ item.releaseTime }}
                 </h5>
+              </div>
+              <div class="data-box_item_desc">
+                {{ item.description }}
               </div>
             </div>
             <div class="Pagination">
@@ -224,32 +226,29 @@
               :key="item.id"
             >
               <div class="data-box_item_top">
-                <p class="data-box_item_type">
-                  {{ item.type }}
-                </p>
-                <p class="line" />
-                <p class="data-box_item_title">{{ item.needTitle }}</p>
-              </div>
-              <div class="data-box_item_desc">
-                {{ item.description }}
-              </div>
-              <div class="time">
-                <template
-                  v-for="statusItem in applicationStatus"
-                  :key="statusItem.name"
-                >
-                  <p
-                    class="tag"
-                    v-if="statusItem.value == item.status"
-                    :style="{
-                      background: statusItem.background,
-                      color: statusItem.color,
-                      borderColor: statusItem.color,
-                    }"
-                  >
-                    {{ statusItem.name }}
+                <div style="display: flex">
+                  <p class="data-box_item_type">
+                    {{ item.type }}
                   </p>
-                </template>
+                  <p class="line" />
+                  <p class="data-box_item_title">{{ item.needTitle }}</p>
+                  <template
+                    v-for="statusItem in applicationStatus"
+                    :key="statusItem.name"
+                  >
+                    <p
+                      class="tag"
+                      v-if="statusItem.value == item.status"
+                      :style="{
+                        background: statusItem.background,
+                        color: statusItem.color,
+                        borderColor: statusItem.color,
+                      }"
+                    >
+                      {{ statusItem.name }}
+                    </p>
+                  </template>
+                </div>
                 <h5 style="font-weight: 400">
                   报名时间：{{
                     item.applyTime.indexOf(" ") > -1
@@ -257,6 +256,9 @@
                       : item.applyTime
                   }}
                 </h5>
+              </div>
+              <div class="data-box_item_desc">
+                {{ item.description }}
               </div>
             </div>
             <div class="Pagination">
@@ -292,6 +294,7 @@
   </div>
   <RoleDialog
     :visible="roleDialogVisible"
+    :roleList="roleList"
     @onHandleClose="
       roleDialogVisible = false;
       getIdentity();
@@ -436,6 +439,7 @@ const getTypeNotNull = async () => {
       code: "",
     });
     typeList.value = data.datas;
+    filterParams.value.type = typeList.value[0].code;
   }
 };
 // 获取需求大厅列表数据
@@ -617,8 +621,7 @@ onMounted(() => {
     cursor: pointer;
     .data-box_item_top {
       width: 100%;
-      display: flex;
-      align-items: center;
+      @include flex(center, space-between, nowrap);
       margin-bottom: 8px;
       .data-box_item_type,
       .data-box_item_title {
@@ -652,6 +655,7 @@ onMounted(() => {
   padding: 2px 8px;
   @include font(12px, 400, none, 20px);
   border: 1px solid #ff892e;
+  margin-left: 8px;
 }
 .es-demand-list-search__empty {
   @include widthAndHeight(232px);
