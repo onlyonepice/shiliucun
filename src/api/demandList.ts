@@ -66,3 +66,19 @@ export const getNeedEvaluateApi = (data) => {
     { data },
   );
 };
+
+// 需求大厅_获取身份
+export const getIdentityApi = () => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-data-center/need/userLabel/front/v1.0/getIdentity",
+  );
+};
+
+// 获取角色配置
+export const getRoleConfigApi = () => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-data-center/need/label/front/v1.0/listForChooseIdentity",
+  );
+};

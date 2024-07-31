@@ -1,5 +1,8 @@
 <template>
   <div :class="['es-commonPage', ns.b()]">
+    <p :class="ns.b('identity')">
+      当前身份：业主<span @click="roleDialogVisible = true">修改</span>
+    </p>
     <div :class="ns.b('tab-list')">
       <div
         class="tab-list_item"
@@ -287,6 +290,7 @@
       :show="releaseDemandShow"
     />
   </div>
+  <RoleDialog :visible="roleDialogVisible" />
 </template>
 
 <script setup lang="ts">
@@ -295,6 +299,7 @@ import useNamespace from "@/utils/nameSpace";
 import businessCard from "@/views/demandMatching/detail/components/businessCard.vue";
 import DemandHallIcon from "@/assets/img/demand/demand-hall-icon.png";
 import DemandReleaseIcon from "@/assets/img/demand/demand-release-icon.png";
+import RoleDialog from "./roleDialog.vue";
 const ns = useNamespace("demand-list");
 import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
@@ -308,9 +313,11 @@ import {
   getReleaseNeedApi,
   getApplyNeedApi,
   getNeedEvaluateApi,
+  getIdentityApi,
 } from "@/api/demandList";
 import { getUserDetailInfo } from "@/api/user";
 const isLogin = ref(getToken());
+const roleDialogVisible: Ref<boolean> = ref(false); // 角色弹窗
 const tabList = ref([
   {
     name: "需求大厅",
@@ -425,6 +432,13 @@ const getNeed = async () => {
     total.value = data.datas.total;
   }
 };
+// 获取身份
+const getIdentity = async () => {
+  const { datas, resp_code } = await getIdentityApi();
+  if (resp_code === 0) {
+    roleDialogVisible.value = datas.length === 0;
+  }
+};
 const releaseParams = ref({
   pageNumber: 1,
   pageSize: 10,
@@ -487,6 +501,7 @@ const onChangeType = (value, key) => {
 onMounted(() => {
   getTypeNotNull();
   getSortTypeList();
+  getIdentity();
   window.trackFunction("pc_RequestConnect_click");
 });
 </script>
@@ -494,6 +509,17 @@ onMounted(() => {
 @import "@/style/mixin.scss";
 .es-demand-list {
   padding-top: 80px;
+  position: relative;
+}
+.es-demand-list-identity {
+  @include absolute(1, 97px, 0, none, none);
+  @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+  display: inline-block;
+  span {
+    @include font(14px, 400, #244bf1, 22px);
+    margin-left: 8px;
+    cursor: pointer;
+  }
 }
 .es-demand-list-tab-list {
   width: 100%;

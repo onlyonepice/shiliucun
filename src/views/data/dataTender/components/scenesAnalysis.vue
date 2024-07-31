@@ -76,9 +76,9 @@ const unitDom = ref(); // 获取单位下拉框
 const eChartsOption: Ref<any> = ref(pieEChartsOption());
 // 获取eCharts节点
 const eChartsDom = ref(null);
-// 导出图片相关
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+// 下载图片相关
+const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 const ns = useNamespace("dataScenesAnalysis");
 const loading: Ref<boolean> = ref(false);
 const props = defineProps({
@@ -199,7 +199,7 @@ function createECharts() {
   myChart.setOption(eChartsOption.value);
 }
 
-// 导出图片
+// 下载图片
 function exportResult() {
   const _echarts = echarts.getInstanceByDom(eChartsDom.value);
   exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });

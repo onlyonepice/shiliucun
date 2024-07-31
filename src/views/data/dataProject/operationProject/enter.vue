@@ -83,8 +83,8 @@ const ns = useNamespace("operationProject");
 const EChartOptions: Ref<any> = ref({});
 const EChartOptions2: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 const echartsMask: Ref<boolean> = ref(false); // echarts蒙层
 // 获取eCharts节点
 const eChartsDom = ref(null);
@@ -558,7 +558,7 @@ const initData = (type = 1) => {
     ],
   };
 };
-// 导出图片
+// 下载图片
 function exportResult(type) {
   const _echarts = echarts.getInstanceByDom(
     type === 1 ? eChartsDom.value : eChartsDom2.value,

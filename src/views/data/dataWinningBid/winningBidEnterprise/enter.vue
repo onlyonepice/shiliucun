@@ -68,8 +68,8 @@ const isEmptyData = ref(false);
 const echartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
 const echartsMask: Ref<boolean> = ref(false);
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 // 获取eCharts节点
 const eChartsDom = ref(null);
 const props = defineProps({

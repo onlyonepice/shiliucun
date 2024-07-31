@@ -64,8 +64,8 @@ const { VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("winningBidPrice");
 const EChartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 const echartsMask: Ref<boolean> = ref(false); // echarts蒙层
 // 获取eCharts节点
 const eChartsDom = ref(null);
@@ -455,7 +455,7 @@ const initData = () => {
     ],
   };
 };
-// 导出图片
+// 下载图片
 function exportResult() {
   const _echarts = echarts.getInstanceByDom(eChartsDom.value);
   exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });

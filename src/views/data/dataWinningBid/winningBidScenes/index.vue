@@ -53,8 +53,8 @@ import * as echarts from "echarts";
 import { pieEChartsOption } from "@/utils/echarts/pieECharts.ts";
 const { VITE_DATABASE_URL } = import.meta.env;
 const loading: Ref<boolean> = ref(false);
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 const canvasTitle = ref(""); // 弹窗标题
 // const unit = ref(); // 单位选择dom
 const showEmpty: Ref<boolean> = ref(false);
@@ -175,7 +175,7 @@ const initECharts = () => {
   myChart.clear();
   myChart.setOption(eChartsOption.value);
 };
-// 导出图片
+// 下载图片
 function exportResult() {
   const _echarts = echarts.getInstanceByDom(eChartsDom.value);
   exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });
