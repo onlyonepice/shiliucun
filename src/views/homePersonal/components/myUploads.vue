@@ -8,7 +8,7 @@
       <el-table :data="mainData" style="width: 810px">
         <el-table-column label="产品名称" prop="name" />
         <el-table-column label="企业名称" prop="enterprise" min-width="120px" />
-        <el-table-column label="产品图片" width="110px">
+        <el-table-column label="产品白底图" width="110px">
           <template #default="scope">
             <div @click="handleViewImages(scope.row.image)" class="table-image">
               <img class="image" :src="fileUrl + scope.row.image[0]" />

@@ -18,20 +18,16 @@
         <p v-if="item.value === currentTab" class="active_line" />
       </div>
     </div>
-    <WinningBidPrice v-if="currentTab === 'price'" :formOptions="formOptions" />
-    <WinningBidEnterprise
+    <!-- <WinningBidPrice v-if="currentTab === 'price'" :formOptions="formOptions" /> -->
+    <BidPriceNew v-if="currentTab === 'price'" :formOptions="formOptions" />
+    <BidScale v-if="currentTab === 'scale'" :formOptions="formOptions" />
+    <BidEnterprise
       v-if="currentTab === 'enterprise'"
       :formOptions="formOptions"
     />
-    <WinningBidReport v-if="currentTab === 'report'" />
-    <WinningBidScenes
-      v-if="currentTab === 'scenes'"
-      :formOptions="formOptions"
-    />
-    <WinningTimeAnalysis
-      :formOptions="formOptions"
-      v-if="currentTab === 'duration'"
-    />
+    <BidReport v-if="currentTab === 'report'" />
+    <BidScenes v-if="currentTab === 'scenes'" :formOptions="formOptions" />
+    <TimeAnalysis :formOptions="formOptions" v-if="currentTab === 'duration'" />
   </div>
   <NpsMark
     module="查中标"
@@ -51,14 +47,17 @@ import {
   getTenderTimeFilterApi,
   applicationScenariosBox,
   bidWinningContentData_V2,
+  newEnergyStorageDurationBox,
 } from "@/api/data";
 import { ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import WinningBidPrice from "./winningBidPrice/enter.vue";
-import WinningBidReport from "./winningBidReport/enter.vue";
-import WinningBidScenes from "./winningBidScenes/index.vue";
-import WinningTimeAnalysis from "./winningTimeAnalysis/index.vue";
-import WinningBidEnterprise from "./winningBidEnterprise/enter.vue";
+// import WinningBidPrice from "./winningBidPrice/enter.vue"; //老版价格分析
+import BidPriceNew from "./winningBidPriceNew/enter.vue";
+import BidScale from "./winningBidScale/enter.vue";
+import BidReport from "./winningBidReport/enter.vue";
+import BidScenes from "./winningBidScenes/index.vue";
+import TimeAnalysis from "./winningTimeAnalysis/index.vue";
+import BidEnterprise from "./winningBidEnterprise/enter.vue";
 
 const ns = useNamespace("dataWinningBid");
 const tabList = ref([
@@ -66,6 +65,11 @@ const tabList = ref([
     code: "bidwin_month_click",
     name: "中标价格分析",
     value: "price",
+  },
+  {
+    code: "scale_analysis",
+    name: "中标规模分析",
+    value: "scale",
   },
   {
     name: "中标企业分析",
@@ -107,6 +111,7 @@ const getSelectData = () => {
     getTenderTimeFilterApi(),
     getUnitListApi(),
     getBiddingAreaApi(),
+    newEnergyStorageDurationBox(),
   ]).then((res) => {
     formOptions.value = res.filter((item: response) => {
       return item.resp_code === 0;
@@ -118,15 +123,18 @@ getSelectData();
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+
 .es-dataWinningBid {
   padding-top: 80px;
   padding-bottom: 50px;
 }
+
 .es-dataWinningBid-tab-box {
   @include widthAndHeight(100%, 56px);
   border-bottom: 1px solid #dbdce2;
   display: flex;
   margin-bottom: 24px;
+
   .es-dataWinningBid-tab_item {
     @include widthAndHeight(116px, 100%);
     padding-top: 17px;
@@ -136,9 +144,11 @@ getSelectData();
     align-items: center;
     margin-right: 8px;
     cursor: pointer;
+
     .item_name {
       @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     }
+
     .active_line {
       width: 116px;
       height: 2px;

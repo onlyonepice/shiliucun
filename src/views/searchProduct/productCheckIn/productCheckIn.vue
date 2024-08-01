@@ -35,11 +35,12 @@
           v-show="tabVal === 2"
         />
         <Step3
+          :data="form"
+          v-show="tabVal === 3"
           :draftData="draftData"
           @submit="handleSubmit"
           @saveDraft="saveDraft"
           @back="handleBack"
-          v-show="tabVal === 3"
         />
       </div>
     </div>
@@ -87,6 +88,7 @@ const tabs = ref([
 ]);
 
 function handleNext(data) {
+  console.log(data);
   form = { ...form, ...data };
   tabVal.value += 1;
 }

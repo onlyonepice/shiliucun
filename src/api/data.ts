@@ -326,3 +326,27 @@ export const getApiTime = () => {
     "/eesa-data-center/statistics/openApi/v1.0/getLastUpdateTime",
   );
 };
+
+// 前台_中标价格分析
+export const biddingPriceAnalysis = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/priceTracking/openApi/v1.0/biddingPriceAnalysis",
+    { data },
+  );
+};
+// 储能时长2.0
+export const newEnergyStorageDurationBox = () => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/priceTracking/openApi/v1.0/newEnergyStorageDurationBox",
+  );
+};
+// 前台_中标规模分析
+export const biddingScaleAnalysis = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/priceTracking/openApi/v1.0/biddingScaleAnalysis",
+    { data },
+  );
+};
