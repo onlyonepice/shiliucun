@@ -117,13 +117,13 @@ export const step3Field = [
     showProp: "dischargeDepth",
     type: "input",
     // 根据前面的选项改变
-    rules: [
-      {
-        required: true,
-        message: "请输入放电深度",
-        trigger: "change",
-      },
-    ],
+    // rules: [
+    //   {
+    //     required: true,
+    //     message: "请输入放电深度",
+    //     trigger: "change",
+    //   },
+    // ],
   },
   { label: "PCS参数", type: "title" },
   {
@@ -167,13 +167,13 @@ export const step3Field = [
     showProp: "systemOverallEfficiency",
     type: "input",
     // 根据前面的选项改变
-    rules: [
-      {
-        required: true,
-        message: "请输入系统综合效率",
-        trigger: "change",
-      },
-    ],
+    // rules: [
+    //   {
+    //     required: true,
+    //     message: "请输入系统综合效率",
+    //     trigger: "change",
+    //   },
+    // ],
   },
   {
     label: "年衰减率/%",
@@ -181,13 +181,13 @@ export const step3Field = [
     showProp: "annualDecayRate",
     type: "input",
     // 根据前面的选项改变
-    rules: [
-      {
-        required: true,
-        message: "请输入年衰减率",
-        trigger: "change",
-      },
-    ],
+    // rules: [
+    //   {
+    //     required: true,
+    //     message: "请输入年衰减率",
+    //     trigger: "change",
+    //   },
+    // ],
   },
   {
     label: "冷却方式",
@@ -209,12 +209,12 @@ export const step3Field = [
     prop: "energyStorageSystemProductUnitPrice",
     type: "number",
     // 根据前面的选项改变
-    rules: [
-      {
-        required: true,
-        message: "请输入产品单价",
-        trigger: "change",
-      },
-    ],
+    // rules: [
+    //   {
+    //     required: true,
+    //     message: "请输入产品单价",
+    //     trigger: "change",
+    //   },
+    // ],
   },
 ];

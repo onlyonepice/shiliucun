@@ -28,6 +28,7 @@
       <div
         class="echarts-mask animate__animated animate__fadeIn"
         v-if="echartsMask"
+        :style="echartsMaskStyle"
       >
         <h4>开通企业VIP查看完整数据</h4>
         <el-button type="primary" @click="router.push('/vip')"
@@ -52,7 +53,7 @@ import { get, toNumber } from "lodash";
 import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
 import { priceFormOptionsNews } from "../data";
-import { ref, watch, Ref, nextTick } from "vue";
+import { ref, watch, Ref, nextTick, computed } from "vue";
 import { biddingPriceAnalysis, maskPermissions } from "@/api/data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
@@ -86,7 +87,17 @@ const options = ref(priceFormOptionsNews());
 interface response {
   datas: any;
 }
-
+const echartsMaskStyle: any = computed(() => {
+  let itemWidth = 0;
+  if (requestData.value.stepSize === "月") {
+    itemWidth = 81.5;
+  } else if (requestData.value.stepSize === "季") {
+    itemWidth = 242;
+  }
+  return {
+    width: `${itemWidth * quantity.value}px`,
+  };
+});
 watch(
   () => props.formOptions,
   (res: response[]) => {
@@ -324,6 +335,7 @@ const setTitle = (datas) => {
   EChartOptions.value.title.text = `${datas[0].month}-${datas[datas.length - 1].month}${biddingContent}（${technologyType}，${Duration}）中标均价趋势分析`;
 };
 
+const quantity = ref(0);
 const initECharts = async () => {
   const myChart = echarts.init(
     document.getElementById("eChart-winningBidPrice"),
@@ -337,8 +349,12 @@ const initECharts = async () => {
     }
   });
   if (getToken()) {
-    const res = await maskPermissions({ moduleName: "中标价格分析" });
+    const res = await maskPermissions({
+      moduleName: "中标价格分析",
+      stepSize: requestData.value.stepSize,
+    });
     echartsMask.value = res.datas.isCovered;
+    quantity.value = res.datas.quantity;
   }
   myChart.setOption(EChartOptions.value);
 };
@@ -375,8 +391,8 @@ window?.trackFunction("pc_Winbid_PriceAnalysis_click");
   width: 100%;
 }
 .echarts-mask {
-  @include widthAndHeight(240px, 475px);
-  @include absolute(1, none, 90px, 96px, none);
+  @include widthAndHeight(243px, 475px);
+  @include absolute(1, none, 91px, 96px, none);
   background: rgba(255, 255, 255, 0.3);
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(25px);
