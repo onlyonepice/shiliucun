@@ -88,7 +88,6 @@ const tabs = ref([
 ]);
 
 function handleNext(data) {
-  console.log(data);
   form = { ...form, ...data };
   tabVal.value += 1;
 }

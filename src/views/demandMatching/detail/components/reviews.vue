@@ -117,7 +117,6 @@ getNeedEvaluate();
 const reasonList: Ref<Array<any>> = ref([]);
 // 选择评价原因
 const onSubmitReason = (id: number) => {
-  console.log(id);
   // 空数组中没有对应id就添加，有就删除
   reasonList.value = reasonList.value.includes(id)
     ? reasonList.value.filter((item) => item !== id)

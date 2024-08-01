@@ -263,7 +263,6 @@ const initECharts = async () => {
     const res = await maskPermissions({ moduleName: "中标企业分析" });
     echartsMask.value = res.datas.isCovered;
   }
-  console.log(echartOptions.value);
   myChart.setOption(echartOptions.value);
 };
 

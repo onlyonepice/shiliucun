@@ -513,7 +513,6 @@ const getSortTypeList = async () => {
   }
 };
 const onChangeType = (value, key) => {
-  console.log(key, value);
   filterParams.value[key] = value;
   if (currentPage.value === "demand") {
     getNeed();
