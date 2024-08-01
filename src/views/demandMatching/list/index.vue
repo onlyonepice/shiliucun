@@ -298,6 +298,7 @@
     @onHandleClose="
       roleDialogVisible = false;
       getIdentity();
+      getNeed();
     "
   />
 </template>

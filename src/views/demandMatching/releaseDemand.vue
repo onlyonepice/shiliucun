@@ -289,7 +289,7 @@
           </div>
           <div
             :class="ns.be('content', 'infoDialog')"
-            style="height: 74px; align-items: flex-start"
+            style="height: 79px; align-items: flex-start"
           >
             <span required>需求描述</span>
             <Select
