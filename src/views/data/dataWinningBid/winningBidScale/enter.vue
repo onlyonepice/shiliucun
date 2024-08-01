@@ -28,6 +28,7 @@
       <div
         class="echarts-mask animate__animated animate__fadeIn"
         v-if="echartsMask"
+        :style="echartsMaskStyle"
       >
         <h4>开通企业VIP查看完整数据</h4>
         <el-button type="primary" @click="router.push('/vip')"
@@ -52,7 +53,7 @@ import * as echarts from "echarts";
 import { getToken } from "@/utils/auth";
 import { priceFormOptions } from "../data";
 import useNamespace from "@/utils/nameSpace";
-import { ref, watch, Ref, nextTick } from "vue";
+import { ref, watch, Ref, nextTick, computed } from "vue";
 import { biddingScaleAnalysis, maskPermissions } from "@/api/data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
@@ -84,6 +85,11 @@ const options = ref(priceFormOptions());
 interface response {
   datas: any;
 }
+const echartsMaskStyle: any = computed(() => {
+  return {
+    width: `${81 * quantity.value}px`,
+  };
+});
 
 watch(
   () => props.formOptions,
@@ -163,7 +169,7 @@ const getData = async () => {
     loading.value = false;
   }
 };
-
+const quantity = ref();
 const initECharts = async () => {
   const myChart = echarts.init(
     document.getElementById("eChart-winningBidPrice"),
@@ -179,6 +185,7 @@ const initECharts = async () => {
   if (getToken()) {
     const res = await maskPermissions({ moduleName: "中标规模分析" });
     echartsMask.value = res.datas.isCovered;
+    quantity.value = res.datas.quantity;
   }
   myChart.setOption(EChartOptions.value);
 };
