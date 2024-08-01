@@ -274,7 +274,14 @@ const getData = async () => {
   try {
     const data = await biddingPriceAnalysis(requestData.value);
     const { datas, resp_code } = data;
-    if (resp_code === 0 && datas.length) {
+    const showData = datas.some((item) => {
+      return (
+        !isNaN(toNumber(item.minUnitPrice)) ||
+        !isNaN(toNumber(item.avgUnitPrice)) ||
+        !isNaN(toNumber(item.maxUnitPrice))
+      );
+    });
+    if (resp_code === 0 && datas.length && showData) {
       const series = [
         {
           name: "",
