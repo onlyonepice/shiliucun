@@ -333,7 +333,7 @@ const getData = async () => {
       EChartOptions.value.series = series;
       setTitle(datas);
       initECharts();
-    } else if (!datas.length) {
+    } else {
       isEmptyData.value = true;
     }
     loading.value = false;

@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { get } from "lodash";
+import { get, toNumber } from "lodash";
 import * as echarts from "echarts";
 import { getToken } from "@/utils/auth";
 import { priceFormOptions } from "../data";
@@ -150,7 +150,11 @@ const getData = async () => {
   try {
     const data = await biddingScaleAnalysis(requestData.value);
     const { datas, resp_code } = data;
-    if (resp_code === 0 && datas.length) {
+    const showData = datas.every(
+      (item) =>
+        !isNaN(toNumber(item.powerScale)) && !isNaN(toNumber(item.energyScale)),
+    );
+    if (resp_code === 0 && datas.length && showData) {
       EChartOptions.value.series[0].data = [];
       EChartOptions.value.xAxis.data = [];
       EChartOptions.value.series[1].data = [];
@@ -161,7 +165,7 @@ const getData = async () => {
         EChartOptions.value.title.subtext = requestData.value.biddingContent;
       });
       initECharts();
-    } else if (!datas.length) {
+    } else {
       isEmptyData.value = true;
     }
     loading.value = false;
@@ -233,7 +237,6 @@ const initData = () => {
       className: "custom-tooltip",
       extraCssText: "padding: 16px; border-radius: 8px;",
       formatter: (params) => {
-        console.log(params);
         let itemHtml = "";
         params.forEach((item, index) => {
           itemHtml += `<div style="width: 208px;height: 32px;background: #F2F3F5;border-radius: 4px;line-height: 32px;padding:0 8px;margin-top: 8px;display:flex;align-items:center;">
