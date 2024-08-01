@@ -1,7 +1,7 @@
 <template>
   <div :class="['es-commonPage', ns.b()]">
     <p :class="[ns.b('identity'), 'animate__animated animate__fadeIn']">
-      当前身份：{{ getRole }}<span @click="roleDialogVisible = true">修改</span>
+      当前身份：{{ getRole }}<span @click="onModify()">修改</span>
     </p>
     <div :class="ns.b('tab-list')">
       <div
@@ -376,6 +376,14 @@ const handleReleaseClick = () => {
   }
   releaseDemandShow.value = true;
 };
+// 点击修改
+const onModify = () => {
+  isLogin.value = getToken();
+  if (!getToken()) {
+    return useUserStore().openLogin(true);
+  }
+  roleDialogVisible.value = true;
+};
 const userDetailInfo = ref({});
 // 获取用户详细信息
 const onGetUserInfo = async () => {
@@ -521,7 +529,7 @@ const onChangeType = (value, key) => {
 onMounted(() => {
   getTypeNotNull();
   getSortTypeList();
-  getIdentity();
+  getToken() && getIdentity();
   window.trackFunction("pc_RequestConnect_click");
 });
 </script>

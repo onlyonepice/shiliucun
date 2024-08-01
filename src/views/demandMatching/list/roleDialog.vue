@@ -45,6 +45,7 @@
 import { Ref, ref, watch, computed } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { getRoleConfigApi, selectIdentityApi } from "@/api/demandList";
+import { getToken } from "@/utils/auth";
 const ns = useNamespace("roleConfig");
 const dialogVisible: Ref<boolean> = ref(false);
 const emits = defineEmits(["onHandleClose"]);
@@ -99,7 +100,7 @@ const getAssignConfig = async () => {
     roleConfig.value = datas;
   }
 };
-getAssignConfig();
+getToken() && getAssignConfig();
 // 选择身份
 const onChoseRole = (index: number) => {
   choseRole.value = index;
