@@ -233,9 +233,18 @@ const initData = () => {
       className: "custom-tooltip",
       extraCssText: "padding: 16px; border-radius: 8px;",
       formatter: (params) => {
+        console.log(params);
         let itemHtml = "";
-        params.forEach((item) => {
-          itemHtml += `<div style="width: 208px;height: 32px;background: #F2F3F5;border-radius: 4px;line-height: 32px;padding:0 8px;margin-top: 8px;display:flex;"><div style="font-weight: 400;font-size: 14px;color: rgba(0,0,0,0.6);">${item.seriesName}</div><div style="font-weight: 600;font-size: 14px;color: rgba(0,0,0,0.9);margin-left:auto;">${item.value}</div></div>`;
+        params.forEach((item, index) => {
+          itemHtml += `<div style="width: 208px;height: 32px;background: #F2F3F5;border-radius: 4px;line-height: 32px;padding:0 8px;margin-top: 8px;display:flex;align-items:center;">
+            <div style="background:${item.color};width:12px;height:12px;margin-right:8px;"></div>
+            <div style="font-weight: 400;font-size: 14px;color: rgba(0,0,0,0.6);">
+              ${item.seriesName}
+            </div>
+            <div style="font-weight: 600;font-size: 14px;color: rgba(0,0,0,0.9);margin-left:auto;">
+              ${item.value}${index === 0 ? "MW" : "MWh"}
+            </div>
+          </div>`;
         });
         const { axisValueLabel } = params[0];
         var htmlStr = `<div style="" ><div style="font-weight: 600;font-size: 16px;color: rgba(0,0,0,0.9);">${axisValueLabel}</div>${itemHtml}</div>`;
@@ -269,7 +278,6 @@ const initData = () => {
     yAxis: [
       {
         type: "value",
-        name: "MWh",
         nameTextStyle: {
           fontSize: 14,
         },

@@ -230,7 +230,8 @@ const initData = () => {
             : toNumber(params[2].value).toFixed(4);
         if (!value1 && !value2 && !value3) return "";
         const itemOneHtml = `
-          <div style="display:flex;margin-top:8px;height:32px;background:#F2F3F5;border-radius:4px;padding:0 8px;">
+          <div style="display:flex;margin-top:8px;height:32px;background:#F2F3F5;border-radius:4px;padding:0 8px;display:flex;align-items:center;">
+            <div style="background:${params[1].color};width:12px;height:12px;margin-right:8px;"></div>
             <div style="${itemLabelStyle}">中标价格范围</div>
             <div style="${itemValueStyle}">${value1}元-${value2}元</div>
           </div>
@@ -239,7 +240,8 @@ const initData = () => {
           <div style="${popupStyle}">
             <div style="${titleStyle}">${name}</div>
             ${toNumber(value1) == toNumber(value2) ? "" : itemOneHtml}
-            <div style="display:flex;margin-top:8px;height:32px;background:#F2F3F5;border-radius:4px;padding:0 8px;">
+            <div style="display:flex;margin-top:8px;height:32px;background:#F2F3F5;border-radius:4px;padding:0 8px;display:flex;align-items:center;">
+              <div style="background:${params[2].color};width:12px;height:4px;margin-right:8px;"></div>
               <div style="${itemLabelStyle}">加权中标均价（元/Wh）</div>
               <div style="${itemValueStyle}">${value3}元</div>
             </div>
