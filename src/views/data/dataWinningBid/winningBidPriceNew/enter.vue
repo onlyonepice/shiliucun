@@ -221,8 +221,10 @@ const initData = () => {
             : toNumber(params[0].value).toFixed(4);
         const value2 = isNaN(params[1].value)
           ? 0
-          : (toNumber(value1) * 10000 + toNumber(params[1].value) * 10000) /
-            10000;
+          : (
+              (toNumber(value1) * 10000 + toNumber(params[1].value) * 10000) /
+              10000
+            ).toFixed(4);
         const value3 = isNaN(params[2].value)
           ? 0
           : toNumber(params[2].value) % 1 == 0
@@ -352,7 +354,14 @@ const setTitle = (datas) => {
     "paramDesc",
     "",
   );
-  EChartOptions.value.title.text = `${datas[0].month}-${datas[datas.length - 1].month}${biddingContent}（${technologyType}，${Duration}）中标均价趋势分析`;
+  const type = get(
+    props.formOptions[9]?.datas.find(
+      (item: any) => item.paramName === technologyType,
+    ),
+    "paramDesc",
+    "",
+  );
+  EChartOptions.value.title.text = `${datas[0].month}-${datas[datas.length - 1].month}${biddingContent}（${type}，${Duration}）中标均价趋势分析`;
 };
 
 const quantity = ref(0);

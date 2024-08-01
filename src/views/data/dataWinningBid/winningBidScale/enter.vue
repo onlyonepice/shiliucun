@@ -14,12 +14,6 @@
         @onChange="(val) => selectChange(item, index, val)"
       />
     </div>
-    <div :class="ns.b('hint')">
-      <img :src="lament_icon" alt="" />
-      <span
-        >中标价格在去除最高值和最低值后，以能量规模（MWh）为权重，使用加权平均的方法计算。</span
-      >
-    </div>
     <el-button type="primary" @click="exportResult" style="float: right"
       >下载图片</el-button
     >
@@ -57,8 +51,8 @@ import { ref, watch, Ref, nextTick, computed } from "vue";
 import { biddingScaleAnalysis, maskPermissions } from "@/api/data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
-import lament_icon from "@/assets/img/common/lament_icon.png";
 import { useRouter } from "vue-router";
+
 const router = useRouter();
 const { VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("winningBidPrice");
@@ -370,6 +364,7 @@ window.trackFunction("pc_Winbid_PriceAnalysis_click");
   width: 100%;
   display: flex;
   align-items: center;
+  margin-bottom: 32px;
   .select-item {
     display: flex;
     align-items: center;
@@ -385,24 +380,7 @@ window.trackFunction("pc_Winbid_PriceAnalysis_click");
     margin-right: 15px;
   }
 }
-.es-winningBidPrice-hint {
-  width: 100%;
-  margin: 8px 0 32px 0;
-  background-color: #eff4ff;
-  height: 32px;
-  padding: 6px 8px;
-  display: flex;
-  align-items: center;
-  img {
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
-  }
-  span {
-    font-weight: 400;
-    @include font(12px, 400, rgba(0, 0, 0, 0.6), 20px);
-  }
-}
+
 .es-winningBidPrice-eCharts-box {
   width: 100%;
   @include relative();
