@@ -102,7 +102,7 @@ watch(
               item.bind.options = res[0].datas;
               break;
             case "technologyType":
-              item.bind.options = res[1].datas;
+              item.bind.options = res[9].datas;
               break;
             case "applicationScenarios":
               item.bind.options = res[3].datas;
@@ -118,10 +118,10 @@ watch(
                 "2",
               );
               break;
-            case 1:
+            case 9:
               requestData.value.technologyType = get(
                 item.datas.find((item) => item.defaultValue),
-                "paramDesc",
+                "paramName",
                 "1",
               );
               break;
@@ -150,9 +150,9 @@ const getData = async () => {
   try {
     const data = await biddingScaleAnalysis(requestData.value);
     const { datas, resp_code } = data;
-    const showData = datas.every(
+    const showData = datas.some(
       (item) =>
-        !isNaN(toNumber(item.powerScale)) && !isNaN(toNumber(item.energyScale)),
+        !isNaN(toNumber(item.powerScale)) || !isNaN(toNumber(item.energyScale)),
     );
     if (resp_code === 0 && datas.length && showData) {
       EChartOptions.value.series[0].data = [];
@@ -238,6 +238,8 @@ const initData = () => {
       extraCssText: "padding: 16px; border-radius: 8px;",
       formatter: (params) => {
         let itemHtml = "";
+        const isShow = params.every((item) => item.value === "-");
+        if (isShow) return itemHtml;
         params.forEach((item, index) => {
           itemHtml += `<div style="width: 208px;height: 32px;background: #F2F3F5;border-radius: 4px;line-height: 32px;padding:0 8px;margin-top: 8px;display:flex;align-items:center;">
             <div style="background:${item.color};width:12px;height:12px;margin-right:8px;"></div>

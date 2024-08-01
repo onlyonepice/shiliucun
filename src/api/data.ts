@@ -117,10 +117,10 @@ export const durationData_V2 = () => {
   );
 };
 // 技术类型列表
-export const technologyType_V2 = () => {
+export const technologyType_V2 = (type?: string) => {
   return http.request<responseType>(
     "post",
-    "/eesa-report/priceTracking/front/openApi/V1.0/technologyTypeBox",
+    `/eesa-report/priceTracking/front/openApi/V1.0/technologyTypeBox?type=${type}`,
   );
 };
 // 应用场景下拉框

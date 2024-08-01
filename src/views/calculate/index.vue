@@ -543,12 +543,6 @@ async function onAnalysis(data: any, type: string) {
     searchParamsB.value.calculationPeriod = "10年";
     searchParamsB.value.emcComprehensiveTaxRate = 87;
   }
-  console.log(
-    "-------",
-    searchParamsA.value,
-    "++++++++++++++++++",
-    searchParamsB.value,
-  );
   nextTick(() => {
     showInvestment.value = true;
     onSearch(true, type);
