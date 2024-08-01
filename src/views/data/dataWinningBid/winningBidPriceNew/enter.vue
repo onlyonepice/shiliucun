@@ -214,19 +214,37 @@ const initData = () => {
           "font-weight: 400;font-size: 14px;color: rgba(0,0,0,0.6);line-height: 32px;";
         const itemValueStyle =
           "font-weight: 600;font-size: 14px;color: rgba(0,0,0,0.9);line-height: 32px;margin-left:auto;";
-
-        const itemOneHtml = `<div style="display:flex;margin-top:8px;height:32px;background:#F2F3F5;border-radius:4px;padding:0 8px;">
-            <div style="${itemLabelStyle}">中标价格范围</div>
-            <div style="${itemValueStyle}">${toNumber(params[0].value).toFixed(2)}元-${(toNumber(params[1].value) + toNumber(params[0].value)).toFixed(2)}元</div>
-          </div>`;
-        const htmlStr = `<div style="${popupStyle}">
-          <div style="${titleStyle}">${name}</div>
-          ${toNumber(params[0].value) == toNumber(params[1].value) + toNumber(params[0].value) ? "" : itemOneHtml}
+        const value1 = isNaN(params[0].value)
+          ? 0
+          : toNumber(params[0].value) % 1 == 0
+            ? toNumber(params[0].value).toFixed(0)
+            : toNumber(params[0].value).toFixed(4);
+        const value2 = isNaN(params[1].value)
+          ? 0
+          : (toNumber(value1) * 10000 + toNumber(params[1].value) * 10000) /
+            10000;
+        const value3 = isNaN(params[2].value)
+          ? 0
+          : toNumber(params[2].value) % 1 == 0
+            ? toNumber(params[2].value).toFixed(0)
+            : toNumber(params[2].value).toFixed(4);
+        if (!value1 && !value2 && !value3) return "";
+        const itemOneHtml = `
           <div style="display:flex;margin-top:8px;height:32px;background:#F2F3F5;border-radius:4px;padding:0 8px;">
-            <div style="${itemLabelStyle}">加权中标均价（元/Wh）</div>
-            <div style="${itemValueStyle}">${toNumber(params[2].value).toFixed(2)}元</div>
+            <div style="${itemLabelStyle}">中标价格范围</div>
+            <div style="${itemValueStyle}">${value1}元-${value2}元</div>
           </div>
-        </div>`;
+        `;
+        const htmlStr = `
+          <div style="${popupStyle}">
+            <div style="${titleStyle}">${name}</div>
+            ${toNumber(value1) == toNumber(value2) ? "" : itemOneHtml}
+            <div style="display:flex;margin-top:8px;height:32px;background:#F2F3F5;border-radius:4px;padding:0 8px;">
+              <div style="${itemLabelStyle}">加权中标均价（元/Wh）</div>
+              <div style="${itemValueStyle}">${value3}元</div>
+            </div>
+          </div>
+        `;
         return htmlStr;
       },
     },

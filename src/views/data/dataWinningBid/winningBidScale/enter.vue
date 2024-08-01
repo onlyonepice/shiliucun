@@ -158,7 +158,7 @@ const getData = async () => {
         EChartOptions.value.series[0].data.push(item.powerScale);
         EChartOptions.value.series[1].data.push(item.energyScale);
         EChartOptions.value.xAxis.data.push(item.month);
-        EChartOptions.value.title.text = `储能月度中标单价/容量分析-${requestData.value.biddingContent}（${requestData.value.technologyType}）`;
+        EChartOptions.value.title.subtext = requestData.value.biddingContent;
       });
       initECharts();
     } else if (!datas.length) {
@@ -194,7 +194,7 @@ const initData = () => {
     color: ["#244BF1", "#91A5F8"],
     title: {
       show: true,
-      text: `储能月度中标单价/容量分析-${requestData.value.biddingContent}（${requestData.value.technologyType}）`,
+      text: "储能月度中标规模分析",
       left: "center",
       subtext: requestData.value.biddingContent,
       subtextStyle: {
