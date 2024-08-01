@@ -109,7 +109,7 @@ watch(
               item.bind.options = res[0].datas;
               break;
             case "technologyType":
-              item.bind.options = res[1].datas;
+              item.bind.options = res[9].datas;
               break;
             case "energyStorageDuration":
               item.bind.options = res[8].datas;
@@ -131,10 +131,10 @@ watch(
                 "2",
               );
               break;
-            case 1:
+            case 9:
               requestData.value.technologyType = get(
                 item.datas.find((item) => item.defaultValue),
-                "paramDesc",
+                "paramName",
                 "1",
               );
               break;

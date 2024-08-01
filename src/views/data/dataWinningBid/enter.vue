@@ -112,6 +112,7 @@ const getSelectData = () => {
     getUnitListApi(),
     getBiddingAreaApi(),
     newEnergyStorageDurationBox(),
+    technologyType_V2("all"),
   ]).then((res) => {
     formOptions.value = res.filter((item: response) => {
       return item.resp_code === 0;
