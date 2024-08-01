@@ -1,174 +1,176 @@
 <template>
-  <h4 :class="ns.b('h4')">
-    基本信息<span>请完善真实的企业项目信息，有利于最后生成完整报告</span>
-  </h4>
-  <div :class="ns.b('filter')">
-    <div :class="ns.be('filter', 'item')">
-      <span required>项目名称</span>
-      <Select
-        type="input"
-        :defaultValue="basicInfo.projectName"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'projectName');
-          }
-        "
-      />
+  <div>
+    <h4 :class="ns.b('h4')">
+      基本信息<span>请完善真实的企业项目信息，有利于最后生成完整报告</span>
+    </h4>
+    <div :class="ns.b('filter')">
+      <div :class="ns.be('filter', 'item')">
+        <span required>项目名称</span>
+        <Select
+          type="input"
+          :defaultValue="basicInfo.projectName"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'projectName');
+            }
+          "
+        />
+      </div>
+      <div :class="ns.be('filter', 'item')">
+        <span required>用电类型I</span>
+        <Select
+          :options="[]"
+          valueKey="regionName"
+          labelKey="regionName"
+          :defaultValue="basicInfo.electricityUsageType1"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'electricityUsageType1');
+            }
+          "
+        />
+      </div>
+      <div :class="ns.be('filter', 'item')">
+        <span required="false">企业信息</span>
+        <Select
+          type="input"
+          :defaultValue="basicInfo.projectName"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'projectName');
+            }
+          "
+        />
+      </div>
+      <div :class="ns.be('filter', 'item')">
+        <span required>用电类型II</span>
+        <Select
+          :options="[]"
+          valueKey="regionName"
+          labelKey="regionName"
+          :defaultValue="basicInfo.electricityUsageType2"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'electricityUsageType2');
+            }
+          "
+        />
+      </div>
+      <div :class="ns.be('filter', 'item')">
+        <span required>项目地区</span>
+        <Select
+          :options="[]"
+          valueKey="regionName"
+          labelKey="regionName"
+          :defaultValue="basicInfo.transformerCapacity"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'transformerCapacity');
+            }
+          "
+        />
+      </div>
+      <div :class="ns.be('filter', 'item')">
+        <span required>电压等级</span>
+        <Select
+          :options="[]"
+          valueKey="regionName"
+          labelKey="regionName"
+          :defaultValue="basicInfo.tariffLevelName"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'tariffLevelName');
+            }
+          "
+        />
+      </div>
     </div>
-    <div :class="ns.be('filter', 'item')">
-      <span required>用电类型I</span>
-      <Select
-        :options="[]"
-        valueKey="regionName"
-        labelKey="regionName"
-        :defaultValue="basicInfo.electricityUsageType1"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'electricityUsageType1');
-          }
-        "
-      />
+    <h4 :class="ns.b('h4')">用电信息</h4>
+    <div :class="ns.b('filter')">
+      <div :class="ns.be('filter', 'item')">
+        <span required>变压器信息</span>
+        <Select
+          type="input"
+          :defaultValue="basicInfo.projectName"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'projectName');
+            }
+          "
+        />
+      </div>
+      <div :class="ns.be('filter', 'item')">
+        <span required>变压器容量</span>
+        <Select
+          :options="[]"
+          valueKey="regionName"
+          labelKey="regionName"
+          :defaultValue="basicInfo.electricityUsageType1"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'electricityUsageType1');
+            }
+          "
+        />
+      </div>
+      <div :class="ns.be('filter', 'item')">
+        <span required="false">年度用电量</span>
+        <Select
+          type="input"
+          :defaultValue="basicInfo.projectName"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'projectName');
+            }
+          "
+        />
+      </div>
+      <div :class="ns.be('filter', 'item')">
+        <span required>光伏装机量</span>
+        <Select
+          :options="[]"
+          valueKey="regionName"
+          labelKey="regionName"
+          :defaultValue="basicInfo.electricityUsageType2"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'electricityUsageType2');
+            }
+          "
+        />
+      </div>
+      <div :class="ns.be('filter', 'item')">
+        <span required>所属行业</span>
+        <Select
+          :options="[]"
+          valueKey="regionName"
+          labelKey="regionName"
+          :defaultValue="basicInfo.transformerCapacity"
+          width="475px"
+          @onChange="
+            ($event) => {
+              onAreaChange($event, 'transformerCapacity');
+            }
+          "
+        />
+      </div>
     </div>
-    <div :class="ns.be('filter', 'item')">
-      <span required="false">企业信息</span>
-      <Select
-        type="input"
-        :defaultValue="basicInfo.projectName"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'projectName');
-          }
-        "
-      />
+    <div :class="ns.b('imageBox')">
+      <el-button type="primary" :class="ns.be('imageBox', 'btn')"
+        >点击切换</el-button
+      >
+      <img src="" alt="" />
     </div>
-    <div :class="ns.be('filter', 'item')">
-      <span required>用电类型II</span>
-      <Select
-        :options="[]"
-        valueKey="regionName"
-        labelKey="regionName"
-        :defaultValue="basicInfo.electricityUsageType2"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'electricityUsageType2');
-          }
-        "
-      />
-    </div>
-    <div :class="ns.be('filter', 'item')">
-      <span required>项目地区</span>
-      <Select
-        :options="[]"
-        valueKey="regionName"
-        labelKey="regionName"
-        :defaultValue="basicInfo.transformerCapacity"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'transformerCapacity');
-          }
-        "
-      />
-    </div>
-    <div :class="ns.be('filter', 'item')">
-      <span required>电压等级</span>
-      <Select
-        :options="[]"
-        valueKey="regionName"
-        labelKey="regionName"
-        :defaultValue="basicInfo.tariffLevelName"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'tariffLevelName');
-          }
-        "
-      />
-    </div>
-  </div>
-  <h4 :class="ns.b('h4')">用电信息</h4>
-  <div :class="ns.b('filter')">
-    <div :class="ns.be('filter', 'item')">
-      <span required>变压器信息</span>
-      <Select
-        type="input"
-        :defaultValue="basicInfo.projectName"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'projectName');
-          }
-        "
-      />
-    </div>
-    <div :class="ns.be('filter', 'item')">
-      <span required>变压器容量</span>
-      <Select
-        :options="[]"
-        valueKey="regionName"
-        labelKey="regionName"
-        :defaultValue="basicInfo.electricityUsageType1"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'electricityUsageType1');
-          }
-        "
-      />
-    </div>
-    <div :class="ns.be('filter', 'item')">
-      <span required="false">年度用电量</span>
-      <Select
-        type="input"
-        :defaultValue="basicInfo.projectName"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'projectName');
-          }
-        "
-      />
-    </div>
-    <div :class="ns.be('filter', 'item')">
-      <span required>光伏装机量</span>
-      <Select
-        :options="[]"
-        valueKey="regionName"
-        labelKey="regionName"
-        :defaultValue="basicInfo.electricityUsageType2"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'electricityUsageType2');
-          }
-        "
-      />
-    </div>
-    <div :class="ns.be('filter', 'item')">
-      <span required>所属行业</span>
-      <Select
-        :options="[]"
-        valueKey="regionName"
-        labelKey="regionName"
-        :defaultValue="basicInfo.transformerCapacity"
-        width="475px"
-        @onChange="
-          ($event) => {
-            onAreaChange($event, 'transformerCapacity');
-          }
-        "
-      />
-    </div>
-  </div>
-  <div :class="ns.b('imageBox')">
-    <el-button type="primary" :class="ns.be('imageBox', 'btn')"
-      >点击切换</el-button
-    >
-    <img src="" alt="" />
   </div>
 </template>
 
@@ -225,8 +227,19 @@ const basicInfo: Ref<any> = ref({
   border-radius: 4px;
   border: 1px solid #244bf1;
   position: relative;
+  @include flex(center, center, nowrap);
+  img {
+    @include widthAndHeight(433px, 266px);
+  }
 }
 .es-liteStepOne-imageBox__btn {
   @include absolute(1, 0, 0, none, none);
+}
+</style>
+<style lang="scss">
+.es-liteStepOne-imageBox {
+  button {
+    border-radius: 0;
+  }
 }
 </style>

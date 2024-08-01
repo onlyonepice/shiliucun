@@ -423,7 +423,6 @@ async function onSearch(type? = false, source?: string) {
       : "";
   delete _search.choseProduct;
   _search.systemUnitPrice = Number(_search.systemUnitPrice);
-  _search.additionalEPCCosts = 200;
   const { datas, resp_code }: any = await apiAnalyzeSearch(_search);
   if (_search.callingMode) {
     const _datas: any = await getTimesApi({
@@ -520,6 +519,7 @@ function onReset() {
 }
 // 开始分析按钮
 async function onAnalysis(data: any, type: string) {
+  console.log(data);
   showInvestment.value = false;
   addAreaType.value = type === "searchB";
 

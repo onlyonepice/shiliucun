@@ -794,20 +794,21 @@ watch(
         role: null,
         tab: [],
       };
-      val.needLabelListVOList.map((item) => {
-        item.labelType === "customer_group" &&
-          (needData.value.role = item.needLabelResponseList[0].id);
-        if (item.labelType === "content") {
-          item.needLabelResponseList.map((_item) => {
-            needData.value.tab.push(_item.id);
-          });
-        }
-        if (item.labelType === "custom") {
-          item.needLabelResponseList.map((_item) => {
-            needData.value.tab.push(_item.labelName);
-          });
-        }
-      });
+      val.needLabelListVOList &&
+        val.needLabelListVOList.map((item) => {
+          item.labelType === "customer_group" &&
+            (needData.value.role = item.needLabelResponseList[0].id);
+          if (item.labelType === "content") {
+            item.needLabelResponseList.map((_item) => {
+              needData.value.tab.push(_item.id);
+            });
+          }
+          if (item.labelType === "custom") {
+            item.needLabelResponseList.map((_item) => {
+              needData.value.tab.push(_item.labelName);
+            });
+          }
+        });
       if (needData.value.imageUrls) {
         imageList.value = needData.value.imageUrls.split(",").map((item) => {
           return {
