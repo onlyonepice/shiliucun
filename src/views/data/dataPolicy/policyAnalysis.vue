@@ -66,9 +66,9 @@ const policyRegionAnalysisImg = ref(null);
 const contentFilter = ref([]);
 
 const loading = ref(true);
-// 导出图片相关
-const exportImgUrl = ref<Array<{ png: any; jpg: any }>>([]); // 导出图片地址
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+// 下载图片相关
+const exportImgUrl = ref<Array<{ png: any; jpg: any }>>([]); // 下载图片地址
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 const ns = useNamespace("policyAnalysis");
 
 const year = ref("");
@@ -81,7 +81,7 @@ function onChangeFilter(val: any) {
   getPolicyAnalysisData();
 }
 
-// 导出图片
+// 下载图片
 function exportResult() {
   exportImgUrl.value = [
     policyRegionAnalysisImg.value.exportImg(),

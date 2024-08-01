@@ -84,7 +84,7 @@
           {{ item.text }}
         </div>
       </div>
-      <div class="export-image" @click="exportResult">导出图片</div>
+      <div class="export-image" @click="exportResult">下载图片</div>
     </div>
     <Select
       @on-change="changeMonth"
@@ -192,10 +192,10 @@ const specificList: Ref<Array<{ id: number; text: string }>> = ref([
 const loading = ref(false);
 // 获取echarts节点
 const myeCharts = ref<any>(null);
-// 导出图片相关
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
+// 下载图片相关
+const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
 const exportImgTitle: Ref<string> = ref("");
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 const choseSpecific: Ref<number> = ref(1);
 const monthData = ref<any>([]);
 const timeFrame = ref({ start: null, end: null });
@@ -236,7 +236,7 @@ const monthPriceDifferenceData = ref<any>({}); // 峰谷价差数据
 const monthElectricityPriceData = ref<any>([]); // 分时电价数据
 //
 const electricityPrice = ref(null);
-// 导出图片
+// 下载图片
 const exportResult = () => {
   const _echarts = echarts.getInstanceByDom(myeCharts.value);
   exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });

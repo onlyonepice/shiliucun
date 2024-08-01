@@ -64,7 +64,7 @@
         title="峰谷价差"
         width="20%"
       />
-      <div class="export-image" @click="exportResult">导出图片</div>
+      <div class="export-image" @click="exportResult">下载图片</div>
     </div>
     <div
       v-loading="loading"
@@ -140,10 +140,10 @@ const seriesName = computed(() => {
 // 获取echarts节点
 const myeCharts1 = ref<any>(null);
 
-// 导出图片相关
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
+// 下载图片相关
+const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
 const exportImgTitle: Ref<string> = ref("");
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 
 // select option 数据
 const yearData = ref<any>([]); // 时间数据
@@ -163,7 +163,7 @@ const searchParams = ref<any>({
   years: "",
 });
 
-// 导出图片
+// 下载图片
 function exportResult() {
   const _echarts = echarts.getInstanceByDom(myeCharts1.value);
   exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });

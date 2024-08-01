@@ -37,8 +37,10 @@ test_install:
      - pnpm install --no-frozen-lockfile --registry "https://registry.npmmirror.com"
   tags:   #runner标签
     - data-report
-  only:   #分支
-    - test
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "test"'
+      changes:
+        - package.json  
 
 prod_install:
   stage: install
@@ -56,8 +58,10 @@ prod_install:
      - pnpm install --registry "https://registry.npmmirror.com"
   tags:   #runner标签
     - data-report
-  only:   #分支
-    - /^Rel-.*/
+  rules:
+    - if: '$CI_COMMIT_REF_NAME =~ /^Rel-.*/'
+      changes:
+        - package.json  
 
 test_build:
   stage: build

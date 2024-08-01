@@ -81,11 +81,11 @@
       :titleWidth="100"
       title="EMC综合税率%"
       type="number"
-      :defaultValue="searchParams.EMCComprehensiveTaxRate"
+      :defaultValue="searchParams.emcComprehensiveTaxRate"
       :precision="0"
       @onChange="
         ($event) => {
-          onChangeFilter($event, 'EMCComprehensiveTaxRate');
+          onChangeFilter($event, 'emcComprehensiveTaxRate');
         }
       "
     />

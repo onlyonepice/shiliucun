@@ -4,7 +4,7 @@ import { http } from "@/utils/http";
 export const getDemandDetailApi = (params: any) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    "/eesa-industrial-map/need/need/openApi/v1.0/getNeedById",
+    "/eesa-data-center/need/need/openApi/v1.0/getNeedById",
     { params },
   );
 };
@@ -13,7 +13,7 @@ export const getDemandDetailApi = (params: any) => {
 export const applyDemandApi = (data: any) => {
   return http.request<{ datas; resp_code }>(
     "post",
-    "/eesa-industrial-map/need/apply/front/V1.0/apply",
+    "/eesa-data-center/need/apply/front/V1.0/apply",
     { data },
   );
 };
@@ -22,7 +22,7 @@ export const applyDemandApi = (data: any) => {
 export const getApplyListApi = (data: any) => {
   return http.request<{ datas; resp_code }>(
     "post",
-    "/eesa-industrial-map/need/apply/openApi/v1.0/apply/getApplyByNeedId",
+    "/eesa-data-center/need/apply/openApi/v1.0/apply/getApplyByNeedId",
     { data },
   );
 };
@@ -31,7 +31,7 @@ export const getApplyListApi = (data: any) => {
 export const agreeOrRefuseApplyApi = (data: any) => {
   return http.request<{ datas; resp_code }>(
     "post",
-    "/eesa-industrial-map/need/apply/front/V1.0/apply/change/status",
+    "/eesa-data-center/need/apply/front/V1.0/apply/change/status",
     { data },
   );
 };
@@ -40,7 +40,7 @@ export const agreeOrRefuseApplyApi = (data: any) => {
 export const changeApplyStatusApi = (params: number) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    `/eesa-industrial-map/need/apply/front/V1.0/apply/${params}`,
+    `/eesa-data-center/need/apply/front/V1.0/apply/${params}`,
   );
 };
 
@@ -48,7 +48,7 @@ export const changeApplyStatusApi = (params: number) => {
 export const getCloseReasonApi = (params: any) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    `/eesa-industrial-map/sysDict/back/V1.0/findListByTypeAndValue`,
+    `/eesa-data-center/sysDict/back/V1.0/findListByTypeAndValue`,
     { params },
   );
 };
@@ -57,7 +57,7 @@ export const getCloseReasonApi = (params: any) => {
 export const closeDemandApi = (data: any) => {
   return http.request<{ datas; resp_code }>(
     "post",
-    "/eesa-industrial-map/need/needNps/front/v1.0/submitNps",
+    "/eesa-data-center/need/needNps/front/v1.0/submitNps",
     { data },
   );
 };
@@ -65,7 +65,7 @@ export const closeDemandApi = (data: any) => {
 export const deleteDemandApi = (id: number) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    `/eesa-industrial-map/need/need/front/v1.0/closeNeedById?needId=${id}`,
+    `/eesa-data-center/need/need/front/v1.0/closeNeedById?needId=${id}`,
   );
 };
 
@@ -73,7 +73,7 @@ export const deleteDemandApi = (id: number) => {
 export const getAssignConfigApi = (params: any) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    `/eesa-industrial-map/sysDict/back/v1.0/findAllByTypeAndValue`,
+    `/eesa-data-center/sysDict/back/v1.0/findAllByTypeAndValue`,
     { params },
   );
 };
@@ -82,7 +82,7 @@ export const getAssignConfigApi = (params: any) => {
 export const cancelApplyApi = (id: number) => {
   return http.request<{ datas; resp_code }>(
     "post",
-    `/eesa-industrial-map/need/apply/front/v1.0/applyCancel?id=${id}`,
+    `/eesa-data-center/need/apply/front/v1.0/applyCancel?id=${id}`,
   );
 };
 
@@ -90,6 +90,15 @@ export const cancelApplyApi = (id: number) => {
 export const solveDemandApi = (id: number) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    `/eesa-industrial-map/need/need/front/v1.0/finishNeedById?needId=${id}`,
+    `/eesa-data-center/need/need/front/v1.0/finishNeedById?needId=${id}`,
+  );
+};
+
+// 提交评价
+export const submitEvaluateApi = (data: any) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    "/eesa-data-center/need/applyEvaluate/front/v1.0/SubmitEvaluate",
+    { data },
   );
 };

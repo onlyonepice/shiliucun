@@ -17,24 +17,43 @@
     >
       <div :class="ns.be('left', 'evaluate')">
         <h5>真实度评价</h5>
-        <template v-if="false">
+        <template v-if="detailInfo.applyEvaluateVOList.length !== 0">
           <div
-            :class="[ns.be('left', 'reviews'), ns.be('left', 'goodReviews')]"
+            :class="[
+              ns.be('left', 'reviews'),
+              item.code === 'FAVORABLE_COMMENT'
+                ? ns.be('left', 'goodReviews')
+                : ns.be('left', 'badReviews'),
+            ]"
+            v-for="item in detailInfo.applyEvaluateVOList"
+            :key="item.code"
           >
             <div :class="ns.be('left', 'reviews-head')">
-              <img :src="GoodReviewsImg" alt="" />
-              <span>+38</span>
+              <img
+                :src="
+                  item.code === 'FAVORABLE_COMMENT'
+                    ? GoodReviewsImg
+                    : BadReviewsImg
+                "
+                alt=""
+              />
+              <span
+                >+{{
+                  item.code === "FAVORABLE_COMMENT"
+                    ? detailInfo.likes
+                    : detailInfo.unlike
+                }}</span
+              >
             </div>
             <span>｜</span>
-            <span>资源不错 +12、态度良好 +24</span>
-          </div>
-          <div :class="[ns.be('left', 'reviews'), ns.be('left', 'badReviews')]">
-            <div :class="ns.be('left', 'reviews-head')">
-              <img :src="BadReviewsImg" alt="" />
-              <span>+38</span>
-            </div>
-            <span>｜</span>
-            <span>态度恶劣 +24</span>
+            <span
+              v-for="(_item, _index) in item.applyEvaluateResponseList"
+              :key="_index"
+              >{{ _item.feedback }} +{{ _item.count
+              }}{{
+                _index === item.applyEvaluateResponseList.length - 1 ? "" : "、"
+              }}</span
+            >
           </div>
         </template>
         <template v-else>
@@ -59,7 +78,10 @@
           </div>
         </template>
       </div>
-      <Reviews />
+      <Reviews
+        v-if="detailInfo.isApply && !detailInfo.isEvaluate"
+        @onSubmit="onSubmit"
+      />
     </div>
   </div>
   <ApplyDialog
@@ -123,6 +145,7 @@ import {
   cancelApplyApi,
 } from "@/api/demandMatching";
 import LamentIcon from "@/assets/img/common/lament_icon.png";
+import { ElMessage } from "element-plus";
 const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("demandMatchingDetail");
@@ -161,6 +184,11 @@ onMounted(() => {
   getDemandDetail();
   getApplyList();
 });
+// 提交评价
+const onSubmit = () => {
+  ElMessage.success("评价成功");
+  getDemandDetail();
+};
 const releaseDemandSuccess = () => {
   getDemandDetail();
   resetDialogVisible.value = false;
@@ -193,6 +221,7 @@ const onDelete = async (type: boolean) => {
     router.go(-1);
   }
 };
+
 const onSolve = async (type: boolean) => {
   solveDialogVisible.value = false;
   if (type) {
@@ -277,15 +306,20 @@ const onchangeCurrent = (val: number) => {
     border-radius: 4px;
     @include flex(center, flex-start, nowrap);
   }
-  &:nth-of-type(1) .es-demandMatchingDetail-left__reviews-head {
+}
+.es-demandMatchingDetail-left__goodReviews {
+  .es-demandMatchingDetail-left__reviews-head {
     background: linear-gradient(90deg, #eaedfe 0%, rgba(234, 237, 254, 0) 100%);
     @include font(16px, 400, #244bf1, 24px);
   }
-  &:nth-of-type(2) .es-demandMatchingDetail-left__reviews-head {
+}
+.es-demandMatchingDetail-left__badReviews {
+  .es-demandMatchingDetail-left__reviews-head {
     background: linear-gradient(90deg, #feeff0 0%, rgba(254, 239, 240, 0) 100%);
     @include font(16px, 400, #f75964, 24px);
   }
 }
+
 .es-demandMatchingDetail-left__reviews-none {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
 }

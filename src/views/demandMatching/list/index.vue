@@ -1,5 +1,8 @@
 <template>
   <div :class="['es-commonPage', ns.b()]">
+    <p :class="[ns.b('identity'), 'animate__animated animate__fadeIn']">
+      当前身份：{{ getRole }}<span @click="roleDialogVisible = true">修改</span>
+    </p>
     <div :class="ns.b('tab-list')">
       <div
         class="tab-list_item"
@@ -28,18 +31,34 @@
         />
       </div>
       <div :class="ns.b('type-list')">
-        <p
-          :class="
-            filterParams.type === item.code
-              ? 'type-item-active type-item'
-              : 'type-item'
-          "
-          v-for="item in typeList"
-          :key="item.label"
-          @click="changeType(item.code)"
-        >
-          {{ item.label }}
-        </p>
+        <div :class="ns.b('type-search')">
+          <Select
+            title="排序"
+            :options="sortTypeList"
+            valueKey="code"
+            labelKey="label"
+            width="260px"
+            :defaultValue="filterParams.sortType"
+            @onChange="
+              ($event) => {
+                onChangeType($event, 'sortType');
+              }
+            "
+          />
+          <Select
+            title="类型"
+            :options="typeList"
+            valueKey="code"
+            labelKey="label"
+            width="260px"
+            :defaultValue="filterParams.type"
+            @onChange="
+              ($event) => {
+                onChangeType($event, 'type');
+              }
+            "
+          />
+        </div>
         <el-button
           @click="handleReleaseClick"
           class="release-demand"
@@ -56,33 +75,35 @@
             :key="item.id"
           >
             <div class="data-box_item_top">
-              <p class="data-box_item_type">
-                {{ item.typeName }}
-              </p>
-              <p class="line" v-if="item.typeName" />
-              <p class="data-box_item_title">{{ item.title }}</p>
+              <div style="display: flex">
+                <p class="data-box_item_type">
+                  {{ item.typeName }}
+                </p>
+                <p class="line" v-if="item.typeName" />
+                <p class="data-box_item_title">{{ item.title }}</p>
+                <template
+                  v-for="statusItem in demandStatus"
+                  :key="statusItem.name"
+                >
+                  <p
+                    class="tag"
+                    v-if="statusItem.value == item.status"
+                    :style="{
+                      background: statusItem.background,
+                      color: statusItem.color,
+                      borderColor: statusItem.color,
+                    }"
+                  >
+                    {{ statusItem.name }}
+                  </p>
+                </template>
+              </div>
+              <h5 style="font-weight: 400; float: right">
+                发布时间：{{ item.releaseTime }}
+              </h5>
             </div>
             <div class="data-box_item_desc">
               {{ item.description }}
-            </div>
-            <div class="time">
-              <template
-                v-for="statusItem in demandStatus"
-                :key="statusItem.name"
-              >
-                <p
-                  class="tag"
-                  v-if="statusItem.value == item.status"
-                  :style="{
-                    background: statusItem.background,
-                    color: statusItem.color,
-                    borderColor: statusItem.color,
-                  }"
-                >
-                  {{ statusItem.name }}
-                </p>
-              </template>
-              <h5 style="font-weight: 400">发布时间：{{ item.releaseTime }}</h5>
             </div>
           </div>
           <div class="Pagination">
@@ -140,35 +161,35 @@
               :key="item.id"
             >
               <div class="data-box_item_top">
-                <p class="data-box_item_type">
-                  {{ item.typeName }}
-                </p>
-                <p class="line" />
-                <p class="data-box_item_title">{{ item.title }}</p>
-              </div>
-              <div class="data-box_item_desc">
-                {{ item.description }}
-              </div>
-              <div class="time">
-                <template
-                  v-for="statusItem in demandStatus"
-                  :key="statusItem.name"
-                >
-                  <p
-                    class="tag"
-                    v-if="statusItem.value == item.status"
-                    :style="{
-                      background: statusItem.background,
-                      color: statusItem.color,
-                      borderColor: statusItem.color,
-                    }"
-                  >
-                    {{ statusItem.name }}
+                <div style="display: flex">
+                  <p class="data-box_item_type">
+                    {{ item.typeName }}
                   </p>
-                </template>
+                  <p class="line" />
+                  <p class="data-box_item_title">{{ item.title }}</p>
+                  <template
+                    v-for="statusItem in demandStatus"
+                    :key="statusItem.name"
+                  >
+                    <p
+                      class="tag"
+                      v-if="statusItem.value == item.status"
+                      :style="{
+                        background: statusItem.background,
+                        color: statusItem.color,
+                        borderColor: statusItem.color,
+                      }"
+                    >
+                      {{ statusItem.name }}
+                    </p>
+                  </template>
+                </div>
                 <h5 style="font-weight: 400">
                   发布时间：{{ item.releaseTime }}
                 </h5>
+              </div>
+              <div class="data-box_item_desc">
+                {{ item.description }}
               </div>
             </div>
             <div class="Pagination">
@@ -205,32 +226,29 @@
               :key="item.id"
             >
               <div class="data-box_item_top">
-                <p class="data-box_item_type">
-                  {{ item.type }}
-                </p>
-                <p class="line" />
-                <p class="data-box_item_title">{{ item.needTitle }}</p>
-              </div>
-              <div class="data-box_item_desc">
-                {{ item.description }}
-              </div>
-              <div class="time">
-                <template
-                  v-for="statusItem in applicationStatus"
-                  :key="statusItem.name"
-                >
-                  <p
-                    class="tag"
-                    v-if="statusItem.value == item.status"
-                    :style="{
-                      background: statusItem.background,
-                      color: statusItem.color,
-                      borderColor: statusItem.color,
-                    }"
-                  >
-                    {{ statusItem.name }}
+                <div style="display: flex">
+                  <p class="data-box_item_type">
+                    {{ item.type }}
                   </p>
-                </template>
+                  <p class="line" />
+                  <p class="data-box_item_title">{{ item.needTitle }}</p>
+                  <template
+                    v-for="statusItem in applicationStatus"
+                    :key="statusItem.name"
+                  >
+                    <p
+                      class="tag"
+                      v-if="statusItem.value == item.status"
+                      :style="{
+                        background: statusItem.background,
+                        color: statusItem.color,
+                        borderColor: statusItem.color,
+                      }"
+                    >
+                      {{ statusItem.name }}
+                    </p>
+                  </template>
+                </div>
                 <h5 style="font-weight: 400">
                   报名时间：{{
                     item.applyTime.indexOf(" ") > -1
@@ -238,6 +256,9 @@
                       : item.applyTime
                   }}
                 </h5>
+              </div>
+              <div class="data-box_item_desc">
+                {{ item.description }}
               </div>
             </div>
             <div class="Pagination">
@@ -271,29 +292,42 @@
       :show="releaseDemandShow"
     />
   </div>
+  <RoleDialog
+    :visible="roleDialogVisible"
+    :roleList="roleList"
+    @onHandleClose="
+      roleDialogVisible = false;
+      getIdentity();
+      getNeed();
+    "
+  />
 </template>
 
 <script setup lang="ts">
+import { ref, onUnmounted, onMounted, Ref, computed } from "vue";
 import ReleaseDemand from "../releaseDemand.vue";
 import useNamespace from "@/utils/nameSpace";
 import businessCard from "@/views/demandMatching/detail/components/businessCard.vue";
 import DemandHallIcon from "@/assets/img/demand/demand-hall-icon.png";
 import DemandReleaseIcon from "@/assets/img/demand/demand-release-icon.png";
+import RoleDialog from "./roleDialog.vue";
 const ns = useNamespace("demand-list");
 import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
 const router = useRouter();
 import { getToken } from "@/utils/auth";
-import { ref, onUnmounted, onMounted } from "vue";
 import { demandStatus, applicationStatus } from "../config";
 import {
   getTypeNotNullApi,
   getNeedApi,
   getReleaseNeedApi,
   getApplyNeedApi,
+  getNeedEvaluateApi,
+  getIdentityApi,
 } from "@/api/demandList";
 import { getUserDetailInfo } from "@/api/user";
 const isLogin = ref(getToken());
+const roleDialogVisible: Ref<boolean> = ref(false); // 角色弹窗
 const tabList = ref([
   {
     name: "需求大厅",
@@ -307,8 +341,8 @@ const tabList = ref([
 const filterParams = ref({
   pageNumber: 1,
   pageSize: 10,
-  type: "",
-  title: "",
+  type: null,
+  sortType: null,
 });
 const total = ref(0);
 const demandList = ref([{}]);
@@ -327,6 +361,14 @@ const manageTabArr = ref([
     isShowRed: false,
   },
 ]);
+const getRole = computed(() => {
+  let _role = "";
+  roleList.value.map((item) => {
+    item.labelType === "customer_group" &&
+      (_role = item.needLabelResponseList[0].labelName);
+  });
+  return _role;
+});
 const handleReleaseClick = () => {
   isLogin.value = getToken();
   if (!getToken()) {
@@ -378,11 +420,6 @@ const changeTab = (value) => {
   }
   currentPage.value = value;
 };
-const changeType = (value) => {
-  filterParams.value.type = value;
-  filterParams.value.pageNumber = 1;
-  getNeed();
-};
 const handleDetailClick = (row) => {
   router.push({
     path: `/demandMatching/detail`,
@@ -403,13 +440,24 @@ const getTypeNotNull = async () => {
       code: "",
     });
     typeList.value = data.datas;
+    filterParams.value.type = typeList.value[0].code;
   }
 };
+// 获取需求大厅列表数据
 const getNeed = async () => {
   const data = await getNeedApi(filterParams.value);
   if (data.resp_code === 0) {
     demandList.value = data.datas.records;
     total.value = data.datas.total;
+  }
+};
+const roleList: Ref<any[]> = ref([]); // 角色列表
+// 获取身份
+const getIdentity = async () => {
+  const { datas, resp_code } = await getIdentityApi();
+  if (resp_code === 0) {
+    roleList.value = datas;
+    roleDialogVisible.value = datas.length === 0;
   }
 };
 const releaseParams = ref({
@@ -452,9 +500,29 @@ const onchangeCurrentApply = (number: number) => {
 onUnmounted(() => {
   releaseDemandShow.value = false;
 });
+const sortTypeList: Ref<Array<any>> = ref([]);
+// 获取排序筛选项
+const getSortTypeList = async () => {
+  const { datas, resp_code } = await getNeedEvaluateApi({
+    type: "NEED_HOMEPAGE_SORT",
+  });
+  if (resp_code === 0) {
+    sortTypeList.value = datas[0].subset;
+    filterParams.value.sortType = datas[0].subset[0].code;
+    getNeed();
+  }
+};
+const onChangeType = (value, key) => {
+  console.log(key, value);
+  filterParams.value[key] = value;
+  if (currentPage.value === "demand") {
+    getNeed();
+  }
+};
 onMounted(() => {
   getTypeNotNull();
-  getNeed();
+  getSortTypeList();
+  getIdentity();
   window.trackFunction("pc_RequestConnect_click");
 });
 </script>
@@ -462,6 +530,17 @@ onMounted(() => {
 @import "@/style/mixin.scss";
 .es-demand-list {
   padding-top: 80px;
+  position: relative;
+}
+.es-demand-list-identity {
+  @include absolute(1, 97px, 0, none, none);
+  @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+  display: inline-block;
+  span {
+    @include font(14px, 400, #244bf1, 22px);
+    margin-left: 8px;
+    cursor: pointer;
+  }
 }
 .es-demand-list-tab-list {
   width: 100%;
@@ -494,6 +573,9 @@ onMounted(() => {
       left: 0;
     }
   }
+}
+.es-demand-list-type-search {
+  @include flex(center, flex-start, nowrap);
 }
 .es-demand-list-search {
   width: 100%;
@@ -540,8 +622,7 @@ onMounted(() => {
     cursor: pointer;
     .data-box_item_top {
       width: 100%;
-      display: flex;
-      align-items: center;
+      @include flex(center, space-between, nowrap);
       margin-bottom: 8px;
       .data-box_item_type,
       .data-box_item_title {
@@ -575,6 +656,7 @@ onMounted(() => {
   padding: 2px 8px;
   @include font(12px, 400, none, 20px);
   border: 1px solid #ff892e;
+  margin-left: 8px;
 }
 .es-demand-list-search__empty {
   @include widthAndHeight(232px);

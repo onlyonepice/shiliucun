@@ -58,7 +58,7 @@ const handleClose = (type: boolean) => {
 <style lang="scss">
 @import "@/style/mixin.scss";
 .es-dialog {
-  @include absolute(1, 50%, 0, 0, 50%);
+  @include relative(1, 50%, 0, 0, 50%);
   @include margin(0, 0, 0, 0);
   transform: translate(-50%, -50%);
   border-radius: 10px;

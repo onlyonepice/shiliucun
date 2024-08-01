@@ -56,10 +56,10 @@ const { VITE_DATABASE_URL } = import.meta.env;
 const eChartsOption: Ref<any> = ref(EChartOptions());
 // 获取eCharts节点
 const eChartsDom = ref(null);
-// 导出图片相关
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
+// 下载图片相关
+const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
 const exportImgTitle: Ref<string> = ref("");
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 const ns = useNamespace("dataAreaAnalysis");
 const loading: Ref<boolean> = ref(false);
 const props = defineProps({
@@ -244,7 +244,7 @@ const getRegionColor = async () => {
   }
 };
 
-// 导出图片
+// 下载图片
 function exportResult() {
   const _echarts = echarts.getInstanceByDom(eChartsDom.value);
   exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });

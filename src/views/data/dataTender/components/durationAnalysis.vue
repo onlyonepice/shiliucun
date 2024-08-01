@@ -88,8 +88,8 @@ const EChartOptions: Ref<any> = ref({
 });
 const isEmptyData = ref(false);
 const loading = ref(true);
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 const eChartsDomDurationAnalysis: Ref<any> = ref(null);
 
 const contentList = ref([]); // select options 招标内容
@@ -172,7 +172,7 @@ const initECharts = () => {
   myChart.setOption(EChartOptions.value);
 };
 
-// 导出图片
+// 下载图片
 function exportResult() {
   const _echarts = echarts.getInstanceByDom(eChartsDomDurationAnalysis.value);
   exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });

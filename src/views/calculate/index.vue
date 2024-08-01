@@ -201,7 +201,7 @@ const titleSkip = ref({
 });
 // 查询参数
 const searchParamsA: Ref<any> = ref({
-  EMCComprehensiveTaxRate: 87,
+  emcComprehensiveTaxRate: 87,
 });
 const searchParamsB: Ref<any> = ref({});
 const addAreaType: Ref<boolean> = ref(false); // 添加地区对比
@@ -423,6 +423,7 @@ async function onSearch(type? = false, source?: string) {
       : "";
   delete _search.choseProduct;
   _search.systemUnitPrice = Number(_search.systemUnitPrice);
+  _search.additionalEPCCosts = 200;
   const { datas, resp_code }: any = await apiAnalyzeSearch(_search);
   if (_search.callingMode) {
     const _datas: any = await getTimesApi({
@@ -533,13 +534,21 @@ async function onAnalysis(data: any, type: string) {
     searchParamsA.value.annualDays = 300;
     searchParamsA.value.bankRate = "5%";
     searchParamsA.value.calculationPeriod = "10年";
+    searchParamsA.value.emcComprehensiveTaxRate = 87;
   } else {
     titleB.value = data.regionName;
     searchParamsB.value = Object.assign(searchParamsB.value, cloneDeep(data));
     searchParamsB.value.annualDays = 300;
     searchParamsB.value.bankRate = "5%";
     searchParamsB.value.calculationPeriod = "10年";
+    searchParamsB.value.emcComprehensiveTaxRate = 87;
   }
+  console.log(
+    "-------",
+    searchParamsA.value,
+    "++++++++++++++++++",
+    searchParamsB.value,
+  );
   nextTick(() => {
     showInvestment.value = true;
     onSearch(true, type);

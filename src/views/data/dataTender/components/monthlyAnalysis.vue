@@ -63,10 +63,10 @@ const eChartsOption: Ref<any> = ref(eChartsOptionCommon());
 // 获取eCharts节点
 const eChartsDom = ref(null);
 const isEmptyData = ref(false);
-// 导出图片相关
-const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
+// 下载图片相关
+const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
 const exportImgTitle: Ref<string> = ref("");
-const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
+const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
 const ns = useNamespace("dataMonthlyAnalysis");
 const loading: Ref<boolean> = ref(false);
 const echartsMask: Ref<boolean> = ref(false); // echarts蒙层
@@ -172,7 +172,7 @@ function createECharts() {
   myChart.setOption(eChartsOption.value);
 }
 
-// 导出图片
+// 下载图片
 function exportResult() {
   const _echarts = echarts.getInstanceByDom(eChartsDom.value);
   exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });

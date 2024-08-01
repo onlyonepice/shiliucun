@@ -97,7 +97,7 @@ export default {
     onCancel() {
       this.$emit("close");
     },
-    // 导出图片
+    // 下载图片
     onExport() {
       this.showDialog = true;
       const { imgTitle, exportTypeValue } = this;

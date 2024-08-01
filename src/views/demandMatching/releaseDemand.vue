@@ -54,10 +54,11 @@
       title="发布需求"
       :visible="visibleInfo"
       width="560px"
-      :height="step === 1 ? '568px' : '718px'"
+      :height="step === 1 ? '568px' : 'auto'"
       :showFoot="false"
       :appendToBody="appendToBody"
       @onHandleClose="onHandleCloseDialog"
+      :class="ns.b('dialog-step')"
     >
       <template #content>
         <div :class="ns.b('step-box')">
@@ -271,9 +272,24 @@
               "
             />
           </div>
+          <div :class="ns.be('content', 'infoDialog')">
+            <span required>寻求资源</span>
+            <Select
+              type="select"
+              :defaultValue="needData.role"
+              :options="roleList"
+              labelKey="labelName"
+              valueKey="id"
+              @onChange="
+                (val) => {
+                  return onChangeNeed(val, 'role');
+                }
+              "
+            />
+          </div>
           <div
             :class="ns.be('content', 'infoDialog')"
-            style="margin-bottom: 58px"
+            style="height: 79px; align-items: flex-start"
           >
             <span required>需求描述</span>
             <Select
@@ -312,6 +328,28 @@
             </div>
           </div>
           <div class="hint">最多上传三张图片</div>
+          <div
+            :class="ns.be('content', 'infoDialog')"
+            style="display: flex; align-items: flex-start; height: auto"
+          >
+            <span>标签</span>
+            <Select
+              type="select"
+              :defaultValue="needData.tab"
+              :options="tabList"
+              :multiple="true"
+              labelKey="labelName"
+              valueKey="id"
+              @onChange="
+                (val) => {
+                  return onChangeNeed(val, 'tab');
+                }
+              "
+            />
+            <span :class="ns.b('add-tab')" @click="addTabDialog = true"
+              >添加标签</span
+            >
+          </div>
           <div class="btn-box">
             <el-button @click="backStep" style="margin-right: 231px"
               >上一步</el-button
@@ -321,9 +359,7 @@
               >发布需求</el-button
             >
           </div>
-          <div class="info-card">
-            <businessCard :info="userDetailInfo" />
-          </div>
+          <businessCard :info="userDetailInfo" class="info-card" />
         </div>
       </template>
     </Dialog>
@@ -335,6 +371,27 @@
       <img w-full :src="dialogImageUrl" alt="Preview Image" />
     </el-dialog>
   </div>
+  <Dialog
+    title="添加标签"
+    :visible="addTabDialog"
+    width="560px"
+    height="176px"
+    @onHandleClose="onHandleCloseTab"
+    confirmText="添加"
+  >
+    <template #content>
+      <div :class="ns.be('content', 'mbDialog')">
+        <span required>标签名称</span>
+        <Select
+          type="input"
+          :defaultValue="tabName"
+          @onChange="onChange"
+          style="width: 100%"
+          :maxlength="5"
+        />
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script lang="ts" setup>
@@ -368,12 +425,14 @@ import {
   getNeedTypeApi,
   releaseNeedApi,
   updateNeedApi,
+  getRoleConfigApi,
 } from "@/api/demandList";
 import { getInnermostObject } from "@/utils/index";
 const uploadToken: Ref<any> = ref({
   Authorization: "Bearer " + getToken(),
   Tenant: "iReport-front",
 });
+const addTabDialog = ref(false); // 添加标签弹窗
 const props = defineProps({
   show: {
     type: Boolean,
@@ -388,6 +447,7 @@ const props = defineProps({
     default: false,
   },
 });
+const tabName = ref(""); // 添加标签名称
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
 const ns = useNamespace("releaseDemand");
@@ -432,7 +492,25 @@ const step = ref(1);
 const handleConfirmUserInfo = () => {
   isConfirmUserInfo.value = !isConfirmUserInfo.value;
 };
-
+const roleList: Ref<Array<any>> = ref([]); // 角色列表
+const tabList: Ref<Array<any>> = ref([]); // tab列表
+// 获取角色配置
+const getRoleConfig = async () => {
+  const { resp_code, datas } = await getRoleConfigApi();
+  if (resp_code === 0) {
+    datas.forEach((item) => {
+      if (item.labelType === "customer_group") {
+        roleList.value = item.needLabelResponseList;
+      } else if (item.labelType === "content") {
+        tabList.value = item.needLabelResponseList;
+      }
+    });
+  }
+};
+// 添加标签名称
+const onChange = (value: any) => {
+  tabName.value = value;
+};
 onMounted(() => {
   userInfo.value = useUserStore().$state.userInfo;
   showInfo.value.mobile = userInfo.value.mobileHide;
@@ -442,6 +520,7 @@ onMounted(() => {
   onGetArea();
   getPositionType();
   getNeedType();
+  getRoleConfig();
 });
 const onChangeNeed = (value: any, type: string) => {
   needData.value[type] = value;
@@ -453,12 +532,21 @@ const onChangeNeed = (value: any, type: string) => {
     });
   }
 };
+// 关闭添加标签弹窗
+const onHandleCloseTab = (type: boolean) => {
+  addTabDialog.value = false;
+  type && needData.value.tab.push(tabName.value);
+  tabName.value = "";
+};
 const handleReleaseNeed = async () => {
   if (needData.value.title === "") {
     ElMessage.error("请填写标题");
     return;
   } else if (needData.value.type === "") {
     ElMessage.error("请选择需求类型");
+    return;
+  } else if (needData.value.role.length === 0) {
+    ElMessage.error("请选择寻求资源");
     return;
   } else if (needData.value.description === "") {
     ElMessage.error("请填写需求描述");
@@ -476,6 +564,18 @@ const handleReleaseNeed = async () => {
       : item.url;
   });
   needData.value.imageUrls = needData.value.imageUrls.join(",");
+  needData.value.dhLabelDTOList = [{ id: needData.value.role }];
+  needData.value.tab.map((item) => {
+    if (typeof item === "number") {
+      needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({
+        id: item,
+      });
+    } else {
+      needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({
+        labelName: item,
+      });
+    }
+  });
   const data = needData.value.id
     ? await updateNeedApi(needData.value)
     : await releaseNeedApi(needData.value);
@@ -603,7 +703,10 @@ const onHandleClose = async (type: boolean) => {
     }
   }
 };
-const needData = ref();
+const needData: Ref<any> = ref({
+  role: null,
+  tab: [],
+});
 const imageList = ref([]);
 // 查看大图
 const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
@@ -678,6 +781,9 @@ watch(
   (val) => {
     const arr = cloneDeep(val);
     if (val && Object.keys(arr).length > 0) {
+      const _role = -1;
+      const _tab = [];
+
       needData.value = {
         title: arr.title,
         type: arr.type,
@@ -685,7 +791,23 @@ watch(
         typeName: arr.typeName,
         description: arr.description,
         id: arr.id ? arr.id : null,
+        role: null,
+        tab: [],
       };
+      val.needLabelListVOList.map((item) => {
+        item.labelType === "customer_group" &&
+          (needData.value.role = item.needLabelResponseList[0].id);
+        if (item.labelType === "content") {
+          item.needLabelResponseList.map((_item) => {
+            needData.value.tab.push(_item.id);
+          });
+        }
+        if (item.labelType === "custom") {
+          item.needLabelResponseList.map((_item) => {
+            needData.value.tab.push(_item.labelName);
+          });
+        }
+      });
       if (needData.value.imageUrls) {
         imageList.value = needData.value.imageUrls.split(",").map((item) => {
           return {
@@ -702,6 +824,8 @@ watch(
         imageUrls: "",
         typeName: "",
         description: "",
+        role: null,
+        tab: [],
       };
     }
   },
@@ -721,12 +845,10 @@ watch(
   font-size: 12px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.6);
+  width: 300px;
 }
 .info-card {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 24px;
+  margin: 24px auto 0;
 }
 .isShow {
   width: 116px;
@@ -744,6 +866,11 @@ watch(
 
 .es-releaseDemand-content {
   @include flex(flex-start, space-between, nowrap);
+}
+.es-releaseDemand-add-tab {
+  @include font(14px, 400, #244bf1, 22px);
+  margin-left: 8px;
+  cursor: pointer;
 }
 .release-demand-footer {
   width: 100%;
@@ -916,6 +1043,14 @@ watch(
 @import "@/style/mixin.scss";
 .el-date-table td.current:not(.disabled) .el-date-table-cell__text {
   background-color: #244bf1 !important;
+}
+.es-releaseDemand-dialog-step {
+  .select {
+    height: auto !important;
+  }
+  .el-dialog__body {
+    padding-bottom: 24px !important;
+  }
 }
 .es-releaseDemand {
   .el-switch__core {
