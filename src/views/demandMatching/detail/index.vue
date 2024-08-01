@@ -306,15 +306,20 @@ const onchangeCurrent = (val: number) => {
     border-radius: 4px;
     @include flex(center, flex-start, nowrap);
   }
-  &:nth-of-type(1) .es-demandMatchingDetail-left__reviews-head {
+}
+.es-demandMatchingDetail-left__goodReviews {
+  .es-demandMatchingDetail-left__reviews-head {
     background: linear-gradient(90deg, #eaedfe 0%, rgba(234, 237, 254, 0) 100%);
     @include font(16px, 400, #244bf1, 24px);
   }
-  &:nth-of-type(2) .es-demandMatchingDetail-left__reviews-head {
+}
+.es-demandMatchingDetail-left__badReviews {
+  .es-demandMatchingDetail-left__reviews-head {
     background: linear-gradient(90deg, #feeff0 0%, rgba(254, 239, 240, 0) 100%);
     @include font(16px, 400, #f75964, 24px);
   }
 }
+
 .es-demandMatchingDetail-left__reviews-none {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
 }

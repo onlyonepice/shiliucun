@@ -11,18 +11,21 @@
         <div :class="ns.be('step', 'line')" v-if="item.id !== 3" />
       </template>
     </div>
+    <StepOne v-show="step === 1" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
+import StepOne from "./stepOne.vue";
 const ns = useNamespace("calculationLite");
 const stepList: Ref<Array<any>> = ref([
   { id: 1, name: "基本信息" },
   { id: 2, name: "容量测算" },
   { id: 3, name: "经济分析" },
 ]);
+const step: Ref<number> = ref(1);
 </script>
 
 <style lang="scss">
