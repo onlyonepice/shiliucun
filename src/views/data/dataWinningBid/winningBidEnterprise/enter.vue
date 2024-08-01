@@ -22,6 +22,9 @@
         >中标价格在去除最高值和最低值后，以能量规模（MWh）为权重，使用加权平均的方法计算。</span
       >
     </div>
+    <div :class="ns.b('download')">
+      <el-button type="primary" @click="exportResult">下载图片</el-button>
+    </div>
     <div :class="ns.b('eCharts-box')" v-if="!isEmptyData">
       <div
         v-loading="loading"
@@ -234,7 +237,16 @@ const getData = async () => {
     loading.value = false;
   }
 };
-
+// 下载图片
+function exportResult() {
+  const _echarts = echarts.getInstanceByDom(eChartsDom.value);
+  exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });
+  exportImgUrl.value.jpg = _echarts.getDataURL({
+    type: "jpeg",
+    backgroundColor: "#fff",
+  });
+  exportVisible.value = true;
+}
 const initECharts = async () => {
   const myChart = echarts.init(
     document.getElementById("eChart-winningBidEnterprise"),
@@ -667,6 +679,10 @@ window.trackFunction("pc_Winbid_CompanyAnalysis_click");
     width: 100%;
     height: 642px;
   }
+}
+.es-winningBidEnterprise-download {
+  @include flex(center, flex-end, nowrap);
+  margin-bottom: 8px;
 }
 .echarts-mask-bottom {
   @include widthAndHeight(calc(100% - 120px), 200px);
