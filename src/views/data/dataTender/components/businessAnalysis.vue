@@ -146,7 +146,6 @@ async function getElectricityTypeOneName() {
     const _textData = props.contentFilter.filter((item) => {
       return item.id === contentDict.value;
     });
-    console.log(_textData);
     const _data = datas.slice(0, 20);
     eChartsOption.value.title.text = releaseTime.value + "储能招标企业分析";
     eChartsOption.value.title.subtext = _textData[0].paramDesc;

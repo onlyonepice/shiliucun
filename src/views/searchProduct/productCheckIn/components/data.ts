@@ -36,7 +36,7 @@ export const step2Field = [
     ],
   },
   {
-    label: "产品图片",
+    label: "产品白底图",
     prop: "images",
     type: "uploadImgs",
     accept: ["png", "jpg", "jpeg"],
@@ -102,7 +102,7 @@ export const step3Field = [
     label: "电池系统能量/kWh",
     prop: "batterySystemEnergy",
     showProp: "batterySystemEnergy",
-    type: "input",
+    type: "number",
     rules: [
       {
         required: true,
@@ -116,6 +116,14 @@ export const step3Field = [
     prop: "dischargeDepth",
     showProp: "dischargeDepth",
     type: "input",
+    // 根据前面的选项改变
+    rules: [
+      {
+        required: true,
+        message: "请输入放电深度",
+        trigger: "change",
+      },
+    ],
   },
   { label: "PCS参数", type: "title" },
   {
@@ -158,12 +166,28 @@ export const step3Field = [
     prop: "systemOverallEfficiency",
     showProp: "systemOverallEfficiency",
     type: "input",
+    // 根据前面的选项改变
+    rules: [
+      {
+        required: true,
+        message: "请输入系统综合效率",
+        trigger: "change",
+      },
+    ],
   },
   {
     label: "年衰减率/%",
     prop: "annualDecayRate",
     showProp: "annualDecayRate",
     type: "input",
+    // 根据前面的选项改变
+    rules: [
+      {
+        required: true,
+        message: "请输入年衰减率",
+        trigger: "change",
+      },
+    ],
   },
   {
     label: "冷却方式",
@@ -184,5 +208,13 @@ export const step3Field = [
     showProp: "energyStorageSystemProductUnitPrice",
     prop: "energyStorageSystemProductUnitPrice",
     type: "number",
+    // 根据前面的选项改变
+    rules: [
+      {
+        required: true,
+        message: "请输入产品单价",
+        trigger: "change",
+      },
+    ],
   },
 ];

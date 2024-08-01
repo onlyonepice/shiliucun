@@ -45,6 +45,69 @@ export const priceFormOptions = () => {
     },
   ];
 };
+
+export const priceFormOptionsNews = () => {
+  return [
+    {
+      type: "select",
+      title: "中标内容",
+      model: "biddingContent",
+      bind: {
+        placeholder: "请选择",
+        options: [],
+        cascaderOption: {
+          label: "paramDesc",
+          value: "paramName",
+          emitPath: false,
+        },
+      },
+    },
+    {
+      type: "select",
+      title: "储能时长",
+      model: "energyStorageDuration",
+      bind: {
+        placeholder: "请选择",
+        options: [],
+        cascaderOption: {
+          label: "paramDesc",
+          value: "paramName",
+          emitPath: false,
+        },
+      },
+    },
+    {
+      type: "select",
+      title: "技术类型",
+      model: "technologyType",
+      bind: {
+        ref: "business-electricity-cascade",
+        placeholder: "请选择",
+        options: [],
+        cascaderOption: {
+          label: "paramDesc",
+          value: "paramName",
+          emitPath: false,
+        },
+      },
+    },
+    {
+      type: "select",
+      title: "步长",
+      model: "stepSize",
+      bind: {
+        placeholder: "请选择",
+        options: [],
+        cascaderOption: {
+          label: "paramDesc",
+          value: "paramName",
+          emitPath: false,
+        },
+      },
+    },
+  ];
+};
+
 export const enterpriseFormOptions = () => {
   return [
     {
@@ -122,6 +185,7 @@ export const enterpriseFormOptions = () => {
     },
   ];
 };
+
 export const enterScenesFormOptions = () => {
   return [
     {

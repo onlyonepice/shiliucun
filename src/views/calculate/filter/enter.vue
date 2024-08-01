@@ -310,7 +310,7 @@
           </div>
           <!-- 下面需要筛选项都做完 -->
           <div class="product-desc">
-            <p>产品图片</p>
+            <p>产品白底图</p>
             <div class="product-desc__info">
               <el-image
                 class="product-desc__img"
@@ -377,7 +377,7 @@ const searchParams: Ref<any> = ref({
   dischargeDepth: "", // 放电深度
   annualDecay: "", // 年衰减率
   annualMaintenance: "", // 年维护费用
-  picture: "", // 产品图片
+  picture: "", // 产品白底图
   chargeDischargeIdentifying: "",
 });
 // B地区筛选项

@@ -70,8 +70,6 @@ export const getProductDetailsEditApi = (id) => {
 };
 // 上传修改参数
 export const productCheckInSaveOrUpdateApi = (data: any) => {
-  console.log("44444", data);
-
   return http.request<{ resp_code: number; datas: any }>(
     "post",
     "/eesa-report/energyStorageProduct/energyStorageProduct/front/v1.0/saveOrUpdate",

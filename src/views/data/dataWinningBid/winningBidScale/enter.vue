@@ -48,13 +48,12 @@
 
 <script setup lang="ts">
 import { get } from "lodash";
-import { cloneDeep } from "lodash";
 import * as echarts from "echarts";
 import { getToken } from "@/utils/auth";
 import { priceFormOptions } from "../data";
 import useNamespace from "@/utils/nameSpace";
 import { ref, watch, Ref, nextTick } from "vue";
-import { capacityAnalysis_V2, maskPermissions } from "@/api/data";
+import { biddingScaleAnalysis, maskPermissions } from "@/api/data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
 import lament_icon from "@/assets/img/common/lament_icon.png";
@@ -64,8 +63,8 @@ const { VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("winningBidPrice");
 const EChartOptions: Ref<any> = ref({});
 const loading: Ref<boolean> = ref(false);
-const exportImgUrl = ref({ png: "", jpg: "" }); // 下载图片地址
-const exportVisible: Ref<boolean> = ref(false); // 是否打开下载图片弹窗
+const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
+const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const echartsMask: Ref<boolean> = ref(false); // echarts蒙层
 // 获取eCharts节点
 const eChartsDom = ref(null);
@@ -143,104 +142,18 @@ const getData = async () => {
   loading.value = true;
   isEmptyData.value = false;
   try {
-    const data = await capacityAnalysis_V2(requestData.value);
+    const data = await biddingScaleAnalysis(requestData.value);
     const { datas, resp_code } = data;
-    const textStyle = {
-      fontSize: 14,
-      lineHeight: 22,
-      fontWeight: 400,
-      color: "#5B6985",
-    };
     if (resp_code === 0 && datas.length) {
-      let barSeries = [];
-      let lineSeries: any = [];
-      barSeries = datas[0].data.map((item) => {
-        return {
-          type: "bar",
-          name: item.hour,
-          value: item.hour,
-          yAxisIndex: 0,
-          barWidth: 16,
-          stack: "total",
-          itemStyle: {
-            color: colorEnum[item.hour],
-          },
-          data: [],
-        };
-      });
-      lineSeries = cloneDeep(barSeries).map((item: any) => {
-        const result = {
-          ...item,
-          type: "line",
-          name: `${item.name}中标均价`,
-          yAxisIndex: 1,
-          lineStyle: {
-            width: 2,
-          },
-          symbolSize: 6,
-          connectNulls: true,
-        };
-        delete result.stack;
-        return result;
-      });
+      EChartOptions.value.series[0].data = [];
       EChartOptions.value.xAxis.data = [];
-      datas.forEach((item) => {
+      EChartOptions.value.series[1].data = [];
+      datas.forEach((item: any) => {
+        EChartOptions.value.series[0].data.push(item.powerScale);
+        EChartOptions.value.series[1].data.push(item.energyScale);
         EChartOptions.value.xAxis.data.push(item.month);
-
-        item.data.forEach((barItem, barIndex) => {
-          const bar_target: any = barSeries.find(
-            (item: any) => item.name === barItem.hour,
-          );
-          const line_target: any = lineSeries.find(
-            (item: any) => item.name === `${barItem.hour}中标均价`,
-          );
-
-          const energyScale = isNaN(+item.data[barIndex].energyScale)
-            ? item.data[barIndex].energyScale
-            : (+item.data[barIndex].energyScale).toFixed(1);
-
-          const winningUnitPrice = isNaN(+item.data[barIndex].winningUnitPrice)
-            ? item.data[barIndex].winningUnitPrice
-            : (+item.data[barIndex].winningUnitPrice).toFixed(2);
-
-          bar_target.data.push({
-            value: energyScale,
-            energyScale,
-            winningUnitPrice,
-          });
-          line_target.data.push({
-            value: winningUnitPrice,
-            energyScale,
-            winningUnitPrice,
-          });
-        });
+        EChartOptions.value.title.text = `储能月度中标单价/容量分析-${requestData.value.biddingContent}（${requestData.value.technologyType}）`;
       });
-      const legend = [
-        {
-          x: "center",
-          y: "90%",
-          textStyle,
-          data: barSeries.map((item: any) => {
-            return {
-              name: item.name,
-              icon: "rect",
-            };
-          }),
-        },
-        {
-          x: "center",
-          y: "95%",
-          textStyle,
-          data: lineSeries.map((item: any) => {
-            return {
-              name: item.name,
-              icon: "path://M-0.000,-0.000 L10.000,-0.000 L10.000,1.000 L-0.000,1.000 L-0.000,-0.000 Z",
-            };
-          }),
-        },
-      ];
-      EChartOptions.value.series = barSeries.reverse().concat(lineSeries);
-      EChartOptions.value.legend = legend;
       initECharts();
     } else if (!datas.length) {
       isEmptyData.value = true;
@@ -264,26 +177,42 @@ const initECharts = async () => {
     }
   });
   if (getToken()) {
-    const res = await maskPermissions({ moduleName: "中标价格分析" });
+    const res = await maskPermissions({ moduleName: "中标规模分析" });
     echartsMask.value = res.datas.isCovered;
   }
   myChart.setOption(EChartOptions.value);
 };
-const colorEnum = {
-  "4小时及以上": "#B8C4FB",
-  "2到4小时（含2小时）": "#6F89F6",
-  "2小时以内": "#244BF1",
-};
 const initData = () => {
   EChartOptions.value = {
-    color: ["#165DFF", "#2FAEFF", "#FF7D00"],
+    color: ["#244BF1", "#91A5F8"],
     title: {
       show: true,
       text: `储能月度中标单价/容量分析-${requestData.value.biddingContent}（${requestData.value.technologyType}）`,
       left: "center",
+      subtext: requestData.value.biddingContent,
+      subtextStyle: {
+        color: "rgba(0,0,0,0.6)",
+        fontSize: 14,
+        fontWeight: "normal",
+      },
     },
     graphic: [chartWatermark],
-    legend: {},
+    legend: {
+      show: true,
+      left: "center",
+      height: 16,
+      bottom: "1%",
+      itemGap: 48,
+      lineStyle: {
+        width: 16,
+      },
+      textStyle: {
+        fontSize: 14,
+        lineHeight: 22,
+        fontWeight: 400,
+        color: "#5B6985",
+      },
+    },
     tooltip: {
       trigger: "axis",
       borderWidth: 0,
@@ -297,68 +226,12 @@ const initData = () => {
       className: "custom-tooltip",
       extraCssText: "padding: 16px; border-radius: 8px;",
       formatter: (params) => {
-        const barList = params
-          .filter((item) => item.seriesType === "bar")
-          .reverse();
-        const total = barList
-          .map((item) => item.data.energyScale)
-          .reduce((a, c) => a + (c === "-" ? 0 : +c), 0);
-
-        var htmlStr = `<div style="width: 368px;" >
-              <div style="line-height:24px; font-width: 400; display: flex; justify-content: space-between;">
-                <span style="font-weight: 600; font-size: 16px; color:#000;">${params[0].name}</span>
-                <span style="font-weight: 600; font-size: 16px; color:#000;">合计：${total.toFixed(1)}MWh</span>
-              </div>
-            `;
+        let itemHtml = "";
         params.forEach((item) => {
-          const energyScale =
-            item.data.energyScale === "-" ? "" : `${item.data.energyScale}MWh`;
-          const winningUnitPrice =
-            item.data.winningUnitPrice === "-"
-              ? ""
-              : ` | ${item.data.winningUnitPrice}元/Wh`;
-          const _noData =
-            item.data.energyScale === "-" && item.data.winningUnitPrice === "-";
-
-          htmlStr += `<div
-              style="
-                width: 100%;
-                height: 32px;
-                margin-top: 8px;
-                background: #F4F5F7;
-                border-radius: 4px;
-                padding: 0 8px 0 10px;
-                font-weight: 400;
-                display: ${item.seriesType !== "bar" ? "none" : "flex"};
-                align-items: center;
-                justify-content: space-between;
-              "
-              >
-                <div
-                  style="
-                    height: 100%;
-                    display: flex;
-                    align-items: center;
-                  "
-                >
-                  <div
-                    style="
-                      width: 12px;
-                      height: 12px;
-                      margin-right: 10px;
-                      background-color: ${colorEnum[item.seriesName]};
-                      border-radius: 2px;
-                    "
-                  >
-                  </div>
-                  <span style="font-size: 14px; color: #5B6985;">${item.seriesName}</span>
-                </div>
-                <span style="font-size: 14px; color: #000; font-weight: 600;">
-                  ${!_noData ? energyScale + winningUnitPrice : "暂无数据"}
-                </span>
-              </div>`;
+          itemHtml += `<div style="width: 208px;height: 32px;background: #F2F3F5;border-radius: 4px;line-height: 32px;padding:0 8px;margin-top: 8px;display:flex;"><div style="font-weight: 400;font-size: 14px;color: rgba(0,0,0,0.6);">${item.seriesName}</div><div style="font-weight: 600;font-size: 14px;color: rgba(0,0,0,0.9);margin-left:auto;">${item.value}</div></div>`;
         });
-        htmlStr += "</div>";
+        const { axisValueLabel } = params[0];
+        var htmlStr = `<div style="" ><div style="font-weight: 600;font-size: 16px;color: rgba(0,0,0,0.9);">${axisValueLabel}</div>${itemHtml}</div>`;
         return htmlStr;
       },
     },
@@ -370,7 +243,7 @@ const initData = () => {
     },
     xAxis: {
       type: "category",
-      data: [],
+      data: [1, 2, 3],
       axisLine: {
         show: true,
         lineStyle: {
@@ -390,50 +263,15 @@ const initData = () => {
       {
         type: "value",
         name: "MWh",
-        position: "left",
-        alignTicks: true,
         nameTextStyle: {
           fontSize: 14,
-          fontWeight: "bold",
-        },
-        splitLine: {
-          show: true,
-          lineStyle: {
-            type: "dashed",
-            color: "#E5E6EA",
-            width: 1,
-          },
-        },
-      },
-      {
-        type: "value",
-        name: "元/Wh",
-        position: "right",
-        alignTicks: true,
-        nameTextStyle: {
-          fontSize: 14,
-          fontWeight: "bold",
-        },
-        axisLabel: {
-          formatter: function (value) {
-            return parseFloat(value.toFixed(1));
-          },
-        },
-        splitLine: {
-          show: true,
-          lineStyle: {
-            type: "dashed",
-            color: "#E5E6EA",
-            width: 1,
-          },
         },
       },
     ],
     series: [
       {
-        name: "容量（MWh）",
+        name: "功率",
         type: "bar",
-        yAxisIndex: 0,
         barWidth: 16,
         itemStyle: {
           color: "pink",
@@ -444,18 +282,27 @@ const initData = () => {
             },
           },
         },
-        data: [],
+        data: [1, 2, 3],
       },
       {
-        name: "中标单价（元/Wh）",
-        type: "line",
-        yAxisIndex: 1,
-        data: [],
+        name: "能量",
+        type: "bar",
+        barWidth: 16,
+        itemStyle: {
+          color: "pink",
+          normal: {
+            lineStyle: {
+              width: 2,
+              type: "dotted",
+            },
+          },
+        },
+        data: [1, 2, 3],
       },
     ],
   };
 };
-// 下载图片
+// 导出图片
 function exportResult() {
   const _echarts = echarts.getInstanceByDom(eChartsDom.value as any);
   exportImgUrl.value.png = _echarts.getDataURL({ type: "png" });
@@ -479,7 +326,7 @@ const selectChange = (row, index, val) => {
     });
   }
 };
-window.trackFunction && window.trackFunction("pc_Winbid_PriceAnalysis_click");
+window.trackFunction("pc_Winbid_PriceAnalysis_click");
 </script>
 
 <style lang="scss" scoped>

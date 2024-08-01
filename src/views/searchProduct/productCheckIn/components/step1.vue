@@ -33,6 +33,22 @@
           />
         </el-select>
       </el-form-item>
+      <!-- <el-form-item
+        label="产品类型"
+        prop="productSubtype"
+        :rules="[
+          { required: true, message: '请选择产品类型', trigger: 'change' },
+        ]"
+      >
+        <el-select v-model="form.productSubtype" placeholder="请选择">
+          <el-option
+            v-for="item in productSubtypeOption"
+            :label="item.label"
+            :value="item.value"
+            :key="item.value"
+          />
+        </el-select>
+      </el-form-item> -->
       <el-form-item label=" ">
         <el-button @click="handleNext(formRef)" type="primary">
           下一步

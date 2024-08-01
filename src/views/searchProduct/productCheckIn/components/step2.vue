@@ -157,7 +157,7 @@ const rules = reactive<FormRules<typeof form>>({
   releaseTime: [
     { trigger: "change", required: true, message: "请选择产品发布时间" },
   ],
-  images: [{ trigger: "change", required: true, message: "请上传产品图片" }],
+  images: [{ trigger: "change", required: true, message: "请上传产品白底图" }],
   specificationDocumentFileList: [
     { trigger: "change", required: false, message: "请上传图片" },
   ],
@@ -203,7 +203,6 @@ const emits = defineEmits(["next", "back", "saveDraft"]);
 
 // 校验文件
 function beforeAvatarUpload(rawFile, { accept, size }) {
-  console.log(rawFile, getFileType(rawFile.name));
   if (!accept.includes(getFileType(rawFile.name))) {
     ElMessage({ message: "文件类型不支持", type: "error" });
     return false;
