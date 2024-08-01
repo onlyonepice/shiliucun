@@ -15,7 +15,7 @@ export default {
         default: () => import("@/views/calculation/lite/index.vue"),
       },
       meta: {
-        title: "项目",
+        title: "工商业测算Lite版",
       },
     },
     {
@@ -25,7 +25,7 @@ export default {
         default: () => import("@/views/calculation/basic/index.vue"),
       },
       meta: {
-        title: "项目",
+        title: "工商业测算Basic版",
       },
     },
   ],
