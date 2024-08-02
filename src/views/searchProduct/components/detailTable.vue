@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts" setup>
-// import { Ref, ref } from "vue";
+// import { computed } from "vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("searchProduct-comparedTable");
 defineProps({
@@ -105,7 +105,16 @@ defineProps({
     type: String,
     default: "INDUSTRY_ENERGY_STORAGE",
   },
+  merge: {
+    type: Array as any,
+    default: () => [],
+  },
 });
+// const getMerge = computed(() => {
+//   return (name: string) => {
+//     return props.merge.indexOf(name) !== -1 ? "center" : "left";
+//   };
+// });
 </script>
 
 <style lang="scss" scoped>
