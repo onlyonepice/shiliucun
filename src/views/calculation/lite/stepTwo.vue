@@ -5,7 +5,7 @@
       <span required>设备数量</span>
       <Select
         type="input"
-        :defaultValue="basicInfo.projectName"
+        :defaultValue="basic.projectName"
         width="475px"
         @onChange="
           ($event) => {
@@ -18,9 +18,12 @@
 </template>
 
 <script lang="ts" setup>
-// import { Ref, ref } from "vue";
+import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("liteStepTwo");
+const basic: Ref<any> = ref({
+  projectName: "",
+});
 </script>
 
 <style lang="scss">

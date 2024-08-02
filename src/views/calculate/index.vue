@@ -46,14 +46,7 @@
           :showInfoList="showInfoList"
           @onChangeFilter="onChangeFilter"
         />
-        <Canvas
-          v-if="!addAreaType"
-          ref="searchCanvas"
-          :searchCanvas="searchCanvas"
-          :searchParams="searchParamsA"
-          :searchParamsShow="searchParamsShow"
-          @onSearch="onSearchData"
-        />
+
         <template v-if="showInfoList[0][0].value === 'EMC合同能源'">
           <div
             style="overflow-x: scroll; overflow-y: hidden"
@@ -116,6 +109,14 @@
         </div>
       </div>
     </template>
+    <Canvas
+      v-if="!addAreaType"
+      ref="searchCanvas"
+      :searchCanvas="searchCanvas"
+      :searchParams="searchParamsA"
+      :searchParamsShow="searchParamsShow"
+      @onSearch="onSearchData"
+    />
   </div>
   <DownloadReport
     v-if="downloadReportShow"

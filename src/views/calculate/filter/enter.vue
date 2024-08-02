@@ -591,10 +591,10 @@ async function onAreaChange(data: string, type: string, compare: string) {
       electricityType1.value = item.reInvestmentElectricityType;
       if (compare === "A") {
         searchParams.value.electricityTypeOneName =
-          item.reInvestmentElectricityType[0].paramName;
+          item.reInvestmentElectricityType[1].paramName;
       } else {
         searchParamsB.value.electricityTypeOneName =
-          item.reInvestmentElectricityType[0].paramName;
+          item.reInvestmentElectricityType[1].paramName;
       }
     }
   });

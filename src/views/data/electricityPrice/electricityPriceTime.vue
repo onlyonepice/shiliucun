@@ -385,7 +385,7 @@ const onGetRegionalData = async () => {
         if (item.regionName === searchParams.value.regionName) {
           electricityType1.value = item.reInvestmentElectricityType;
           searchParams.value.electricityTypeOneName =
-            item.reInvestmentElectricityType[0].paramName;
+            item.reInvestmentElectricityType[1].paramName;
         }
       });
       getElectricityTypeTwo();

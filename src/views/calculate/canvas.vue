@@ -2,7 +2,7 @@
   <div class="common-title common-title-margin">峰谷价差</div>
   <div class="investment-eCharts">
     <div id="my-chart" ref="eCharts" />
-    <div class="slider-wrapper">
+    <div class="slider-wrapper" v-if="false">
       <div class="slider-wrapper__desc">
         <img :src="TipsIcon" alt="" />
         <p>拖动滑块调整电价查看不同峰谷价差情况下的收益</p>
@@ -327,7 +327,7 @@ defineExpose({ getCanvasData, getSliderConfig });
 }
 
 #my-chart {
-  width: 76% !important;
+  width: 100% !important;
   height: 448px;
   min-width: 480px;
 }
