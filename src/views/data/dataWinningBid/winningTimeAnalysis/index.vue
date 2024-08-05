@@ -31,6 +31,7 @@
         @on-change="(val) => handleChange(val, 'partition')"
       />
     </div>
+    <EchartsTips />
     <div :class="ns.b('btns')">
       <el-button type="primary" @click="exportResult">下载图片</el-button>
     </div>

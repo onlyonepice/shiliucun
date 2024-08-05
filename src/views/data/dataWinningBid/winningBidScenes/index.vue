@@ -15,6 +15,7 @@
         @onChange="(val) => selectChange(item, index, val)"
       />
     </div>
+    <EchartsTips />
     <el-button
       v-if="!showEmpty"
       style="float: right; margin-top: 32px"

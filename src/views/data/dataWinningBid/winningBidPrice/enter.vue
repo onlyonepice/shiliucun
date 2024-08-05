@@ -20,6 +20,7 @@
         >中标价格在去除最高值和最低值后，以能量规模（MWh）为权重，使用加权平均的方法计算。</span
       >
     </div>
+    <EchartsTips />
     <el-button type="primary" @click="exportResult" style="float: right"
       >下载图片</el-button
     >

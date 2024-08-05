@@ -17,10 +17,16 @@
       />
     </div>
     <div :class="ns.b('hint')">
-      <img :src="lament_icon" alt="" />
-      <span
-        >中标价格在去除最高值和最低值后，以能量规模（MWh）为权重，使用加权平均的方法计算。</span
-      >
+      <div>
+        <img :src="lament_icon" alt="" />
+        <span
+          >中标价格在去除最高值和最低值后，以能量规模（MWh）为权重，使用加权平均的方法计算。</span
+        >
+      </div>
+      <div>
+        <img :src="lament_icon" alt="" />
+        <span>仅含项目级中标，不含集采/框架</span>
+      </div>
     </div>
     <div :class="ns.b('download')">
       <el-button type="primary" @click="exportResult">下载图片</el-button>
@@ -658,10 +664,11 @@ window.trackFunction("pc_Winbid_CompanyAnalysis_click");
   width: 100%;
   margin: 0 0 32px 0;
   background-color: #eff4ff;
-  height: 32px;
+  // height: 32px;
   padding: 6px 8px;
-  display: flex;
-  align-items: center;
+  div {
+    @include flex(center, flex-start, nowrap);
+  }
   img {
     width: 16px;
     height: 16px;
