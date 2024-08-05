@@ -305,6 +305,7 @@ const getCompanyInfo = async (id: string) => {
   });
   if (resp_code === 0) {
     companyInfo.value = datas;
+    datas === null && (tabsList.value = [{ id: 0, name: "产品参数" }]);
   }
 };
 
