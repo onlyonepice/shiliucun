@@ -79,7 +79,13 @@
             :defaultId="choseTabs"
           />
           <template v-if="choseTabs === 0">
-            <el-table :data="tableData" style="width: 100%" :border="true">
+            <el-table
+              :data="tableData"
+              style="width: 100%"
+              :border="true"
+              :span-method="arraySpanMethod"
+              type="index"
+            >
               <el-table-column fixed prop="name" label="" width="160">
                 <template #default="scope">
                   <p
@@ -109,9 +115,9 @@
                 </template>
               </el-table-column>
               <el-table-column
-                prop="info1"
                 v-for="item in tableData[0].info.length"
                 :key="item"
+                :prop="'info' + item"
                 label=""
                 :width="
                   943 / tableData[0].info.length < 300
@@ -121,11 +127,11 @@
               >
                 <template #default="scope">
                   <detailTable
-                    v-if="scope.row.info[item - 1]"
                     :index="scope.$index"
                     :info="scope.row.info[item - 1] || {}"
                     :productType="route.query.productType"
                   />
+                  <div>{{ scope.$rowIndex }}</div>
                 </template>
               </el-table-column>
             </el-table>
@@ -225,6 +231,23 @@ const tabNameList = ref([
   "尺寸/m*m*m",
   "产品单价/元/kWh",
 ]);
+const tabNameListEn = ref([
+  "modelName",
+  "a",
+  "batteryTypeName",
+  "batterySystemEnergy",
+  "dischargeDepth",
+  "b",
+  "nominalVoltage",
+  "ratedPower",
+  "c",
+  "productFormName",
+  "systemOverallEfficiency",
+  "annualDecayRate",
+  "coolingMethodName",
+  "size",
+  "energyStorageSystemProductUnitPrice",
+]);
 const tabNameList2 = ref([
   "产品型号",
   "形态",
@@ -234,6 +257,16 @@ const tabNameList2 = ref([
   "循环寿命",
   "尺寸",
   "产品单价（元/Wh）",
+]);
+const tabNameList2En = ref([
+  "modelName",
+  "shapeName",
+  "batteryCapacity",
+  "chargeDischargeRate",
+  "energyDensity",
+  "cycleLife",
+  "size",
+  "productPrice",
 ]);
 const tableData: Ref<any> = ref([]);
 const route = useRoute();
@@ -308,7 +341,73 @@ const getCompanyInfo = async (id: string) => {
     datas === null && (tabsList.value = [{ id: 0, name: "产品参数" }]);
   }
 };
+// 寻找出相同的key
+function generateComparisonMatrix(data) {
+  if (data.length === 0) return [];
 
+  const keys = Object.keys(data[0]);
+  const matrix = [];
+
+  keys.forEach((key) => {
+    const valueOccurrences = {};
+    const row = new Array(data.length).fill(0);
+
+    // Collect occurrences of each value
+    data.forEach((item, index) => {
+      const value = item[key];
+      if (!valueOccurrences[value]) {
+        valueOccurrences[value] = [];
+      }
+      valueOccurrences[value].push(index);
+    });
+
+    // Populate the result row based on occurrences
+    Object.values(valueOccurrences).forEach((indices) => {
+      indices.forEach((index, i) => {
+        if (i === 0) {
+          row[index] = indices.length;
+        } else {
+          row[index] = 0;
+        }
+      });
+    });
+
+    matrix.push(row);
+  });
+
+  return matrix;
+}
+// 合并单元格
+/* eslint-disable */
+const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
+  if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
+    if (rowIndex === 1 || rowIndex === 5 || rowIndex === 8) {
+      if (columnIndex === 1) {
+        return [1, productDetail.value.models.length]; // 合并第一行第二列和第三列单元格
+      } else if (columnIndex === 2) {
+        return [0, 0]; // 被合并的单元格设置为[0, 0]
+      }
+    }
+  }
+  const _list = [];
+  productDetail.value.models.map((item) => {
+    var _data = {};
+    const _value =
+      route.query.productType === "INDUSTRY_ENERGY_STORAGE"
+        ? tabNameListEn.value
+        : tabNameList2En.value;
+    _value.map((_item) => {
+      _data[_item] = item[_item] || "";
+    });
+    _list.push(_data);
+  });
+  if (columnIndex > 0) {
+    return {
+      rowspan: 1,
+      colspan: generateComparisonMatrix(_list)[rowIndex][columnIndex - 1],
+    };
+  }
+};
 // 获取产品详情
 const getProductDetail = async () => {
   const { datas, resp_code }: any = await getProductDetailApi({
@@ -317,6 +416,12 @@ const getProductDetail = async () => {
   });
   if (resp_code === 0) {
     getCompanyInfo(datas.enterpriseId);
+    if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
+      const collator = new Intl.Collator("zh-CN", { sensitivity: "base" });
+      datas.models.map((item) => {
+        item.coolingMethodName = item.coolingMethodName.sort(collator.compare);
+      });
+    }
     productDetail.value = datas;
     breadcrumbList.value[1].text = datas.name;
     if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
@@ -529,6 +634,21 @@ const onConnectCompany = (id: string) => {
     text-align: right;
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     border-right: none !important;
+  }
+  .el-table__body {
+    .el-table__row {
+      td {
+        text-align: center;
+      }
+      td[colspan="1"] {
+        div {
+          text-align: left;
+        }
+        p {
+          text-align: left;
+        }
+      }
+    }
   }
 }
 </style>

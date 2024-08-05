@@ -8,6 +8,51 @@ export function toType(obj) {
     .toLowerCase();
 }
 
+// 对比两个对象是否相同
+export function deepEqual(obj1, obj2) {
+  if (obj1 === obj2) return true; // 快速检查引用相等
+
+  if (obj1 === null || obj2 === null) return false; // null 或 undefined 不相等
+
+  if (typeof obj1 !== typeof obj2) return false; // 类型不同不相等
+
+  if (typeof obj1 === "object") {
+    if (Array.isArray(obj1) !== Array.isArray(obj2)) return false; // 判断是否同为数组
+
+    if (Array.isArray(obj1)) {
+      if (obj1.length !== obj2.length) return false; // 数组长度不相等
+
+      // 对数组进行排序然后比较
+      obj1 = [...obj1].sort();
+      obj2 = [...obj2].sort();
+
+      for (let i = 0; i < obj1.length; i++) {
+        if (!deepEqual(obj1[i], obj2[i])) return false; // 递归比较数组元素
+      }
+
+      return true;
+    } else {
+      const keys1 = Object.keys(obj1);
+      const keys2 = Object.keys(obj2);
+
+      if (keys1.length !== keys2.length) return false; // 对象键数量不同
+
+      // 对对象键进行排序然后比较
+      keys1.sort();
+      keys2.sort();
+
+      for (const key of keys1) {
+        if (keys2.indexOf(key) === -1 || !deepEqual(obj1[key], obj2[key]))
+          return false; // 递归比较对象值
+      }
+
+      return true;
+    }
+  }
+
+  return false; // 其他类型（如数字、字符串）直接比较
+}
+
 // 获取对象最里层的对象
 export function getInnermostObject(obj) {
   if (
