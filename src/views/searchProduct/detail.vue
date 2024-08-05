@@ -84,6 +84,7 @@
               style="width: 100%"
               :border="true"
               :span-method="arraySpanMethod"
+              type="index"
             >
               <el-table-column fixed prop="name" label="" width="160">
                 <template #default="scope">
@@ -114,9 +115,9 @@
                 </template>
               </el-table-column>
               <el-table-column
-                prop="info1"
                 v-for="item in tableData[0].info.length"
                 :key="item"
+                :prop="'info' + item"
                 label=""
                 :width="
                   943 / tableData[0].info.length < 300
@@ -127,10 +128,10 @@
                 <template #default="scope">
                   <detailTable
                     :index="scope.$index"
-                    :info="scope.row.info || {}"
-                    :item="item - 1"
+                    :info="scope.row.info[item - 1] || {}"
                     :productType="route.query.productType"
                   />
+                  <div>{{ scope.$rowIndex }}</div>
                 </template>
               </el-table-column>
             </el-table>
@@ -330,30 +331,40 @@ const getCompanyInfo = async (id: string) => {
   }
 };
 // 寻找出相同的key
-function compareObjects(arr) {
-  // 获取对象中的所有键（假设所有对象的键相同）
-  const keys = Object.keys(arr[0]);
-  const result = Array.from({ length: keys.length }, () =>
-    Array(arr.length).fill(0),
-  );
+function generateComparisonMatrix(data) {
+  if (data.length === 0) return [];
 
-  // 外层循环：遍历对象数组中的每个对象
-  for (let i = 1; i < arr.length; i++) {
-    // 内层循环：遍历每个对象的每个键
-    for (let j = 0; j < keys.length; j++) {
-      const key = keys[j];
-      // 中间层循环：遍历前面的对象
-      for (let k = 0; k < i; k++) {
-        // 如果当前对象的键值与之前某个对象的键值相同
-        if (arr[i][key] === arr[k][key]) {
-          result[j][k]++;
-          break; // 找到一次相同后跳出
-        }
+  const keys = Object.keys(data[0]);
+  const matrix = [];
+
+  keys.forEach((key) => {
+    const valueOccurrences = {};
+    const row = new Array(data.length).fill(0);
+
+    // Collect occurrences of each value
+    data.forEach((item, index) => {
+      const value = item[key];
+      if (!valueOccurrences[value]) {
+        valueOccurrences[value] = [];
       }
-    }
-  }
+      valueOccurrences[value].push(index);
+    });
 
-  return result;
+    // Populate the result row based on occurrences
+    Object.values(valueOccurrences).forEach((indices) => {
+      indices.forEach((index, i) => {
+        if (i === 0) {
+          row[index] = indices.length;
+        } else {
+          row[index] = 0;
+        }
+      });
+    });
+
+    matrix.push(row);
+  });
+
+  return matrix;
 }
 // 合并单元格
 /* eslint-disable */
@@ -366,26 +377,6 @@ const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
         return [0, 0]; // 被合并的单元格设置为[0, 0]
       }
     } else {
-      let _columnIndex = [];
-      tabNameListEn.value.map((item, index) => {
-        const _itemIndex = new Array(productDetail.value.models.length).fill(0);
-        for (
-          let _index = 0;
-          _index < productDetail.value.models.length - 1;
-          _index++
-        ) {
-          if (
-            JSON.stringify(productDetail.value.models[_index][item]) ===
-            JSON.stringify(productDetail.value.models[_index + 1][item])
-          ) {
-            index !== 1 &&
-              index !== 5 &&
-              index !== 8 &&
-              (_itemIndex[_index] = _itemIndex[_index] + 1);
-          }
-        }
-        _columnIndex.push(_itemIndex);
-      });
       const _list = [];
       productDetail.value.models.map((item) => {
         var _data = {};
@@ -394,17 +385,11 @@ const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
         });
         _list.push(_data);
       });
-      if (columnIndex === 1) {
+      if (columnIndex > 0) {
         return {
           rowspan: 1,
-          colspan: compareObjects(_list)[rowIndex][0] + 1,
-        }; // 合并第一行第二列和第三列单元格
-      }
-      if (columnIndex === 2) {
-        return {
-          rowspan: 1,
-          colspan: 1,
-        }; // 被合并的单元格设置为[0, 0]
+          colspan: generateComparisonMatrix(_list)[rowIndex][columnIndex - 1],
+        };
       }
     }
   }
@@ -417,6 +402,10 @@ const getProductDetail = async () => {
   });
   if (resp_code === 0) {
     getCompanyInfo(datas.enterpriseId);
+    const collator = new Intl.Collator("zh-CN", { sensitivity: "base" });
+    datas.models.map((item) => {
+      item.coolingMethodName = item.coolingMethodName.sort(collator.compare);
+    });
     productDetail.value = datas;
     breadcrumbList.value[1].text = datas.name;
     if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
@@ -629,6 +618,21 @@ const onConnectCompany = (id: string) => {
     text-align: right;
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     border-right: none !important;
+  }
+  .el-table__body {
+    .el-table__row {
+      td {
+        text-align: center;
+      }
+      td[colspan="1"] {
+        div {
+          text-align: left;
+        }
+        p {
+          text-align: left;
+        }
+      }
+    }
   }
 }
 </style>
