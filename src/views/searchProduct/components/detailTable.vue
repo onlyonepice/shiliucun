@@ -6,51 +6,62 @@
       name="产品型号"
       style="font-weight: 600"
     >
-      {{ info.modelName ? info.modelName : "-" }}
+      {{ info[item].modelName ? info[item].modelName : "-" }}
     </div>
     <div v-if="index === 1" :class="ns.b('common')" name="电池参数" />
     <div v-if="index === 2" :class="ns.b('common')" name="电芯类型">
-      {{ info.batteryTypeName ? info.batteryTypeName : "-" }}
+      {{ info[item].batteryTypeName ? info[item].batteryTypeName : "-" }}
     </div>
     <div v-if="index === 3" :class="ns.b('common')" name="电池系统能量/kWh">
-      {{ info.batterySystemEnergy ? info.batterySystemEnergy + "kWh" : "-" }}
+      {{
+        info[item].batterySystemEnergy
+          ? info[item].batterySystemEnergy + "kWh"
+          : "-"
+      }}
     </div>
     <div v-if="index === 4" :class="ns.b('common')" name="放电深度/%">
-      {{ info.dischargeDepth ? info.dischargeDepth + "%" : "-" }}
+      {{ info[item].dischargeDepth ? info[item].dischargeDepth + "%" : "-" }}
     </div>
     <div v-if="index === 5" :class="ns.b('common')" name="PCS参数" />
     <div v-if="index === 6" :class="ns.b('common')" name="标称电压/V">
       {{
-        info.nominalVoltage && info.nominalVoltage.length !== 0
-          ? info.nominalVoltage.join("-")
+        info[item].nominalVoltage && info[item].nominalVoltage.length !== 0
+          ? info[item].nominalVoltage.join("-")
           : "-"
       }}
     </div>
     <div v-if="index === 7" :class="ns.b('common')" name="额定功率/kW">
-      {{ info.ratedPower ? info.ratedPower + "kW" : "-" }}
+      {{ info[item].ratedPower ? info[item].ratedPower + "kW" : "-" }}
     </div>
     <div v-if="index === 8" :class="ns.b('common')" name="系统参数" />
     <div v-if="index === 9" :class="ns.b('common')" name="产品形态">
-      {{ info.productFormName ? info.productFormName : "-" }}
+      {{ info[item].productFormName ? info[item].productFormName : "-"
+      }}{{ item }}
     </div>
     <div v-if="index === 10" :class="ns.b('common')" name="系统综合效率/%">
       {{
-        info.systemOverallEfficiency ? info.systemOverallEfficiency + "%" : "-"
-      }}
+        info[item].systemOverallEfficiency
+          ? info[item].systemOverallEfficiency + "%"
+          : "-"
+      }}{{ item }}
     </div>
     <div v-if="index === 11" :class="ns.b('common')" name="年衰减率/%">
-      {{ info.annualDecayRate ? info.annualDecayRate + "%" : "-" }}
+      {{ info[item].annualDecayRate ? info[item].annualDecayRate + "%" : "-" }}
     </div>
     <div v-if="index === 12" :class="ns.b('common')" name="冷却方式">
-      {{ info.coolingMethodName ? info.coolingMethodName.join(",") : "-" }}
+      {{
+        info[item].coolingMethodName
+          ? info[item].coolingMethodName.join(",")
+          : "-"
+      }}
     </div>
     <div v-if="index === 13" :class="ns.b('common')" name="尺寸/m*m*m">
-      {{ info.size ? info.size : "-" }}
+      {{ info[item].size ? info[item].size : "-" }}
     </div>
     <div v-if="index === 14" :class="ns.b('common')" name="产品单价/元/kWh">
       {{
-        info.energyStorageSystemProductUnitPrice
-          ? info.energyStorageSystemProductUnitPrice
+        info[item].energyStorageSystemProductUnitPrice
+          ? info[item].energyStorageSystemProductUnitPrice
           : "-"
       }}
     </div>
@@ -100,6 +111,10 @@ defineProps({
   info: {
     type: Object as any,
     default: () => {},
+  },
+  item: {
+    type: Number,
+    default: 0,
   },
   productType: {
     type: String,

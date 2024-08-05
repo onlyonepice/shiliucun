@@ -126,11 +126,10 @@
               >
                 <template #default="scope">
                   <detailTable
-                    v-if="scope.row.info[item - 1]"
                     :index="scope.$index"
-                    :info="scope.row.info[item - 1] || {}"
+                    :info="scope.row.info || {}"
+                    :item="item - 1"
                     :productType="route.query.productType"
-                    :merge="findCommonValueKeys(...productDetail.models)"
                   />
                 </template>
               </el-table-column>
@@ -331,62 +330,43 @@ const getCompanyInfo = async (id: string) => {
   }
 };
 // 寻找出相同的key
-function findCommonValueKeys(...arrays) {
-  if (arrays.length === 0) return [];
+function compareObjects(arr) {
+  // 获取对象中的所有键（假设所有对象的键相同）
+  const keys = Object.keys(arr[0]);
+  const result = Array.from({ length: keys.length }, () =>
+    Array(arr.length).fill(0),
+  );
 
-  // Function to filter out invalid values
-  const isValidValue = (value) =>
-    value !== null &&
-    value !== undefined &&
-    value !== "" &&
-    !(Array.isArray(value) && value.length === 0);
-
-  // Initialize an object to track common keys and their values
-  const commonKeys = {};
-
-  // Get keys from the first object as a base for comparison
-  const keys = Object.keys(arrays[0]);
-
-  // Initialize commonKeys with all keys from the first object
-  keys.forEach((key) => {
-    if (isValidValue(arrays[0][key])) {
-      commonKeys[key] = arrays[0][key];
-    }
-  });
-
-  // Compare each array with the first one
-  for (let i = 1; i < arrays.length; i++) {
-    const currentObj = arrays[i];
-    keys.forEach((key) => {
-      if (commonKeys[key] !== undefined && !isValidValue(currentObj[key])) {
-        commonKeys[key] = undefined;
-      } else if (
-        commonKeys[key] !== undefined &&
-        commonKeys[key] !== currentObj[key]
-      ) {
-        commonKeys[key] = undefined;
+  // 外层循环：遍历对象数组中的每个对象
+  for (let i = 1; i < arr.length; i++) {
+    // 内层循环：遍历每个对象的每个键
+    for (let j = 0; j < keys.length; j++) {
+      const key = keys[j];
+      // 中间层循环：遍历前面的对象
+      for (let k = 0; k < i; k++) {
+        // 如果当前对象的键值与之前某个对象的键值相同
+        if (arr[i][key] === arr[k][key]) {
+          result[j][k]++;
+          break; // 找到一次相同后跳出
+        }
       }
-    });
+    }
   }
 
-  // Filter out keys that are not common
-  return Object.keys(commonKeys).filter((key) => commonKeys[key] !== undefined);
+  return result;
 }
 // 合并单元格
 /* eslint-disable */
 const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
     if (rowIndex === 1 || rowIndex === 5 || rowIndex === 8) {
-      // if (columnIndex === 1) {
-      //   return [1, productDetail.value.models.length]; // 合并第一行第二列和第三列单元格
-      // } else if (columnIndex === 2) {
-      //   return [0, 0]; // 被合并的单元格设置为[0, 0]
-      // }
+      if (columnIndex === 1) {
+        return [1, productDetail.value.models.length]; // 合并第一行第二列和第三列单元格
+      } else if (columnIndex === 2) {
+        return [0, 0]; // 被合并的单元格设置为[0, 0]
+      }
     } else {
       let _columnIndex = [];
-      // for (const key in productDetail.value.models[0]) {
-
-      // }
       tabNameListEn.value.map((item, index) => {
         const _itemIndex = new Array(productDetail.value.models.length).fill(0);
         for (
@@ -414,26 +394,10 @@ const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
         });
         _list.push(_data);
       });
-      console.log(compareObjectsByKeys(_list));
-      // const _columnIndex = [];
-      // tabNameListEn.value.map((item, index) => {
-      //   findCommonValueKeys(...productDetail.value.models).map((_item) => {
-      //     if (item === _item) {
-      //       _columnIndex.push(index);
-      //     }
-      //   });
-      // });
-      // if (!_columnIndex.indexOf(rowIndex)) {
-      //   if (columnIndex === 1) {
-      //     return [1, productDetail.value.models.length]; // 合并第一行第二列和第三列单元格
-      //   } else if (columnIndex === 2) {
-      //     return [0, 0]; // 被合并的单元格设置为[0, 0]
-      //   }
-      // }
       if (columnIndex === 1) {
         return {
           rowspan: 1,
-          colspan: _columnIndex[rowIndex][0] + 1,
+          colspan: compareObjects(_list)[rowIndex][0] + 1,
         }; // 合并第一行第二列和第三列单元格
       }
       if (columnIndex === 2) {
@@ -445,35 +409,6 @@ const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
     }
   }
 };
-function compareObjectsByKeys(arr) {
-  // 获取对象中所有键的列表（假设所有对象的键相同）
-  const keys = Object.keys(arr[0]);
-  const keyCount = keys.length;
-  const objCount = arr.length;
-
-  // 初始化一个二维数组，每个子数组的大小为对象的数量，初始值为0
-  const result = Array.from({ length: keyCount }, () =>
-    Array(objCount).fill(0),
-  );
-
-  // 外层循环：遍历对象数组中的每个对象
-  for (let i = 1; i < objCount; i++) {
-    // 内层循环：遍历每个对象的每个键
-    for (let j = 0; j < keyCount; j++) {
-      const key = keys[j];
-      for (let k = 0; k < i; k++) {
-        // 如果当前对象的键值与之前某个对象的键值相同
-        if (arr[i][key] === arr[k][key]) {
-          result[j][i - 1]++;
-        }
-      }
-    }
-  }
-
-  return result;
-}
-
-// arraySpanMethod({});
 // 获取产品详情
 const getProductDetail = async () => {
   const { datas, resp_code }: any = await getProductDetailApi({
