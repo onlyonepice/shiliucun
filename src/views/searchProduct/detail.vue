@@ -258,6 +258,16 @@ const tabNameList2 = ref([
   "尺寸",
   "产品单价（元/Wh）",
 ]);
+const tabNameList2En = ref([
+  "modelName",
+  "shapeName",
+  "batteryCapacity",
+  "chargeDischargeRate",
+  "energyDensity",
+  "cycleLife",
+  "size",
+  "productPrice",
+]);
 const tableData: Ref<any> = ref([]);
 const route = useRoute();
 const productDetail: Ref<any> = ref({}); // 产品详情
@@ -376,22 +386,25 @@ const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
       } else if (columnIndex === 2) {
         return [0, 0]; // 被合并的单元格设置为[0, 0]
       }
-    } else {
-      const _list = [];
-      productDetail.value.models.map((item) => {
-        var _data = {};
-        tabNameListEn.value.map((_item) => {
-          _data[_item] = item[_item] || "";
-        });
-        _list.push(_data);
-      });
-      if (columnIndex > 0) {
-        return {
-          rowspan: 1,
-          colspan: generateComparisonMatrix(_list)[rowIndex][columnIndex - 1],
-        };
-      }
     }
+  }
+  const _list = [];
+  productDetail.value.models.map((item) => {
+    var _data = {};
+    const _value =
+      route.query.productType === "INDUSTRY_ENERGY_STORAGE"
+        ? tabNameListEn.value
+        : tabNameList2En.value;
+    _value.map((_item) => {
+      _data[_item] = item[_item] || "";
+    });
+    _list.push(_data);
+  });
+  if (columnIndex > 0) {
+    return {
+      rowspan: 1,
+      colspan: generateComparisonMatrix(_list)[rowIndex][columnIndex - 1],
+    };
   }
 };
 // 获取产品详情
@@ -402,10 +415,12 @@ const getProductDetail = async () => {
   });
   if (resp_code === 0) {
     getCompanyInfo(datas.enterpriseId);
-    const collator = new Intl.Collator("zh-CN", { sensitivity: "base" });
-    datas.models.map((item) => {
-      item.coolingMethodName = item.coolingMethodName.sort(collator.compare);
-    });
+    if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
+      const collator = new Intl.Collator("zh-CN", { sensitivity: "base" });
+      datas.models.map((item) => {
+        item.coolingMethodName = item.coolingMethodName.sort(collator.compare);
+      });
+    }
     productDetail.value = datas;
     breadcrumbList.value[1].text = datas.name;
     if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
