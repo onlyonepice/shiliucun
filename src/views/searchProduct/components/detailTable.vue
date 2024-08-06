@@ -55,6 +55,63 @@
       }}
     </div>
   </template>
+  <template v-if="productType === 'ENERGY_STORAGE_INVERTER'">
+    <div
+      v-if="index === 0"
+      :class="ns.b('common')"
+      name="产品型号"
+      style="font-weight: 600"
+    >
+      {{ info.modelName ? info.modelName : "-" }}
+    </div>
+    <div v-if="index === 1" :class="ns.b('common')" name="直流侧参数" />
+    <div v-if="index === 2" :class="ns.b('common')" name="直流电压范围/V">
+      {{ info.dcVoltageRange ? info.dcVoltageRange : "-" }}
+    </div>
+    <div v-if="index === 3" :class="ns.b('common')" name="最大直流电流/A">
+      {{ info.maximumDirectCurrent ? info.maximumDirectCurrent : "-" }}
+    </div>
+    <div v-if="index === 4" :class="ns.b('common')" name="交流侧参数" />
+    <div v-if="index === 5" :class="ns.b('common')" name="额定输出功率/kW">
+      {{ info.ratedOutputPower ? info.ratedOutputPower : "-" }}
+    </div>
+    <div v-if="index === 6" :class="ns.b('common')" name="额定交流电压/V">
+      {{ info.ratedACVoltage ? info.ratedACVoltage : "-" }}
+    </div>
+    <div v-if="index === 7" :class="ns.b('common')" name="额定交流电流/A">
+      {{ info.ratedAlternatingCurrent ? info.ratedAlternatingCurrent : "-" }}
+    </div>
+    <div v-if="index === 8" :class="ns.b('common')" name="额定交流频率">
+      {{ info.ratedACFrequency ? info.ratedACFrequency : "-" }}
+    </div>
+    <div v-if="index === 9" :class="ns.b('common')" name="系统参数" />
+    <div v-if="index === 10" :class="ns.b('common')" name="最大效率/%">
+      {{ info.maximumEfficiency ? info.maximumEfficiency : "-" }}
+    </div>
+    <div v-if="index === 11" :class="ns.b('common')" name="工作温度范围">
+      {{
+        info.operatingTemperatureRange ? info.operatingTemperatureRange : "-"
+      }}
+    </div>
+    <div v-if="index === 12" :class="ns.b('common')" name="相对湿度范围">
+      {{ info.relativeHumidityRange ? info.relativeHumidityRange : "-" }}
+    </div>
+    <div v-if="index === 13" :class="ns.b('common')" name="海拔高度">
+      {{ info.altitude ? info.altitude : "-" }}
+    </div>
+    <div v-if="index === 14" :class="ns.b('common')" name="冷却方式">
+      {{ info.coolingMethodName ? info.coolingMethodName.join(",") : "-" }}
+    </div>
+    <div v-if="index === 15" :class="ns.b('common')" name="尺寸（W*H*D）/mm">
+      {{ info.size ? info.size : "-" }}
+    </div>
+    <div v-if="index === 16" :class="ns.b('common')" name="重量/kg">
+      {{ info.weight ? info.weight : "-" }}
+    </div>
+    <div v-if="index === 17" :class="ns.b('common')" name="产品单价/元/台">
+      {{ info.productPrice ? info.productPrice : "-" }}
+    </div>
+  </template>
   <template v-else>
     <div
       v-if="index === 0"

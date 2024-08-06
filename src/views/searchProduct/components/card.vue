@@ -173,32 +173,32 @@ const productInfo = computed(() => {
     _data.push(
       {
         label: "直流电压范围：",
-        value: props.product.shapeName || "-",
+        value: props.product.dcVoltageRange + "V" || "-",
       },
       {
         label: "最大直流电流：",
-        value: props.product.cycleLife || "-",
+        value: props.product.maximumDirectCurrent + "A" || "-",
       },
       {
         label: "额定功率：",
-        value: props.product.energyDensity || "-",
+        value: props.product.ratedPower + "kW" || "-",
       },
       {
         label: "额定交流电压：",
-        value: props.product.batteryCapacity
-          ? props.product.batteryCapacity + "Ah"
+        value: props.product.ratedACVoltage
+          ? props.product.ratedACVoltage + "V"
           : "-",
       },
       {
         label: "最大效率：",
-        value: props.product.batteryCapacity
-          ? props.product.batteryCapacity + "Ah"
+        value: props.product.maximumEfficiency
+          ? props.product.maximumEfficiency + "%"
           : "-",
       },
       {
         label: "频率：",
-        value: props.product.batteryCapacity
-          ? props.product.batteryCapacity + "Ah"
+        value: props.product.ratedACFrequency
+          ? props.product.ratedACFrequency + "Hz"
           : "-",
       },
     );

@@ -104,6 +104,82 @@
       }}
     </div>
   </template>
+  <template v-if="productType === 'ENERGY_STORAGE_INVERTER'">
+    <div v-if="index === 1" :class="ns.b('common')" name="产品型号">
+      <Select
+        v-if="info.models.length > 1"
+        title=""
+        :options="info.models"
+        valueKey="modelName"
+        labelKey="modelName"
+        width="100%"
+        :defaultValue="info.models[0].modelName"
+        @onChange="
+          ($event) => {
+            onChoseProduct($event);
+          }
+        "
+      />
+      <p v-else>{{ showData.modelName ? showData.modelName : "-" }}</p>
+    </div>
+    <div v-if="index === 2" :class="ns.b('enterprise')" name="直流侧参数" />
+    <div v-if="index === 3" :class="ns.b('common')" name="直流电压范围/V">
+      {{ showData.dcVoltageRange ? showData.dcVoltageRange : "-" }}
+    </div>
+    <div v-if="index === 4" :class="ns.b('common')" name="最大直流电流/A">
+      {{ showData.maximumDirectCurrent ? showData.maximumDirectCurrent : "-" }}
+    </div>
+    <div v-if="index === 5" :class="ns.b('common')" name="交流侧参数" />
+    <div v-if="index === 6" :class="ns.b('common')" name="额定输出功率/kW">
+      {{ showData.ratedOutputPower ? showData.ratedOutputPower : "-" }}
+    </div>
+    <div v-if="index === 7" :class="ns.b('common')" name="额定交流电压/V">
+      {{ showData.ratedACVoltage ? showData.ratedACVoltage : "-" }}
+    </div>
+    <div v-if="index === 8" :class="ns.b('common')" name="额定交流电流/A">
+      {{
+        showData.ratedAlternatingCurrent
+          ? showData.ratedAlternatingCurrent
+          : "-"
+      }}
+    </div>
+    <div v-if="index === 9" :class="ns.b('common')" name="额定交流频率">
+      {{ showData.ratedACFrequency ? showData.ratedACFrequency : "-" }}
+    </div>
+    <div v-if="index === 10" :class="ns.b('common')" name="系统参数" />
+    <div v-if="index === 11" :class="ns.b('common')" name="最大效率/%">
+      {{ showData.maximumEfficiency ? showData.maximumEfficiency : "-" }}
+    </div>
+    <div v-if="index === 12" :class="ns.b('common')" name="工作温度范围">
+      {{
+        showData.operatingTemperatureRange
+          ? showData.operatingTemperatureRange
+          : "-"
+      }}
+    </div>
+    <div v-if="index === 13" :class="ns.b('common')" name="相对湿度范围">
+      {{
+        showData.relativeHumidityRange ? showData.relativeHumidityRange : "-"
+      }}
+    </div>
+    <div v-if="index === 14" :class="ns.b('common')" name="海拔高度">
+      {{ showData.altitude ? showData.altitude : "-" }}
+    </div>
+    <div v-if="index === 15" :class="ns.b('common')" name="冷却方式">
+      {{
+        showData.coolingMethodName ? showData.coolingMethodName.join(",") : "-"
+      }}
+    </div>
+    <div v-if="index === 16" :class="ns.b('common')" name="尺寸（W*H*D）/mm">
+      {{ showData.size ? showData.size : "-" }}
+    </div>
+    <div v-if="index === 17" :class="ns.b('common')" name="重量/kg">
+      {{ showData.weight ? showData.weight : "-" }}
+    </div>
+    <div v-if="index === 18" :class="ns.b('common')" name="产品单价/元/台">
+      {{ showData.productPrice ? showData.productPrice : "-" }}
+    </div>
+  </template>
   <template v-else>
     <div v-if="index === 1" :class="ns.b('common')" name="产品名称">
       {{ info.name ? info.name : "-" }}

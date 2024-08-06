@@ -17,6 +17,20 @@
             >
               {{ scope.row.name }}
             </p>
+            <p
+              v-if="route.query.productType === 'ENERGY_STORAGE_INVERTER'"
+              :style="{
+                color: 'rgba(0, 0, 0, 0.9)',
+                'font-weight':
+                  scope.$index === 2 ||
+                  scope.$index === 5 ||
+                  scope.$index === 10
+                    ? 600
+                    : 400,
+              }"
+            >
+              {{ scope.row.name }}
+            </p>
             <p v-else style="color: rgba(0, 0, 0, 0.9)">
               {{ scope.row.name }}
             </p>
@@ -129,6 +143,27 @@ const tabNameList2 = ref([
   "尺寸",
   "产品单价/元/Wh",
 ]);
+const tabNameList3 = ref([
+  "",
+  "产品型号",
+  "直流侧参数",
+  "直流电压范围",
+  "最大直流电流/A",
+  "交流侧参数",
+  "额定输出功率/kW",
+  "额定交流电压/V",
+  "额定交流电流/A",
+  "额定交流频率",
+  "系统参数",
+  "最大效率/%",
+  "工作温度范围",
+  "相对湿度范围",
+  "海拔高度",
+  "冷却方式",
+  "尺寸（W*H*D）/mm",
+  "重量/kg",
+  "产品单价/元/台",
+]);
 const choseIndexList = ref([0, 0, 0, 0]);
 // 获取对比列表数据
 const getComparedList = async () => {
@@ -150,20 +185,24 @@ const getComparedList = async () => {
       route.query.productType !== "INDUSTRY_ENERGY_STORAGE" &&
         (item.image = item.models[0].image);
     });
-    if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
-      for (let index = 0; index < 16; index++) {
-        tableData.value.push({
-          name: tabNameList.value[index],
-          info: cloneDeep(datas),
-        });
-      }
-    } else {
-      for (let index = 0; index < 10; index++) {
-        tableData.value.push({
-          name: tabNameList2.value[index],
-          info: cloneDeep(datas),
-        });
-      }
+    const _productType = route.query.productType;
+    const _length =
+      _productType === "INDUSTRY_ENERGY_STORAGE"
+        ? 16
+        : _productType === "ENERGY_STORAGE_INVERTER"
+          ? 19
+          : 10;
+    const _value =
+      _productType === "INDUSTRY_ENERGY_STORAGE"
+        ? tabNameList.value
+        : _productType === "ENERGY_STORAGE_INVERTER"
+          ? tabNameList3.value
+          : tabNameList2.value;
+    for (let index = 0; index < _length; index++) {
+      tableData.value.push({
+        name: _value[index],
+        info: cloneDeep(datas),
+      });
     }
   }
 };

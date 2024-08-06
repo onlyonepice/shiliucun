@@ -104,6 +104,21 @@
                     {{ scope.row.name }}
                   </p>
                   <p
+                    v-if="route.query.productType === 'ENERGY_STORAGE_INVERTER'"
+                    :style="{
+                      'text-align': 'right',
+                      color: 'rgba(0, 0, 0, 0.9)',
+                      'font-weight':
+                        scope.$index === 1 ||
+                        scope.$index === 4 ||
+                        scope.$index === 9
+                          ? 600
+                          : 400,
+                    }"
+                  >
+                    {{ scope.row.name }}
+                  </p>
+                  <p
                     v-else
                     style="
                       text-align: right;
@@ -268,13 +283,54 @@ const tabNameList2En = ref([
   "size",
   "productPrice",
 ]);
+const tabNameList3 = ref([
+  "产品型号",
+  "直流侧参数",
+  "直流电压范围",
+  "最大直流电流/A",
+  "交流侧参数",
+  "额定输出功率/kW",
+  "额定交流电压/V",
+  "额定交流电流/A",
+  "额定交流频率",
+  "系统参数",
+  "最大效率/%",
+  "工作温度范围",
+  "相对湿度范围",
+  "海拔高度",
+  "冷却方式",
+  "尺寸（W*H*D）/mm",
+  "重量/kg",
+  "产品单价/元/台",
+]);
+const tabNameList3En = ref([
+  "modelName",
+  "a",
+  "dcVoltageRange",
+  "maximumDirectCurrent",
+  "b",
+  "ratedOutputPower",
+  "ratedACVoltage",
+  "ratedAlternatingCurrent",
+  "ratedACFrequency",
+  "c",
+  "maximumEfficiency",
+  "operatingTemperatureRange",
+  "relativeHumidityRange",
+  "altitude",
+  "coolingMethod",
+  "size",
+  "weight",
+  "productPrice",
+]);
 const tableData: Ref<any> = ref([]);
 const route = useRoute();
 const productDetail: Ref<any> = ref({}); // 产品详情
 const productDetailList: Ref<any> = ref({});
 const productDetailInfo = computed(() => {
+  const _productType = route.query.productType;
   const _data = [];
-  if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
+  if (_productType === "INDUSTRY_ENERGY_STORAGE") {
     _data.push(
       {
         label: "额定功率：",
@@ -296,6 +352,37 @@ const productDetailInfo = computed(() => {
         label: "冷却方式：",
         value:
           productDetail.value.models[0].coolingMethodName.join("，") || "-",
+      },
+    );
+  } else if (_productType === "ENERGY_STORAGE_INVERTER") {
+    _data.push(
+      {
+        label: "直流电压范围：",
+        value: productDetail.value.models[0].dcVoltageRange + "V" || "-",
+      },
+      {
+        label: "最大直流电流：",
+        value: productDetail.value.models[0].maximumDirectCurrent
+          ? productDetail.value.models[0].maximumDirectCurrent + "A"
+          : "-",
+      },
+      {
+        label: "额定功率：",
+        value: productDetail.value.models[0].ratedPower
+          ? productDetail.value.models[0].ratedPower + "kW"
+          : "-",
+      },
+      {
+        label: "额定交流电压：",
+        value: productDetail.value.models[0].ratedACVoltage + "V" || "-",
+      },
+      {
+        label: "最大效率：",
+        value: productDetail.value.models[0].maximumEfficiency + "%" || "-",
+      },
+      {
+        label: "频率：",
+        value: productDetail.value.models[0].ratedACFrequency + "Hz" || "-",
       },
     );
   } else {
@@ -395,7 +482,9 @@ const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
     const _value =
       route.query.productType === "INDUSTRY_ENERGY_STORAGE"
         ? tabNameListEn.value
-        : tabNameList2En.value;
+        : route.query.productType === "ENERGY_STORAGE_INVERTER"
+          ? tabNameList3En.value
+          : tabNameList2En.value;
     _value.map((_item) => {
       _data[_item] = item[_item] || "";
     });
@@ -415,8 +504,12 @@ const getProductDetail = async () => {
     productType: route.query.productType,
   });
   if (resp_code === 0) {
+    const _productType = route.query.productType;
     getCompanyInfo(datas.enterpriseId);
-    if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
+    if (
+      _productType === "INDUSTRY_ENERGY_STORAGE" ||
+      _productType === "ENERGY_STORAGE_INVERTER"
+    ) {
       const collator = new Intl.Collator("zh-CN", { sensitivity: "base" });
       datas.models.map((item) => {
         item.coolingMethodName = item.coolingMethodName.sort(collator.compare);
@@ -424,21 +517,24 @@ const getProductDetail = async () => {
     }
     productDetail.value = datas;
     breadcrumbList.value[1].text = datas.name;
-    if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
-      for (let index = 0; index < 15; index++) {
-        tableData.value.push({
-          name: tabNameList.value[index],
-          info: cloneDeep(datas.models),
-        });
-      }
-    } else {
-      productDetail.value.image = datas.models[0].image || "";
-      for (let index = 0; index < 8; index++) {
-        tableData.value.push({
-          name: tabNameList2.value[index],
-          info: cloneDeep(datas.models),
-        });
-      }
+
+    const _length =
+      _productType === "INDUSTRY_ENERGY_STORAGE"
+        ? 15
+        : _productType === "ENERGY_STORAGE_INVERTER"
+          ? 18
+          : 8;
+    const _value =
+      _productType === "INDUSTRY_ENERGY_STORAGE"
+        ? tabNameList.value
+        : _productType === "ENERGY_STORAGE_INVERTER"
+          ? tabNameList3.value
+          : tabNameList2.value;
+    for (let index = 0; index < _length; index++) {
+      tableData.value.push({
+        name: _value[index],
+        info: cloneDeep(datas.models),
+      });
     }
   }
 };
