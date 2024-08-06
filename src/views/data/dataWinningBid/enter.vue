@@ -27,6 +27,8 @@
     />
     <BidReport v-if="currentTab === 'report'" />
     <BidScenes v-if="currentTab === 'scenes'" :formOptions="formOptions" />
+    <Centralized v-if="currentTab === 'centralized'" />
+
     <TimeAnalysis :formOptions="formOptions" v-if="currentTab === 'duration'" />
   </div>
   <NpsMark
@@ -58,7 +60,7 @@ import BidReport from "./winningBidReport/enter.vue";
 import BidScenes from "./winningBidScenes/index.vue";
 import TimeAnalysis from "./winningTimeAnalysis/index.vue";
 import BidEnterprise from "./winningBidEnterprise/enter.vue";
-
+import Centralized from "./winningBidCentralized/index.vue";
 const ns = useNamespace("dataWinningBid");
 const tabList = ref([
   {
@@ -86,11 +88,11 @@ const tabList = ref([
     value: "duration",
     code: "bidwin_scenes_click",
   },
-  // {
-  //   name: "中标分析报告",
-  //   value: "report",
-  //   code: "bidwin_region_click",
-  // },
+  {
+    code: "centralized",
+    name: "企业集采入围",
+    value: "centralized",
+  },
 ]);
 
 const currentTab = ref("price");

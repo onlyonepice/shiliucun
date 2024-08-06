@@ -1,4 +1,4 @@
-<!-- 中标价格分析 -->
+<!-- 中标规模分析 -->
 <template>
   <div :class="ns.b()">
     <div :class="ns.b('filter')">
@@ -52,7 +52,6 @@ import { biddingScaleAnalysis, maskPermissions } from "@/api/data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
 import { useRouter } from "vue-router";
-
 const router = useRouter();
 const { VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("winningBidPrice");
