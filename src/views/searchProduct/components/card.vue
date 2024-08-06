@@ -147,7 +147,7 @@ const productInfo = computed(() => {
         value: props.product.annualDecayRate || "-",
       },
     );
-  } else {
+  } else if (props.productType === "ELECTRIC_CORE") {
     _data.push(
       {
         label: "形态：",
@@ -164,6 +164,39 @@ const productInfo = computed(() => {
       },
       {
         label: "容量：",
+        value: props.product.batteryCapacity
+          ? props.product.batteryCapacity + "Ah"
+          : "-",
+      },
+    );
+  } else {
+    _data.push(
+      {
+        label: "直流电压范围：",
+        value: props.product.shapeName || "-",
+      },
+      {
+        label: "最大直流电流：",
+        value: props.product.cycleLife || "-",
+      },
+      {
+        label: "额定功率：",
+        value: props.product.energyDensity || "-",
+      },
+      {
+        label: "额定交流电压：",
+        value: props.product.batteryCapacity
+          ? props.product.batteryCapacity + "Ah"
+          : "-",
+      },
+      {
+        label: "最大效率：",
+        value: props.product.batteryCapacity
+          ? props.product.batteryCapacity + "Ah"
+          : "-",
+      },
+      {
+        label: "频率：",
         value: props.product.batteryCapacity
           ? props.product.batteryCapacity + "Ah"
           : "-",

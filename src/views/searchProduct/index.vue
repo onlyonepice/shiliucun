@@ -79,7 +79,7 @@ const ns = useNamespace("searchProduct");
 const tabsList: Ref<Array<TabsList>> = ref([
   { id: 0, name: "工商业一体机", code: "INDUSTRY_ENERGY_STORAGE" },
   { id: 1, name: "电芯", code: "ELECTRIC_CORE" },
-  // { id: 3, name: "储能变流器" },
+  { id: 2, name: "储能变流器", code: "ENERGY_STORAGE_INVERTER" },
   // { id: 4, name: "大型储能柜" },
 ]);
 const filterInfo: Ref<any> = ref({
@@ -183,7 +183,7 @@ const getProductFilter = async () => {
   });
   const { datas }: any = await getProductFilterApi({
     energyStorageProductCode: _data[0].code,
-    productType: tabsList.value[choseTabs.value].code,
+    productType: _data[0].code,
   });
   const _list: any = [];
   for (const key in datas) {
@@ -222,6 +222,7 @@ const getProductList = async () => {
   _data.enterpriseIds.length === 0
     ? (_data.enterpriseIds = null)
     : _data.enterpriseIds;
+  console.log(tabsList.value, choseTabs.value);
   _data.productType = tabsList.value[choseTabs.value].code;
   const { datas, resp_code } = await getProductListApi(Object.assign(_data));
   if (resp_code === 0) {

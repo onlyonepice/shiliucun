@@ -217,6 +217,7 @@ function handleProductCheckIn() {
   cursor: pointer;
   @include relative();
   flex: 0 0 122px;
+  overflow: hidden;
   img {
     width: 82px;
     object-fit: cover;
