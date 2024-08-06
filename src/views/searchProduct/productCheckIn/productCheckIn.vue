@@ -140,6 +140,7 @@ function saveDraft(formData) {
       operate: 1,
       id: id.value,
     };
+    delete data.productSubtype;
     productCheckInSaveOrUpdateApi(data).then(({ resp_code, datas }) => {
       id.value = datas;
       resp_code === 0 && ElMessage.success("保存成功");

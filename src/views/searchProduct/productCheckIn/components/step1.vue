@@ -33,22 +33,6 @@
           />
         </el-select>
       </el-form-item>
-      <!-- <el-form-item
-        label="产品类型"
-        prop="productSubtype"
-        :rules="[
-          { required: true, message: '请选择产品类型', trigger: 'change' },
-        ]"
-      >
-        <el-select v-model="form.productSubtype" placeholder="请选择">
-          <el-option
-            v-for="item in productSubtypeOption"
-            :label="item.label"
-            :value="item.value"
-            :key="item.value"
-          />
-        </el-select>
-      </el-form-item> -->
       <el-form-item label=" ">
         <el-button @click="handleNext(formRef)" type="primary">
           下一步
@@ -59,7 +43,6 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { getSelectByTypeApi } from "@/api/user";
 import useNamespace from "@/utils/nameSpace";
 
 const prop = defineProps({
@@ -68,6 +51,13 @@ const prop = defineProps({
     default: null,
   },
 });
+const formRef = ref();
+const productTypeOption = ref([
+  { label: "工商业储能", value: "INDUSTRY_ENERGY_STORAGE" },
+  { label: "储能变流器", value: "ENERGY_STORAGE_INVERTER" },
+]);
+const productSubtypeOption = ref([]);
+const form = ref<any>({});
 watch(
   () => prop.draftData,
   () => {
@@ -80,10 +70,20 @@ watch(
     immediate: true,
   },
 );
-const formRef = ref();
-const productTypeOption = ref([]);
-const productSubtypeOption = ref([]);
-const form = ref<any>({});
+watch(
+  () => form.value.productType,
+  (val) => {
+    if (val === "INDUSTRY_ENERGY_STORAGE") {
+      productSubtypeOption.value = [{ label: "一体机", value: "一体机" }];
+      form.value.productSubtype = "一体机";
+    } else {
+      productSubtypeOption.value = [
+        { label: "储能变流器", value: "储能变流器" },
+      ];
+      form.value.productSubtype = "储能变流器";
+    }
+  },
+);
 const ns = useNamespace("step1");
 const emits = defineEmits(["next"]);
 
@@ -96,30 +96,6 @@ function handleNext(formRefName) {
     }
   });
 }
-async function getOptions() {
-  Promise.all([
-    getSelectByTypeApi({
-      type: "PRODUCT_CATEGORY",
-    }),
-    getSelectByTypeApi({
-      type: "product_type",
-    }),
-  ]).then((res) => {
-    productTypeOption.value = res[0].datas.map((item) => {
-      return {
-        label: item.value,
-        value: item.code,
-      };
-    });
-    productSubtypeOption.value = res[1].datas.map((item) => {
-      return {
-        label: item.value,
-        value: item.id,
-      };
-    });
-  });
-}
-getOptions();
 </script>
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";

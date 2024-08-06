@@ -222,7 +222,6 @@ const getProductList = async () => {
   _data.enterpriseIds.length === 0
     ? (_data.enterpriseIds = null)
     : _data.enterpriseIds;
-  console.log(tabsList.value, choseTabs.value);
   _data.productType = tabsList.value[choseTabs.value].code;
   const { datas, resp_code } = await getProductListApi(Object.assign(_data));
   if (resp_code === 0) {

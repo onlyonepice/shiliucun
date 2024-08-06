@@ -2,7 +2,11 @@
   <div :class="ns.b()">
     <template v-if="pageStatus === 1">
       <div :class="[ns.b('top')]">
-        <h3>我的产品</h3>
+        <Tabs
+          :tabsList="tabsList"
+          @onHandleClick="onHandleClick"
+          :defaultId="choseTabs"
+        />
         <el-button type="primary" @click="onSettlement()">产品入驻</el-button>
       </div>
       <el-table :data="mainData" style="width: 810px">
@@ -216,7 +220,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, Ref } from "vue";
 import { useRouter } from "vue-router";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
@@ -225,7 +229,11 @@ import {
   getProductDetailsApi,
 } from "@/api/searchProduct";
 import { step3Field } from "@/views/searchProduct/productCheckIn/components/data";
-
+const tabsList: Ref<Array<any>> = ref([
+  { id: 0, name: "工商业一体机", code: "INDUSTRY_ENERGY_STORAGE" },
+  { id: 1, name: "储能变流器", code: "ENERGY_STORAGE_INVERTER" },
+]);
+const choseTabs: Ref<number> = ref(0); // 选中的tab
 const total = ref(0);
 const showBig = ref(false);
 const showBigImgList = ref([]);
@@ -239,8 +247,16 @@ const ns = useNamespace("MyUploads");
 const paging = ref({ limit: 10, page: 1 });
 const { fileUrl } = useUserStoreHook().$state;
 
+const onHandleClick = (val) => {
+  choseTabs.value = val;
+  getProductCheckInList();
+};
 async function getProductCheckInList() {
-  const { datas, resp_code } = await getProductCheckInListApi(paging.value);
+  const { datas, resp_code } = await getProductCheckInListApi(
+    Object.assign(paging.value, {
+      productType: tabsList.value[choseTabs.value].code,
+    }),
+  );
   if (resp_code === 0) {
     total.value = datas.totalElements;
     mainData.value = datas.content;
@@ -289,9 +305,7 @@ function handleCurrentChange(val: number) {
 @import "@/style/mixin.scss";
 .es-MyUploads-top {
   @include flex(center, space-between);
-  @include padding(0, 0, 19px, 0);
-  border-bottom: 1px solid #dbdce2;
-  @include margin(0, 0, 24px, 0);
+  border-bottom: 2px solid #dbdce2;
   h3 {
     line-height: 56px;
   }
@@ -528,6 +542,11 @@ function handleCurrentChange(val: number) {
     background: #dee8ff;
     border-radius: 4px;
     color: #244bf1;
+  }
+}
+.es-homePersonal-box--right {
+  .es-tabs {
+    height: 54px;
   }
 }
 </style>
