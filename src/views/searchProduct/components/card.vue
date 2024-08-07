@@ -93,6 +93,7 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { useRouter } from "vue-router";
 import { getToken } from "@/utils/auth";
 import { useUserStore } from "@/store/modules/user";
+import { ElMessage } from "element-plus";
 const router = useRouter();
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const ns = useNamespace("searchProduct-card");
@@ -211,10 +212,12 @@ const getType = computed(() => {
     : false;
 });
 const onOpenWindow = (id: number) => {
-  window.open(
-    `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
-    "externalWindow",
-  );
+  id === null && ElMessage.warning("该企业暂未入驻");
+  id &&
+    window.open(
+      `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
+      "externalWindow",
+    );
 };
 const onDetail = () => {
   if (!getToken()) {

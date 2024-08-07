@@ -11,7 +11,11 @@
       </el-button>
     </div>
     <el-form ref="formRef" :model="tableForm" label-width="auto">
-      <el-table :data="tableField" style="width: 100%">
+      <el-table
+        :data="tableField"
+        style="width: 100%"
+        :productType="productType"
+      >
         <el-table-column fixed="left" label="" prop="label" width="160px" />
         <el-table-column
           v-for="(item, index) in tableForm"
@@ -22,7 +26,7 @@
         >
           <template #default="scope">
             <div
-              class="input-box"
+              :class="['input-box']"
               v-if="stepField[scope.$index].type !== 'title'"
             >
               <el-form-item
@@ -57,12 +61,12 @@
                 </el-select>
                 <template v-if="stepField[scope.$index].type === 'inputs'">
                   <el-input
-                    v-model="tableForm[index][stepField[scope.$index].prop1]"
+                    v-model="tableForm[index][stepField[scope.$index].prop]"
                     placeholder="请输入"
                   />
                   <div class="inputs-line">-</div>
                   <el-input
-                    v-model="tableForm[index][stepField[scope.$index].prop2]"
+                    v-model="tableForm[index][stepField[scope.$index].prop1]"
                     placeholder="请输入"
                   />
                 </template>
@@ -107,23 +111,49 @@
   </div>
 </template>
 <script setup lang="ts">
-import { step3Field } from "./data";
+import { step3Field, step3FieldVariable } from "./data";
 import { ElMessage } from "element-plus";
-import { ref, onMounted, watch } from "vue";
+import { ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { getSelectByTypeApi } from "@/api/user";
-
 const prop = defineProps({
   draftData: {
     type: Object,
     default: null,
   },
+  // 产品类型：
+  // INDUSTRY_ENERGY_STORAGE: "工商业储能",
+  // ENERGY_STORAGE_INVERTER: "储能变流器"
+  productType: {
+    type: String,
+    default: "INDUSTRY_ENERGY_STORAGE",
+  },
 });
+
+const formRef = ref(null);
+const tableField = ref([]);
+const isAgreement = ref(false);
+const ns = useNamespace("step3");
+const stepField = ref<any>(null);
+const tableForm = ref<any[]>([{}]);
+const emits = defineEmits(["submit", "back", "saveDraft"]);
 watch(
   () => prop.draftData,
   () => {
-    if (prop.draftData?.models) {
-      tableForm.value = prop.draftData.models.map((item) => {
+    const _data =
+      prop.productType === "INDUSTRY_ENERGY_STORAGE"
+        ? prop.draftData.industrialEnergyStorageModels
+        : prop.draftData.energyStorageInverterModels;
+
+    if (_data) {
+      tableForm.value = _data.map((item) => {
+        if (
+          prop.productType === "ENERGY_STORAGE_INVERTER" &&
+          item.dcVoltageRange !== null
+        ) {
+          item.dcVoltageRangeMin = item.dcVoltageRange[0];
+          item.dcVoltageRangeMaX = item.dcVoltageRange[1];
+        }
         let object = {};
         for (const key in item) {
           item[key] && (object[key] = item[key]);
@@ -136,22 +166,23 @@ watch(
     immediate: true,
   },
 );
-
-const formRef = ref(null);
-const tableField = ref([]);
-const isAgreement = ref(false);
-const ns = useNamespace("step3");
-const stepField = ref<any>(step3Field);
-const tableForm = ref<any[]>([{}]);
-const emits = defineEmits(["submit", "back", "saveDraft"]);
-
-onMounted(() => {
-  stepField.value.forEach((item) => {
-    tableField.value.push({
-      label: item.label,
+watch(
+  () => prop.productType,
+  () => {
+    if (prop.productType === "INDUSTRY_ENERGY_STORAGE") {
+      stepField.value = step3Field;
+    } else {
+      stepField.value = step3FieldVariable;
+    }
+    stepField.value.forEach((item) => {
+      tableField.value.push({
+        label: item.label,
+      });
     });
-  });
-});
+    getOptions();
+  },
+  { immediate: true },
+);
 function handleAddModel() {
   tableForm.value.push({});
 }
@@ -214,7 +245,6 @@ function handleSaveDraft() {
     models: [...tableForm.value],
   });
 }
-getOptions();
 </script>
 
 <style lang="scss" scoped>
@@ -320,6 +350,38 @@ getOptions();
           border-top: 1px solid #dbdce2;
         }
       }
+      &:hover {
+        td {
+          background: #fff;
+        }
+      }
+    }
+    .el-table__row td:nth-of-type(1) {
+      background: #f2f3f5;
+      text-align: right;
+      @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+      border-right: none !important;
+    }
+  }
+  ::v-deep(.el-table)[producttype="ENERGY_STORAGE_INVERTER"] {
+    tr {
+      &:nth-child(2),
+      &:nth-child(5),
+      &:nth-child(10) {
+        td.el-table__cell {
+          border-left: 1px solid transparent;
+          &:nth-child(1),
+          &:nth-child(2) {
+            border-left: 1px solid #dbdce2;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.9);
+          }
+        }
+      }
+    }
+  }
+  ::v-deep(.el-table)[producttype="INDUSTRY_ENERGY_STORAGE"] {
+    tr {
       &:nth-child(2),
       &:nth-child(6),
       &:nth-child(9) {
@@ -333,17 +395,6 @@ getOptions();
           }
         }
       }
-      &:hover {
-        td {
-          background: #fff;
-        }
-      }
-    }
-    .el-table__row td:nth-of-type(1) {
-      background: #f2f3f5;
-      text-align: right;
-      @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
-      border-right: none !important;
     }
   }
   .es-step3__footer {

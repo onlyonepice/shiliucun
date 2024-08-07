@@ -180,7 +180,7 @@
       {{ showData.productPrice ? showData.productPrice : "-" }}
     </div>
   </template>
-  <template v-else>
+  <template v-if="productType === 'ELECTRIC_CORE'">
     <div v-if="index === 1" :class="ns.b('common')" name="产品名称">
       {{ info.name ? info.name : "-" }}
     </div>

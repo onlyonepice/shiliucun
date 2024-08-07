@@ -119,7 +119,7 @@
                     {{ scope.row.name }}
                   </p>
                   <p
-                    v-else
+                    v-if="route.query.productType === 'ELECTRIC_CORE'"
                     style="
                       text-align: right;
                       color: &quot;rgba(0, 0, 0, 0.9)&quot;;
@@ -215,6 +215,7 @@ import DetailCompany from "./components/detailCompany.vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { cloneDeep } from "lodash";
 import { getEnterpriseDetailApi } from "@/api/searchProduct";
+import { ElMessage } from "element-plus";
 const companyInfo: Ref<any> = ref({}); // 获取企业信息
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const productConnectVisible: Ref<boolean> = ref(false); // 修改企业弹窗
@@ -565,10 +566,12 @@ getProductDetail();
 getProductDetailList();
 // 联系厂商
 const onConnectCompany = (id: string) => {
-  window.open(
-    `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
-    "externalWindow",
-  );
+  id === null && ElMessage.warning("该企业暂未入驻");
+  id &&
+    window.open(
+      `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${id}`,
+      "externalWindow",
+    );
 };
 </script>
 

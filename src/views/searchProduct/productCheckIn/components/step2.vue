@@ -89,7 +89,7 @@
                 }
               "
             >
-              <el-button>上传pdf/jpg文件</el-button>
+              <el-button>{{ item.btnText }}</el-button>
             </el-upload>
             <div
               class="field-item"

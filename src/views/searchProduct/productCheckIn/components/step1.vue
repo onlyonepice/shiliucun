@@ -5,7 +5,7 @@
         label="产品分类"
         prop="productType"
         :rules="[
-          { required: true, message: '请选择产品分类', trigger: 'change' },
+          { required: true, message: '请选择产品分类', trigger: 'blur' },
         ]"
       >
         <el-select v-model="form.productType" placeholder="请选择">
@@ -21,7 +21,7 @@
         label="产品类型"
         prop="productSubtype"
         :rules="[
-          { required: true, message: '请选择产品类型', trigger: 'change' },
+          { required: true, message: '请选择产品类型', trigger: 'blur' },
         ]"
       >
         <el-select v-model="form.productSubtype" placeholder="请选择">
@@ -42,7 +42,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, nextTick } from "vue";
 import useNamespace from "@/utils/nameSpace";
 
 const prop = defineProps({
@@ -63,7 +63,9 @@ watch(
   () => {
     if (prop.draftData) {
       form.value.productType = prop.draftData.productType;
-      form.value.productSubtype = prop.draftData.productSubtype;
+      nextTick(() => {
+        form.value.productSubtype = prop.draftData.productSubtype;
+      });
     }
   },
   {
@@ -74,14 +76,13 @@ watch(
   () => form.value.productType,
   (val) => {
     if (val === "INDUSTRY_ENERGY_STORAGE") {
-      productSubtypeOption.value = [{ label: "一体机", value: "一体机" }];
-      form.value.productSubtype = "一体机";
-    } else {
       productSubtypeOption.value = [
-        { label: "储能变流器", value: "储能变流器" },
+        { label: "一体机", value: "IntegrateMachine" },
       ];
-      form.value.productSubtype = "储能变流器";
+    } else {
+      productSubtypeOption.value = [{ label: "储能变流器", value: "PCS2" }];
     }
+    form.value.productSubtype = "";
   },
 );
 const ns = useNamespace("step1");

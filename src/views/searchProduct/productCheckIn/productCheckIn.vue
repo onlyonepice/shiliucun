@@ -34,14 +34,17 @@
           @back="handleBack"
           v-show="tabVal === 2"
         />
-        <Step3
-          :data="form"
-          v-show="tabVal === 3"
-          :draftData="draftData"
-          @submit="handleSubmit"
-          @saveDraft="saveDraft"
-          @back="handleBack"
-        />
+        <template v-if="form.productType">
+          <Step3
+            :data="form"
+            :productType="form.productType"
+            v-show="tabVal === 3"
+            :draftData="draftData"
+            @submit="handleSubmit"
+            @saveDraft="saveDraft"
+            @back="handleBack"
+          />
+        </template>
       </div>
     </div>
     <el-dialog :show-close="false" v-model="dialogVisible">
@@ -100,8 +103,11 @@ function handleBack() {
 async function getDetails() {
   try {
     loading.value = true;
-    const { id } = route.query;
-    const { resp_code, datas } = await getProductDetailsEditApi(id);
+    const { id, productType } = route.query;
+    const { resp_code, datas } = await getProductDetailsEditApi({
+      id,
+      productType,
+    });
     if (resp_code === 0) {
       delete datas?.id;
       draftData.value = datas;
@@ -140,7 +146,12 @@ function saveDraft(formData) {
       operate: 1,
       id: id.value,
     };
-    delete data.productSubtype;
+    if (form.productType === "INDUSTRY_ENERGY_STORAGE") {
+      data.industrialEnergyStorageModels = data.models;
+    } else {
+      data.energyStorageInverterModels = data.models;
+    }
+    delete data.models;
     productCheckInSaveOrUpdateApi(data).then(({ resp_code, datas }) => {
       id.value = datas;
       resp_code === 0 && ElMessage.success("保存成功");
@@ -161,6 +172,15 @@ function handleSubmit(formData) {
       operate: 0,
       id: id.value,
     };
+    if (form.productType === "INDUSTRY_ENERGY_STORAGE") {
+      data.industrialEnergyStorageModels = data.models;
+    } else {
+      data.energyStorageInverterModels = data.models;
+      data.energyStorageInverterModels.map((item) => {
+        item.dcVoltageRange = [item.dcVoltageRangeMin, item.dcVoltageRangeMaX];
+      });
+    }
+    delete data.models;
     loading.value = true;
     productCheckInSaveOrUpdateApi(data).then(({ resp_code }) => {
       if (resp_code === 0) {
