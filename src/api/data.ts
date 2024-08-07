@@ -350,3 +350,18 @@ export const biddingScaleAnalysis = (data) => {
     { data },
   );
 };
+// 采集入围时间列表
+export const getCollectTimeList = () => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/priceTracking/openApi/v1.0/collectionEntryTime",
+  );
+};
+// 企业采集入围
+export const getCollectionEntry = (params: { time: string }) => {
+  return http.request<responseType>(
+    "get",
+    "/eesa-report/priceTracking/openApi/v1.0/collectionEntry",
+    { params },
+  );
+};
