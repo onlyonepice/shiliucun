@@ -217,7 +217,7 @@ async function onGetRegionalData() {
             electricityTypes.value.push(_item);
             electricityTypes.value.length >= 2 &&
               (searchParams.value.electricityTypeOneName =
-                electricityTypes.value[1].paramName);
+                electricityTypes.value[0].paramName);
           }
         });
       }
