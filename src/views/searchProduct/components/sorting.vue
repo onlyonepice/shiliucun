@@ -14,7 +14,9 @@
       <div
         v-for="item in productType === 'INDUSTRY_ENERGY_STORAGE'
           ? sortingList
-          : sortingList2"
+          : productType === 'ELECTRIC_CORE'
+            ? sortingList2
+            : sortingList3"
         :key="item.id"
         :class="[
           ns.b('common'),
@@ -111,6 +113,18 @@ const sortingList2: Ref<Array<any>> = ref([
   {
     id: 2,
     text: "容量",
+    desc: "inPriceSort",
+  },
+]);
+const sortingList3: Ref<Array<any>> = ref([
+  {
+    id: 1,
+    text: "价格",
+    desc: "inPriceSort",
+  },
+  {
+    id: 2,
+    text: "额定功率",
     desc: "inPriceSort",
   },
 ]);

@@ -29,7 +29,7 @@ defineProps({
 @import "@/style/mixin.scss";
 .es-emptyProduct {
   text-align: center;
-  @include flex();
+  @include flex(center, center, nowrap);
   flex-direction: column;
   margin: 0 auto;
 }

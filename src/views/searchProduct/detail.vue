@@ -4,20 +4,15 @@
     <div :class="[ns.b('content'), 'es-commonPage']" v-if="productDetail.id">
       <div :class="[ns.b('content-top')]">
         <div :class="[ns.b('content-top-title')]">
-          <template
-            v-if="productDetail.image && productDetail.image.length !== 0"
-          >
-            <div :class="[ns.be('info-left', 'bigImg-box')]">
-              <img
-                :class="[ns.be('info-left', 'bigImg')]"
-                :src="
-                  useUserStoreHook().$state.fileUrl + productDetail.image[0]
-                "
-                alt=""
-              />
-            </div>
-          </template>
-          <EmptyProduct v-else size="120px" />
+          <div :class="[ns.be('info-left', 'bigImg-box')]">
+            <img
+              v-if="productDetail.image && productDetail.image.length !== 0"
+              :class="[ns.be('info-left', 'bigImg')]"
+              :src="useUserStoreHook().$state.fileUrl + productDetail.image[0]"
+              alt=""
+            />
+            <EmptyProduct v-else size="120px" />
+          </div>
           <div :class="[ns.b('info-right')]">
             <h3 :class="[ns.b('info-right-title')]">
               {{ productDetail.name }}
@@ -76,6 +71,8 @@
             </div>
           </div>
         </div>
+      </div>
+      <div :class="[ns.b('content-top')]" style="margin-top: 24px">
         <!-- 产品参数 -->
         <div :class="[ns.b('content-detail')]">
           <h3>产品参数</h3>
@@ -160,6 +157,12 @@
           <template v-else>
             <DetailCompany :companyInfo="companyInfo" />
           </template>
+          <img
+            v-for="item in productDetail.productIntroductionFile"
+            :key="item"
+            :src="useUserStore().fileUrl + item"
+            :class="ns.b('productIntroductionFile')"
+          />
         </div>
       </div>
       <div
@@ -180,15 +183,14 @@
               :src="useUserStoreHook().$state.fileUrl + item.logoUrl"
               alt=""
             />
-            <div
-              :class="[ns.be('item', 'logo-box')]"
-              v-if="item.image.length > 0"
-            >
+            <div :class="[ns.be('item', 'logo-box')]">
               <img
+                v-if="item.image.length > 0"
                 :class="[ns.be('item', 'logo')]"
                 :src="useUserStoreHook().$state.fileUrl + item.image[0]"
                 alt=""
               />
+              <EmptyProduct v-else size="120px" />
             </div>
             <div :class="[ns.be('item', 'price')]" v-if="item.price">
               <p>
@@ -215,6 +217,7 @@ import {
   getProductDetailApi,
   getProductDetailListApi,
 } from "@/api/searchProduct";
+import { useUserStore } from "@/store/modules/user";
 import { useRoute, useRouter } from "vue-router";
 import detailTable from "./components/detailTable.vue";
 import DetailCompany from "./components/detailCompany.vue";
@@ -365,7 +368,13 @@ const productDetailInfo = computed(() => {
     _data.push(
       {
         label: "直流电压范围：",
-        value: productDetail.value.models[0].dcVoltageRange + "V" || "-",
+        value:
+          productDetail.value.models[0].dcVoltageRange.length === 0
+            ? "-"
+            : productDetail.value.models[0].dcVoltageRange[0] +
+              "-" +
+              productDetail.value.models[0].dcVoltageRange[1] +
+              "v",
       },
       {
         label: "最大直流电流：",
@@ -381,15 +390,21 @@ const productDetailInfo = computed(() => {
       },
       {
         label: "额定交流电压：",
-        value: productDetail.value.models[0].ratedACVoltage + "V" || "-",
+        value: productDetail.value.models[0].ratedACVoltage
+          ? productDetail.value.models[0].ratedACVoltage + "V"
+          : "-",
       },
       {
         label: "最大效率：",
-        value: productDetail.value.models[0].maximumEfficiency + "%" || "-",
+        value: productDetail.value.models[0].maximumEfficiency
+          ? productDetail.value.models[0].maximumEfficiency + "%"
+          : "-",
       },
       {
         label: "频率：",
-        value: productDetail.value.models[0].ratedACFrequency + "Hz" || "-",
+        value: productDetail.value.models[0].ratedACFrequency
+          ? productDetail.value.models[0].ratedACFrequency
+          : "-",
       },
     );
   } else {
@@ -523,6 +538,9 @@ const getProductDetail = async () => {
       });
     }
     productDetail.value = datas;
+    productDetail.value.image === null &&
+      (productDetail.value.image =
+        datas.models[0].image.length === 0 ? null : [datas.models[0].image[0]]);
     breadcrumbList.value[1].text = datas.name;
 
     const _length =
@@ -719,6 +737,13 @@ const onConnectCompany = (id: string) => {
   @include textOverflowOne();
   width: 176px;
   margin: 0 auto;
+}
+.es-searchProductDetail-productIntroductionFile {
+  width: 100%;
+  height: auto;
+  &:nth-of-type(1) {
+    margin-top: 24px;
+  }
 }
 </style>
 <style lang="scss">
