@@ -8,7 +8,7 @@
     />
     <div :class="ns.be('img', 'box')">
       <img
-        v-if="product.image.length !== 0"
+        v-if="product.image && product.image.length !== 0"
         :class="ns.b('img')"
         :src="useUserStoreHook().$state.fileUrl + product.image[0]"
         alt=""
