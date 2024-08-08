@@ -1,8 +1,9 @@
 <template>
   <h5 :class="ns.b()">
-    完整数据来源：<el-link href="" :underline="false" target="_blank"
-      >EESA储能数据库</el-link
-    >
+    完整数据来源：
+    <el-link href="" :underline="false" target="_blank">
+      EESA储能数据库
+    </el-link>
   </h5>
 </template>
 <script lang="ts" setup>
