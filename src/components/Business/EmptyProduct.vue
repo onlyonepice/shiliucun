@@ -6,9 +6,6 @@
       :src="EmptyProduct"
       alt=""
     />
-    <p :class="ns.b('desc')" :style="{ 'font-size': fontSize }">
-      产品图片正在更新
-    </p>
   </div>
 </template>
 
