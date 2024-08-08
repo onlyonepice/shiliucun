@@ -158,7 +158,7 @@ const eChartsOption: Ref<any> = ref({
       const titleStyle =
         "font-weight: 600;font-size: 16px;color: rgba(0,0,0,0.9);";
       const itemStyle =
-        "width:128px;height: 32px;background: #F2F3F5;border-radius: 4px;line-height: 32px;padding:0 8px;margin-top: 8px;display:flex;align-items:center;";
+        "width:188px;height: 32px;background: #F2F3F5;border-radius: 4px;line-height: 32px;padding:0 8px;margin-top: 8px;display:flex;align-items:center;";
       const itemLabelStyle =
         "font-weight: 400;font-size: 14px;color: rgba(0,0,0,0.6);";
       const itemValueStyle =
@@ -169,7 +169,7 @@ const eChartsOption: Ref<any> = ref({
         itemHtml += `<div style="${itemStyle}">
             <div style="background:${item.color};width:12px;height:12px;margin-right:8px;"></div>
             <div style="${itemLabelStyle}"></div>
-            <div style="${itemValueStyle}">${item.value}</div>
+            <div style="${itemValueStyle}">${item.value}MWh</div>
           </div>`;
       });
       const { axisValueLabel } = params[0];
