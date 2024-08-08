@@ -186,7 +186,8 @@ function handleSubmit(formData) {
     loading.value = true;
     if (
       data.productType !== "INDUSTRY_ENERGY_STORAGE" &&
-      (data.displayChannels || data.displayChannels.length)
+      data.displayChannels &&
+      data.displayChannels.length
     ) {
       delete data.displayChannels;
     }
