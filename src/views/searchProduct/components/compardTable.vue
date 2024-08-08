@@ -126,7 +126,11 @@
     </div>
     <div v-if="index === 2" :class="ns.b('enterprise')" name="直流侧参数" />
     <div v-if="index === 3" :class="ns.b('common')" name="直流电压范围/V">
-      {{ showData.dcVoltageRange ? showData.dcVoltageRange : "-" }}
+      {{
+        showData.dcVoltageRange
+          ? showData.dcVoltageRange[0] + "-" + showData.dcVoltageRange[1]
+          : "-"
+      }}
     </div>
     <div v-if="index === 4" :class="ns.b('common')" name="最大直流电流/A">
       {{ showData.maximumDirectCurrent ? showData.maximumDirectCurrent : "-" }}

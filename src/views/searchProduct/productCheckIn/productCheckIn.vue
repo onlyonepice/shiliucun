@@ -30,6 +30,7 @@
         <Step2
           v-show="tabVal === 2"
           :draftData="draftData"
+          :productType="form.productType"
           @saveDraft="saveDraft"
           @next="handleNext"
           @back="handleBack"
