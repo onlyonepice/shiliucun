@@ -358,7 +358,7 @@ function handleCurrentChange(val: number) {
       width: 80px;
       height: 80px;
       position: relative;
-      cursor: pointer;
+      cursor: zoom-in;
       @include flex(center, center);
       .image {
         max-width: 80px;
