@@ -113,10 +113,11 @@
           <div :class="ns.b('product-info')">
             <div :class="ns.b('product-info-left')">
               <img
-                v-if="detailsData.image"
+                v-if="detailsData.image && detailsData.image.length > 0"
                 :src="fileUrl + detailsData.image[0]"
                 alt=""
               />
+              <EmptyProduct v-else size="120px" />
             </div>
             <div :class="ns.b('product-info-right')">
               <div :class="ns.b('product-info-title')">
@@ -177,7 +178,9 @@
                   "
                 >
                   {{
-                    detailsData.models[index][stepField[scope.$index].showProp]
+                    detailsData.models[index][
+                      stepField[scope.$index].showProp
+                    ] || "-"
                   }}
                 </div>
                 <div v-if="stepField[scope.$index].multiple">
@@ -288,6 +291,7 @@ function onSettlement() {
   router.push("/searchProductProductCheckIn");
 }
 async function handelViewAttribute(row) {
+  tableField.value = [];
   const { resp_code, datas } = await getProductDetailsApi({
     id: row.id,
     productType: tabsList.value[choseTabs.value].code,

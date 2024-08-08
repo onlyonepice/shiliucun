@@ -8,6 +8,7 @@
             <p
               v-if="route.query.productType === 'INDUSTRY_ENERGY_STORAGE'"
               :style="{
+                textAlign: 'left',
                 color: 'rgba(0, 0, 0, 0.9)',
                 'font-weight':
                   scope.$index === 2 || scope.$index === 6 || scope.$index === 9
@@ -20,6 +21,7 @@
             <p
               v-if="route.query.productType === 'ENERGY_STORAGE_INVERTER'"
               :style="{
+                textAlign: 'left',
                 color: 'rgba(0, 0, 0, 0.9)',
                 'font-weight':
                   scope.$index === 2 ||
@@ -31,7 +33,10 @@
             >
               {{ scope.row.name }}
             </p>
-            <p v-else style="color: rgba(0, 0, 0, 0.9)">
+            <p
+              v-if="route.query.productType === 'ELECTRIC_CORE'"
+              style="text-align: left; color: rgba(0, 0, 0, 0.9)"
+            >
               {{ scope.row.name }}
             </p>
           </template>
@@ -180,6 +185,7 @@ const getComparedList = async () => {
   _data.productType = route.query.productType;
   const { resp_code, datas }: any = await getProductComparedApi(_data);
   if (resp_code === 0) {
+    tableData.value = [];
     datas.forEach((item: any) => {
       item.show = true;
       route.query.productType !== "INDUSTRY_ENERGY_STORAGE" &&
