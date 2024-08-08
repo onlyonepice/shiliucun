@@ -23,11 +23,14 @@
           @mouseleave="choseComputed = ''"
         >
           <img
+            v-if="
+              comparedList[index].image &&
+              comparedList[index].image.length !== 0
+            "
             :src="
               useUserStoreHook().$state.fileUrl + comparedList[index].image[0]
             "
             alt=""
-            v-if="comparedList[index].image.length !== 0"
           />
           <EmptyProduct v-else size="60px" fontSize="12px" />
           <div>
