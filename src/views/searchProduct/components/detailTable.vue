@@ -42,7 +42,11 @@
       {{ info.annualDecayRate ? info.annualDecayRate + "%" : "-" }}
     </div>
     <div v-if="index === 12" :class="ns.b('common')" name="冷却方式">
-      {{ info.coolingMethodName ? info.coolingMethodName.join(",") : "-" }}
+      {{
+        info.coolingMethodName.length !== 0
+          ? info.coolingMethodName.join(",")
+          : "-"
+      }}
     </div>
     <div v-if="index === 13" :class="ns.b('common')" name="尺寸/m*m*m">
       {{ info.size ? info.size : "-" }}
@@ -104,7 +108,11 @@
       {{ info.altitude ? info.altitude : "-" }}
     </div>
     <div v-if="index === 14" :class="ns.b('common')" name="冷却方式">
-      {{ info.coolingMethodName ? info.coolingMethodName.join(",") : "-" }}
+      {{
+        info.coolingMethodName.length !== 0
+          ? info.coolingMethodName.join(",")
+          : "-"
+      }}
     </div>
     <div v-if="index === 15" :class="ns.b('common')" name="尺寸（W*H*D）/mm">
       {{ info.size ? info.size : "-" }}
