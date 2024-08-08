@@ -1,6 +1,6 @@
 <!-- 企业集采入围 -->
 <template>
-  <div :class="ns.b()" id="be-selected" v-loading="loading">
+  <div :class="ns.b()" v-loading="loading">
     <Select
       title="集采入围时间"
       :titleWidth="100"
@@ -22,7 +22,7 @@
           id="eChart-centralized"
           ref="eChartsCentralized"
         />
-        <div class="table-box">
+        <div class="table-box" id="table-box" @scroll="handleScroll">
           <table
             class="invite-tenders"
             id="invite-tenders"
@@ -30,7 +30,9 @@
           >
             <thead>
               <tr>
-                <th>招标量</th>
+                <th :style="`transform: translate(${thTitle}px, 0.1px)`">
+                  <div class="tr-title">招标量</div>
+                </th>
                 <th
                   v-for="item in shortlistedEnterprise.amountOfTender"
                   :key="item"
@@ -45,8 +47,8 @@
                 v-for="item in shortlistedEnterprise.collectionScaleResp"
                 :key="item.firm"
               >
-                <th>
-                  <div>{{ filterText(item.firm) }}</div>
+                <th :style="`transform: translate(${thTitle}px, 0)`">
+                  <div class="tr-title">{{ filterText(item.firm) }}</div>
                 </th>
                 <th
                   v-for="_item in shortlistedEnterprise.amountOfTender"
@@ -92,6 +94,7 @@ import { nextTick } from "process";
 const ns = useNamespace("centralized");
 const isWidth = ref(false);
 const isEmptyData = ref(false);
+const thTitle = ref(0);
 const loading: Ref<boolean> = ref(false); // 加载
 const timeList: Ref<Array<any>> = ref([]); // 时间筛选项
 const eChartsCentralized: Ref<any> = ref(null); // 柱状图
@@ -281,9 +284,12 @@ onMounted(() => {
   getTimeList();
 });
 function handleResize() {
-  const pageWidth = document.querySelector("#be-selected");
+  const pageWidth = document.querySelector("#table-box");
   const tableWidth = document.querySelector("#invite-tenders");
   isWidth.value = pageWidth.clientWidth >= tableWidth.clientWidth;
+}
+function handleScroll(e) {
+  thTitle.value = e.target.scrollLeft;
 }
 window.addEventListener("resize", handleResize);
 </script>
@@ -307,13 +313,32 @@ window.addEventListener("resize", handleResize);
   flex-direction: row-reverse;
 }
 .table-box {
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   width: 100%;
+  padding-bottom: 16px;
   .invite-tenders {
-    border: 1px solid #dbdce2;
     box-shadow: border-box;
     * {
       box-shadow: border-box;
+    }
+
+    th {
+      border: 1px solid #dbdce2;
+      &:first-child {
+        border: none;
+        position: relative;
+        .tr-title {
+          position: absolute;
+          top: -0.5px;
+          left: 0px;
+          width: calc(100% + 1px);
+          height: calc(100% + 1px);
+          padding: 0 23px;
+          background-color: #f2f3f5;
+          border: 1px solid #dbdce2;
+        }
+      }
     }
 
     thead {
@@ -325,15 +350,14 @@ window.addEventListener("resize", handleResize);
           font-size: 14px;
           color: rgba(0, 0, 0, 0.6);
           text-align: center;
-
-          border: 1px solid #dbdce2;
+          z-index: 1;
 
           &:first-child {
+            z-index: 2;
             min-width: 182px;
             width: 186px;
             text-align: right;
             border-radius: 4px;
-            background-color: #f2f3f5;
           }
         }
       }
@@ -343,14 +367,16 @@ window.addEventListener("resize", handleResize);
         height: 38px;
         line-height: 38px;
         th {
-          border: 1px solid #dbdce2;
           padding: 0 23px;
           position: relative;
+          z-index: 1;
+
           &:first-child {
+            z-index: 2;
             text-align: right;
             border-radius: 4px;
-            background-color: #f2f3f5;
           }
+
           .th-content {
             position: absolute;
             width: 100%;
