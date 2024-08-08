@@ -8,7 +8,7 @@ export const chartWatermark = {
   style: {
     image: downloadBg,
     width: 415,
-    height: 342,
+    height: 300,
   },
   z: 999,
 };

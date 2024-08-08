@@ -23,20 +23,20 @@
       </div>
       <div :class="ns.b('form')">
         <Step1
+          v-show="tabVal === 1"
           :draftData="draftData"
           @next="handleNext"
-          v-show="tabVal === 1"
         />
         <Step2
+          v-show="tabVal === 2"
           :draftData="draftData"
           @saveDraft="saveDraft"
           @next="handleNext"
           @back="handleBack"
-          v-show="tabVal === 2"
         />
         <Step3
-          :data="form"
           v-show="tabVal === 3"
+          :data="form"
           :draftData="draftData"
           @submit="handleSubmit"
           @saveDraft="saveDraft"
@@ -73,7 +73,7 @@ import {
 
 const id = ref(null);
 const loading = ref(false);
-let form: any = {};
+const form = ref<any>({});
 const tabVal = ref(1);
 const route = useRoute();
 const router = useRouter();
@@ -88,7 +88,7 @@ const tabs = ref([
 ]);
 
 function handleNext(data) {
-  form = { ...form, ...data };
+  form.value = { ...form.value, ...data };
   tabVal.value += 1;
 }
 
@@ -105,7 +105,7 @@ async function getDetails() {
     if (resp_code === 0) {
       delete datas?.id;
       draftData.value = datas;
-      form = datas;
+      form.value = datas;
       const step2Status = step2Field.every((item) => {
         return datas[item.prop];
       });
@@ -125,8 +125,8 @@ async function getDetails() {
 function saveDraft(formData) {
   try {
     loading.value = true;
-    if (form?.models) {
-      form.models.map((item: any) => {
+    if (form.value?.models) {
+      form.value.models.map((item: any) => {
         return {
           ...fieldAll.models[0],
           ...item,
@@ -135,7 +135,7 @@ function saveDraft(formData) {
     }
     const data = {
       ...fieldAll,
-      ...form,
+      ...form.value,
       ...formData,
       operate: 1,
       id: id.value,
@@ -156,12 +156,18 @@ function handleSubmit(formData) {
   try {
     const data = {
       ...fieldAll,
-      ...form,
+      ...form.value,
       ...formData,
       operate: 0,
       id: id.value,
     };
     loading.value = true;
+    if (
+      data.productType !== "INDUSTRY_ENERGY_STORAGE" &&
+      (data.displayChannels || data.displayChannels.length)
+    ) {
+      delete data.displayChannels;
+    }
     productCheckInSaveOrUpdateApi(data).then(({ resp_code }) => {
       if (resp_code === 0) {
         route.query.id ? router.go(-1) : router.push("homePersonal?id=6");

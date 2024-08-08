@@ -5,7 +5,7 @@
         label="产品分类"
         prop="productType"
         :rules="[
-          { required: true, message: '请选择产品分类', trigger: 'change' },
+          { required: true, message: '请选择产品分类', trigger: 'blur' },
         ]"
       >
         <el-select v-model="form.productType" placeholder="请选择">
@@ -21,12 +21,29 @@
         label="产品类型"
         prop="productSubtype"
         :rules="[
-          { required: true, message: '请选择产品类型', trigger: 'change' },
+          { required: true, message: '请选择产品类型', trigger: 'blur' },
         ]"
       >
         <el-select v-model="form.productSubtype" placeholder="请选择">
           <el-option
             v-for="item in productSubtypeOption"
+            :label="item.label"
+            :value="item.value"
+            :key="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        v-if="form.productType === 'INDUSTRY_ENERGY_STORAGE'"
+        label="展示渠道"
+        prop="displayChannels"
+        :rules="[
+          { required: true, message: '请选择展示渠道', trigger: 'blur' },
+        ]"
+      >
+        <el-select multiple v-model="form.displayChannels" placeholder="请选择">
+          <el-option
+            v-for="item in displayChannelsOptions"
             :label="item.label"
             :value="item.value"
             :key="item.value"
@@ -56,31 +73,42 @@ const productTypeOption = ref([
   { label: "工商业储能", value: "INDUSTRY_ENERGY_STORAGE" },
   { label: "储能变流器", value: "ENERGY_STORAGE_INVERTER" },
 ]);
+const displayChannelsOptions = ref([
+  { label: "是否用于工商业测算", value: "INDUSTRIAL_CALCULATION" },
+  { label: "是否展示于产品库", value: "SHOW_FOR_PRODUCT" },
+]);
 const productSubtypeOption = ref([]);
-const form = ref<any>({});
+const form = ref<any>({
+  productType: "",
+  productSubtype: "",
+  displayChannels: [],
+});
+
 watch(
   () => prop.draftData,
   () => {
     if (prop.draftData) {
       form.value.productType = prop.draftData.productType;
       form.value.productSubtype = prop.draftData.productSubtype;
+      form.value.displayChannels = prop.draftData.displayChannels;
     }
   },
   {
     immediate: true,
   },
 );
+
 watch(
   () => form.value.productType,
   (val) => {
     if (val === "INDUSTRY_ENERGY_STORAGE") {
-      productSubtypeOption.value = [{ label: "一体机", value: "一体机" }];
-      form.value.productSubtype = "一体机";
-    } else {
       productSubtypeOption.value = [
-        { label: "储能变流器", value: "储能变流器" },
+        { label: "一体机", value: "IntegrateMachine" },
       ];
-      form.value.productSubtype = "储能变流器";
+      form.value.productSubtype = "IntegrateMachine";
+    } else {
+      productSubtypeOption.value = [{ label: "储能变流器", value: "PCS2" }];
+      form.value.productSubtype = "PCS2";
     }
   },
 );

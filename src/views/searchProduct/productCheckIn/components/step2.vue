@@ -60,7 +60,7 @@
               :on-success="(data) => handleAvatarSuccess(data, item)"
               :before-upload="
                 (file) => {
-                  return beforeAvatarUpload(file, item);
+                  return beforeAvatarUpload(file, item as any);
                 }
               "
             >
@@ -85,11 +85,11 @@
               :on-success="(data) => handleAvatarSuccess(data, item)"
               :before-upload="
                 (file) => {
-                  return beforeAvatarUpload(file, item);
+                  return beforeAvatarUpload(file, item as any);
                 }
               "
             >
-              <el-button>上传pdf/jpg文件</el-button>
+              <el-button>{{ item.btnText }}</el-button>
             </el-upload>
             <div
               class="field-item"

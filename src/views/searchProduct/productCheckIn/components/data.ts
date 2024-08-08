@@ -57,7 +57,23 @@ export const step2Field = [
     type: "uploadField",
     accept: ["pdf", "jpg", "jpeg"],
     limit: 5,
-    text: "",
+    btnText: "上传pdf/jpg文件",
+    size: 10,
+    rules: [
+      {
+        required: true,
+        message: "请上传图片",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    label: "产品介绍",
+    prop: "productIntroductionFile",
+    type: "uploadField",
+    accept: ["png", "jpg", "jpeg"],
+    limit: 5,
+    btnText: "上传jpg/png文件",
     size: 10,
     rules: [
       {
@@ -90,6 +106,7 @@ export const step3Field = [
     showProp: "batteryTypeName",
     options: [],
     type: "select",
+    required: true,
     rules: [
       {
         required: true,
@@ -103,6 +120,7 @@ export const step3Field = [
     prop: "batterySystemEnergy",
     showProp: "batterySystemEnergy",
     type: "number",
+    required: true,
     rules: [
       {
         required: true,
@@ -116,14 +134,15 @@ export const step3Field = [
     prop: "dischargeDepth",
     showProp: "dischargeDepth",
     type: "input",
+    required: false,
     // 根据前面的选项改变
-    // rules: [
-    //   {
-    //     required: true,
-    //     message: "请输入放电深度",
-    //     trigger: "change",
-    //   },
-    // ],
+    rules: [
+      {
+        required: true,
+        message: "请输入放电深度",
+        trigger: "change",
+      },
+    ],
   },
   { label: "PCS参数", type: "title" },
   {
@@ -138,6 +157,7 @@ export const step3Field = [
     prop: "ratedPower",
     type: "input",
     showProp: "ratedPower",
+    required: true,
     rules: [
       {
         required: true,
@@ -153,6 +173,7 @@ export const step3Field = [
     type: "select",
     showProp: "productFormName",
     options: [],
+    required: true,
     rules: [
       {
         required: true,
@@ -166,28 +187,30 @@ export const step3Field = [
     prop: "systemOverallEfficiency",
     showProp: "systemOverallEfficiency",
     type: "input",
+    required: false,
     // 根据前面的选项改变
-    // rules: [
-    //   {
-    //     required: true,
-    //     message: "请输入系统综合效率",
-    //     trigger: "change",
-    //   },
-    // ],
+    rules: [
+      {
+        required: true,
+        message: "请输入系统综合效率",
+        trigger: "change",
+      },
+    ],
   },
   {
     label: "年衰减率/%",
     prop: "annualDecayRate",
     showProp: "annualDecayRate",
     type: "input",
+    required: false,
     // 根据前面的选项改变
-    // rules: [
-    //   {
-    //     required: true,
-    //     message: "请输入年衰减率",
-    //     trigger: "change",
-    //   },
-    // ],
+    rules: [
+      {
+        required: true,
+        message: "请输入年衰减率",
+        trigger: "change",
+      },
+    ],
   },
   {
     label: "冷却方式",
@@ -208,13 +231,14 @@ export const step3Field = [
     showProp: "energyStorageSystemProductUnitPrice",
     prop: "energyStorageSystemProductUnitPrice",
     type: "number",
+    required: false,
     // 根据前面的选项改变
-    // rules: [
-    //   {
-    //     required: true,
-    //     message: "请输入产品单价",
-    //     trigger: "change",
-    //   },
-    // ],
+    rules: [
+      {
+        required: true,
+        message: "请输入产品单价",
+        trigger: "change",
+      },
+    ],
   },
 ];
