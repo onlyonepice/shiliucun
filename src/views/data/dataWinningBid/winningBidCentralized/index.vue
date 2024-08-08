@@ -17,12 +17,13 @@
     <div :class="ns.b('content')">
       <EmptyData v-if="isEmptyData" />
       <template v-else>
-        <div
-          :class="ns.b('chart')"
-          id="eChart-centralized"
-          ref="eChartsCentralized"
-        />
         <div class="table-box" id="table-box" @scroll="handleScroll">
+          <div
+            :style="`width: ${echartsWidth}px`"
+            :class="ns.b('chart')"
+            id="eChart-centralized"
+            ref="eChartsCentralized"
+          />
           <table
             class="invite-tenders"
             id="invite-tenders"
@@ -72,6 +73,10 @@
             </tbody>
           </table>
         </div>
+        <ElectricityText
+          :style="`${!isWidth ? 'margin-top:20px;' : ''}`"
+          :url="VITE_DATABASE_URL + '#/winningBidLibraryManage'"
+        />
       </template>
     </div>
   </div>
@@ -86,12 +91,15 @@
 <script setup lang="ts">
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
+import { useUserStore } from "@/store/modules/user";
 import { Ref, ref, computed, onMounted } from "vue";
 import { chartWatermark } from "@/utils/echarts/eCharts";
 import { getCollectTimeList, getCollectionEntry } from "@/api/data";
 import { nextTick } from "process";
 
+const { VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("centralized");
+const echartsWidth = ref(1150);
 const isWidth = ref(false);
 const isEmptyData = ref(false);
 const thTitle = ref(0);
@@ -117,7 +125,13 @@ const shortlistedEnterprise = ref<{
 });
 const eChartsOption: Ref<any> = ref({
   yAxis: { name: "MWh" },
-  series: { type: "bar", barWidth: 24, data: [] },
+  series: {
+    type: "bar",
+    barWidth: 24,
+    data: [],
+    barGap: "120%",
+    barCategoryGap: "12%",
+  },
   xAxis: {
     name: "",
     data: [],
@@ -173,6 +187,12 @@ const eChartsOption: Ref<any> = ref({
       fontWeight: "600",
     },
   },
+  grid: {
+    left: "143",
+    right: "0%",
+    bottom: "10%",
+    containLabel: true,
+  },
 });
 
 function filterText(text: string) {
@@ -208,8 +228,16 @@ const eChartName = computed(() => {
 });
 const initECharts = async () => {
   try {
-    const myChart = echarts.init(document.getElementById("eChart-centralized"));
-    myChart.setOption(eChartsOption.value);
+    // 把表格的宽度赋值给echarts
+    echartsWidth.value =
+      document.querySelector("#invite-tenders").clientWidth || 1150;
+    setTimeout(() => {
+      const myChart = echarts.init(
+        document.getElementById("eChart-centralized"),
+      );
+      myChart.resize();
+      myChart.setOption(eChartsOption.value);
+    });
   } catch (error) {
     console.error("渲染图表出错", error);
   }
@@ -217,14 +245,24 @@ const initECharts = async () => {
 // change
 const handleChange = (val) => {
   searchParams.value.time = val;
-  isWidth.value = false;
-  // 判断在渲染前是否为空
-  if (isEmptyData.value) {
-    isEmptyData.value = false;
-    nextTick(() => {
-      getCollectionEntryList();
+  // 切换时判断是否登录
+  if (useUserStore().token && useUserStore().token !== "") {
+    isWidth.value = false;
+    // 判断在渲染前是否为空
+    if (isEmptyData.value) {
+      isEmptyData.value = false;
+      nextTick(() => {
+        getCollectionEntryList();
+      });
+    } else getCollectionEntryList();
+  } else {
+    useUserStore().openLogin(true);
+    setTimeout(() => {
+      searchParams.value.time = timeList.value.find(
+        (item) => item.defaultValue,
+      ).paramName;
     });
-  } else getCollectionEntryList();
+  }
 };
 // 下载图片
 function exportResult() {
@@ -267,7 +305,6 @@ async function getCollectionEntryList() {
       eChartsOption.value.series.data = datas.collectingParty.map(
         (item) => item.gatheringScale,
       );
-      initECharts();
       nextTick(() => {
         handleResize();
       });
@@ -286,11 +323,17 @@ onMounted(() => {
 function handleResize() {
   const pageWidth = document.querySelector("#table-box");
   const tableWidth = document.querySelector("#invite-tenders");
+  // 没超过宽度就100% 超过就自适应
   isWidth.value = pageWidth.clientWidth >= tableWidth.clientWidth;
+  setTimeout(() => {
+    // 同步echarts宽度
+    initECharts();
+  });
 }
 function handleScroll(e) {
   thTitle.value = e.target.scrollLeft;
 }
+// 当页面宽高改变时触发
 window.addEventListener("resize", handleResize);
 </script>
 
@@ -303,7 +346,7 @@ window.addEventListener("resize", handleResize);
 }
 
 #eChart-centralized {
-  @include widthAndHeight(1152px, 340px);
+  height: 240px;
   margin-top: 32px;
 }
 
@@ -337,6 +380,7 @@ window.addEventListener("resize", handleResize);
           padding: 0 23px;
           background-color: #f2f3f5;
           border: 1px solid #dbdce2;
+          border-bottom: 0;
         }
       }
     }
