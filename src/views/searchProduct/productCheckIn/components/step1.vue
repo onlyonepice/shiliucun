@@ -74,8 +74,8 @@ const productTypeOption = ref([
   { label: "储能变流器", value: "ENERGY_STORAGE_INVERTER" },
 ]);
 const displayChannelsOptions = ref([
-  { label: "是否用于工商业测算", value: "INDUSTRIAL_CALCULATION" },
-  { label: "是否展示于产品库", value: "SHOW_FOR_PRODUCT" },
+  { label: "工商业测算", value: "INDUSTRIAL_CALCULATION" },
+  { label: "产品库展示", value: "SHOW_FOR_PRODUCT" },
 ]);
 const productSubtypeOption = ref([]);
 const form = ref<any>({
