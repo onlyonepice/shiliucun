@@ -540,7 +540,9 @@ const getProductDetail = async () => {
     productDetail.value = datas;
     productDetail.value.image === null &&
       (productDetail.value.image =
-        datas.models[0].image.length === 0 ? null : [datas.models[0].image[0]]);
+        datas.models[0].image && datas.models[0].image.length > 0
+          ? [datas.models[0].image[0]]
+          : null);
     breadcrumbList.value[1].text = datas.name;
 
     const _length =
