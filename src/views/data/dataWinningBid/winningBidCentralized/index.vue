@@ -91,6 +91,7 @@
 <script setup lang="ts">
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
+import { useUserStore } from "@/store/modules/user";
 import { Ref, ref, computed, onMounted } from "vue";
 import { chartWatermark } from "@/utils/echarts/eCharts";
 import { getCollectTimeList, getCollectionEntry } from "@/api/data";
@@ -244,14 +245,24 @@ const initECharts = async () => {
 // change
 const handleChange = (val) => {
   searchParams.value.time = val;
-  isWidth.value = false;
-  // 判断在渲染前是否为空
-  if (isEmptyData.value) {
-    isEmptyData.value = false;
-    nextTick(() => {
-      getCollectionEntryList();
+  // 切换时判断是否登录
+  if (useUserStore().token && useUserStore().token !== "") {
+    isWidth.value = false;
+    // 判断在渲染前是否为空
+    if (isEmptyData.value) {
+      isEmptyData.value = false;
+      nextTick(() => {
+        getCollectionEntryList();
+      });
+    } else getCollectionEntryList();
+  } else {
+    useUserStore().openLogin(true);
+    setTimeout(() => {
+      searchParams.value.time = timeList.value.find(
+        (item) => item.defaultValue,
+      ).paramName;
     });
-  } else getCollectionEntryList();
+  }
 };
 // 下载图片
 function exportResult() {
