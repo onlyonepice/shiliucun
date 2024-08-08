@@ -33,6 +33,23 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item
+        v-if="form.productType === 'INDUSTRY_ENERGY_STORAGE'"
+        label="展示渠道"
+        prop="displayChannels"
+        :rules="[
+          { required: true, message: '请选择展示渠道', trigger: 'blur' },
+        ]"
+      >
+        <el-select multiple v-model="form.displayChannels" placeholder="请选择">
+          <el-option
+            v-for="item in displayChannelsOptions"
+            :label="item.label"
+            :value="item.value"
+            :key="item.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label=" ">
         <el-button @click="handleNext(formRef)" type="primary">
           下一步
@@ -56,13 +73,23 @@ const productTypeOption = ref([
   { label: "工商业储能", value: "INDUSTRY_ENERGY_STORAGE" },
   { label: "储能变流器", value: "ENERGY_STORAGE_INVERTER" },
 ]);
+const displayChannelsOptions = ref([
+  { label: "是否用于工商业测算", value: "INDUSTRIAL_CALCULATION" },
+  { label: "是否展示于产品库", value: "SHOW_FOR_PRODUCT" },
+]);
 const productSubtypeOption = ref([]);
-const form = ref<any>({});
+const form = ref<any>({
+  productType: "",
+  productSubtype: "",
+  displayChannels: [],
+});
+
 watch(
   () => prop.draftData,
   () => {
     if (prop.draftData) {
       form.value.productType = prop.draftData.productType;
+      form.value.displayChannels = prop.draftData.displayChannels;
       nextTick(() => {
         form.value.productSubtype = prop.draftData.productSubtype;
       });
@@ -72,6 +99,7 @@ watch(
     immediate: true,
   },
 );
+
 watch(
   () => form.value.productType,
   (val) => {
@@ -79,8 +107,10 @@ watch(
       productSubtypeOption.value = [
         { label: "一体机", value: "IntegrateMachine" },
       ];
+      form.value.productSubtype = "IntegrateMachine";
     } else {
       productSubtypeOption.value = [{ label: "储能变流器", value: "PCS2" }];
+      form.value.productSubtype = "PCS2";
     }
     form.value.productSubtype = "";
   },

@@ -60,7 +60,7 @@
               :on-success="(data) => handleAvatarSuccess(data, item)"
               :before-upload="
                 (file) => {
-                  return beforeAvatarUpload(file, item);
+                  return beforeAvatarUpload(file, item as any);
                 }
               "
             >
@@ -85,7 +85,7 @@
               :on-success="(data) => handleAvatarSuccess(data, item)"
               :before-upload="
                 (file) => {
-                  return beforeAvatarUpload(file, item);
+                  return beforeAvatarUpload(file, item as any);
                 }
               "
             >

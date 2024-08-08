@@ -23,16 +23,16 @@
       </div>
       <div :class="ns.b('form')">
         <Step1
+          v-show="tabVal === 1"
           :draftData="draftData"
           @next="handleNext"
-          v-show="tabVal === 1"
         />
         <Step2
+          v-show="tabVal === 2"
           :draftData="draftData"
           @saveDraft="saveDraft"
           @next="handleNext"
           @back="handleBack"
-          v-show="tabVal === 2"
         />
         <template v-if="form.productType">
           <Step3
@@ -76,7 +76,7 @@ import {
 
 const id = ref(null);
 const loading = ref(false);
-let form: any = {};
+const form = ref<any>({});
 const tabVal = ref(1);
 const route = useRoute();
 const router = useRouter();
@@ -91,7 +91,7 @@ const tabs = ref([
 ]);
 
 function handleNext(data) {
-  form = { ...form, ...data };
+  form.value = { ...form.value, ...data };
   tabVal.value += 1;
 }
 
@@ -111,7 +111,8 @@ async function getDetails() {
     if (resp_code === 0) {
       delete datas?.id;
       draftData.value = datas;
-      form = datas;
+      form.value = datas;
+      loading.value = false;
       const step2Status = step2Field.every((item) => {
         return datas[item.prop];
       });
@@ -122,17 +123,16 @@ async function getDetails() {
       }
     }
   } catch (e) {
-    console.error(e);
-  } finally {
     loading.value = false;
+    console.error(e);
   }
 }
 
 function saveDraft(formData) {
   try {
     loading.value = true;
-    if (form?.models) {
-      form.models.map((item: any) => {
+    if (form.value?.models) {
+      form.value.models.map((item: any) => {
         return {
           ...fieldAll.models[0],
           ...item,
@@ -141,12 +141,12 @@ function saveDraft(formData) {
     }
     const data = {
       ...fieldAll,
-      ...form,
+      ...form.value,
       ...formData,
       operate: 1,
       id: id.value,
     };
-    if (form.productType === "INDUSTRY_ENERGY_STORAGE") {
+    if (form.value.productType === "INDUSTRY_ENERGY_STORAGE") {
       data.industrialEnergyStorageModels = data.models;
     } else {
       data.energyStorageInverterModels = data.models;
@@ -154,12 +154,12 @@ function saveDraft(formData) {
     delete data.models;
     productCheckInSaveOrUpdateApi(data).then(({ resp_code, datas }) => {
       id.value = datas;
+      loading.value = false;
       resp_code === 0 && ElMessage.success("保存成功");
     });
   } catch (e) {
-    console.error(e);
-  } finally {
     loading.value = false;
+    console.error(e);
   }
 }
 // 提交
@@ -167,12 +167,12 @@ function handleSubmit(formData) {
   try {
     const data = {
       ...fieldAll,
-      ...form,
+      ...form.value,
       ...formData,
       operate: 0,
       id: id.value,
     };
-    if (form.productType === "INDUSTRY_ENERGY_STORAGE") {
+    if (form.value.productType === "INDUSTRY_ENERGY_STORAGE") {
       data.industrialEnergyStorageModels = data.models;
     } else {
       data.energyStorageInverterModels = data.models;
@@ -182,8 +182,15 @@ function handleSubmit(formData) {
     }
     delete data.models;
     loading.value = true;
+    if (
+      data.productType !== "INDUSTRY_ENERGY_STORAGE" &&
+      (data.displayChannels || data.displayChannels.length)
+    ) {
+      delete data.displayChannels;
+    }
     productCheckInSaveOrUpdateApi(data).then(({ resp_code }) => {
       if (resp_code === 0) {
+        loading.value = false;
         route.query.id ? router.go(-1) : router.push("homePersonal?id=6");
       } else {
         ElMessage.error("产品上传失败");
@@ -191,10 +198,10 @@ function handleSubmit(formData) {
     });
   } catch (e) {
     console.error(e);
-  } finally {
     loading.value = false;
   }
 }
+
 onMounted(() => {
   if (route.query?.id) {
     getDetails();

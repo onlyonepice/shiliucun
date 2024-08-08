@@ -32,7 +32,11 @@
               <el-form-item
                 :label="' '"
                 :prop="`[${index}].${stepField[scope.$index].prop}`"
-                :rules="stepField[scope.$index].rules"
+                :rules="
+                  stepField[scope.$index].required
+                    ? stepField[scope.$index].rules
+                    : []
+                "
               >
                 <el-input
                   v-if="stepField[scope.$index].type === 'input'"
@@ -121,6 +125,10 @@ const prop = defineProps({
     type: Object,
     default: null,
   },
+  data: {
+    type: Object,
+    default: null,
+  },
   // 产品类型：
   // INDUSTRY_ENERGY_STORAGE: "工商业储能",
   // ENERGY_STORAGE_INVERTER: "储能变流器"
@@ -139,11 +147,12 @@ const tableForm = ref<any[]>([{}]);
 const emits = defineEmits(["submit", "back", "saveDraft"]);
 watch(
   () => prop.draftData,
-  () => {
+  (val) => {
+    if (!val) return;
     const _data =
       prop.productType === "INDUSTRY_ENERGY_STORAGE"
-        ? prop.draftData.industrialEnergyStorageModels
-        : prop.draftData.energyStorageInverterModels;
+        ? prop.draftData?.industrialEnergyStorageModels
+        : prop.draftData?.energyStorageInverterModels;
 
     if (_data) {
       tableForm.value = _data.map((item) => {
@@ -166,9 +175,45 @@ watch(
     immediate: true,
   },
 );
+
+watch(
+  () => prop.data,
+  (val) => {
+    if (stepField.value === null) return;
+    // 额外添加必填项名单
+    const requiredList = [
+      "dischargeDepth", // 放电深度
+      "annualDecayRate", // 年衰减率
+      "systemOverallEfficiency", // 系统综合效率
+      "energyStorageSystemProductUnitPrice", // 产品单价
+    ];
+    // INDUSTRIAL_CALCULATION 是否用于工商业测算 需要额外添加必填项
+    // INDUSTRY_ENERGY_STORAGE 是否为储能行业
+    console.log(val.productType, val?.displayChannels);
+    if (
+      val.productType === "INDUSTRY_ENERGY_STORAGE" &&
+      val?.displayChannels?.includes("INDUSTRIAL_CALCULATION")
+    ) {
+      stepField.value.forEach((item) => {
+        if (requiredList.includes(item.prop)) {
+          item.required = true;
+        }
+      });
+    } else {
+      stepField.value.forEach((item) => {
+        if (requiredList.includes(item.prop)) {
+          item.required = false;
+        }
+      });
+    }
+  },
+  { immediate: true, deep: true },
+);
+
 watch(
   () => prop.productType,
   () => {
+    tableField.value = [];
     if (prop.productType === "INDUSTRY_ENERGY_STORAGE") {
       stepField.value = step3Field;
     } else {

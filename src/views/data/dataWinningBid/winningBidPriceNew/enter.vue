@@ -55,16 +55,16 @@
 
 <script setup lang="ts">
 import * as echarts from "echarts";
+import { useRouter } from "vue-router";
 import { get, toNumber } from "lodash";
 import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
 import { priceFormOptionsNews } from "../data";
-import { ref, watch, Ref, nextTick, computed } from "vue";
-import { biddingPriceAnalysis, maskPermissions } from "@/api/data";
 import { useUserStore } from "@/store/modules/user";
 import { chartWatermark } from "@/utils/echarts/eCharts";
+import { ref, watch, Ref, nextTick, computed } from "vue";
 import lament_icon from "@/assets/img/common/lament_icon.png";
-import { useRouter } from "vue-router";
+import { biddingPriceAnalysis, maskPermissions } from "@/api/data";
 
 const router = useRouter();
 const { VITE_DATABASE_URL } = import.meta.env;
@@ -74,6 +74,7 @@ const loading: Ref<boolean> = ref(false);
 const exportImgUrl = ref({ png: "", jpg: "" }); // 导出图片地址
 const exportVisible: Ref<boolean> = ref(false); // 是否打开导出图片弹窗
 const echartsMask: Ref<boolean> = ref(false); // echarts蒙层
+
 // 获取eCharts节点
 const eChartsDom = ref(null);
 const props = defineProps({

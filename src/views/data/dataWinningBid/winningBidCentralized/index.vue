@@ -30,7 +30,7 @@
           >
             <thead>
               <tr>
-                <th>招标量{{ thWidth }}</th>
+                <th>招标量</th>
                 <th
                   v-for="item in shortlistedEnterprise.amountOfTender"
                   :key="item"
@@ -54,8 +54,8 @@
                 >
                   <div class="th-content">
                     <template
-                      v-for="value in item.beShortlistedOrNotResp"
-                      :key="value.scale"
+                      v-for="(value, index) in item.beShortlistedOrNotResp"
+                      :key="index"
                     >
                       <div v-if="value.scale === _item" class="th-content-item">
                         <img
@@ -85,6 +85,7 @@
 import * as echarts from "echarts";
 import useNamespace from "@/utils/nameSpace";
 import { Ref, ref, computed, onMounted } from "vue";
+import { chartWatermark } from "@/utils/echarts/eCharts";
 import { getCollectTimeList, getCollectionEntry } from "@/api/data";
 import { nextTick } from "process";
 
@@ -114,7 +115,14 @@ const shortlistedEnterprise = ref<{
 const eChartsOption: Ref<any> = ref({
   yAxis: { name: "MWh" },
   series: { type: "bar", barWidth: 24, data: [] },
-  xAxis: { name: "", data: [] },
+  xAxis: {
+    name: "",
+    data: [],
+    axisLabel: {
+      interval: 0,
+    },
+  },
+  graphic: [chartWatermark],
   color: ["#244BF1"],
   tooltip: {
     trigger: "axis",
@@ -186,9 +194,9 @@ const thWidth = computed(() => {
         maxCount = mostFrequent[key];
       }
     }
-    return `${maxCount * 24 + 40}px`;
+    return `${maxCount * 30 + 40}px`;
   }
-  return `${4 * 24 + 40}px`;
+  return `${4 * 30 + 40}px`;
 });
 
 const eChartName = computed(() => {
@@ -207,7 +215,13 @@ const initECharts = async () => {
 const handleChange = (val) => {
   searchParams.value.time = val;
   isWidth.value = false;
-  getCollectionEntryList();
+  // 判断在渲染前是否为空
+  if (isEmptyData.value) {
+    isEmptyData.value = false;
+    nextTick(() => {
+      getCollectionEntryList();
+    });
+  } else getCollectionEntryList();
 };
 // 下载图片
 function exportResult() {
@@ -240,12 +254,8 @@ async function getCollectionEntryList() {
       datas?.collectingParty?.length &&
       datas?.shortlistedEnterprise?.collectionScaleResp?.length
     ) {
-      isEmptyData.value = false;
       // 获取表格
-      shortlistedEnterprise.value.amountOfTender =
-        datas.shortlistedEnterprise.amountOfTender;
-      shortlistedEnterprise.value.collectionScaleResp =
-        datas?.shortlistedEnterprise?.collectionScaleResp;
+      shortlistedEnterprise.value = datas.shortlistedEnterprise;
       // 获取图表数据
       eChartsOption.value.title.text = eChartName.value;
       eChartsOption.value.xAxis.data = datas.collectingParty.map(
