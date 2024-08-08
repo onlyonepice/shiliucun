@@ -28,8 +28,8 @@
           <el-option
             v-for="item in productSubtypeOption"
             :label="item.label"
-            :value="item.value"
-            :key="item.value"
+            :value="item.code"
+            :key="item.code"
           />
         </el-select>
       </el-form-item>
@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from "vue";
 import useNamespace from "@/utils/nameSpace";
-
+import { getProductTypeApi } from "@/api/searchProduct";
 const prop = defineProps({
   draftData: {
     type: Object,
@@ -103,15 +103,11 @@ watch(
 watch(
   () => form.value.productType,
   (val) => {
-    if (val === "INDUSTRY_ENERGY_STORAGE") {
-      productSubtypeOption.value = [
-        { label: "一体机", value: "IntegrateMachine" },
-      ];
-      form.value.productSubtype = "IntegrateMachine";
-    } else {
-      productSubtypeOption.value = [{ label: "储能变流器", value: "PCS2" }];
-      form.value.productSubtype = "PCS2";
-    }
+    getProductType(
+      val === "INDUSTRY_ENERGY_STORAGE"
+        ? "product_type"
+        : "product_energy_storage_inverter_type",
+    );
     form.value.productSubtype = "";
   },
 );
@@ -126,6 +122,13 @@ function handleNext(formRefName) {
       return;
     }
   });
+}
+
+async function getProductType(type: string) {
+  const { datas, resp_code }: any = await getProductTypeApi({ type });
+  if (resp_code === 0) {
+    productSubtypeOption.value = datas;
+  }
 }
 </script>
 <style lang="scss" scoped>
