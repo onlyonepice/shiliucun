@@ -112,6 +112,7 @@ async function getDetails() {
       delete datas?.id;
       draftData.value = datas;
       form.value = datas;
+      loading.value = false;
       const step2Status = step2Field.every((item) => {
         return datas[item.prop];
       });
@@ -122,9 +123,8 @@ async function getDetails() {
       }
     }
   } catch (e) {
-    console.error(e);
-  } finally {
     loading.value = false;
+    console.error(e);
   }
 }
 
@@ -154,12 +154,12 @@ function saveDraft(formData) {
     delete data.models;
     productCheckInSaveOrUpdateApi(data).then(({ resp_code, datas }) => {
       id.value = datas;
+      loading.value = false;
       resp_code === 0 && ElMessage.success("保存成功");
     });
   } catch (e) {
-    console.error(e);
-  } finally {
     loading.value = false;
+    console.error(e);
   }
 }
 // 提交
@@ -190,6 +190,7 @@ function handleSubmit(formData) {
     }
     productCheckInSaveOrUpdateApi(data).then(({ resp_code }) => {
       if (resp_code === 0) {
+        loading.value = false;
         route.query.id ? router.go(-1) : router.push("homePersonal?id=6");
       } else {
         ElMessage.error("产品上传失败");
@@ -197,10 +198,10 @@ function handleSubmit(formData) {
     });
   } catch (e) {
     console.error(e);
-  } finally {
     loading.value = false;
   }
 }
+
 onMounted(() => {
   if (route.query?.id) {
     getDetails();
