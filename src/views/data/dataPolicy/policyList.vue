@@ -259,7 +259,7 @@ function handleMonthClick(row) {
 }
 
 function getRegion(regionName) {
-  return !regionName ? "" : regionName.join("-");
+  return !regionName ? "" : regionName;
 }
 
 function handleHiddenDetailClick(index, rowIndex) {

@@ -61,11 +61,11 @@ export const getProductDetailsApi = (params) => {
   );
 };
 // 表单回填详情接口
-export const getProductDetailsEditApi = (id) => {
+export const getProductDetailsEditApi = (params: any) => {
   return http.request<{ resp_code: number; datas: any }>(
     "get",
     "/eesa-report/energyStorageProduct/energyStorageProduct/front/v1.0/getProductById",
-    { params: { id } },
+    { params },
   );
 };
 // 上传修改参数

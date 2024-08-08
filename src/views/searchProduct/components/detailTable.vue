@@ -112,7 +112,7 @@
       {{ info.productPrice ? info.productPrice : "-" }}
     </div>
   </template>
-  <template v-else>
+  <template v-if="productType === 'ELECTRIC_CORE'">
     <div
       v-if="index === 0"
       :class="ns.b('common')"

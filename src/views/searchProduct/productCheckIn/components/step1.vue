@@ -59,7 +59,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, nextTick } from "vue";
 import useNamespace from "@/utils/nameSpace";
 
 const prop = defineProps({
@@ -89,8 +89,10 @@ watch(
   () => {
     if (prop.draftData) {
       form.value.productType = prop.draftData.productType;
-      form.value.productSubtype = prop.draftData.productSubtype;
       form.value.displayChannels = prop.draftData.displayChannels;
+      nextTick(() => {
+        form.value.productSubtype = prop.draftData.productSubtype;
+      });
     }
   },
   {
@@ -110,6 +112,7 @@ watch(
       productSubtypeOption.value = [{ label: "储能变流器", value: "PCS2" }];
       form.value.productSubtype = "PCS2";
     }
+    form.value.productSubtype = "";
   },
 );
 const ns = useNamespace("step1");

@@ -138,7 +138,11 @@
             </div>
           </div>
         </div>
-        <el-table :data="tableField" style="max-width: 810px; width: 100%">
+        <el-table
+          :data="tableField"
+          style="max-width: 810px; width: 100%"
+          :productType="tabsList[choseTabs].code"
+        >
           <el-table-column label="" fixed="left" prop="label" width="160px" />
           <el-table-column
             v-for="(item, index) in detailsData.models"
@@ -155,6 +159,7 @@
                 <div
                   v-if="
                     stepField[scope.$index].type === 'input' ||
+                    stepField[scope.$index].type === 'number' ||
                     (stepField[scope.$index].type === 'select' &&
                       !stepField[scope.$index].multiple)
                   "
@@ -220,7 +225,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, Ref } from "vue";
+import { ref, Ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
@@ -228,7 +233,10 @@ import {
   getProductCheckInListApi,
   getProductDetailsApi,
 } from "@/api/searchProduct";
-import { step3Field } from "@/views/searchProduct/productCheckIn/components/data";
+import {
+  step3Field,
+  step3FieldVariable,
+} from "@/views/searchProduct/productCheckIn/components/data";
 const tabsList: Ref<Array<any>> = ref([
   { id: 0, name: "工商业一体机", code: "INDUSTRY_ENERGY_STORAGE" },
   { id: 1, name: "储能变流器", code: "ENERGY_STORAGE_INVERTER" },
@@ -237,7 +245,7 @@ const choseTabs: Ref<number> = ref(0); // 选中的tab
 const total = ref(0);
 const showBig = ref(false);
 const showBigImgList = ref([]);
-const stepField = ref<any>(step3Field);
+const stepField = ref<any>(null);
 const mainData = ref([]);
 const tableField = ref([]);
 const pageStatus = ref(1);
@@ -249,6 +257,7 @@ const { fileUrl } = useUserStoreHook().$state;
 
 const onHandleClick = (val) => {
   choseTabs.value = val;
+  mainData.value = [];
   getProductCheckInList();
 };
 async function getProductCheckInList() {
@@ -269,15 +278,26 @@ function onSettlement() {
 async function handelViewAttribute(row) {
   const { resp_code, datas } = await getProductDetailsApi({
     id: row.id,
-    productType: "INDUSTRY_ENERGY_STORAGE",
+    productType: tabsList.value[choseTabs.value].code,
   });
   if (resp_code === 0) {
     detailsData.value = datas;
   }
-  pageStatus.value = 2;
+  stepField.value = choseTabs.value === 0 ? step3Field : step3FieldVariable;
+  console.log("==============", stepField.value);
+  stepField.value.forEach((item) => {
+    tableField.value.push({
+      label: item.label,
+    });
+  });
+  nextTick(() => {
+    pageStatus.value = 2;
+  });
 }
 function handelReUpload(id, status) {
-  router.push(`/searchProductProductCheckIn?id=${id}&status=${status}`);
+  router.push(
+    `/searchProductProductCheckIn?id=${id}&status=${status}&productType=${tabsList.value[choseTabs.value].code}`,
+  );
 }
 function handelViewImgClose() {
   showBig.value = false;
@@ -288,13 +308,6 @@ function handleViewImages(imgs) {
 }
 getProductCheckInList();
 
-onMounted(() => {
-  stepField.value.forEach((item) => {
-    tableField.value.push({
-      label: item.label,
-    });
-  });
-});
 // 页数改变
 function handleCurrentChange(val: number) {
   paging.value.page = val;
@@ -486,6 +499,38 @@ function handleCurrentChange(val: number) {
             border-top: 1px solid #dbdce2;
           }
         }
+        &:hover {
+          td {
+            background: #fff;
+          }
+        }
+      }
+      .el-table__row td:nth-of-type(1) {
+        background: #f2f3f5;
+        text-align: right;
+        @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+        border-right: none !important;
+      }
+    }
+    ::v-deep(.el-table)[producttype="ENERGY_STORAGE_INVERTER"] {
+      tr {
+        &:nth-child(2),
+        &:nth-child(5),
+        &:nth-child(10) {
+          td.el-table__cell {
+            border-left: 1px solid transparent;
+            &:nth-child(1),
+            &:nth-child(2) {
+              border-left: 1px solid #dbdce2;
+              font-weight: 600;
+              color: rgba(0, 0, 0, 0.9);
+            }
+          }
+        }
+      }
+    }
+    ::v-deep(.el-table)[producttype="INDUSTRY_ENERGY_STORAGE"] {
+      tr {
         &:nth-child(2),
         &:nth-child(6),
         &:nth-child(9) {
@@ -499,17 +544,6 @@ function handleCurrentChange(val: number) {
             }
           }
         }
-        &:hover {
-          td {
-            background: #fff;
-          }
-        }
-      }
-      .el-table__row td:nth-of-type(1) {
-        background: #f2f3f5;
-        text-align: right;
-        @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
-        border-right: none !important;
       }
     }
   }
