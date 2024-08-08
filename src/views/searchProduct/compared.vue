@@ -3,7 +3,7 @@
     <Breadcrumb :breadcrumbList="breadcrumbList" />
     <div :class="['es-commonPage', ns.b('content')]">
       <el-table :data="tableData" style="width: 100%" :border="true">
-        <el-table-column fixed prop="name" label="" width="124">
+        <el-table-column fixed prop="name" label="" width="164">
           <template #default="scope">
             <p
               v-if="route.query.productType === 'INDUSTRY_ENERGY_STORAGE'"
@@ -41,7 +41,7 @@
             </p>
           </template>
         </el-table-column>
-        <el-table-column prop="info1" label="" width="244">
+        <el-table-column prop="info1" label="" width="204">
           <template #default="scope">
             <compardTable
               v-if="scope.row.info[0] && scope.row.info[0].show"

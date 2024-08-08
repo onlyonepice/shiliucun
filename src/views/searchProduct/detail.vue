@@ -384,8 +384,8 @@ const productDetailInfo = computed(() => {
       },
       {
         label: "额定功率：",
-        value: productDetail.value.models[0].ratedPower
-          ? productDetail.value.models[0].ratedPower + "kW"
+        value: productDetail.value.models[0].ratedOutputPower
+          ? productDetail.value.models[0].ratedOutputPower + "kW"
           : "-",
       },
       {
