@@ -8,11 +8,12 @@
     />
     <div :class="ns.be('img', 'box')">
       <img
-        v-if="product.image"
+        v-if="product.image.length !== 0"
         :class="ns.b('img')"
         :src="useUserStoreHook().$state.fileUrl + product.image[0]"
         alt=""
       />
+      <EmptyProduct v-else size="120px" />
     </div>
     <p :class="ns.b('price')" v-if="!!product.price">
       参考价<span>{{ product.price + "/kWh起" }}</span>

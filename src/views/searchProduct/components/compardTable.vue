@@ -5,11 +5,12 @@
       <div style="position: relative">
         <div :class="ns.be('info', 'bigImg-box')">
           <img
-            v-if="info.image"
+            v-if="info.image.length !== 0"
             :class="ns.be('info', 'bigImg')"
             :src="useUserStoreHook().$state.fileUrl + info.image[0]"
             alt=""
           />
+          <EmptyProduct v-else size="120px" />
         </div>
         <img
           v-if="useUserStoreHook().comparedList.length > 2"
@@ -21,6 +22,7 @@
         <p :class="ns.be('info', 'price')" v-if="info.price">
           参考价<span>{{ info.price }}/kWh起</span>
         </p>
+        <div v-else style="height: 29px" />
         <p
           :class="ns.be('info', 'name')"
           style="color: #244bf1; cursor: pointer"

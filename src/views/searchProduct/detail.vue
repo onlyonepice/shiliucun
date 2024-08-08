@@ -4,14 +4,20 @@
     <div :class="[ns.b('content'), 'es-commonPage']" v-if="productDetail.id">
       <div :class="[ns.b('content-top')]">
         <div :class="[ns.b('content-top-title')]">
-          <div :class="[ns.be('info-left', 'bigImg-box')]">
-            <img
-              :class="[ns.be('info-left', 'bigImg')]"
-              v-if="productDetail.image"
-              :src="useUserStoreHook().$state.fileUrl + productDetail.image[0]"
-              alt=""
-            />
-          </div>
+          <template
+            v-if="productDetail.image && productDetail.image.length !== 0"
+          >
+            <div :class="[ns.be('info-left', 'bigImg-box')]">
+              <img
+                :class="[ns.be('info-left', 'bigImg')]"
+                :src="
+                  useUserStoreHook().$state.fileUrl + productDetail.image[0]
+                "
+                alt=""
+              />
+            </div>
+          </template>
+          <EmptyProduct v-else size="120px" />
           <div :class="[ns.b('info-right')]">
             <h3 :class="[ns.b('info-right-title')]">
               {{ productDetail.name }}
@@ -594,6 +600,7 @@ const onConnectCompany = (id: string) => {
 .es-searchProductDetail-info-right {
   @include widthAndHeight(680px, 400px);
   position: relative;
+  margin-left: 24px;
 }
 .es-searchProductDetail-info-left__bigImg-box {
   @include widthAndHeight(400px, 400px);

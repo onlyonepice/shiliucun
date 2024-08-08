@@ -105,3 +105,12 @@ export const getEnterpriseDetailApi = (data: any) => {
     { data },
   );
 };
+
+// 查询二级产品类型
+export const getProductTypeApi = (data: any) => {
+  return http.request<void>(
+    "post",
+    "/eesa-report/front/openApi/v1.0/selectByTypeDefaultHideData",
+    { data },
+  );
+};
