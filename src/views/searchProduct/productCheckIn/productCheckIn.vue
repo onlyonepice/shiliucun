@@ -113,6 +113,7 @@ async function getDetails() {
       delete datas?.id;
       draftData.value = datas;
       form.value = datas;
+      form.value.productType = productType;
       loading.value = false;
       const step2Status = step2Field.every((item) => {
         return datas[item.prop];

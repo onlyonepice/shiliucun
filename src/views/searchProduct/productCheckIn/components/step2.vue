@@ -173,11 +173,24 @@ const prop = defineProps({
     default: "INDUSTRY_ENERGY_STORAGE",
   },
 });
+
+const { fileUrl } = useUserStoreHook().$state;
+const formField = ref(null);
+const ns = useNamespace("step2");
+const showBigImgList = ref([]);
+const showBig = ref(false);
+const formRef = ref(null);
+const form = ref<any>({
+  enterpriseId: null,
+  enterpriseName: null,
+});
+
+const emits = defineEmits(["next", "back", "saveDraft"]);
 watch(
   () => prop.draftData,
   () => {
     if (prop.draftData && formField.value !== null) {
-      if (val === "INDUSTRY_ENERGY_STORAGE") {
+      if (prop.productType === "INDUSTRY_ENERGY_STORAGE") {
         formField.value = step2Field;
       } else {
         formField.value = step2FieldVariable;
@@ -196,28 +209,17 @@ watch(
     immediate: true,
   },
 );
-
-const { fileUrl } = useUserStoreHook().$state;
-const formField = ref(null);
-const ns = useNamespace("step2");
-const showBigImgList = ref([]);
-const showBig = ref(false);
-const formRef = ref(null);
-const form = ref<any>({
-  enterpriseId: null,
-  enterpriseName: null,
-});
-
-const emits = defineEmits(["next", "back", "saveDraft"]);
 watch(
   () => prop.productType,
   (val) => {
+    console.log(val);
     if (val === "INDUSTRY_ENERGY_STORAGE") {
       formField.value = step2Field;
     } else {
       formField.value = step2FieldVariable;
     }
   },
+  { immediate: true },
 );
 // 校验文件
 function beforeAvatarUpload(rawFile, { accept, size }) {
