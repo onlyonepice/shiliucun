@@ -1,7 +1,11 @@
 <template>
   <h5 :class="ns.b()">
     完整数据来源：
-    <el-link href="" :underline="false" target="_blank">
+    <el-link
+      href="https://database.eesaenergy.com/#/home"
+      :underline="false"
+      target="_blank"
+    >
       EESA储能数据库
     </el-link>
   </h5>
