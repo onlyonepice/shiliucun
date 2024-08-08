@@ -189,7 +189,6 @@ watch(
     ];
     // INDUSTRIAL_CALCULATION 是否用于工商业测算 需要额外添加必填项
     // INDUSTRY_ENERGY_STORAGE 是否为储能行业
-    console.log(val.productType, val?.displayChannels);
     if (
       val.productType === "INDUSTRY_ENERGY_STORAGE" &&
       val?.displayChannels?.includes("INDUSTRIAL_CALCULATION")
@@ -258,7 +257,12 @@ function getOptions() {
     // 产品形态
     getSelectByTypeApi({ type: "product_form" }),
     // 冷却方式
-    getSelectByTypeApi({ type: "product_cooling_method" }),
+    getSelectByTypeApi({
+      type:
+        prop.productType === "INDUSTRY_ENERGY_STORAGE"
+          ? "product_cooling_method"
+          : "product_energy_storage_inverter_cooling_method",
+    }),
   ]).then((res) => {
     res.forEach(({ datas }, index) => {
       if (index === 0) {

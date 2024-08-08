@@ -40,9 +40,16 @@
         :class="ns.be('list-left', 'logo')"
       />
       <img
+        v-if="product.image.length !== 0"
         :src="useUserStoreHook().$state.fileUrl + product.image[0]"
         alt=""
         :class="ns.be('list-left', 'img')"
+      />
+      <EmptyProduct
+        v-else
+        size="190px"
+        :class="ns.be('list-left', 'img')"
+        style="margin-left: 16px"
       />
     </div>
     <div :class="ns.b('list-right')">

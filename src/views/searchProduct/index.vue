@@ -114,6 +114,7 @@ watch(
 // 选择标签栏
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
+  (id === 0 || id === 2) && getCoolDown();
   // 筛选想发生改变
   filterInfo.value.coolingMethodIds = [];
   filterInfo.value.enterpriseIds = [];
@@ -139,7 +140,10 @@ const getCoolDown = async () => {
   const { datas }: any = await getCoolDownApi({
     isSelectByHide: true,
     pid: 0,
-    type: "product_cooling_method",
+    type:
+      choseTabs.value === 0
+        ? "product_cooling_method"
+        : "product_energy_storage_inverter_cooling_method",
   });
   filterList.value[0].data = datas;
 };
