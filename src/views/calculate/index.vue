@@ -110,7 +110,7 @@
       </div>
     </template>
     <Canvas
-      v-if="!addAreaType"
+      v-if="!addAreaType && filterFinish"
       ref="searchCanvas"
       :searchCanvas="searchCanvas"
       :searchParams="searchParamsA"
@@ -520,7 +520,6 @@ function onReset() {
 }
 // 开始分析按钮
 async function onAnalysis(data: any, type: string) {
-  console.log(data);
   showInvestment.value = false;
   addAreaType.value = type === "searchB";
 
