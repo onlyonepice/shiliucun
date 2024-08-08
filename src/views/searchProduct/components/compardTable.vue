@@ -5,7 +5,7 @@
       <div style="position: relative">
         <div :class="ns.be('info', 'bigImg-box')">
           <img
-            v-if="info.image.length !== 0"
+            v-if="info.image && info.image.length > 0"
             :class="ns.be('info', 'bigImg')"
             :src="useUserStoreHook().$state.fileUrl + info.image[0]"
             alt=""
