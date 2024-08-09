@@ -2,50 +2,53 @@
 <template>
   <div :class="ns.b()">
     <div :class="ns.b('top')">
-      <Select
-        v-model="contentDict"
-        :options="contentFilter"
-        labelKey="paramDesc"
-        valueKey="id"
-        :defaultValue="contentDict"
-        title="招标内容"
-        @onChange="
-          (val) => {
-            return onChangeFilter(val, 'contentDict');
-          }
-        "
-      />
-      <Select
-        v-model="releaseTime"
-        :options="timeFilter"
-        labelKey="paramDesc"
-        valueKey="paramValue"
-        :defaultValue="releaseTime"
-        title="发布日期"
-        @onChange="
-          (val) => {
-            return onChangeFilter(val, 'releaseTime');
-          }
-        "
-      />
-      <Select
-        ref="unitDom"
-        v-model="unit"
-        :options="unitFilter"
-        labelKey="paramDesc"
-        valueKey="paramValue"
-        :defaultValue="unit"
-        title="统计单位"
-        @onChange="
-          (val) => {
-            return onChangeFilter(val, 'unit');
-          }
-        "
-      />
+      <div :class="ns.be('top', 'left')">
+        <Select
+          v-model="contentDict"
+          :options="contentFilter"
+          labelKey="paramDesc"
+          valueKey="id"
+          :defaultValue="contentDict"
+          title="招标内容"
+          @onChange="
+            (val) => {
+              return onChangeFilter(val, 'contentDict');
+            }
+          "
+        />
+        <Select
+          v-model="releaseTime"
+          :options="timeFilter"
+          labelKey="paramDesc"
+          valueKey="paramValue"
+          :defaultValue="releaseTime"
+          title="发布日期"
+          @onChange="
+            (val) => {
+              return onChangeFilter(val, 'releaseTime');
+            }
+          "
+        />
+        <Select
+          ref="unitDom"
+          v-model="unit"
+          :options="unitFilter"
+          labelKey="paramDesc"
+          valueKey="paramValue"
+          :defaultValue="unit"
+          title="统计单位"
+          @onChange="
+            (val) => {
+              return onChangeFilter(val, 'unit');
+            }
+          "
+        />
+      </div>
+      <div :class="ns.be('top', 'right')" v-if="!showEmpty">
+        <el-button type="primary" @click="exportResult">下载图片</el-button>
+      </div>
     </div>
-    <div :class="ns.be('top', 'right')" v-if="!showEmpty">
-      <el-button type="primary" @click="exportResult">下载图片</el-button>
-    </div>
+    <EchartsTips title="仅含项目级招标，不含集采/框采" />
     <div
       v-if="!showEmpty"
       v-loading="loading"
@@ -224,21 +227,20 @@ function exportResult() {
 }
 
 .es-dataScenesAnalysis-top__left {
-  width: 328px;
-  @include flex(center, flex-start, nowrap);
-
+  width: 80%;
+  height: 32px;
+  @include flex(center, space-between, nowrap);
   .es-dataScenesAnalysis-top__title {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     margin-right: 16px;
     flex: 1;
   }
 }
-
 .es-dataScenesAnalysis-top__right {
-  float: right;
-  margin: 32px 0 16px;
-
-  .es-dataScenesAnalysis-top__line {
+  height: 32px;
+  @include flex();
+  &::before {
+    content: "";
     @include widthAndHeight(1px, 24px);
     display: inline-block;
     background: #dbdce2;
