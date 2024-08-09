@@ -207,7 +207,7 @@ const productInfo = computed(() => {
       {
         label: "频率：",
         value: props.product.ratedACFrequency
-          ? props.product.ratedACFrequency + "Hz"
+          ? props.product.ratedACFrequency
           : "-",
       },
     );
