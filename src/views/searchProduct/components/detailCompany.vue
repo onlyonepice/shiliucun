@@ -58,13 +58,12 @@
     </div>
     <div :class="[ns.b('title')]" v-if="companyInfo.siteUrl">
       <h5>企业官网</h5>
-      <h5 :class="[ns.be('title', 'desc')]">
+      <h5
+        :class="[ns.be('title', 'desc')]"
+        style="color: #244bf1; cursor: pointer"
+        @click="outOpen = true"
+      >
         <span>{{ companyInfo.siteUrl }}</span>
-        <img
-          :src="CopyIcon"
-          alt=""
-          @click="toClipboardFn(companyInfo.siteUrl)"
-        />
       </h5>
     </div>
     <div :class="[ns.b('title')]" v-if="companyInfo.abbreviation">
@@ -147,18 +146,36 @@
       </div>
     </div>
   </div>
+  <Dialog
+    :visible="outOpen"
+    width="560px"
+    height="306px"
+    @onHandleClose="outOpen = false"
+    :showFoot="false"
+    :class="ns.b('out')"
+  >
+    <template #content>
+      <h3>即将离开掌上储能</h3>
+      <span
+        >访问的网站可能包含未知的安全风险，如需继续访问，请手动复制链接访问，并注意保护帐号和隐私信息</span
+      >
+      <div :class="ns.be('out', 'link')">{{ companyInfo.siteUrl }}</div>
+      <div :class="ns.be('out', 'btn')">
+        <el-button type="primary" @click="handleClick(companyInfo.siteUrl)"
+          >继续访问</el-button
+        >
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script lang="ts" setup>
-// import { Ref, ref } from "vue";
+import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
-import CopyIcon from "@/assets/img/common/copy_icon.png";
 import EmptyIcon from "@/assets/img/common/empty-icon-company.png";
-import { ElMessage } from "element-plus";
-import useClipboard from "vue-clipboard3";
 const ns = useNamespace("searchProduct-detailCompany");
-const { toClipboard } = useClipboard();
+const outOpen: Ref<boolean> = ref(false); // 弹窗
 defineProps({
   companyInfo: {
     type: Object as any,
@@ -167,10 +184,7 @@ defineProps({
 });
 const handleClick = (link: string) => {
   window.open(link, "externalWindow");
-};
-const toClipboardFn = (content: string) => {
-  toClipboard(content);
-  ElMessage.success("复制成功");
+  outOpen.value = false;
 };
 </script>
 
@@ -276,5 +290,24 @@ const toClipboardFn = (content: string) => {
   @include font(20px, 600, rgba(255, 255, 255, 0.9), 64px);
   text-align: center;
   margin-right: 12px;
+}
+.es-searchProduct-detailCompany-out {
+  span {
+    @include font(16px, 400, rgba(0, 0, 0, 0.6), 24px);
+    margin: 16px 0 24px;
+    display: inline-block;
+  }
+}
+.es-searchProduct-detailCompany-out__link {
+  @include widthAndHeight(100%, 54px);
+  background: #feeff0;
+  border-radius: 4px;
+  @include flex(center, flex-start, nowrap);
+  @include font(14px, 400, #f75964, 22px);
+  padding: 16px;
+}
+.es-searchProduct-detailCompany-out__btn {
+  @include flex(center, flex-end, nowrap);
+  margin-top: 16px;
 }
 </style>
