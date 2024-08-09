@@ -13,6 +13,7 @@ export default {
       },
       meta: {
         title: "需求对接列表",
+        keepAlive: true,
       },
     },
     {

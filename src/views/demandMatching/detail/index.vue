@@ -150,7 +150,7 @@ const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("demandMatchingDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
-  { text: "需求大厅", path: "/demandMatching/list" },
+  { text: "需求大厅", path: "goBack" },
   { text: "需求详情", path: "" },
 ]);
 const minePublish: Ref<boolean> = ref(false); // 是否是我发布的需求

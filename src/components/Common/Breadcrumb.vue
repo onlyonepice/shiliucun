@@ -38,6 +38,9 @@ defineProps({
   },
 });
 const onTo = (path: string) => {
+  if (path === "goBack") {
+    router.go(-1);
+  }
   router.push(path);
 };
 </script>
