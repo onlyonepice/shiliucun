@@ -289,6 +289,28 @@
           </div>
           <div
             :class="ns.be('content', 'infoDialog')"
+            style="display: flex; align-items: flex-start; height: auto"
+          >
+            <span>内容标签</span>
+            <Select
+              type="select"
+              :defaultValue="needData.tab"
+              :options="tabList"
+              :multiple="true"
+              labelKey="labelName"
+              valueKey="id"
+              @onChange="
+                (val) => {
+                  return onChangeNeed(val, 'tab');
+                }
+              "
+            />
+            <span :class="ns.b('add-tab')" @click="addTabDialog = true"
+              >添加标签</span
+            >
+          </div>
+          <div
+            :class="ns.be('content', 'infoDialog')"
             style="height: 79px; align-items: flex-start"
           >
             <span required>需求描述</span>
@@ -328,28 +350,7 @@
             </div>
           </div>
           <div class="hint">最多上传三张图片</div>
-          <div
-            :class="ns.be('content', 'infoDialog')"
-            style="display: flex; align-items: flex-start; height: auto"
-          >
-            <span>标签</span>
-            <Select
-              type="select"
-              :defaultValue="needData.tab"
-              :options="tabList"
-              :multiple="true"
-              labelKey="labelName"
-              valueKey="id"
-              @onChange="
-                (val) => {
-                  return onChangeNeed(val, 'tab');
-                }
-              "
-            />
-            <span :class="ns.b('add-tab')" @click="addTabDialog = true"
-              >添加标签</span
-            >
-          </div>
+
           <div class="btn-box">
             <el-button @click="backStep" style="margin-right: 231px"
               >上一步</el-button
