@@ -47,6 +47,12 @@
           </div>
         </div>
         <div :class="ns.be('content', 'item')">
+          <h5>业务范围</h5>
+          <div :class="ns.be('item', 'value')">
+            {{ business || "信息暂无" }}
+          </div>
+        </div>
+        <div :class="ns.be('content', 'item')">
           <h5>所在地区</h5>
           <div :class="ns.be('item', 'value')">{{ onGetRegionInfo }}</div>
         </div>
@@ -218,9 +224,10 @@
       title="编辑名片"
       :visible="visibleInfo"
       width="560px"
-      height="524px"
+      height="624px"
       @onHandleClose="onHandleCloseInfo"
       confirmText="保存"
+      :class="ns.b('editInfo')"
     >
       <template #content>
         <div :class="ns.be('content', 'infoDialog')">
@@ -270,6 +277,23 @@
             @onChange="
               (val) => {
                 return onChangeInfo(val, 'postType');
+              }
+            "
+          />
+        </div>
+        <div :class="ns.be('content', 'infoDialog')">
+          <span required>业务范围</span>
+          <Select
+            type="input"
+            specialType="textarea"
+            maxlength="30"
+            :defaultValue="modifyInfoFreeze.business"
+            :options="positionList"
+            labelKey="label"
+            valueKey="id"
+            @onChange="
+              (val) => {
+                return onChangeInfo(val, 'business');
               }
             "
           />
@@ -741,8 +765,8 @@ const onSendCode = async () => {
 }
 
 .es-homePersonalInfo-content__infoDialog {
-  @include widthAndHeight(512px, 32px);
-  @include flex();
+  @include widthAndHeight(512px, auto);
+  @include flex(flex-start);
   & > span {
     display: inline-block;
     line-height: 32px;
@@ -807,6 +831,17 @@ const onSendCode = async () => {
     cursor: pointer;
     @include flex();
     @include font(14px, 600, #244bf1, 22px);
+  }
+}
+.es-homePersonalInfo-editInfo {
+  .select {
+    height: auto !important;
+  }
+  .es-homePersonalInfo-content__infoDialog {
+    min-height: 32px;
+  }
+  .select__input {
+    height: auto !important;
   }
 }
 </style>

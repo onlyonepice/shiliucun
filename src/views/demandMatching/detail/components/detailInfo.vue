@@ -189,23 +189,20 @@ const onShare = async () => {
   margin-bottom: 24px;
 }
 .es-demandMatching-detail-top__removed {
-  // @include widthAndHeight(auto, 38px);
-  height: 38px;
+  min-height: 38px;
   background: #f2f3f5;
   border-radius: 4px;
   padding: 8px 16px;
   margin-right: 24px;
   @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
-  @include textOverflowOne();
   flex: 1;
 }
 .es-demandMatching-detail-top__turnDown {
-  @include widthAndHeight(100%, 38px);
+  min-height: 38px;
   background: #feeff0;
   border-radius: 4px;
   padding: 8px 16px;
   @include font(14px, 600, #f75964, 22px);
-  @include textOverflowOne();
 }
 .es-demandMatching-detail-top__line {
   @include widthAndHeight(712px, 1px);
