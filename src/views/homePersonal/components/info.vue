@@ -49,7 +49,7 @@
         <div :class="ns.be('content', 'item')">
           <h5>业务范围</h5>
           <div :class="ns.be('item', 'value')">
-            {{ business || "信息暂无" }}
+            {{ modifyInfoFreeze.business || "信息暂无" }}
           </div>
         </div>
         <div :class="ns.be('content', 'item')">
@@ -521,6 +521,7 @@ const onGetUserInfo = async () => {
   datas.region !== null &&
     (_modifyInfo.regionCode = getInnermostObject(datas.region).code);
   modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo));
+  modifyInfoFreeze.value.business = useUserStore().$state.userInfo.business;
 };
 // 获取用户地区信息
 const onGetRegionInfo = computed(() => {
