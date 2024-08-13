@@ -203,6 +203,8 @@ const titleSkip = ref({
 // 查询参数
 const searchParamsA: Ref<any> = ref({
   emcComprehensiveTaxRate: 87,
+  ownersShare: 10,
+  dividedByInvestors: 90,
 });
 const searchParamsB: Ref<any> = ref({});
 const addAreaType: Ref<boolean> = ref(false); // 添加地区对比

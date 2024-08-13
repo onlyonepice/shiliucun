@@ -57,7 +57,7 @@
                   {{ __item.moduleName }}
                 </h5>
               </div>
-              <p>{{ __item.conditions }}</p>
+              <!-- <p>{{ __item.conditions }}</p> -->
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@ import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import cancel_icon from "@/assets/img/common/icon_clear.png";
 import VipTopNormal from "@/assets/img/vip/vip-top-normal.png"; // 普通会员
-// import VipTopPersonal from "@/assets/img/vip/vip-top-personal.png"; // 个人会员
+import VipTopPersonal from "@/assets/img/vip/vip-top-personal.png"; // 个人会员
 import VipTopCompany from "@/assets/img/vip/vip-top-company.png"; // 企业会员
 import VipTick from "@/assets/img/vip/vip-tick.png";
 import VipFork from "@/assets/img/vip/vip-fork.png";
@@ -115,28 +115,46 @@ const accountList = ref([
     },
     list: [],
   },
-  // {
-  //   id: 1,
-  //   topIcon: VipTopPersonal,
-  //   code: "PERSON_MEMBER_USER",
-  //   btnConfig: {
-  //     color: "rgba(255,255,255,0.9)",
-  //     bgColor: "#244BF1",
-  //     borderColor: "#244BF1",
-  //     text: "立即开通",
-  //   },
-  //   price: {
-  //     number: 299,
-  //     color: "#244BF1",
-  //     unit: "/月",
-  //     extraPrice: "￥879/季 ￥3399/年",
-  //   },
-  //   list: [],
-  // },
+  {
+    id: 1,
+    topIcon: VipTopPersonal,
+    code: "ENTERPRISE_EESA_MEMBER_USER",
+    btnConfig: {
+      color: "rgba(255,255,255,0.9)",
+      bgColor: "#244BF1",
+      borderColor: "#244BF1",
+      text: "立即开通",
+    },
+    price: {
+      number: 299,
+      color: "#244BF1",
+      unit: "/月",
+      extraPrice: "￥879/季 ￥3399/年",
+    },
+    list: [],
+  },
   {
     id: 2,
     topIcon: VipTopCompany,
-    code: "ENTERPRISE_MEMBER_USER",
+    code: "CHAIRMAN_MEMBER",
+    btnConfig: {
+      color: "#E5BC68",
+      bgColor: "#412F1B",
+      borderColor: "#412F1B",
+      text: "立即开通",
+    },
+    price: {
+      number: 10000,
+      color: "#412F1B",
+      unit: "/3账号/年",
+      extraPrice: "",
+    },
+    list: [],
+  },
+  {
+    id: 3,
+    topIcon: VipTopCompany,
+    code: "VICE_CHAIRMAN_MEMBER",
     btnConfig: {
       color: "#E5BC68",
       bgColor: "#412F1B",
@@ -205,7 +223,7 @@ getVipConfigList();
     display: flex;
     justify-content: flex-start;
     .item {
-      width: 368px;
+      width: 270px;
       position: relative;
       border: 1px solid #dbdce2;
       border-radius: 8px;
@@ -214,7 +232,7 @@ getVipConfigList();
         @include widthAndHeight(100%, 104px);
       }
       .item_btn {
-        @include widthAndHeight(320px, 40px);
+        @include widthAndHeight(220px, 40px);
         border-radius: 4px;
         @include font(16px, 400, rgba(0, 0, 0), 40px);
         text-align: center;
@@ -275,6 +293,7 @@ getVipConfigList();
   padding: 40px 24px 28px 24px;
 }
 .es-vip-price {
+  height: 60px;
   margin: 0 auto 16px;
 }
 .es-vip-module__title {
