@@ -60,7 +60,12 @@
               :class="ns.be('module', 'content')"
             >
               <div>
-                <img :src="__item.isPermission ? VipTick : VipFork" alt="" />
+                <template v-if="__item.isPermission">
+                  <img :src="VipTick" alt="" />
+                </template>
+                <template v-else>
+                  <span>-</span>
+                </template>
                 <h5 :class="ns.be('module_item', 'title')">
                   {{ __item.moduleName }}
                 </h5>
@@ -93,10 +98,11 @@ import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import cancel_icon from "@/assets/img/common/icon_clear.png";
 import VipTopNormal from "@/assets/img/vip/vip-top-normal.png"; // 普通会员
-import VipTopPersonal from "@/assets/img/vip/vip-top-personal.png"; // 个人会员
-import VipTopCompany from "@/assets/img/vip/vip-top-company.png"; // 企业会员
+import VipTopNormal2 from "@/assets/img/vip/vip-top-normal2.png"; // EESA普通会员
+import VipTopNormal3 from "@/assets/img/vip/vip-top-normal3.png"; // EESA理事普通会员
+import VipTopNormal4 from "@/assets/img/vip/vip-top-normal4.png"; // EESA副理事长普通会员
 import VipTick from "@/assets/img/vip/vip-tick.png";
-import VipFork from "@/assets/img/vip/vip-fork.png";
+// import VipFork from "@/assets/img/vip/vip-fork.png";
 import PayQR from "@/assets/img/vip/pay-member-qr.png";
 import { getVipConfigListApi } from "@/api/vip";
 import { getToken } from "@/utils/auth";
@@ -125,7 +131,7 @@ const accountList = ref([
   },
   {
     id: 1,
-    topIcon: VipTopPersonal,
+    topIcon: VipTopNormal2,
     code: "ENTERPRISE_EESA_MEMBER_USER",
     btnConfig: {
       color: "rgba(255,255,255,0.9)",
@@ -143,7 +149,7 @@ const accountList = ref([
   },
   {
     id: 2,
-    topIcon: VipTopCompany,
+    topIcon: VipTopNormal3,
     code: "CHAIRMAN_MEMBER",
     btnConfig: {
       color: "#E5BC68",
@@ -161,7 +167,7 @@ const accountList = ref([
   },
   {
     id: 3,
-    topIcon: VipTopCompany,
+    topIcon: VipTopNormal4,
     code: "VICE_CHAIRMAN_MEMBER",
     btnConfig: {
       color: "#E5BC68",
@@ -194,12 +200,17 @@ const handleClick = (item) => {
   if (_id !== 0 && !getToken()) {
     return useUserStore().openLogin(true);
   }
-  if (_id === 1) {
-    useUserStore().openMembersBuy(true);
+  if (_id === 0) {
+    router.push("/home");
   } else {
-    _id === 0 && router.push("/home");
-    _id === 2 && (QRvisible.value = true);
+    QRvisible.value = true;
   }
+  // if (_id === 1) {
+  //   useUserStore().openMembersBuy(true);
+  // } else {
+  //   _id === 0 && router.push("/home");
+  //   _id === 2 && (QRvisible.value = true);
+  // }
 };
 // 获取vip配置
 const getVipConfigList = async () => {
@@ -318,9 +329,16 @@ getVipConfigList();
   margin-bottom: 10px;
   @include flex(center, space-between, nowrap);
   img {
-    @include widthAndHeight(18px, 18px);
+    @include widthAndHeight(15px, 15px);
     flex: 0;
-    margin-right: 5px;
+    margin-right: 10px;
+  }
+  span {
+    display: inline-block;
+    @include widthAndHeight(15px, 15px);
+    @include flex(center, center, nowrap);
+    @include font(14px, 400, rgba(0, 0, 0, 0.26), 22px);
+    margin-right: 10px;
   }
   div {
     @include flex(center, flex-start, nowrap);
