@@ -6,7 +6,11 @@
         <img class="item_log" :src="item.topIcon" alt="" />
         <div :class="ns.b('content')">
           <div :class="ns.b('price')">
-            <span v-if="item.price.number" style="font-size: 20px">¥</span>
+            <span
+              v-if="item.price.number"
+              style="font-size: 12px; margin-right: 6px"
+              >¥</span
+            >
             <span
               :style="{
                 color: item.price.color,
@@ -18,15 +22,19 @@
               }}</span
             >
             <template v-if="item.price.number">
-              <span style="font-size: 20px">{{ item.price.unit }}</span>
-              <span
+              <span style="font-size: 20px; margin-left: 8px">{{
+                item.price.unit
+              }}</span>
+              <p
                 style="
                   font-size: 16px;
                   color: rgba(0, 0, 0, 0.6);
-                  margin-left: 16px;
+                  margin-top: 6px;
                 "
-                >{{ item.price.extraPrice }}</span
               >
+                <span style="font-size: 12px; margin-right: 6px">¥</span
+                >{{ item.price.extraPrice }}
+              </p>
             </template>
           </div>
           <div
@@ -126,10 +134,10 @@ const accountList = ref([
       text: "立即开通",
     },
     price: {
-      number: 299,
+      number: 11000,
       color: "#244BF1",
-      unit: "/月",
-      extraPrice: "￥879/季 ￥3399/年",
+      unit: "/1账号/年",
+      extraPrice: "1000/账号/年",
     },
     list: [],
   },
@@ -144,10 +152,10 @@ const accountList = ref([
       text: "立即开通",
     },
     price: {
-      number: 10000,
+      number: 25000,
       color: "#412F1B",
       unit: "/3账号/年",
-      extraPrice: "",
+      extraPrice: "3000/账号/年",
     },
     list: [],
   },
@@ -162,10 +170,10 @@ const accountList = ref([
       text: "立即开通",
     },
     price: {
-      number: 10000,
+      number: 50000,
       color: "#412F1B",
       unit: "/3账号/年",
-      extraPrice: "",
+      extraPrice: "3000/账号/年",
     },
     list: [],
   },

@@ -48,8 +48,11 @@
         </div>
         <div :class="ns.be('content', 'item')">
           <h5>业务范围</h5>
-          <div :class="ns.be('item', 'value')">
-            {{ modifyInfoFreeze.business || "信息暂无" }}
+          <div
+            :class="[ns.be('item', 'value'), ns.be('item-special', 'value')]"
+            style="width: 850px"
+          >
+            {{ modifyInfoFreeze.businessInfo || "信息暂无" }}
           </div>
         </div>
         <div :class="ns.be('content', 'item')">
@@ -224,7 +227,6 @@
       title="编辑名片"
       :visible="visibleInfo"
       width="560px"
-      height="624px"
       @onHandleClose="onHandleCloseInfo"
       confirmText="保存"
       :class="ns.b('editInfo')"
@@ -284,13 +286,12 @@
         <div :class="ns.be('content', 'infoDialog')">
           <span required>业务范围</span>
           <Select
-            type="input"
-            specialType="textarea"
-            maxlength="30"
+            type="select"
             :defaultValue="modifyInfoFreeze.business"
-            :options="positionList"
+            :options="businessList"
+            :multiple="true"
             labelKey="label"
-            valueKey="id"
+            valueKey="value"
             @onChange="
               (val) => {
                 return onChangeInfo(val, 'business');
@@ -380,6 +381,7 @@ import {
   getPositionTypeApi,
 } from "@/api/user";
 import { getInnermostObject } from "@/utils/index";
+import { cloneDeep } from "lodash";
 const ns = useNamespace("homePersonalInfo");
 const userInfo: Ref<any> = ref({});
 const visibleMobile: Ref<boolean> = ref(false); // 修改手机号弹窗
@@ -404,6 +406,33 @@ const modifyInfo: Ref<any> = ref({
   email: "",
 }); // 修改信息
 const positionList: Ref<Array<any>> = ref([]); // 岗位类型数组
+const businessList: Ref<Array<any>> = ref([
+  { label: "材料", value: "材料" },
+  { label: "电芯", value: "电芯" },
+  { label: "PCS", value: "PCS" },
+  { label: "BMS", value: "BMS" },
+  { label: "EMS", value: "EMS" },
+  { label: "大储系统", value: "大储系统" },
+  { label: "工商业系统", value: "工商业系统" },
+  { label: "户用系统", value: "户用系统" },
+  { label: "半导体", value: "半导体" },
+  { label: "消防热管理", value: "消防热管理" },
+  { label: "集装箱", value: "集装箱" },
+  { label: "生产设备", value: "生产设备" },
+  { label: "测控设备", value: "测控设备" },
+  { label: "投资", value: "投资" },
+  { label: "EPC", value: "EPC" },
+  { label: "认证", value: "认证" },
+  { label: "业主", value: "业主" },
+  { label: "回收", value: "回收" },
+  { label: "充电", value: "充电" },
+  { label: "运营", value: "运营" },
+  { label: "行业咨询", value: "行业咨询" },
+  { label: "金融租赁", value: "金融租赁" },
+  { label: "云服务", value: "云服务" },
+  { label: "物流", value: "物流" },
+  { label: "协会联盟", value: "协会联盟" },
+]); // 业务范围数组
 const modifyInfoFreeze: Ref<any> = ref({});
 const timer = ref(null); // 定时器
 const userDetailInfo: Ref<any> = ref(); // 用户详细信息
@@ -497,6 +526,7 @@ const onHandleCloseInfo = async (type: boolean) => {
     delete _modifyInfo.email;
   }
   delete _modifyInfo.region;
+  _modifyInfo.business = _modifyInfo.business.join("、");
   const { resp_code }: any = await editUserInfoApi(_modifyInfo);
   if (resp_code === 0) {
     ElMessage.success("编辑成功");
@@ -521,7 +551,11 @@ const onGetUserInfo = async () => {
   datas.region !== null &&
     (_modifyInfo.regionCode = getInnermostObject(datas.region).code);
   modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo));
-  modifyInfoFreeze.value.business = useUserStore().$state.userInfo.business;
+  modifyInfoFreeze.value.businessInfo = cloneDeep(
+    useUserStore().$state.userInfo.business,
+  );
+  modifyInfoFreeze.value.business =
+    useUserStore().$state.userInfo.business.split("、");
 };
 // 获取用户地区信息
 const onGetRegionInfo = computed(() => {
@@ -714,6 +748,11 @@ const onSendCode = async () => {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     @include margin(4px, 0, 0, 0);
     @include textOverflow();
+  }
+  .es-homePersonalInfo-item-special__value {
+    @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+    @include margin(4px, 0, 0, 0);
+    @include textOverflow(10);
   }
   &:nth-last-child(1) {
     @include margin(0, 0, 0, 0);
