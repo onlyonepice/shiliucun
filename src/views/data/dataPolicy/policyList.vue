@@ -1,6 +1,5 @@
 <template>
   <div :class="[ns.b()]">
-    <Loading v-if="filterLoading" />
     <div class="header">
       <Search
         width="368px"
@@ -8,193 +7,200 @@
         v-model="filterParams.keyword"
       />
     </div>
-    <div class="content">
-      <div class="filter-box">
-        <div
-          class="tree-item"
-          v-for="(value, key) in filterOptionsData"
-          :key="key"
-        >
-          <el-tree
-            @check="(data, keys) => handleCheckChange(keys, value)"
-            ref="treeRefFilter"
-            :data="[value]"
-            :default-expanded-keys="defaultExpandedKeys"
-            highlight-current
-            :props="defaultProps"
-            node-key="paramValue"
-            render-after-expand
-            show-checkbox
-            :default-checked-keys="filterParams[value.paramValue].split(',')"
+    <template v-if="!filterLoading">
+      <div class="content">
+        <div class="filter-box">
+          <div
+            class="tree-item"
+            v-for="(value, key) in filterOptionsData"
+            :key="key"
           >
-            <template #default="{ node, data }">
-              <div class="custom-tree_item">
-                <div class="custom-tree-node">
-                  <span :class="data.dropDownBoxResp ? 'name' : 'parent-name'">
-                    {{ node.label }}
-                  </span>
-                  <span class="number" v-if="data.policyQuantity">
-                    {{ data.policyQuantity }}
-                  </span>
-                </div>
-                <div
-                  @click.stop
-                  v-if="showOpen(key)"
-                  style="
-                     {
-                      left: 56px;
-                    }
-                  "
-                  class="open-box"
-                >
-                  <p
-                    @click.stop="handleShowAllClick(key, data)"
-                    class="showAll-btn"
-                    v-if="data.showAll !== undefined"
-                  >
-                    {{ !data.showAll ? "展开更多" : "收起更多" }}
-                  </p>
-                </div>
-              </div>
-            </template>
-          </el-tree>
-        </div>
-      </div>
-      <div class="policy-list">
-        <div
-          class="policy_item"
-          v-for="(item, index) in pageData"
-          :key="item.policyReleased"
-        >
-          <el-collapse v-model="activeName">
-            <el-collapse-item
-              :title="`${item.policyReleased} （${item.total}条数据）`"
-              :name="index"
+            <el-tree
+              @check="(data, keys) => handleCheckChange(keys, value)"
+              ref="treeRefFilter"
+              :data="[value]"
+              :default-expanded-keys="defaultExpandedKeys"
+              highlight-current
+              :props="defaultProps"
+              node-key="paramValue"
+              render-after-expand
+              show-checkbox
+              :default-checked-keys="filterParams[value.paramValue].split(',')"
             >
-              <el-scrollbar
-                class="policy_item_box"
-                v-loading="item.loading"
-                ref="scrollbar"
-                @scroll="() => handleScroll(scrollbar[index], item)"
-                :style="{ height: item.data.length > 10 ? '500px' : 'auto' }"
-              >
-                <template v-if="item.data.length">
-                  <div
-                    class="policy_item_box_content"
-                    :key="row.policyName"
-                    v-for="(row, rowIndex) in item.data"
-                  >
-                    <div
-                      class="policy_item_value"
-                      @click="handleItemClick(index, rowIndex)"
+              <template #default="{ node, data }">
+                <div class="custom-tree_item">
+                  <div class="custom-tree-node">
+                    <span
+                      :class="data.dropDownBoxResp ? 'name' : 'parent-name'"
                     >
-                      <p class="policy-name">{{ row.policyName }}</p>
-                      <div class="tag-box">
-                        <p class="tag" v-for="tag in row.typeName" :key="tag">
-                          {{ tag }}
+                      {{ node.label }}
+                    </span>
+                    <span class="number" v-if="data.policyQuantity">
+                      {{ data.policyQuantity }}
+                    </span>
+                  </div>
+                  <div
+                    @click.stop
+                    v-if="showOpen(key)"
+                    style="
+                       {
+                        left: 56px;
+                      }
+                    "
+                    class="open-box"
+                  >
+                    <p
+                      @click.stop="handleShowAllClick(key, data)"
+                      class="showAll-btn"
+                      v-if="data.showAll !== undefined"
+                    >
+                      {{ !data.showAll ? "展开更多" : "收起更多" }}
+                    </p>
+                  </div>
+                </div>
+              </template>
+            </el-tree>
+          </div>
+        </div>
+        <div class="policy-list">
+          <div
+            class="policy_item"
+            v-for="(item, index) in pageData"
+            :key="item.policyReleased"
+          >
+            <el-collapse v-model="activeName">
+              <el-collapse-item
+                :title="`${item.policyReleased} （${item.total}条数据）`"
+                :name="index"
+              >
+                <el-scrollbar
+                  class="policy_item_box"
+                  v-loading="item.loading"
+                  ref="scrollbar"
+                  @scroll="() => handleScroll(scrollbar[index], item)"
+                  :style="{ height: item.data.length > 10 ? '500px' : 'auto' }"
+                >
+                  <template v-if="item.data.length">
+                    <div
+                      class="policy_item_box_content"
+                      :key="row.policyName"
+                      v-for="(row, rowIndex) in item.data"
+                    >
+                      <div
+                        class="policy_item_value"
+                        @click="handleItemClick(index, rowIndex)"
+                      >
+                        <p class="policy-name">{{ row.policyName }}</p>
+                        <div class="tag-box">
+                          <p class="tag" v-for="tag in row.typeName" :key="tag">
+                            {{ tag }}
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        v-if="row.showDetail"
+                        class="detail-data"
+                        :class="row.className"
+                      >
+                        <div class="detail_content">
+                          <div class="detail_content_item">
+                            <p class="detail_content_item_label">基本信息</p>
+                            <div class="detail_content_item_value">
+                              <div class="detail_content_item_value_item">
+                                <p class="detail_content_item_value_item_label">
+                                  发布时间
+                                </p>
+                                <p class="detail_content_item_value_item_value">
+                                  {{ row.detailData?.releaseTime }}
+                                </p>
+                              </div>
+                              <div class="detail_content_item_value_item">
+                                <p class="detail_content_item_value_item_label">
+                                  发布地区
+                                </p>
+                                <p class="detail_content_item_value_item_value">
+                                  {{ getRegion(row.detailData?.regionName) }}
+                                </p>
+                              </div>
+                              <div
+                                class="detail_content_item_value_item"
+                                v-if="row.detailData?.allocationStorageRatio"
+                              >
+                                <p class="detail_content_item_value_item_label">
+                                  配储比例
+                                </p>
+                                <p class="detail_content_item_value_item_value">
+                                  {{ row.detailData?.allocationStorageRatio }}
+                                </p>
+                              </div>
+                              <div class="detail_content_item_value_item">
+                                <p class="detail_content_item_value_item_label">
+                                  原文链接
+                                </p>
+                                <p
+                                  @click="
+                                    handleLinkClick(
+                                      row.detailData?.originalLink,
+                                    )
+                                  "
+                                  style="color: #244bf1; cursor: pointer"
+                                  class="detail_content_item_value_item_value"
+                                >
+                                  查看原文链接
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="detail_content_item">
+                            <p class="detail_content_item_label">摘要</p>
+                            <div class="detail_content_item_value">
+                              <div class="detail_content_item_value_item">
+                                <p class="detail_content_item_value_item_label">
+                                  摘要内容
+                                </p>
+                                <p class="detail_content_item_value_item_value">
+                                  {{ row.detailData?.summary }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <p
+                          @click="handleHiddenDetailClick(index, rowIndex)"
+                          class="hidden-detail"
+                        >
+                          收起详情&nbsp;&nbsp;^
                         </p>
                       </div>
                     </div>
-                    <div
-                      v-if="row.showDetail"
-                      class="detail-data"
-                      :class="row.className"
-                    >
-                      <div class="detail_content">
-                        <div class="detail_content_item">
-                          <p class="detail_content_item_label">基本信息</p>
-                          <div class="detail_content_item_value">
-                            <div class="detail_content_item_value_item">
-                              <p class="detail_content_item_value_item_label">
-                                发布时间
-                              </p>
-                              <p class="detail_content_item_value_item_value">
-                                {{ row.detailData?.releaseTime }}
-                              </p>
-                            </div>
-                            <div class="detail_content_item_value_item">
-                              <p class="detail_content_item_value_item_label">
-                                发布地区
-                              </p>
-                              <p class="detail_content_item_value_item_value">
-                                {{ getRegion(row.detailData?.regionName) }}
-                              </p>
-                            </div>
-                            <div
-                              class="detail_content_item_value_item"
-                              v-if="row.detailData?.allocationStorageRatio"
-                            >
-                              <p class="detail_content_item_value_item_label">
-                                配储比例
-                              </p>
-                              <p class="detail_content_item_value_item_value">
-                                {{ row.detailData?.allocationStorageRatio }}
-                              </p>
-                            </div>
-                            <div class="detail_content_item_value_item">
-                              <p class="detail_content_item_value_item_label">
-                                原文链接
-                              </p>
-                              <p
-                                @click="
-                                  handleLinkClick(row.detailData?.originalLink)
-                                "
-                                style="color: #244bf1; cursor: pointer"
-                                class="detail_content_item_value_item_value"
-                              >
-                                查看原文链接
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="detail_content_item">
-                          <p class="detail_content_item_label">摘要</p>
-                          <div class="detail_content_item_value">
-                            <div class="detail_content_item_value_item">
-                              <p class="detail_content_item_value_item_label">
-                                摘要内容
-                              </p>
-                              <p class="detail_content_item_value_item_value">
-                                {{ row.detailData?.summary }}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <p
-                        @click="handleHiddenDetailClick(index, rowIndex)"
-                        class="hidden-detail"
-                      >
-                        收起详情&nbsp;&nbsp;^
-                      </p>
-                    </div>
-                  </div>
-                </template>
-                <template v-else><EmptyData /></template>
-              </el-scrollbar>
-            </el-collapse-item>
-          </el-collapse>
+                  </template>
+                  <template v-else><EmptyData /></template>
+                </el-scrollbar>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+          <el-empty
+            v-if="pageData.length === 0 && !filterLoading"
+            description="暂无数据~"
+          />
         </div>
-        <el-empty
-          v-if="pageData.length === 0 && !filterLoading"
-          description="暂无数据~"
-        />
+        <el-scrollbar class="month-list">
+          <p
+            :class="
+              policyReleased === item.paramValue
+                ? 'active-month month_item'
+                : 'month_item'
+            "
+            v-for="item in monthList?.dropDownBoxResp || []"
+            :key="item.paramValue"
+            @click="handleMonthClick(item)"
+          >
+            {{ item.paramValue }}
+          </p>
+        </el-scrollbar>
       </div>
-      <el-scrollbar class="month-list">
-        <p
-          :class="
-            policyReleased === item.paramValue
-              ? 'active-month month_item'
-              : 'month_item'
-          "
-          v-for="item in monthList?.dropDownBoxResp || []"
-          :key="item.paramValue"
-          @click="handleMonthClick(item)"
-        >
-          {{ item.paramValue }}
-        </p>
-      </el-scrollbar>
-    </div>
+    </template>
+    <PolicySkeleton v-else />
   </div>
 </template>
 <script lang="ts" setup>
@@ -217,6 +223,7 @@ import { useRoute } from "vue-router";
 import { getToken } from "@/utils/auth";
 import { getTimesApi } from "@/api/user";
 import useNamespace from "@/utils/nameSpace";
+import PolicySkeleton from "./component/skeleton/policeSearch.vue";
 import { useUserStore } from "@/store/modules/user";
 import { windowScrollStore } from "@/store/modules/windowScroll";
 import { ElMessage } from "element-plus";
@@ -233,7 +240,7 @@ const paging = ref({
 const pageData = ref([]);
 const activeName = ref([0, 1]);
 const treeRefFilter = ref(null);
-const filterLoading = ref(true);
+const filterLoading = ref(true); // 骨架屏显示
 const scrollbar = ref<any>(null);
 const filterOptions = ref([]); //所有筛选项
 const policyReleased = ref(""); //政策发布时间
@@ -352,7 +359,6 @@ const showOpen = computed(() => {
 
 // 获取政策列表
 async function getData() {
-  filterLoading.value = true;
   pageData.value = [];
   const index = monthList.value.dropDownBoxResp.findIndex(
     (item) => item.paramValue === policyReleased.value,
@@ -761,6 +767,7 @@ $maxHeightVal: 800px;
 @import "@/style/mixin.scss";
 
 .es-policyList {
+  min-height: 100vh;
   .el-tree-node__content {
     width: 100%;
     box-sizing: border-box;

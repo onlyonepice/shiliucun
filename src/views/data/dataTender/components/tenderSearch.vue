@@ -1,27 +1,86 @@
 <!-- 招标查找 -->
 <template>
   <div :class="['es-commonPage', ns.b()]">
-    <div :class="ns.b('left')">
-      <div class="filter-box" v-if="filterOptionsData.length > 0">
-        <div
-          class="tree-item"
-          v-for="(value, key) in filterOptionsData"
-          :key="key"
-        >
-          <template v-if="value[0].paramValue !== 'yearRange'">
-            <el-tree
-              @check="() => changeTag(value[0], key)"
-              ref="treeRefFilter"
-              :data="value"
-              default-expand-all
-              highlight-current
-              :props="defaultProps"
-              node-key="paramValue"
-              show-checkbox
-            >
-              <template #default="{ node, data }">
-                <span class="custom-tree_item">
-                  <div class="custom-tree-node">
+    <template v-if="!loading">
+      <div :class="ns.b('left')">
+        <div class="filter-box" v-if="filterOptionsData.length > 0">
+          <div
+            class="tree-item"
+            v-for="(value, key) in filterOptionsData"
+            :key="key"
+          >
+            <template v-if="value[0].paramValue !== 'yearRange'">
+              <el-tree
+                @check="() => changeTag(value[0], key)"
+                ref="treeRefFilter"
+                :data="value"
+                default-expand-all
+                highlight-current
+                :props="defaultProps"
+                node-key="paramValue"
+                show-checkbox
+              >
+                <template #default="{ node, data }">
+                  <span class="custom-tree_item">
+                    <div class="custom-tree-node">
+                      <span
+                        :class="!data.policyQuantity ? 'name' : 'parent-name'"
+                      >
+                        {{ node.label }}</span
+                      >
+                      <span class="number" v-if="data.policyQuantity">
+                        {{ data.policyQuantity }}
+                      </span>
+                    </div>
+                    <div
+                      v-if="showOpen(data)"
+                      :style="{
+                        left:
+                          filterOptionsData[key].paramValue === 'itemCategory'
+                            ? '40px'
+                            : '56px',
+                      }"
+                      class="open-box"
+                    >
+                      <p
+                        @click="handleShowAllClick(key, data)"
+                        class="showAll-btn"
+                        v-if="!data.showAll"
+                      >
+                        展开更多
+                      </p>
+                      <p
+                        @click="handleShowAllClick(key, data)"
+                        class="showAll-btn"
+                        v-if="data.showAll"
+                      >
+                        收起更多
+                      </p>
+                    </div>
+                  </span>
+                </template>
+              </el-tree>
+            </template>
+            <template v-else>
+              <el-tree
+                @node-click="(val) => changeYearRangeTag(val, value[0])"
+                :data="value"
+                default-expand-all
+                highlight-current
+                :props="defaultProps"
+              >
+                <template #default="{ node, data }">
+                  <span class="custom-tree-node">
+                    <img
+                      class="radio"
+                      v-if="data.policyQuantity"
+                      :src="
+                        data.paramValue === filterParams[value[0].paramValue]
+                          ? radio_true
+                          : radio_false
+                      "
+                      alt=""
+                    />
                     <span
                       :class="!data.policyQuantity ? 'name' : 'parent-name'"
                     >
@@ -30,110 +89,56 @@
                     <span class="number" v-if="data.policyQuantity">
                       {{ data.policyQuantity }}
                     </span>
-                  </div>
-                  <div
-                    v-if="showOpen(data)"
-                    :style="{
-                      left:
-                        filterOptionsData[key].paramValue === 'itemCategory'
-                          ? '40px'
-                          : '56px',
-                    }"
-                    class="open-box"
-                  >
-                    <p
-                      @click="handleShowAllClick(key, data)"
-                      class="showAll-btn"
-                      v-if="!data.showAll"
-                    >
-                      展开更多
-                    </p>
-                    <p
-                      @click="handleShowAllClick(key, data)"
-                      class="showAll-btn"
-                      v-if="data.showAll"
-                    >
-                      收起更多
-                    </p>
-                  </div>
-                </span>
-              </template>
-            </el-tree>
-          </template>
-          <template v-else>
-            <el-tree
-              @node-click="(val) => changeYearRangeTag(val, value[0])"
-              :data="value"
-              default-expand-all
-              highlight-current
-              :props="defaultProps"
-            >
-              <template #default="{ node, data }">
-                <span class="custom-tree-node">
-                  <img
-                    class="radio"
-                    v-if="data.policyQuantity"
-                    :src="
-                      data.paramValue === filterParams[value[0].paramValue]
-                        ? radio_true
-                        : radio_false
-                    "
-                    alt=""
-                  />
-                  <span :class="!data.policyQuantity ? 'name' : 'parent-name'">
-                    {{ node.label }}</span
-                  >
-                  <span class="number" v-if="data.policyQuantity">
-                    {{ data.policyQuantity }}
                   </span>
-                </span>
-              </template>
-            </el-tree>
-            <p
-              @click="handleShowAllClick(key, null)"
-              class="showAll-btn"
-              v-if="
-                filterOptions[key].dropDownBoxResp.length > 5 &&
-                !filterOptions[key].parentShowAll
-              "
-            >
-              展开更多
-            </p>
-            <p
-              @click="handleShowAllClick(key, null)"
-              class="showAll-btn"
-              v-if="
-                filterOptions[key].dropDownBoxResp.length > 5 &&
-                filterOptions[key].parentShowAll
-              "
-            >
-              收起更多
-            </p>
-          </template>
+                </template>
+              </el-tree>
+              <p
+                @click="handleShowAllClick(key, null)"
+                class="showAll-btn"
+                v-if="
+                  filterOptions[key].dropDownBoxResp.length > 5 &&
+                  !filterOptions[key].parentShowAll
+                "
+              >
+                展开更多
+              </p>
+              <p
+                @click="handleShowAllClick(key, null)"
+                class="showAll-btn"
+                v-if="
+                  filterOptions[key].dropDownBoxResp.length > 5 &&
+                  filterOptions[key].parentShowAll
+                "
+              >
+                收起更多
+              </p>
+            </template>
+          </div>
         </div>
       </div>
-    </div>
-    <div :class="ns.b('right')">
-      <Search
-        width="858px"
-        v-model="filterParams.keyword"
-        @onSearch="onSearch"
-      />
-      <div class="content" v-loading="loading">
-        <div class="item" v-for="item in pageData" :key="item.id + '7'">
-          <BiddingDynamicsList source="dataTenderSearch" :pageData="item" />
+      <div :class="[ns.b('right'), 'animate__animated animate__fadeIn']">
+        <Search
+          width="858px"
+          v-model="filterParams.keyword"
+          @onSearch="onSearch"
+        />
+        <div class="content">
+          <div class="item" v-for="item in pageData" :key="item.id + '7'">
+            <BiddingDynamicsList source="dataTenderSearch" :pageData="item" />
+          </div>
+          <el-empty
+            v-if="pageData.length === 0"
+            description="数据快马加鞭补全中~"
+          />
+          <Pagination
+            :pageSize="limit"
+            :total="total"
+            @onchangeCurrent="onchangeCurrent"
+          />
         </div>
-        <el-empty
-          v-if="pageData.length === 0 && !loading"
-          description="数据快马加鞭补全中~"
-        />
-        <Pagination
-          :pageSize="limit"
-          :total="total"
-          @onchangeCurrent="onchangeCurrent"
-        />
       </div>
-    </div>
+    </template>
+    <SearchSkeleton v-else />
   </div>
 </template>
 
@@ -147,6 +152,7 @@ import { getBidFinderApi, getTenderLookupApi } from "@/api/data";
 import { useRoute } from "vue-router";
 import { cloneDeep } from "lodash";
 import { windowScrollStore } from "@/store/modules/windowScroll";
+import SearchSkeleton from "./skeleton/tenderSearch.vue";
 const route = useRoute();
 const loading = ref(false);
 const filterParams = ref({
@@ -196,8 +202,8 @@ const getData = async () => {
     resp_code: number;
   }
   const data: responseType = await getBidFinderApi(requestData);
-  loading.value = false;
   if (data.resp_code === 0) {
+    loading.value = false;
     total.value = data.datas.total;
     pageData.value = data.datas.records.map((item, index) => {
       if (route.query.id === item.id) {
