@@ -566,21 +566,23 @@ const handleReleaseNeed = async () => {
   });
   needData.value.imageUrls = needData.value.imageUrls.join(",");
   needData.value.dhLabelDTOList = [{ id: needData.value.role }];
-  needData.value.tab.map((item) => {
-    if (typeof item === "number") {
-      needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({
-        id: item,
-      });
-    } else {
-      needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({
-        labelName: item,
-      });
-    }
-  });
+  needData.value.tab.length > 0 &&
+    needData.value.tab.map((item) => {
+      if (typeof item === "number") {
+        needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({
+          id: item,
+        });
+      } else {
+        needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({
+          labelName: item,
+        });
+      }
+    });
   const data = needData.value.id
     ? await updateNeedApi(needData.value)
     : await releaseNeedApi(needData.value);
   if (data.resp_code === 0) {
+    needData.value = {};
     ElMessage.success("提交发布成功");
     emits("success");
   }
