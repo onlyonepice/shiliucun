@@ -522,6 +522,9 @@ const onHandleCloseInfo = async (type: boolean) => {
   ) {
     return ElMessage.error("请输入正确邮箱");
   }
+  if (_modifyInfo.business.length === 0) {
+    return ElMessage.error("请选择业务范围");
+  }
   if (_modifyInfo.email === null || _modifyInfo.email === "") {
     delete _modifyInfo.email;
   }
@@ -556,7 +559,9 @@ const onGetUserInfo = async () => {
     useUserStore().$state.userInfo.business,
   );
   modifyInfoFreeze.value.business =
-    useUserStore().$state.userInfo.business.split("、");
+    useUserStore().$state.userInfo.business === ""
+      ? null
+      : useUserStore().$state.userInfo.business.split("、");
 };
 // 获取用户地区信息
 const onGetRegionInfo = computed(() => {
