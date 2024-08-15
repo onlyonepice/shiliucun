@@ -400,7 +400,7 @@ import businessCard from "@/views/demandMatching/detail/components/businessCard.
 import NoChoseRadio from "@/assets/img/common/i-Report-radio-false.png";
 import HasChoseRadio from "@/assets/img/common/i-Report-radio-true.png";
 import UploadImg from "@/assets/img/common/upload-image.png";
-import { onMounted, ref, Ref, watch } from "vue";
+import { onMounted, ref, Ref, watch, onActivated } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
@@ -522,6 +522,9 @@ onMounted(() => {
   getPositionType();
   getNeedType();
   getRoleConfig();
+});
+onActivated(() => {
+  onGetUserInfo();
 });
 const onChangeNeed = (value: any, type: string) => {
   needData.value[type] = value;
