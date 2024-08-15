@@ -1,28 +1,33 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
     <div :class="ns.b('main')">
-      <div :class="ns.bm('main', 'title')">行业洞察</div>
-      <div :class="ns.b('list')">
-        <IndustryInsightList
-          v-for="(item, index) in industryInsightList"
-          :key="`industry${index}`"
-          :pageData="item"
-          source="reportIndustryInsight"
-        />
-      </div>
-      <div :class="ns.b('paging')">
-        <span :class="ns.bm('paging', 'total')"
-          >共计 {{ industryTotal }} 条</span
-        >
-        <el-pagination
-          v-model:current-page="currentPage1"
-          :page-size="10"
-          :background="background"
-          layout="prev, pager, next"
-          :total="industryTotal"
-          @current-change="handleCurrentChange"
-        />
-      </div>
+      <template v-if="!loading">
+        <div :class="ns.bm('main', 'title')">行业洞察</div>
+        <div :class="ns.b('list')">
+          <IndustryInsightList
+            v-for="(item, index) in industryInsightList"
+            :key="`industry${index}`"
+            :pageData="item"
+            source="reportIndustryInsight"
+          />
+        </div>
+        <div :class="ns.b('paging')">
+          <span :class="ns.bm('paging', 'total')"
+            >共计 {{ industryTotal }} 条</span
+          >
+          <el-pagination
+            v-model:current-page="currentPage1"
+            :page-size="10"
+            :background="background"
+            layout="prev, pager, next"
+            :total="industryTotal"
+            @current-change="handleCurrentChange"
+          />
+        </div>
+      </template>
+      <template v-else>
+        <Skeleton />
+      </template>
     </div>
   </div>
 </template>
@@ -37,6 +42,7 @@ interface List {
   tip: string;
 }
 import { windowScrollStore } from "@/store/modules/windowScroll";
+import Skeleton from "./skeleton.vue";
 const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
 import { getReNewsInformations } from "@/api/report";
@@ -56,12 +62,15 @@ const handleCurrentChange = (val: number) => {
   industryQueryData.value.page = val;
   getReNewsInfoList();
 };
+const loading: Ref<boolean> = ref(false);
 // 获取行业洞察列表数据
 const getReNewsInfoList = async () => {
+  loading.value = true;
   const res = await getReNewsInformations(industryQueryData.value);
   if (res.resp_code === 0) {
     industryInsightList.value = res.datas.records;
     industryTotal.value = res.datas.total;
+    loading.value = false;
   }
   window.trackFunction("pc_Report_Insight_click");
 };
