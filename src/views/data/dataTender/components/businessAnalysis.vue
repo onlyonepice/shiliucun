@@ -154,8 +154,7 @@ async function getElectricityTypeOneName() {
       top: "15%",
       left: "50",
       right: "3%",
-      bottom: "10%",
-      containLabel: true,
+      y2: "35%",
     };
     const _y1 = [];
     const _y2 = [];
@@ -259,7 +258,7 @@ function exportResult() {
   margin-top: 32px;
 }
 .echarts-mask-bottom {
-  @include widthAndHeight(calc(100% - 120px), 120px);
+  @include widthAndHeight(calc(100% - 80px), 190px);
   background: rgba(255, 255, 255, 0.3);
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(7px);
