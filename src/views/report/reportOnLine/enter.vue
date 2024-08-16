@@ -41,16 +41,6 @@
       </div>
       <div class="content" v-loading="loading">
         <div class="report-wrapper">
-          <p class="title" v-if="topReportList.length > 0">付费专区</p>
-          <div class="report-box">
-            <onLineReportList
-              width="198px"
-              v-for="(item, index) in topReportList"
-              :page-data="item"
-              :key="`topReport${index}`"
-              @click="onDetail()"
-            />
-          </div>
           <p class="title">会员专区</p>
           <div class="report-box">
             <onLineReportList
@@ -68,12 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  getOnlineReportFilters,
-  getOnlineReportSelected,
-  getTopOnlineReportSelected,
-  getFreeOnlineReportSelected,
-} from "@/api/report";
+import { getOnlineReportFilters, getOnlineReportSelected } from "@/api/report";
 import { ref } from "vue";
 import Skeleton from "./skeleton.vue";
 import useNamespace from "@/utils/nameSpace";
@@ -84,7 +69,6 @@ const ns = useNamespace("report-onLine");
 windowScroll.SET_SCROLL_TOP(0);
 
 const loading = ref(false);
-const topReportList = ref([]);
 const freeReportList = ref([]);
 const checkedTagIds = ref(["all"]);
 const checkedYearIds = ref(["all"]);
@@ -123,29 +107,8 @@ const getReportTagListFn = async () => {
   }
 };
 
-const getTopOnlineReportSelectedFn = async () => {
-  const data = await getTopOnlineReportSelected({
-    limit: 40,
-    page: 1,
-    keyword: "",
-    tagIds: checkedTagIds.value.join(","),
-    years: checkedYearIds.value.join(","),
-  });
-  if (data.resp_code === 0) {
-    topReportList.value = data.datas.records;
-  }
-};
-
 const getFreeOnlineReportSelectedFn = async () => {
   try {
-    const data = await getFreeOnlineReportSelected({
-      keyword: "",
-      tagIds: checkedTagIds.value.join(","),
-      years: checkedYearIds.value.join(","),
-    });
-    if (data.resp_code === 0) {
-      freeReportList.value = data.datas.records;
-    }
     const _data = await getOnlineReportSelected({
       limit: 1000,
       page: 1,
@@ -193,10 +156,7 @@ const computedFilter = (row, current) => {
 
 const getPageData = () => {
   loading.value = true;
-  Promise.all([
-    getFreeOnlineReportSelectedFn(),
-    getTopOnlineReportSelectedFn(),
-  ]).finally(() => {
+  Promise.all([getFreeOnlineReportSelectedFn()]).finally(() => {
     skeletonScreen.value = false;
   });
 };
