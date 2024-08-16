@@ -26,41 +26,29 @@
       <template v-if="!loadingList">
         <div class="type-demand">
           <div :class="ns.b('filter')">
-            <div :class="ns.be('filter', 'item')">
-              <h5>排序</h5>
+            <div
+              :class="ns.be('filter', 'item')"
+              v-for="item in filterList"
+              :key="item.id"
+            >
+              <h5>{{ item.name }}</h5>
               <div
-                v-for="item in sortTypeList"
-                :key="item.code"
+                v-for="_item in item.option"
+                :key="_item.code"
                 :class="[
                   ns.be('filter', 'chose'),
-                  filterParams.sortType === item.code
+                  filterParams[item.type] === _item.code
                     ? ns.bm('filter', 'active')
                     : '',
                 ]"
-                @click="onChangeType(item.code, 'sortType')"
+                @click="onChangeType(_item.code, item.type)"
               >
-                {{ item.label === "综合排序" ? "推荐" : item.label }}
+                {{ _item.label }}
                 <img
-                  v-if="item.code === 'SORT_BY_TIME'"
+                  v-if="_item.code === 'SORT_BY_TIME'"
                   :src="NewIcon"
                   alt=""
                 />
-              </div>
-            </div>
-            <div :class="ns.be('filter', 'item')">
-              <h5>需求类型</h5>
-              <div
-                v-for="item in typeList"
-                :key="item.code"
-                :class="[
-                  ns.be('filter', 'chose'),
-                  filterParams.type === item.code
-                    ? ns.bm('filter', 'active')
-                    : '',
-                ]"
-                @click="onChangeType(item.code, 'type')"
-              >
-                {{ item.label }}
               </div>
             </div>
           </div>
@@ -369,6 +357,11 @@ const tabList = ref([
     value: "manage",
   },
 ]);
+const filterList: Ref<Array<any>> = ref([
+  { id: 1, type: "needSource", name: "需求来源", option: [] },
+  { id: 2, type: "sortType", name: "排序", option: [] },
+  { id: 3, type: "type", name: "需求类型", option: [] },
+]);
 const filterParams = ref({
   pageNumber: 1,
   pageSize: 10,
@@ -377,7 +370,6 @@ const filterParams = ref({
 });
 const total = ref(0);
 const demandList = ref([{}]);
-const typeList = ref();
 const currentPage = ref("demand");
 const currentManageTab = ref("release");
 const manageTabArr = ref([
@@ -479,8 +471,8 @@ const getTypeNotNull = async () => {
       label: "全部",
       code: "",
     });
-    typeList.value = data.datas;
-    filterParams.value.type = typeList.value[0].code;
+    filterList.value[2].option = data.datas;
+    filterParams.value.type = data.datas[0].code;
   }
 };
 // 获取需求大厅列表数据
@@ -545,14 +537,13 @@ const onchangeCurrentApply = (number: number) => {
 onUnmounted(() => {
   releaseDemandShow.value = false;
 });
-const sortTypeList: Ref<Array<any>> = ref([]);
 // 获取排序筛选项
 const getSortTypeList = async () => {
   const { datas, resp_code } = await getNeedEvaluateApi({
     type: "NEED_HOMEPAGE_SORT",
   });
   if (resp_code === 0) {
-    sortTypeList.value = datas[0].subset;
+    filterList.value[1].option = datas[0].subset;
     filterParams.value.sortType = datas[0].subset[0].code;
     getNeed();
   }
@@ -636,8 +627,9 @@ onMounted(() => {
 }
 .es-demand-list-filter__item {
   @include flex(center, flex-start, nowrap);
-  &:nth-of-type(1) {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
+  &:last-child {
+    margin-bottom: 0;
   }
   h5 {
     width: 60px;

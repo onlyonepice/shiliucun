@@ -120,6 +120,7 @@ const onClickUrl = () => {
 
       .name {
         @include textOverflow(1);
+        flex: 1;
       }
     }
 
