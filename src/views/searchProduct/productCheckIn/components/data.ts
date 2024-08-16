@@ -222,7 +222,7 @@ export const step3Field = [
     prop: "nominalVoltageMin",
     prop1: "nominalVoltageMax",
     showProp: "nominalVoltage",
-    type: "inputs",
+    type: "numbers",
   },
   {
     label: "额定功率/kW",
@@ -336,7 +336,7 @@ export const step3FieldVariable = [
     prop: "dcVoltageRangeMin",
     prop1: "dcVoltageRangeMaX",
     showProp: "dcVoltageRange",
-    type: "inputs",
+    type: "numbers",
     required: true,
     rules: [
       {
@@ -379,13 +379,13 @@ export const step3FieldVariable = [
     label: "额定交流电压/V",
     prop: "ratedACVoltage",
     showProp: "ratedACVoltage",
-    type: "number",
+    type: "input",
   },
   {
     label: "额定交流电流/A",
     prop: "ratedAlternatingCurrent",
     showProp: "ratedAlternatingCurrent",
-    type: "number",
+    type: "input",
   },
   {
     label: "额定交流频率",

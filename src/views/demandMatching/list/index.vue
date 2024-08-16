@@ -100,6 +100,16 @@
                         {{ statusItem.name }}
                       </p>
                     </template>
+                    <p
+                      class="tag"
+                      :style="{
+                        background: '#EAEDFE',
+                        color: '#244BF1',
+                        borderColor: '#244BF1',
+                      }"
+                    >
+                      海外
+                    </p>
                   </div>
                   <h5 style="font-weight: 400; float: right">
                     发布时间：{{ item.releaseTime }}
@@ -358,7 +368,15 @@ const tabList = ref([
   },
 ]);
 const filterList: Ref<Array<any>> = ref([
-  { id: 1, type: "needSource", name: "需求来源", option: [] },
+  {
+    id: 1,
+    type: "tag",
+    name: "需求来源",
+    option: [
+      { code: "全部", label: "全部" },
+      { code: "海外", label: "海外" },
+    ],
+  },
   { id: 2, type: "sortType", name: "排序", option: [] },
   { id: 3, type: "type", name: "需求类型", option: [] },
 ]);
@@ -367,6 +385,7 @@ const filterParams = ref({
   pageSize: 10,
   type: null,
   sortType: null,
+  tag: "全部",
 });
 const total = ref(0);
 const demandList = ref([{}]);
@@ -480,7 +499,6 @@ const getNeed = async () => {
   const data = await getNeedApi(filterParams.value);
   if (data.resp_code === 0) {
     loadingList.value = false;
-
     demandList.value = data.datas.records;
     total.value = data.datas.total;
   }
@@ -623,7 +641,7 @@ onMounted(() => {
 .es-demand-list-filter {
   @include widthAndHeight(100%);
   border-bottom: 1px solid #dbdce2;
-  padding: 0 0 24px;
+  padding-bottom: 23px;
 }
 .es-demand-list-filter__item {
   @include flex(center, flex-start, nowrap);

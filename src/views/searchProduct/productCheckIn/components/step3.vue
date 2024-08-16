@@ -74,6 +74,21 @@
                     placeholder="请输入"
                   />
                 </template>
+                <template v-if="stepField[scope.$index].type === 'numbers'">
+                  <el-input-number
+                    v-model="tableForm[index][stepField[scope.$index].prop]"
+                    placeholder="请输入"
+                    controls-position="right"
+                    :controls="false"
+                  />
+                  <div class="inputs-line">-</div>
+                  <el-input-number
+                    v-model="tableForm[index][stepField[scope.$index].prop1]"
+                    placeholder="请输入"
+                    controls-position="right"
+                    :controls="false"
+                  />
+                </template>
               </el-form-item>
               <div
                 v-if="scope.$index === 0"
@@ -372,6 +387,9 @@ function handleSaveDraft() {
   }
   ::v-deep(.el-table) {
     margin-top: 22px;
+    .el-form-item__content {
+      flex-wrap: nowrap;
+    }
     .el-table__header-wrapper {
       height: 0;
     }
