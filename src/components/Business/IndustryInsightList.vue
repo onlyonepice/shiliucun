@@ -2,10 +2,10 @@
   <div :class="[ns.b()]">
     <div class="left">
       <img :src="quotationMark" alt="" />
-      <p class="day">{{ new Date(pageData.createTime).getDate() }}</p>
+      <p class="day">{{ new Date(pageData.writingTime).getDate() }}</p>
       <p class="date">
-        {{ new Date(pageData.createTime).getFullYear() }}-{{
-          String(new Date(pageData.createTime).getMonth() + 1).padStart(2, "0")
+        {{ new Date(pageData.writingTime).getFullYear() }}-{{
+          String(new Date(pageData.writingTime).getMonth() + 1).padStart(2, "0")
         }}
       </p>
     </div>
