@@ -94,7 +94,7 @@
                   <p
                     v-if="route.query.productType === 'INDUSTRY_ENERGY_STORAGE'"
                     :style="{
-                      'text-align': 'right',
+                      'text-align': 'center',
                       color: 'rgba(0, 0, 0, 0.9)',
                       'font-weight':
                         scope.$index === 1 ||
@@ -109,7 +109,7 @@
                   <p
                     v-if="route.query.productType === 'ENERGY_STORAGE_INVERTER'"
                     :style="{
-                      'text-align': 'right',
+                      'text-align': 'center',
                       color: 'rgba(0, 0, 0, 0.9)',
                       'font-weight':
                         scope.$index === 1 ||
@@ -124,7 +124,7 @@
                   <p
                     v-if="route.query.productType === 'ELECTRIC_CORE'"
                     style="
-                      text-align: right;
+                      text-align: center;
                       color: &quot;rgba(0, 0, 0, 0.9)&quot;;
                     "
                   >
@@ -296,7 +296,7 @@ const tabNameList2En = ref([
 const tabNameList3 = ref([
   "产品型号",
   "直流侧参数",
-  "直流电压范围",
+  "直流电压范围/V",
   "最大直流电流/A",
   "交流侧参数",
   "额定输出功率/kW",
@@ -491,10 +491,15 @@ function generateComparisonMatrix(data) {
 const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
     if (rowIndex === 1 || rowIndex === 5 || rowIndex === 8) {
-      if (columnIndex === 1) {
-        return [1, productDetail.value.models.length]; // 合并第一行第二列和第三列单元格
-      } else if (columnIndex === 2) {
-        return [0, 0]; // 被合并的单元格设置为[0, 0]
+      if (columnIndex === 0) {
+        return [1, productDetail.value.models.length + 1]; // 合并第一行第二列和第三列单元格
+      }
+    }
+  }
+  if (route.query.productType === "ENERGY_STORAGE_INVERTER") {
+    if (rowIndex === 1 || rowIndex === 4 || rowIndex === 9) {
+      if (columnIndex === 0) {
+        return [1, productDetail.value.models.length + 1]; // 合并第一行第二列和第三列单元格
       }
     }
   }
@@ -755,8 +760,6 @@ const onConnectCompany = (id: string) => {
     height: 0;
   }
   .el-table .el-table__cell {
-    padding: 0;
-    height: auto !important;
     padding: 9px 15px 7px 15px;
   }
   .el-table .cell {

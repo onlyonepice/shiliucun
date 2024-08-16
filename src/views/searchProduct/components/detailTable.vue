@@ -190,7 +190,15 @@ defineProps({
 @import "@/style/mixin.scss";
 .es-searchProduct-comparedTable-common {
   @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
-  height: 31px;
-  line-height: 31px;
+  height: 22px;
+}
+</style>
+<style lang="scss">
+@import "@/style/mixin.scss";
+.es-searchProductDetail .el-table .el-table__cell {
+  padding: 8px 15px 7px 16px !important;
+}
+.es-searchProductDetail .el-table__row {
+  height: 32px;
 }
 </style>

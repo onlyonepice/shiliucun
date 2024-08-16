@@ -152,7 +152,7 @@ const tabNameList3 = ref([
   "",
   "产品型号",
   "直流侧参数",
-  "直流电压范围",
+  "直流电压范围/V",
   "最大直流电流/A",
   "交流侧参数",
   "额定输出功率/kW",
@@ -246,7 +246,6 @@ onMounted(() => {
     height: 0;
   }
   .el-table .el-table__cell {
-    padding: 0;
     height: auto !important;
     padding: 9px 15px 7px 15px;
   }
