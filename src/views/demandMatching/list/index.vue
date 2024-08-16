@@ -727,7 +727,7 @@ onMounted(() => {
 }
 .tag {
   border-radius: 4px;
-  padding: 2px 8px;
+  padding: 3px 8px;
   @include font(12px, 400, none, 20px);
   border: 1px solid #ff892e;
   margin-left: 8px;
