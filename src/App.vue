@@ -106,6 +106,7 @@ watch(
   { immediate: true },
 );
 const scrollbarRef = ref(null);
+// 控制页面滚动距离
 watch(windowScroll, (e) => {
   scrollbarRef.value!.setScrollTop(e.scrollTop);
 });

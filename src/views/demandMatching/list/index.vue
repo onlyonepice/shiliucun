@@ -90,7 +90,7 @@
                 :key="item.id"
               >
                 <div class="data-box_item_top">
-                  <div style="display: flex">
+                  <div style="display: flex; align-items: center">
                     <p class="data-box_item_type">
                       {{ item.typeName }}
                     </p>
@@ -344,6 +344,7 @@ import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
 const router = useRouter();
 import { getToken } from "@/utils/auth";
+import { windowScrollStore } from "@/store/modules/windowScroll";
 import { demandStatus, applicationStatus } from "../config";
 import {
   getTypeNotNullApi,
@@ -469,6 +470,7 @@ const handleDetailClick = (row) => {
 const onchangeCurrent = (number: number) => {
   filterParams.value.pageNumber = number;
   getNeed();
+  windowScrollStore().SET_SCROLL_TOP(0);
 };
 const getTypeNotNull = async () => {
   const data = await getTypeNotNullApi({ title: filterParams.value.title });
@@ -520,6 +522,7 @@ const getReleaseNeed = async () => {
 const onchangeCurrentRelease = (number: number) => {
   releaseParams.value.pageNumber = number;
   getReleaseNeed();
+  windowScrollStore().SET_SCROLL_TOP(0);
 };
 const applyParams = ref({
   page: 1,
@@ -537,6 +540,7 @@ const getApplyNeed = async () => {
 const onchangeCurrentApply = (number: number) => {
   applyParams.value.page = number;
   getApplyNeed();
+  windowScrollStore().SET_SCROLL_TOP(0);
 };
 onUnmounted(() => {
   releaseDemandShow.value = false;
