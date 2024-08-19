@@ -373,7 +373,7 @@ const filterList: Ref<Array<any>> = ref([
     type: "tag",
     name: "需求来源",
     option: [
-      { code: "全部", label: "全部" },
+      { code: "", label: "全部" },
       { code: "海外", label: "海外" },
     ],
   },
@@ -385,7 +385,7 @@ const filterParams = ref({
   pageSize: 10,
   type: null,
   sortType: null,
-  tag: "全部",
+  tag: "",
 });
 const total = ref(0);
 const demandList = ref([{}]);

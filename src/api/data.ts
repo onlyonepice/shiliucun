@@ -365,3 +365,20 @@ export const getCollectionEntry = (params: { time: string }) => {
     { params },
   );
 };
+
+// 获取充放电策略获取地区
+export const getChargeDischargePolicyArea = () => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/electricityFutureTimeShare/openApi/v1.1/getRegionChargeDischargeStrategy",
+  );
+};
+
+// 获取充放电策略
+export const getChargeDischargePolicy = (data) => {
+  return http.request<responseType>(
+    "post",
+    "/eesa-report/electricityFutureTimeShare/openApi/v1.1/getTheLatestTickPeriods",
+    { data },
+  );
+};
