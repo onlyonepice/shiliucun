@@ -107,6 +107,7 @@
                         color: '#244BF1',
                         borderColor: '#244BF1',
                       }"
+                      v-if="item.tags && item.tags.includes('海外')"
                     >
                       海外
                     </p>
@@ -560,7 +561,7 @@ const getSortTypeList = async () => {
   const { datas, resp_code } = await getNeedEvaluateApi({
     type: "NEED_HOMEPAGE_SORT",
   });
-  if (resp_code === 0) {
+  if (resp_code === 0 && datas.length) {
     filterList.value[1].option = datas[0].subset;
     filterParams.value.sortType = datas[0].subset[0].code;
     getNeed();

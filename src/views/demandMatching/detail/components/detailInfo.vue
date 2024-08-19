@@ -101,6 +101,17 @@
               : " | " + searchApplicationStatus(detailInfo.applyStatus)?.name
           }}
         </div>
+        <p
+          class="tag"
+          :style="{
+            background: '#EAEDFE',
+            color: '#244BF1',
+            borderColor: '#244BF1',
+          }"
+          v-if="detailInfo.tags && detailInfo.tags.includes('海外')"
+        >
+          海外
+        </p>
       </div>
       <div :class="ns.be('top', 'number')" v-if="detailInfo.status === 4">
         <span>{{ totalApply }}人已报名 · {{ detailInfo.views }}浏览</span>
@@ -240,5 +251,12 @@ const onShare = async () => {
   margin-right: 16px;
   margin-bottom: 16px;
   object-fit: contain;
+}
+.tag {
+  border-radius: 4px;
+  padding: 3px 8px;
+  @include font(12px, 400, none, 20px);
+  border: 1px solid #ff892e;
+  margin-left: 8px;
 }
 </style>
