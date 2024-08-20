@@ -268,7 +268,11 @@
                 </tr>
               </table>
               <table
-                v-else-if="getMode === 'EMC合同能源'"
+                v-else-if="
+                  getMode === 'EMC合同能源' &&
+                  getAccumulatedEarnings_owner &&
+                  getAccumulatedEarnings_owner.length > 0
+                "
                 ref="HTML"
                 style="width: 100%"
               >

@@ -57,7 +57,7 @@
               :addAreaType="addAreaType"
               :revenueEstimateList="revenueEstimateList"
               :searchResult="searchResult"
-              :title="addAreaType ? `地区A：${titleA}` : '收益估算B'"
+              :title="addAreaType ? `地区A：${titleA}` : '收益估算'"
             />
             <Estimate
               v-if="addAreaType"
@@ -86,7 +86,7 @@
               :addAreaType="addAreaType"
               :ownerRevenueEstimateList="ownerRevenueEstimateList"
               :searchResult="searchResult"
-              :title="addAreaType ? `地区A：${titleA}` : '收益估算B'"
+              :title="addAreaType ? `地区A：${titleA}` : '收益估算'"
             />
             <Proprietor
               v-if="addAreaType"
