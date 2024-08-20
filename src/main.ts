@@ -29,12 +29,12 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 // 只监听生产环境错误
-window.addEventListener("error", (event) => {
+window.addEventListener("error", () => {
   // 可以在这里进行错误的处理和上报
   // 上报错误到 Sentry
   Sentry.captureException(`环境：** ${VITE_ENV} **
   用户名：${useUserStore().userInfo.username || "未登录"}
-    具体报错信息：${event.error}
+    具体报错信息：
   `);
 });
 
