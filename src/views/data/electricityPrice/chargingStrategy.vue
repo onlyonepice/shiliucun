@@ -67,8 +67,15 @@ const regionNameList: Ref<Array<any>> = ref([]); // 地区筛选项
 const tableData: Ref<Array<any>> = ref([]); // 充放电策略表格数据
 const getBucketType = computed(() => {
   return (type: string, data: any) => {
-    const _width = (data.endIdentifying - data.startIdentifying) / 2;
-    return `width: ${50 * _width}px;${type === "bucket" ? setColor(data.bucketType) : setChargeColor(data.chargeDischargeStrategy)}`;
+    const {
+      endIdentifying,
+      startIdentifying,
+      bucketType,
+      chargeDischargeStrategy,
+    } = data;
+    console.log(chargeDischargeStrategy);
+    const _width = (endIdentifying - startIdentifying) / 2;
+    return `width: ${50 * _width}px;${type === "bucket" ? setColor(bucketType) : setChargeColor(chargeDischargeStrategy)};border-right: ${chargeDischargeStrategy === "" && type === "charge" ? "" : "1px solid #d0d6e2"}`;
   };
 });
 watch(
@@ -119,7 +126,7 @@ function getChargeDischargePolicyAreaData() {
   padding-left: 20px;
   p {
     width: 50px;
-    border-right: 1px solid #d0d6e2;
+    // border-right: 1px solid #d0d6e2;
     &:last-child {
       border-right: none;
     }

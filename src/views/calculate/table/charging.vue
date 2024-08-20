@@ -59,8 +59,15 @@ const props = defineProps({
 });
 const getBucketType = computed(() => {
   return (type: string, data: any) => {
-    const _width = (data.endIdentifying - data.startIdentifying) / 2;
-    return `width: ${50 * _width}px;${type === "bucket" ? setColor(data.bucketType) : setChargeColor(data.chargeDischargeStrategy)}`;
+    const {
+      endIdentifying,
+      startIdentifying,
+      bucketType,
+      chargeDischargeStrategy,
+    } = data;
+    console.log(chargeDischargeStrategy);
+    const _width = (endIdentifying - startIdentifying) / 2;
+    return `width: ${50 * _width}px;${type === "bucket" ? setColor(bucketType) : setChargeColor(chargeDischargeStrategy)};border-right: ${chargeDischargeStrategy === "" && type === "charge" ? "" : "1px solid #d0d6e2"}`;
   };
 });
 // 获取充放电策略数据
@@ -98,7 +105,6 @@ getChargeDischargePolicyAreaData();
   padding-left: 20px;
   p {
     width: 50px;
-    border-right: 1px solid #d0d6e2;
     &:last-child {
       border-right: none;
     }
