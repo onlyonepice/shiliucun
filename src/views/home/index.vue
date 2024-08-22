@@ -10,7 +10,7 @@
           :disabled="useUserStore().$state.openLoginVisible"
         />
         <div :class="ns.b('homeTopSearchIcon')" @click.stop="onSearch">
-          搜索报告
+          搜索
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
               :key="item.title"
             >
               <img :src="item.icon" alt="" />
-              {{ item.title }}
+              <p>{{ item.title }}</p>
             </div>
           </div>
         </div>
@@ -91,19 +91,33 @@
       </div>
       <div :class="ns.b('enterprise')">
         <div :class="ns.b('enterpriseTitle')">明星企业</div>
-        <div :class="ns.b('enterpriseContent')">
-          <div
-            v-for="(item, index) in logoList"
-            :key="index"
-            :class="ns.b('enterpriseItem')"
+        <swiper
+          :modules="modules"
+          :space-between="8"
+          :loop="true"
+          class="swiperBox"
+          :autoplay="autoplay"
+        >
+          <swiper-slide
+            v-for="(data, i) in Math.ceil(logoList.length / 18)"
+            :key="i"
           >
-            <img
-              :key="item"
-              :src="useUserStoreHook().$state.fileUrl + item.logoUrl"
-              alt=""
-            />
-          </div>
-        </div>
+            <div :class="ns.b('enterpriseContent')">
+              <template v-for="(item, index) in logoList" :key="index">
+                <div
+                  v-if="index >= i * 18 && index < (i + 1) * 18"
+                  :class="ns.b('enterpriseItem')"
+                >
+                  <img
+                    :key="item"
+                    :src="useUserStoreHook().$state.fileUrl + item.logoUrl"
+                    alt=""
+                  />
+                </div>
+              </template>
+            </div>
+          </swiper-slide>
+        </swiper>
       </div>
       <div :class="ns.b('product')">
         <div :class="ns.b('productTitle')">产品动态</div>
@@ -115,7 +129,7 @@
           :autoplay="autoplay"
           @slideChange="onSlideChange"
         >
-          <template v-for="(group, index) in productList" :key="index">
+          <template v-for="(group, i) in productList" :key="i">
             <swiper-slide>
               <div :class="ns.b('productContent')" v-if="group.length">
                 <div
@@ -125,6 +139,7 @@
                   :key="index"
                 >
                   <img
+                    v-if="item.logoUrl"
                     :class="ns.b('productItemLogo')"
                     :src="useUserStoreHook().$state.fileUrl + item.logoUrl"
                     alt=""
@@ -167,7 +182,6 @@
               <div
                 v-else
                 style="
-                  background-color: rgb(218, 218, 218);
                   height: 388px;
                   display: flex;
                   align-items: center;
@@ -175,9 +189,7 @@
                   font-size: 40px;
                 "
                 :class="ns.b('productContent')"
-              >
-                {{ index }}
-              </div>
+              />
             </swiper-slide>
           </template>
         </swiper>
@@ -353,13 +365,13 @@ async function getProductList(page) {
 let lastTimeIndex = 0;
 async function onSlideChange({ realIndex }) {
   if (
+    isNaN(realIndex) ||
     !productList.value.length ||
     lastTimeIndex === realIndex ||
     realIndex === 0
   ) {
     return;
   }
-
   if (lastTimeIndex === productList.value.length) {
     changeGetProductList(realIndex + 1);
   } else if (
@@ -469,9 +481,9 @@ getFrontSelectList();
           display: flex;
           justify-content: space-between;
           .es-home-homeSupplyDemandDockingItem {
-            padding: 24px 0;
+            padding: 24px 0 24px 24px;
             border-radius: 8px;
-            @include flex(center);
+            @include flex(center, flex-start);
             border: 1px solid #dbdce2;
             width: calc((100% / 3) - (8px * 2 / 3));
             @include font(20px, 400, rgba(0, 0, 0, 0.9), 28px);
@@ -484,6 +496,7 @@ getFrontSelectList();
             }
 
             &:hover {
+              font-weight: 600;
               box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
             }
           }
@@ -496,7 +509,7 @@ getFrontSelectList();
             border-radius: 8px;
             padding: 18px 0 18px 16px;
             border: 1px solid #dbdce2;
-            @include flex(center, flex-start);
+            @include flex(center, flex-start, nowrap);
             width: calc((100% / 4) - (8px * 3 / 4));
             @include font(14px, 400, rgba(0, 0, 0, 0.6));
 
@@ -505,8 +518,11 @@ getFrontSelectList();
               height: 40px;
               margin-right: 8px;
             }
-
+            p {
+              flex: 1;
+            }
             &:hover {
+              font-weight: 600;
               box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
             }
           }
@@ -568,7 +584,6 @@ getFrontSelectList();
       .es-home-enterpriseContent {
         display: flex;
         flex-wrap: wrap;
-        margin-top: 32px;
         .es-home-enterpriseItem {
           padding: 16px;
           margin-top: 8px;

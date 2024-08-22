@@ -205,7 +205,6 @@ async function getElectricityTypeTwo() {
 
 function handleNext() {
   formRef.value.validate((valid) => {
-    console.log("==========", valid);
     if (!valid) {
       emit("onNext");
     } else {
