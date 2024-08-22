@@ -44,6 +44,7 @@
           :defaultValue="basicInfo[item.prop]"
           :inputText="item.inputText"
           width="100%"
+          :options="item.options"
           :valueKey="item.valueKey ? item.valueKey : 'value'"
           :labelKey="item.labelKey ? item.labelKey : 'label'"
           @onChange="
@@ -67,21 +68,62 @@
 import { Ref, ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { stepOneBasics, stepOneElectricity } from "./index";
-import { getRegionColorApi } from "@/api/calculation";
+import { getRegionColorApi, getTechnologyType_V2Api } from "@/api/calculation";
 const ns = useNamespace("liteStepOne");
 const stepOneBasicsList: Ref<Array<any>> = ref(stepOneBasics);
+const regionList: Ref<Array<any>> = ref([]); // 地区列表
 const basicInfo: Ref<any> = ref({
   projectName: "",
   regionName: "",
   electricityTypeOneName: "",
+  transformerInformation: 2,
+  industry: "轻工业",
 });
 // 获取地区数据
 async function getRegionColor() {
   const { datas, resp_code } = await getRegionColorApi();
   if (resp_code === 0) {
+    regionList.value = datas;
     basicInfo.value.regionName = datas[0].regionName;
+    basicInfo.value.electricityTypeOneName =
+      datas[0].reInvestmentElectricityType[0].paramName;
     stepOneBasicsList.value.map((item) => {
       item.prop === "regionName" && (item.options = datas);
+      item.prop === "electricityTypeOneName" &&
+        (item.options = datas[0].reInvestmentElectricityType);
+    });
+    getElectricityTypeTwo();
+  }
+}
+// 修改地区，获取用电类型1
+function onAreaChange(val: any, prop: string) {
+  const _basicInfo = basicInfo.value;
+  const _regionList = regionList.value;
+  _basicInfo[prop] = val;
+  if (prop === "regionName") {
+    _regionList.map((item) => {
+      if (item.prop === "electricityTypeOneName") {
+        item.options = item.reInvestmentElectricityType;
+        _basicInfo.electricityTypeOneName =
+          item.reInvestmentElectricityType[0].paramName;
+      }
+    });
+    getElectricityTypeTwo();
+  }
+}
+// 获取用电类型2
+async function getElectricityTypeTwo() {
+  const { electricityTypeOneName, regionName } = basicInfo.value;
+  const { datas, resp_code } = await getTechnologyType_V2Api({
+    electricityTypeOneName,
+    regionName,
+  });
+  if (resp_code === 0) {
+    basicInfo.value.electricityTypeTwoName = datas[0].paramName;
+    basicInfo.value.tariffLevelId = datas[0].voltageLevel[0].paramName;
+    stepOneBasicsList.value.map((item) => {
+      item.prop === "electricityTypeTwoName" && (item.options = datas);
+      item.prop === "tariffLevelId" && (item.options = datas[0].voltageLevel);
     });
   }
 }

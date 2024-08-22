@@ -80,8 +80,17 @@
       {{ info.maximumDirectCurrent ? info.maximumDirectCurrent : "-" }}
     </div>
     <div v-if="index === 4" :class="ns.b('common')" name="交流侧参数" />
-    <div v-if="index === 5" :class="ns.b('common')" name="额定输出功率/kW">
-      {{ info.ratedOutputPower ? info.ratedOutputPower : "-" }}
+    <div v-if="index === 5" :class="ns.b('common')" name="额定输出功率">
+      {{
+        info.ratedOutputPower
+          ? info.ratedOutputPower +
+            (info.ratedOutputUnit === null
+              ? ""
+              : info.ratedOutputUnit === 0
+                ? "kW"
+                : "kVA")
+          : "-"
+      }}
     </div>
     <div v-if="index === 6" :class="ns.b('common')" name="额定交流电压/V">
       {{ info.ratedACVoltage ? info.ratedACVoltage : "-" }}

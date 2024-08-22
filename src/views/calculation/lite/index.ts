@@ -13,7 +13,7 @@ export const stepOneBasics = [
   },
   {
     type: "input",
-    prop: "projectName",
+    prop: "enterpriseName",
     title: "企业信息",
   },
   {
@@ -35,6 +35,8 @@ export const stepOneBasics = [
     type: "select",
     prop: "electricityTypeOneName",
     title: "用电类型I",
+    valueKey: "paramName",
+    labelKey: "paramDesc",
     options: [],
     rules: [
       {
@@ -48,6 +50,8 @@ export const stepOneBasics = [
     type: "select",
     prop: "electricityTypeTwoName",
     title: "用电类型II",
+    valueKey: "paramName",
+    labelKey: "paramDesc",
     options: [],
     rules: [
       {
@@ -60,8 +64,10 @@ export const stepOneBasics = [
 
   {
     type: "select",
-    prop: "projectName",
+    prop: "tariffLevelId",
     title: "电压等级",
+    valueKey: "paramName",
+    labelKey: "paramDesc",
     options: [],
     rules: [
       {
@@ -76,9 +82,12 @@ export const stepOneBasics = [
 export const stepOneElectricity = [
   {
     type: "select",
-    prop: "projectName",
+    prop: "transformerInformation",
     title: "变压器信息",
-    options: [],
+    options: [
+      { label: "按容缴费", value: 1 },
+      { label: "按需缴费", value: 2 },
+    ],
     rules: [
       {
         required: true,
@@ -89,15 +98,22 @@ export const stepOneElectricity = [
   },
   {
     type: "input",
-    prop: "projectName",
+    prop: "transformerCapacity",
     title: "变压器容量",
     inputText: "kVA",
+    rules: [
+      {
+        required: true,
+        message: "请输入变压器容量",
+        trigger: "change",
+      },
+    ],
   },
   {
-    type: "select",
-    prop: "projectName",
+    type: "input",
+    prop: "annualElectricityConsumption",
     title: "年度用电量",
-    options: [],
+    inputText: "万度",
     rules: [
       {
         required: true,
@@ -108,15 +124,56 @@ export const stepOneElectricity = [
   },
   {
     type: "input",
-    prop: "projectName",
+    prop: "photovoltaicInstalledCapacity",
     title: "光伏装机量",
     inputText: "kWp",
   },
   {
     type: "select",
-    prop: "projectName",
+    prop: "industry",
     title: "所属行业",
-    options: [],
+    options: [
+      {
+        label: "轻工业",
+        value: "轻工业",
+        recommendId: 2,
+        list: [
+          { src: "load_3.png", type: "", recommend: true, chartId: 3 },
+          { src: "load_4.png", type: "", recommend: true, chartId: 4 },
+          { src: "load_6.png", type: "", recommend: true, chartId: 6 },
+          { src: "load_7.png", type: "", recommend: true, chartId: 7 },
+        ],
+      },
+      {
+        label: "重工业",
+        value: "重工业",
+        recommendId: 3,
+        list: [
+          { src: "load_3.png", type: "", recommend: true, chartId: 3 },
+          { src: "load_4.png", type: "", recommend: true, chartId: 4 },
+          { src: "load_6.png", type: "", recommend: true, chartId: 6 },
+          { src: "load_7.png", type: "", recommend: true, chartId: 7 },
+        ],
+      },
+      {
+        label: "园区及商业",
+        value: "园区及商业",
+        recommendId: 4,
+        list: [
+          { src: "load_4.png", type: "", recommend: true, chartId: 4 },
+          { src: "load_5.png", type: "", recommend: true, chartId: 5 },
+        ],
+      },
+      {
+        label: "公用充电站",
+        value: "公用充电站",
+        recommendId: 1,
+        list: [
+          { src: "load_1.png", type: "", recommend: false, chartId: 1 },
+          { src: "load_2.png", type: "", recommend: false, chartId: 2 },
+        ],
+      },
+    ],
     rules: [
       {
         required: true,

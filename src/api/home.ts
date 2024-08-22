@@ -74,3 +74,11 @@ export const updateCompanyName = (params) => {
     },
   );
 };
+
+// 更新日志
+export const getUpdateLogApi = () => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    `/eesa-data-center/system/sysUpdateLog/openApi/v1.0/getSysUpdateLog?platform=WEB`,
+  );
+};

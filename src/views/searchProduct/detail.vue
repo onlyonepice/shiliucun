@@ -299,7 +299,7 @@ const tabNameList3 = ref([
   "直流电压范围/V",
   "最大直流电流/A",
   "交流侧参数",
-  "额定输出功率/kW",
+  "额定输出功率",
   "额定交流电压/V",
   "额定交流电流/A",
   "额定交流频率",
@@ -385,7 +385,12 @@ const productDetailInfo = computed(() => {
       {
         label: "额定功率：",
         value: productDetail.value.models[0].ratedOutputPower
-          ? productDetail.value.models[0].ratedOutputPower + "kW"
+          ? productDetail.value.models[0].ratedOutputPower +
+            (productDetail.value.models[0].ratedOutputUnit === null
+              ? ""
+              : productDetail.value.models[0].ratedOutputUnit === 0
+                ? "kW"
+                : "kVA")
           : "-",
       },
       {
