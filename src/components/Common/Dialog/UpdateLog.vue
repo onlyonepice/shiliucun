@@ -90,6 +90,12 @@ function getUpdateLog() {
 }
 .es-updateLog-content {
   margin: 24px auto 32px;
+  p {
+    line-height: 22px;
+  }
+  li {
+    line-height: 22px;
+  }
 }
 .es-updateLog-btn {
   @include widthAndHeight(288px, 40px);
