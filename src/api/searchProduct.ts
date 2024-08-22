@@ -20,7 +20,10 @@ export const getProductFilterApi = (params: any) => {
 
 // 查询产品列表
 export const getProductListApi = (data: any) => {
-  return http.request<void>(
+  return http.request<{
+    datas: any;
+    resp_code: number;
+  }>(
     "post",
     "/eesa-report/energyStorageProduct/energyStorageProduct/openApi/v1.0/list",
     { data },

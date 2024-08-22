@@ -75,6 +75,16 @@
                   />
                 </template>
               </el-form-item>
+              <el-select
+                style="width: 90px; margin-left: 16px"
+                class="unit-select"
+                v-if="stepField[scope.$index].unit"
+                v-model="tableForm[index].ratedOutputPowerUnit"
+                placeholder="请选择"
+              >
+                <el-option label="KVA" :value="1" />
+                <el-option label="KW" :value="0" />
+              </el-select>
               <div
                 v-if="scope.$index === 0"
                 :class="[
@@ -216,6 +226,7 @@ watch(
     if (prop.productType === "INDUSTRY_ENERGY_STORAGE") {
       stepField.value = step3Field;
     } else {
+      tableForm.value = [{ ratedOutputPowerUnit: 1 }];
       stepField.value = step3FieldVariable;
     }
     stepField.value.forEach((item) => {
@@ -228,7 +239,7 @@ watch(
   { immediate: true },
 );
 function handleAddModel() {
-  tableForm.value.push({});
+  tableForm.value.push({ ratedOutputPowerUnit: 1 });
 }
 function handleDelate(index) {
   tableForm.value.length !== 1 && tableForm.value.splice(index, 1);
@@ -289,6 +300,7 @@ function getOptions() {
     });
   });
 }
+
 function handleSaveDraft() {
   emits("saveDraft", {
     models: [...tableForm.value],
@@ -300,8 +312,17 @@ function handleSaveDraft() {
 @import "@/style/mixin.scss";
 .es-step3 {
   ::v-deep(.el-form-item) {
+    display: flex;
     flex: 1;
     margin-bottom: 0px;
+
+    .el-form-item__content {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+    .el-input-number {
+      flex: 1;
+    }
     .el-input,
     .el-select {
       .el-select__wrapper,

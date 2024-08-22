@@ -296,6 +296,7 @@ export const step3FieldVariable = [
     showProp: "ratedOutputPower",
     type: "number",
     required: true,
+    unit: true,
     rules: [
       {
         required: true,
