@@ -362,7 +362,7 @@ export const step3FieldVariable = [
   },
   { label: "交流侧参数", type: "title" },
   {
-    label: "额定输出功率/kW",
+    label: "额定输出功率",
     prop: "ratedOutputPower",
     showProp: "ratedOutputPower",
     type: "number",
