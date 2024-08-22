@@ -103,6 +103,7 @@ import EESAOrdinaryVip from "@/assets/img/vip/eesa-ordinary-vip.png";
 import ViceDirectorVip from "@/assets/img/vip/vice-director-vip.png";
 import DirectorVip from "@/assets/img/vip/director-vip.png";
 import SpreadIcon from "@/assets/img/common/spread-out-icon.png";
+import { getToken } from "@/utils/auth";
 const { VITE_INDUSTRIALMAP_URL, VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
 const router = useRouter();
@@ -123,7 +124,11 @@ defineProps({
 });
 // 获取vip图标
 const getVIPIcon = computed(() => {
-  if (useUserStoreHook().$state.userInfo.roles) {
+  if (
+    getToken() !== undefined &&
+    useUserStoreHook().$state.userInfo.roles &&
+    useUserStoreHook().$state.userInfo.roles.length
+  ) {
     const _code = useUserStoreHook().$state.userInfo.roles[0].code;
     return _code === "PERSON_TRIAL_ACCOUNT"
       ? TryOutVip
@@ -340,10 +345,17 @@ watch(
 );
 // 监听用户信息
 watch(
-  () => useUserStoreHook().$state.userInfo.roles,
+  () => useUserStoreHook().$state.userInfo,
   (val) => {
-    navList.value[6].text =
-      val && val[0].code !== "PERSON_ORDINARY_USER" ? "续费VIP" : "开通VIP";
+    if (getToken() !== undefined) {
+      navList.value[6].text =
+        val &&
+        val.roles &&
+        val.roles.length &&
+        val.roles[0].code !== "PERSON_ORDINARY_USER"
+          ? "续费VIP"
+          : "开通VIP";
+    }
   },
   { immediate: true },
 );

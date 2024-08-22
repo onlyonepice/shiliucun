@@ -157,12 +157,13 @@ const props = defineProps({
 });
 const onCloseDialog = () => {
   emit("onCancel");
-  getToken() &&
+  if (getToken()) {
     getMessageApi({ type: 1 }).then((res) => {
       if (res.resp_code === 0) {
         useUserStore().$state.showNewUserVip = res.datas !== null;
       }
     });
+  }
 };
 const handleSwitchProtocol = (type: string) => {
   protocolShow.value = type;
