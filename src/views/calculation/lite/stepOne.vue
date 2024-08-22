@@ -56,18 +56,62 @@
       </el-form-item>
     </el-form>
     <div :class="ns.b('imageBox')">
-      <el-button type="primary" :class="ns.be('imageBox', 'btn')"
+      <el-button
+        type="primary"
+        :class="ns.be('imageBox', 'btn')"
+        @click="imgDialog = true"
         >点击切换</el-button
       >
-      <img src="" alt="" />
+      <img
+        :src="
+          'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/' + choseImgSure
+        "
+        alt=""
+      />
     </div>
   </div>
+  <Dialog
+    :visible="imgDialog"
+    title="选择图表"
+    :width="'560px'"
+    @onHandleClose="onHandleClose"
+  >
+    <template #content>
+      <div
+        style="display: flex; justify-content: space-between; flex-wrap: wrap"
+      >
+        <div
+          :class="[
+            ns.be('image', 'list'),
+            choseImg === item.src ? ns.bm('image', 'active') : '',
+          ]"
+          v-for="item in imgList"
+          :key="item.chartId"
+          @click="choseImg = item.src"
+        >
+          <img
+            v-if="choseImg === item.src"
+            :class="ns.b('image-icon')"
+            :src="ImageChoseIcon"
+            alt=""
+          />
+          <img
+            :src="
+              'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/' + item.src
+            "
+            alt=""
+          />
+        </div>
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref, onMounted } from "vue";
+import { Ref, ref, onMounted, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { stepOneBasics, stepOneElectricity } from "./index";
+import ImageChoseIcon from "@/assets/img/common/image-chose-icon.png";
 import { getRegionColorApi, getTechnologyType_V2Api } from "@/api/calculation";
 const ns = useNamespace("liteStepOne");
 const stepOneBasicsList: Ref<Array<any>> = ref(stepOneBasics);
@@ -79,6 +123,28 @@ const basicInfo: Ref<any> = ref({
   transformerInformation: 2,
   industry: "轻工业",
 });
+const formRef = ref(); // 表单
+const imgList: Ref<Array<any>> = ref([]); // 图片列表
+const choseImgSure: Ref<string> = ref(""); // 选中的图片
+const choseImg: Ref<string> = ref(""); // 选中的图片
+const imgDialog: Ref<boolean> = ref(false); // 图片弹窗
+watch(
+  () => basicInfo.value.industry,
+  (val) => {
+    stepOneElectricity.length &&
+      stepOneElectricity.map((item) => {
+        item.prop === "industry" &&
+          item.options.map((_item) => {
+            _item.label === val && (imgList.value = _item.list);
+          });
+      });
+    choseImg.value = imgList.value[0].src;
+    choseImgSure.value = imgList.value[0].src;
+  },
+  {
+    immediate: true,
+  },
+);
 // 获取地区数据
 async function getRegionColor() {
   const { datas, resp_code } = await getRegionColorApi();
@@ -111,6 +177,15 @@ function onAreaChange(val: any, prop: string) {
     getElectricityTypeTwo();
   }
 }
+// 关闭弹窗
+function onHandleClose(type: boolean) {
+  imgDialog.value = false;
+  if (type) {
+    choseImgSure.value = choseImg.value;
+  } else {
+    choseImg.value = choseImgSure.value;
+  }
+}
 // 获取用电类型2
 async function getElectricityTypeTwo() {
   const { electricityTypeOneName, regionName } = basicInfo.value;
@@ -128,9 +203,23 @@ async function getElectricityTypeTwo() {
   }
 }
 
+function handleNext() {
+  formRef.value.validate((valid) => {
+    console.log("==========", valid);
+    if (!valid) {
+      emit("onNext");
+    } else {
+      return "true";
+    }
+  });
+}
+
 onMounted(() => {
   getRegionColor();
 });
+
+//]暴露方法
+defineExpose({ handleNext });
 </script>
 
 <style lang="scss" scoped>
@@ -189,6 +278,25 @@ onMounted(() => {
 }
 .es-liteStepOne-imageBox__btn {
   @include absolute(1, 0, 0, none, none);
+}
+.es-liteStepOne-image__list {
+  @include widthAndHeight(252px, 142px);
+  @include flex(center, center, nowrap);
+  border-radius: 4px;
+  border: 1px solid #dbdce2;
+  margin-bottom: 8px;
+  cursor: pointer;
+  @include relative();
+  img {
+    @include widthAndHeight(195px, 120px);
+  }
+  .es-liteStepOne-image-icon {
+    @include widthAndHeight(24px, 24px);
+    @include absolute(1, 0, 0, none, none);
+  }
+}
+.es-liteStepOne-image--active {
+  border: 1px solid #244bf1;
 }
 </style>
 <style lang="scss">

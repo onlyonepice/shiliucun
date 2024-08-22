@@ -197,6 +197,7 @@ const releaseDemandSuccess = () => {
 const getDemandDetail = async () => {
   const { datas, resp_code } = await getDemandDetailApi({ id: route.query.id });
   if (resp_code === 0) {
+    datas.tags && (datas.tags = datas.tags.split(","));
     detailInfo.value = datas;
     if (detailInfo.value.accountInfo) {
       detailInfo.value.accountInfo.companyId = datas.enterpriseId || null;

@@ -95,6 +95,8 @@ onMounted(() => {
   useUserStore().token === "" &&
     getToken() &&
     (useUserStore().$state.token = getToken());
+  useUserStore().handleGetUserInfo();
+  useUserStore().handleGetAccountInfo();
 });
 // 监听路由改变
 const windowScroll = windowScrollStore();

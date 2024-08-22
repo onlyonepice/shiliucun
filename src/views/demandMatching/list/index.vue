@@ -500,6 +500,9 @@ const getNeed = async () => {
   const data = await getNeedApi(filterParams.value);
   if (data.resp_code === 0) {
     loadingList.value = false;
+    data.datas.records.forEach((item) => {
+      item.tags && (item.tags = item.tags.split(","));
+    });
     demandList.value = data.datas.records;
     total.value = data.datas.total;
   }

@@ -21,7 +21,7 @@
         <div :class="ns.be('step', 'line')" v-if="item.id !== 3" />
       </template>
     </div>
-    <StepOne v-show="step === 1" />
+    <StepOne v-show="step === 1" ref="stepOne" @onNext="onNextOne" />
     <StepTwo v-show="step === 2" />
     <StepThree v-show="step === 3" />
   </div>
@@ -41,10 +41,14 @@ const stepList: Ref<Array<any>> = ref([
   { id: 3, name: "经济分析" },
 ]);
 const step: Ref<number> = ref(1);
+const stepOne: Ref<any> = ref(null); // 获取子组件-第一步
 const onNext = () => {
   if (step.value < 3) {
     step.value++;
   }
+};
+const onNextOne = () => {
+  stepOne.value.handleNext();
 };
 </script>
 
