@@ -5,7 +5,7 @@
       <div style="position: relative">
         <div :class="ns.be('info', 'bigImg-box')">
           <img
-            v-if="info.image.length !== 0"
+            v-if="info.image && info.image.length > 0"
             :class="ns.be('info', 'bigImg')"
             :src="useUserStoreHook().$state.fileUrl + info.image[0]"
             alt=""
@@ -126,14 +126,27 @@
     </div>
     <div v-if="index === 2" :class="ns.b('enterprise')" name="直流侧参数" />
     <div v-if="index === 3" :class="ns.b('common')" name="直流电压范围/V">
-      {{ showData.dcVoltageRange ? showData.dcVoltageRange : "-" }}
+      {{
+        showData.dcVoltageRange
+          ? showData.dcVoltageRange[0] + "-" + showData.dcVoltageRange[1]
+          : "-"
+      }}
     </div>
     <div v-if="index === 4" :class="ns.b('common')" name="最大直流电流/A">
       {{ showData.maximumDirectCurrent ? showData.maximumDirectCurrent : "-" }}
     </div>
     <div v-if="index === 5" :class="ns.b('common')" name="交流侧参数" />
-    <div v-if="index === 6" :class="ns.b('common')" name="额定输出功率/kW">
-      {{ showData.ratedOutputPower ? showData.ratedOutputPower : "-" }}
+    <div v-if="index === 6" :class="ns.b('common')" name="额定输出功率/">
+      {{
+        showData.ratedOutputPower
+          ? showData.ratedOutputPower +
+            (showData.ratedOutputUnit === null
+              ? ""
+              : showData.ratedOutputUnit === 0
+                ? "kW"
+                : "kVA")
+          : "-"
+      }}
     </div>
     <div v-if="index === 7" :class="ns.b('common')" name="额定交流电压/V">
       {{ showData.ratedACVoltage ? showData.ratedACVoltage : "-" }}

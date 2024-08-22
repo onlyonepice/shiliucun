@@ -3,11 +3,12 @@
     <Breadcrumb :breadcrumbList="breadcrumbList" />
     <div :class="['es-commonPage', ns.b('content')]">
       <el-table :data="tableData" style="width: 100%" :border="true">
-        <el-table-column fixed prop="name" label="" width="124">
+        <el-table-column fixed prop="name" label="" width="164">
           <template #default="scope">
             <p
               v-if="route.query.productType === 'INDUSTRY_ENERGY_STORAGE'"
               :style="{
+                textAlign: 'left',
                 color: 'rgba(0, 0, 0, 0.9)',
                 'font-weight':
                   scope.$index === 2 || scope.$index === 6 || scope.$index === 9
@@ -20,6 +21,7 @@
             <p
               v-if="route.query.productType === 'ENERGY_STORAGE_INVERTER'"
               :style="{
+                textAlign: 'left',
                 color: 'rgba(0, 0, 0, 0.9)',
                 'font-weight':
                   scope.$index === 2 ||
@@ -31,12 +33,15 @@
             >
               {{ scope.row.name }}
             </p>
-            <p v-else style="color: rgba(0, 0, 0, 0.9)">
+            <p
+              v-if="route.query.productType === 'ELECTRIC_CORE'"
+              style="text-align: left; color: rgba(0, 0, 0, 0.9)"
+            >
               {{ scope.row.name }}
             </p>
           </template>
         </el-table-column>
-        <el-table-column prop="info1" label="" width="244">
+        <el-table-column prop="info1" label="" width="204">
           <template #default="scope">
             <compardTable
               v-if="scope.row.info[0] && scope.row.info[0].show"
@@ -147,10 +152,10 @@ const tabNameList3 = ref([
   "",
   "产品型号",
   "直流侧参数",
-  "直流电压范围",
+  "直流电压范围/V",
   "最大直流电流/A",
   "交流侧参数",
-  "额定输出功率/kW",
+  "额定输出功率",
   "额定交流电压/V",
   "额定交流电流/A",
   "额定交流频率",
@@ -180,10 +185,11 @@ const getComparedList = async () => {
   _data.productType = route.query.productType;
   const { resp_code, datas }: any = await getProductComparedApi(_data);
   if (resp_code === 0) {
+    tableData.value = [];
     datas.forEach((item: any) => {
       item.show = true;
       route.query.productType !== "INDUSTRY_ENERGY_STORAGE" &&
-        (item.image = item.models[0].image);
+        (item.image = item.models[0].image || []);
     });
     const _productType = route.query.productType;
     const _length =
@@ -240,7 +246,6 @@ onMounted(() => {
     height: 0;
   }
   .el-table .el-table__cell {
-    padding: 0;
     height: auto !important;
     padding: 9px 15px 7px 15px;
   }

@@ -73,7 +73,7 @@ export const deleteDemandApi = (id: number) => {
 export const getAssignConfigApi = (params: any) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    `/eesa-data-center/sysDict/back/v1.0/findAllByTypeAndValue`,
+    `/eesa-industrial-map/sysDict/back/v1.0/findAllByTypeAndValue`,
     { params },
   );
 };

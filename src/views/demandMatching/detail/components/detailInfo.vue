@@ -101,6 +101,17 @@
               : " | " + searchApplicationStatus(detailInfo.applyStatus)?.name
           }}
         </div>
+        <p
+          class="tag"
+          :style="{
+            background: '#EAEDFE',
+            color: '#244BF1',
+            borderColor: '#244BF1',
+          }"
+          v-if="detailInfo.tags && detailInfo.tags.includes('海外')"
+        >
+          海外
+        </p>
       </div>
       <div :class="ns.be('top', 'number')" v-if="detailInfo.status === 4">
         <span>{{ totalApply }}人已报名 · {{ detailInfo.views }}浏览</span>
@@ -189,23 +200,20 @@ const onShare = async () => {
   margin-bottom: 24px;
 }
 .es-demandMatching-detail-top__removed {
-  // @include widthAndHeight(auto, 38px);
-  height: 38px;
+  min-height: 38px;
   background: #f2f3f5;
   border-radius: 4px;
   padding: 8px 16px;
   margin-right: 24px;
   @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
-  @include textOverflowOne();
   flex: 1;
 }
 .es-demandMatching-detail-top__turnDown {
-  @include widthAndHeight(100%, 38px);
+  min-height: 38px;
   background: #feeff0;
   border-radius: 4px;
   padding: 8px 16px;
   @include font(14px, 600, #f75964, 22px);
-  @include textOverflowOne();
 }
 .es-demandMatching-detail-top__line {
   @include widthAndHeight(712px, 1px);
@@ -243,5 +251,12 @@ const onShare = async () => {
   margin-right: 16px;
   margin-bottom: 16px;
   object-fit: contain;
+}
+.tag {
+  border-radius: 4px;
+  padding: 3px 8px;
+  @include font(12px, 400, none, 20px);
+  border: 1px solid #ff892e;
+  margin-left: 8px;
 }
 </style>

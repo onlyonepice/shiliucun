@@ -229,11 +229,6 @@ const getData = async () => {
           maxlength = item.length;
         }
       });
-      if (+maxlength > 10) {
-        echartOptions.value.grid.bottom = `${(+maxlength / 10) * 35}%`;
-      } else {
-        echartOptions.value.grid.bottom = "35%";
-      }
       initECharts();
     } else if (!res.datas.length) {
       isEmptyData.value = true;
@@ -480,8 +475,9 @@ const initData = () => {
     },
     grid: {
       left: "6%",
-      right: "6%",
       bottom: "35%",
+      right: "3%",
+      y2: "35%",
     },
     xAxis: {
       type: "category",
@@ -692,11 +688,11 @@ window.trackFunction("pc_Winbid_CompanyAnalysis_click");
   margin-bottom: 8px;
 }
 .echarts-mask-bottom {
-  @include widthAndHeight(calc(100% - 120px), 200px);
+  @include widthAndHeight(calc(100% - 100px), 150px);
   background: rgba(255, 255, 255, 0.3);
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(7px);
-  @include absolute(1, none, 60px, 69px, none);
+  @include absolute(1, none, 30px, 69px, none);
   text-align: center;
   h4 {
     margin-top: 70px;

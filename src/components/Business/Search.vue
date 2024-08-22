@@ -15,7 +15,7 @@
         alt=""
       />
       <div class="homeTopSearchIcon" @click.stop="onSearch">
-        <span>搜索</span>
+        <span>{{ searchTitle }}</span>
         <img :src="searchIcon" alt="" />
       </div>
     </div>
@@ -42,6 +42,10 @@ defineProps({
   placeholder: {
     type: String,
     default: "请输入关键词...",
+  },
+  searchTitle: {
+    type: String,
+    default: "搜索",
   },
 });
 // 通过onChange事件传递值给父组件
@@ -83,13 +87,13 @@ const handleClearTap = () => {
   }
 
   .homeTopSearchIcon {
-    @include widthAndHeight(96px, 100%);
+    @include widthAndHeight(auto, 100%);
     @include absolute(1, 0, 0, 0, none);
     @include flex(center, center);
     border-radius: 0px 100px 100px 0px;
     cursor: pointer;
     background-color: #244bf1;
-
+    padding: 6px 14px;
     span {
       @include font(14px, 400, rgba(255, 255, 255, 0.9), 22px);
       margin-right: 4px;

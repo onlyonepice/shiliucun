@@ -150,7 +150,7 @@ const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("demandMatchingDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
-  { text: "需求大厅", path: "/demandMatching/list" },
+  { text: "需求大厅", path: "goBack" },
   { text: "需求详情", path: "" },
 ]);
 const minePublish: Ref<boolean> = ref(false); // 是否是我发布的需求
@@ -197,6 +197,7 @@ const releaseDemandSuccess = () => {
 const getDemandDetail = async () => {
   const { datas, resp_code } = await getDemandDetailApi({ id: route.query.id });
   if (resp_code === 0) {
+    datas.tags && (datas.tags = datas.tags.split(","));
     detailInfo.value = datas;
     if (detailInfo.value.accountInfo) {
       detailInfo.value.accountInfo.companyId = datas.enterpriseId || null;

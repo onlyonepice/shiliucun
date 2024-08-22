@@ -23,16 +23,21 @@
           @mouseleave="choseComputed = ''"
         >
           <img
+            v-if="
+              comparedList[index].image &&
+              comparedList[index].image.length !== 0
+            "
             :src="
               useUserStoreHook().$state.fileUrl + comparedList[index].image[0]
             "
             alt=""
-            v-if="comparedList[index].image.length !== 0"
           />
           <EmptyProduct v-else size="60px" fontSize="12px" />
           <div>
             <h5>{{ comparedList[index].enterprise }}</h5>
-            <span>¥ {{ comparedList[index].price }}/kWh起</span>
+            <span v-if="comparedList[index].price"
+              >¥ {{ comparedList[index].price }}/kWh起</span
+            >
             <text
               v-if="choseComputed === comparedList[index].id"
               class="animate__animated animate__fadeIn"

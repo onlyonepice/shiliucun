@@ -80,8 +80,17 @@
       {{ info.maximumDirectCurrent ? info.maximumDirectCurrent : "-" }}
     </div>
     <div v-if="index === 4" :class="ns.b('common')" name="交流侧参数" />
-    <div v-if="index === 5" :class="ns.b('common')" name="额定输出功率/kW">
-      {{ info.ratedOutputPower ? info.ratedOutputPower : "-" }}
+    <div v-if="index === 5" :class="ns.b('common')" name="额定输出功率">
+      {{
+        info.ratedOutputPower
+          ? info.ratedOutputPower +
+            (info.ratedOutputUnit === null
+              ? ""
+              : info.ratedOutputUnit === 0
+                ? "kW"
+                : "kVA")
+          : "-"
+      }}
     </div>
     <div v-if="index === 6" :class="ns.b('common')" name="额定交流电压/V">
       {{ info.ratedACVoltage ? info.ratedACVoltage : "-" }}
@@ -190,7 +199,15 @@ defineProps({
 @import "@/style/mixin.scss";
 .es-searchProduct-comparedTable-common {
   @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
-  height: 31px;
-  line-height: 31px;
+  height: 22px;
+}
+</style>
+<style lang="scss">
+@import "@/style/mixin.scss";
+.es-searchProductDetail .el-table .el-table__cell {
+  padding: 8px 15px 7px 16px !important;
+}
+.es-searchProductDetail .el-table__row {
+  height: 32px;
 }
 </style>

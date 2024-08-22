@@ -3,195 +3,239 @@
     <h4 :class="ns.b('h4')">
       基本信息<span>请完善真实的企业项目信息，有利于最后生成完整报告</span>
     </h4>
-    <div :class="ns.b('filter')">
-      <div :class="ns.be('filter', 'item')">
-        <span required>项目名称</span>
+    <el-form
+      ref="formRef"
+      :model="basicInfo"
+      label-width="auto"
+      :class="ns.b('form')"
+    >
+      <el-form-item
+        v-for="item in stepOneBasicsList"
+        :key="item.prop"
+        :prop="item.prop"
+        :rules="item.rules"
+        :label="item.title"
+      >
         <Select
-          type="input"
-          :defaultValue="basicInfo.projectName"
-          width="475px"
+          :type="item.type"
+          :defaultValue="basicInfo[item.prop]"
+          :inputText="item.inputText"
+          :valueKey="item.valueKey ? item.valueKey : 'value'"
+          :labelKey="item.labelKey ? item.labelKey : 'label'"
+          width="100%"
+          :options="item.options"
           @onChange="
             ($event) => {
-              onAreaChange($event, 'projectName');
+              onAreaChange($event, item.prop);
             }
           "
         />
-      </div>
-      <div :class="ns.be('filter', 'item')">
-        <span required>用电类型I</span>
+      </el-form-item>
+      <h4 :class="ns.b('h4')">用电信息</h4>
+      <el-form-item
+        v-for="item in stepOneElectricity"
+        :key="item.prop"
+        :prop="item.prop"
+        :rules="item.rules"
+        :label="item.title"
+      >
         <Select
-          :options="[]"
-          valueKey="regionName"
-          labelKey="regionName"
-          :defaultValue="basicInfo.electricityUsageType1"
-          width="475px"
+          :type="item.type"
+          :defaultValue="basicInfo[item.prop]"
+          :inputText="item.inputText"
+          width="100%"
+          :options="item.options"
+          :valueKey="item.valueKey ? item.valueKey : 'value'"
+          :labelKey="item.labelKey ? item.labelKey : 'label'"
           @onChange="
             ($event) => {
-              onAreaChange($event, 'electricityUsageType1');
+              onAreaChange($event, item.prop);
             }
           "
         />
-      </div>
-      <div :class="ns.be('filter', 'item')">
-        <span required="false">企业信息</span>
-        <Select
-          type="input"
-          :defaultValue="basicInfo.projectName"
-          width="475px"
-          @onChange="
-            ($event) => {
-              onAreaChange($event, 'projectName');
-            }
-          "
-        />
-      </div>
-      <div :class="ns.be('filter', 'item')">
-        <span required>用电类型II</span>
-        <Select
-          :options="[]"
-          valueKey="regionName"
-          labelKey="regionName"
-          :defaultValue="basicInfo.electricityUsageType2"
-          width="475px"
-          @onChange="
-            ($event) => {
-              onAreaChange($event, 'electricityUsageType2');
-            }
-          "
-        />
-      </div>
-      <div :class="ns.be('filter', 'item')">
-        <span required>项目地区</span>
-        <Select
-          :options="[]"
-          valueKey="regionName"
-          labelKey="regionName"
-          :defaultValue="basicInfo.transformerCapacity"
-          width="475px"
-          @onChange="
-            ($event) => {
-              onAreaChange($event, 'transformerCapacity');
-            }
-          "
-        />
-      </div>
-      <div :class="ns.be('filter', 'item')">
-        <span required>电压等级</span>
-        <Select
-          :options="[]"
-          valueKey="regionName"
-          labelKey="regionName"
-          :defaultValue="basicInfo.tariffLevelName"
-          width="475px"
-          @onChange="
-            ($event) => {
-              onAreaChange($event, 'tariffLevelName');
-            }
-          "
-        />
-      </div>
-    </div>
-    <h4 :class="ns.b('h4')">用电信息</h4>
-    <div :class="ns.b('filter')">
-      <div :class="ns.be('filter', 'item')">
-        <span required>变压器信息</span>
-        <Select
-          type="input"
-          :defaultValue="basicInfo.projectName"
-          width="475px"
-          @onChange="
-            ($event) => {
-              onAreaChange($event, 'projectName');
-            }
-          "
-        />
-      </div>
-      <div :class="ns.be('filter', 'item')">
-        <span required>变压器容量</span>
-        <Select
-          :options="[]"
-          valueKey="regionName"
-          labelKey="regionName"
-          :defaultValue="basicInfo.electricityUsageType1"
-          width="475px"
-          @onChange="
-            ($event) => {
-              onAreaChange($event, 'electricityUsageType1');
-            }
-          "
-        />
-      </div>
-      <div :class="ns.be('filter', 'item')">
-        <span required="false">年度用电量</span>
-        <Select
-          type="input"
-          :defaultValue="basicInfo.projectName"
-          width="475px"
-          @onChange="
-            ($event) => {
-              onAreaChange($event, 'projectName');
-            }
-          "
-        />
-      </div>
-      <div :class="ns.be('filter', 'item')">
-        <span required>光伏装机量</span>
-        <Select
-          :options="[]"
-          valueKey="regionName"
-          labelKey="regionName"
-          :defaultValue="basicInfo.electricityUsageType2"
-          width="475px"
-          @onChange="
-            ($event) => {
-              onAreaChange($event, 'electricityUsageType2');
-            }
-          "
-        />
-      </div>
-      <div :class="ns.be('filter', 'item')">
-        <span required>所属行业</span>
-        <Select
-          :options="[]"
-          valueKey="regionName"
-          labelKey="regionName"
-          :defaultValue="basicInfo.transformerCapacity"
-          width="475px"
-          @onChange="
-            ($event) => {
-              onAreaChange($event, 'transformerCapacity');
-            }
-          "
-        />
-      </div>
-    </div>
+      </el-form-item>
+    </el-form>
     <div :class="ns.b('imageBox')">
-      <el-button type="primary" :class="ns.be('imageBox', 'btn')"
+      <el-button
+        type="primary"
+        :class="ns.be('imageBox', 'btn')"
+        @click="imgDialog = true"
         >点击切换</el-button
       >
-      <img src="" alt="" />
+      <img
+        :src="
+          'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/' + choseImgSure
+        "
+        alt=""
+      />
     </div>
   </div>
+  <Dialog
+    :visible="imgDialog"
+    title="选择图表"
+    :width="'560px'"
+    @onHandleClose="onHandleClose"
+  >
+    <template #content>
+      <div
+        style="display: flex; justify-content: space-between; flex-wrap: wrap"
+      >
+        <div
+          :class="[
+            ns.be('image', 'list'),
+            choseImg === item.src ? ns.bm('image', 'active') : '',
+          ]"
+          v-for="item in imgList"
+          :key="item.chartId"
+          @click="choseImg = item.src"
+        >
+          <img
+            v-if="choseImg === item.src"
+            :class="ns.b('image-icon')"
+            :src="ImageChoseIcon"
+            alt=""
+          />
+          <img
+            :src="
+              'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/' + item.src
+            "
+            alt=""
+          />
+        </div>
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref } from "vue";
+import { Ref, ref, onMounted, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
+import { stepOneBasics, stepOneElectricity } from "./index";
+import ImageChoseIcon from "@/assets/img/common/image-chose-icon.png";
+import { getRegionColorApi, getTechnologyType_V2Api } from "@/api/calculation";
 const ns = useNamespace("liteStepOne");
+const stepOneBasicsList: Ref<Array<any>> = ref(stepOneBasics);
+const regionList: Ref<Array<any>> = ref([]); // 地区列表
 const basicInfo: Ref<any> = ref({
   projectName: "",
+  regionName: "",
+  electricityTypeOneName: "",
+  transformerInformation: 2,
+  industry: "轻工业",
 });
+const formRef = ref(); // 表单
+const imgList: Ref<Array<any>> = ref([]); // 图片列表
+const choseImgSure: Ref<string> = ref(""); // 选中的图片
+const choseImg: Ref<string> = ref(""); // 选中的图片
+const imgDialog: Ref<boolean> = ref(false); // 图片弹窗
+watch(
+  () => basicInfo.value.industry,
+  (val) => {
+    stepOneElectricity.length &&
+      stepOneElectricity.map((item) => {
+        item.prop === "industry" &&
+          item.options.map((_item) => {
+            _item.label === val && (imgList.value = _item.list);
+          });
+      });
+    choseImg.value = imgList.value[0].src;
+    choseImgSure.value = imgList.value[0].src;
+  },
+  {
+    immediate: true,
+  },
+);
+// 获取地区数据
+async function getRegionColor() {
+  const { datas, resp_code } = await getRegionColorApi();
+  if (resp_code === 0) {
+    regionList.value = datas;
+    basicInfo.value.regionName = datas[0].regionName;
+    basicInfo.value.electricityTypeOneName =
+      datas[0].reInvestmentElectricityType[0].paramName;
+    stepOneBasicsList.value.map((item) => {
+      item.prop === "regionName" && (item.options = datas);
+      item.prop === "electricityTypeOneName" &&
+        (item.options = datas[0].reInvestmentElectricityType);
+    });
+    getElectricityTypeTwo();
+  }
+}
+// 修改地区，获取用电类型1
+function onAreaChange(val: any, prop: string) {
+  const _basicInfo = basicInfo.value;
+  const _regionList = regionList.value;
+  _basicInfo[prop] = val;
+  if (prop === "regionName") {
+    _regionList.map((item) => {
+      if (item.prop === "electricityTypeOneName") {
+        item.options = item.reInvestmentElectricityType;
+        _basicInfo.electricityTypeOneName =
+          item.reInvestmentElectricityType[0].paramName;
+      }
+    });
+    getElectricityTypeTwo();
+  }
+}
+// 关闭弹窗
+function onHandleClose(type: boolean) {
+  imgDialog.value = false;
+  if (type) {
+    choseImgSure.value = choseImg.value;
+  } else {
+    choseImg.value = choseImgSure.value;
+  }
+}
+// 获取用电类型2
+async function getElectricityTypeTwo() {
+  const { electricityTypeOneName, regionName } = basicInfo.value;
+  const { datas, resp_code } = await getTechnologyType_V2Api({
+    electricityTypeOneName,
+    regionName,
+  });
+  if (resp_code === 0) {
+    basicInfo.value.electricityTypeTwoName = datas[0].paramName;
+    basicInfo.value.tariffLevelId = datas[0].voltageLevel[0].paramName;
+    stepOneBasicsList.value.map((item) => {
+      item.prop === "electricityTypeTwoName" && (item.options = datas);
+      item.prop === "tariffLevelId" && (item.options = datas[0].voltageLevel);
+    });
+  }
+}
+
+function handleNext() {
+  formRef.value.validate((valid) => {
+    console.log("==========", valid);
+    if (!valid) {
+      emit("onNext");
+    } else {
+      return "true";
+    }
+  });
+}
+
+onMounted(() => {
+  getRegionColor();
+});
+
+//]暴露方法
+defineExpose({ handleNext });
 </script>
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .es-liteStepOne-h4 {
+  width: 100%;
   margin-bottom: 20px;
   margin: 25px 0 20px;
   span {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     margin-left: 8px;
   }
+}
+.es-liteStepOne-form {
+  width: 100%;
+  @include flex(flex-start, space-between, wrap);
 }
 .es-liteStepOne-filter {
   @include flex(center, space-between, wrap);
@@ -235,11 +279,35 @@ const basicInfo: Ref<any> = ref({
 .es-liteStepOne-imageBox__btn {
   @include absolute(1, 0, 0, none, none);
 }
+.es-liteStepOne-image__list {
+  @include widthAndHeight(252px, 142px);
+  @include flex(center, center, nowrap);
+  border-radius: 4px;
+  border: 1px solid #dbdce2;
+  margin-bottom: 8px;
+  cursor: pointer;
+  @include relative();
+  img {
+    @include widthAndHeight(195px, 120px);
+  }
+  .es-liteStepOne-image-icon {
+    @include widthAndHeight(24px, 24px);
+    @include absolute(1, 0, 0, none, none);
+  }
+}
+.es-liteStepOne-image--active {
+  border: 1px solid #244bf1;
+}
 </style>
 <style lang="scss">
 .es-liteStepOne-imageBox {
   button {
     border-radius: 0;
+  }
+}
+.es-liteStepOne-form {
+  .el-form-item {
+    width: 48%;
   }
 }
 </style>

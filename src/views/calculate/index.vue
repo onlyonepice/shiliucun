@@ -57,7 +57,7 @@
               :addAreaType="addAreaType"
               :revenueEstimateList="revenueEstimateList"
               :searchResult="searchResult"
-              :title="addAreaType ? `地区A：${titleA}` : '收益估算B'"
+              :title="addAreaType ? `地区A：${titleA}` : '收益估算'"
             />
             <Estimate
               v-if="addAreaType"
@@ -67,6 +67,14 @@
               :searchResult="searchResultB"
             />
           </div>
+          <Canvas
+            v-if="!addAreaType && filterFinish"
+            ref="searchCanvas"
+            :searchCanvas="searchCanvas"
+            :searchParams="searchParamsA"
+            :searchParamsShow="searchParamsShow"
+            @onSearch="onSearchData"
+          />
         </template>
         <template v-else>
           <div
@@ -78,7 +86,7 @@
               :addAreaType="addAreaType"
               :ownerRevenueEstimateList="ownerRevenueEstimateList"
               :searchResult="searchResult"
-              :title="addAreaType ? `地区A：${titleA}` : '收益估算B'"
+              :title="addAreaType ? `地区A：${titleA}` : '收益估算'"
             />
             <Proprietor
               v-if="addAreaType"
@@ -108,15 +116,10 @@
           />
         </div>
       </div>
+      <div v-show="choseTab === 3">
+        <Charging :searchParamsShow="searchParamsShow" v-if="showInvestment" />
+      </div>
     </template>
-    <Canvas
-      v-if="!addAreaType && filterFinish"
-      ref="searchCanvas"
-      :searchCanvas="searchCanvas"
-      :searchParams="searchParamsA"
-      :searchParamsShow="searchParamsShow"
-      @onSearch="onSearchData"
-    />
   </div>
   <DownloadReport
     v-if="downloadReportShow"
@@ -151,6 +154,7 @@ import Filter from "./filter/enter.vue";
 import Canvas from "./canvas.vue";
 import DownloadReport from "./downLoad/DownloadReport.vue";
 import Dom from "./downLoad/dom.vue";
+import Charging from "./table/charging.vue";
 import Dissatisfy from "@/assets/img/common/dissatisfy.png";
 import ChoseDissatisfy from "@/assets/img/common/chose-dissatisfy.png";
 import Normal from "@/assets/img/common/normal.png";
@@ -203,6 +207,8 @@ const titleSkip = ref({
 // 查询参数
 const searchParamsA: Ref<any> = ref({
   emcComprehensiveTaxRate: 87,
+  ownersShare: 10,
+  dividedByInvestors: 90,
 });
 const searchParamsB: Ref<any> = ref({});
 const addAreaType: Ref<boolean> = ref(false); // 添加地区对比
@@ -224,6 +230,7 @@ const report: Ref<any> = ref({
 });
 const tabsList = ref([
   { id: 1, name: "金融方案" },
+  { id: 3, name: "充放电策略" },
   { id: 2, name: "充放电量" },
 ]);
 const titleA = ref("");

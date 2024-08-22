@@ -18,6 +18,8 @@
     <ElectricityAnalysis v-if="chosePriceType === 2" />
     <!-- 各省峰谷时段 -->
     <ElectricityPricePeriod v-if="chosePriceType === 3" />
+    <!-- 充放电策略 -->
+    <ChargingStrategy v-if="chosePriceType === 4" />
   </div>
 </template>
 
@@ -26,11 +28,13 @@ import { ref, Ref } from "vue";
 import ElectricityAnalysis from "./electricityAnalysis.vue";
 import ElectricityPriceTime from "./electricityPriceTime.vue";
 import ElectricityPricePeriod from "./electricityPricePeriod.vue";
+import ChargingStrategy from "./chargingStrategy.vue";
 const chosePriceType = ref(1);
 const priceTypeList: Ref<Array<{ id: number; text: string }>> = ref([
   { id: 1, text: "分时/分月电价" },
   { id: 2, text: "电价分析" },
   { id: 3, text: "各省峰谷时段" },
+  { id: 4, text: "充放电策略" },
 ]);
 const onImage = () => {
   window.trackFunction("pc_Elecprice_Banner_click");

@@ -32,6 +32,7 @@
         <el-button type="primary" @click="exportResult">下载图片</el-button>
       </div>
     </div>
+    <EchartsTips title="仅含项目级招标，不含集采/框采" />
     <div v-loading="loading" id="eChart_areaAnalysis" ref="eChartsDom" />
     <ExportCanvasDialog
       :visible="exportVisible"

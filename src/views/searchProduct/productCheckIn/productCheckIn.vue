@@ -30,6 +30,7 @@
         <Step2
           v-show="tabVal === 2"
           :draftData="draftData"
+          :productType="form.productType"
           @saveDraft="saveDraft"
           @next="handleNext"
           @back="handleBack"
@@ -112,6 +113,7 @@ async function getDetails() {
       delete datas?.id;
       draftData.value = datas;
       form.value = datas;
+      form.value.productType = productType;
       loading.value = false;
       const step2Status = step2Field.every((item) => {
         return datas[item.prop];
@@ -188,7 +190,8 @@ function handleSubmit(formData) {
     loading.value = true;
     if (
       data.productType !== "INDUSTRY_ENERGY_STORAGE" &&
-      (data.displayChannels || data.displayChannels.length)
+      data.displayChannels &&
+      data.displayChannels.length
     ) {
       delete data.displayChannels;
     }

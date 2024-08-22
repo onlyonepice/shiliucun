@@ -53,16 +53,7 @@
               </div>
             </div>
             <template v-if="useUserStoreHook().$state.userInfo.roles">
-              <img
-                v-if="
-                  useUserStoreHook().$state.userInfo.roles[0].code !==
-                    'PERSON_ORDINARY_USER' &&
-                  useUserStoreHook().$state.userInfo.roles[0].code !==
-                    'PERSON_TRIAL_ACCOUNT'
-                "
-                :class="ns.b('vip')"
-                :src="getVIPIcon"
-              />
+              <img :class="ns.b('vip')" :src="getVIPIcon" />
             </template>
           </div>
           <div
@@ -105,7 +96,8 @@ import LogoIcon from "@/assets/img/common/logo-icon.png";
 import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
-import PersonalVip from "@/assets/img/vip/personal-vip.png";
+import PersonalCommonVip from "@/assets/img/vip/personal-common-member.png";
+import TryOutVip from "@/assets/img/vip/try-out-vip.png";
 import CompanyVip from "@/assets/img/vip/company-vip.png";
 import EESAOrdinaryVip from "@/assets/img/vip/eesa-ordinary-vip.png";
 import ViceDirectorVip from "@/assets/img/vip/vice-director-vip.png";
@@ -133,8 +125,8 @@ defineProps({
 const getVIPIcon = computed(() => {
   if (useUserStoreHook().$state.userInfo.roles) {
     const _code = useUserStoreHook().$state.userInfo.roles[0].code;
-    return _code === "PERSON_MEMBER_USER"
-      ? PersonalVip
+    return _code === "PERSON_TRIAL_ACCOUNT"
+      ? TryOutVip
       : _code === "ENTERPRISE_MEMBER_USER"
         ? CompanyVip
         : _code === "ENTERPRISE_EESA_MEMBER_USER"
@@ -143,7 +135,7 @@ const getVIPIcon = computed(() => {
             ? ViceDirectorVip
             : _code === "CHAIRMAN_MEMBER"
               ? DirectorVip
-              : "";
+              : PersonalCommonVip;
   } else {
     return "";
   }

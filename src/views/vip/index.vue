@@ -6,7 +6,11 @@
         <img class="item_log" :src="item.topIcon" alt="" />
         <div :class="ns.b('content')">
           <div :class="ns.b('price')">
-            <span v-if="item.price.number" style="font-size: 20px">¥</span>
+            <span
+              v-if="item.price.number"
+              style="font-size: 12px; margin-right: 6px"
+              >¥</span
+            >
             <span
               :style="{
                 color: item.price.color,
@@ -18,15 +22,19 @@
               }}</span
             >
             <template v-if="item.price.number">
-              <span style="font-size: 20px">{{ item.price.unit }}</span>
-              <span
+              <span style="font-size: 20px; margin-left: 8px">{{
+                item.price.unit
+              }}</span>
+              <p
                 style="
                   font-size: 16px;
                   color: rgba(0, 0, 0, 0.6);
-                  margin-left: 16px;
+                  margin-top: 6px;
                 "
-                >{{ item.price.extraPrice }}</span
               >
+                <span style="font-size: 12px; margin-right: 6px">¥</span
+                >{{ item.price.extraPrice }}
+              </p>
             </template>
           </div>
           <div
@@ -52,12 +60,17 @@
               :class="ns.be('module', 'content')"
             >
               <div>
-                <img :src="__item.isPermission ? VipTick : VipFork" alt="" />
+                <template v-if="__item.isPermission">
+                  <img :src="VipTick" alt="" />
+                </template>
+                <template v-else>
+                  <span>-</span>
+                </template>
                 <h5 :class="ns.be('module_item', 'title')">
                   {{ __item.moduleName }}
                 </h5>
               </div>
-              <p>{{ __item.conditions }}</p>
+              <!-- <p>{{ __item.conditions }}</p> -->
             </div>
           </div>
         </div>
@@ -85,10 +98,11 @@ import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import cancel_icon from "@/assets/img/common/icon_clear.png";
 import VipTopNormal from "@/assets/img/vip/vip-top-normal.png"; // 普通会员
-// import VipTopPersonal from "@/assets/img/vip/vip-top-personal.png"; // 个人会员
-import VipTopCompany from "@/assets/img/vip/vip-top-company.png"; // 企业会员
+import VipTopNormal2 from "@/assets/img/vip/vip-top-normal2.png"; // EESA普通会员
+import VipTopNormal3 from "@/assets/img/vip/vip-top-normal3.png"; // EESA理事普通会员
+import VipTopNormal4 from "@/assets/img/vip/vip-top-normal4.png"; // EESA副理事长普通会员
 import VipTick from "@/assets/img/vip/vip-tick.png";
-import VipFork from "@/assets/img/vip/vip-fork.png";
+// import VipFork from "@/assets/img/vip/vip-fork.png";
 import PayQR from "@/assets/img/vip/pay-member-qr.png";
 import { getVipConfigListApi } from "@/api/vip";
 import { getToken } from "@/utils/auth";
@@ -115,28 +129,28 @@ const accountList = ref([
     },
     list: [],
   },
-  // {
-  //   id: 1,
-  //   topIcon: VipTopPersonal,
-  //   code: "PERSON_MEMBER_USER",
-  //   btnConfig: {
-  //     color: "rgba(255,255,255,0.9)",
-  //     bgColor: "#244BF1",
-  //     borderColor: "#244BF1",
-  //     text: "立即开通",
-  //   },
-  //   price: {
-  //     number: 299,
-  //     color: "#244BF1",
-  //     unit: "/月",
-  //     extraPrice: "￥879/季 ￥3399/年",
-  //   },
-  //   list: [],
-  // },
+  {
+    id: 1,
+    topIcon: VipTopNormal2,
+    code: "ENTERPRISE_EESA_MEMBER_USER",
+    btnConfig: {
+      color: "rgba(255,255,255,0.9)",
+      bgColor: "#244BF1",
+      borderColor: "#244BF1",
+      text: "立即开通",
+    },
+    price: {
+      number: 11000,
+      color: "#244BF1",
+      unit: "/1账号/年",
+      extraPrice: "1000/账号/年",
+    },
+    list: [],
+  },
   {
     id: 2,
-    topIcon: VipTopCompany,
-    code: "ENTERPRISE_MEMBER_USER",
+    topIcon: VipTopNormal3,
+    code: "CHAIRMAN_MEMBER",
     btnConfig: {
       color: "#E5BC68",
       bgColor: "#412F1B",
@@ -144,10 +158,28 @@ const accountList = ref([
       text: "立即开通",
     },
     price: {
-      number: 10000,
+      number: 25000,
       color: "#412F1B",
       unit: "/3账号/年",
-      extraPrice: "",
+      extraPrice: "3000/账号/年",
+    },
+    list: [],
+  },
+  {
+    id: 3,
+    topIcon: VipTopNormal4,
+    code: "VICE_CHAIRMAN_MEMBER",
+    btnConfig: {
+      color: "#E5BC68",
+      bgColor: "#412F1B",
+      borderColor: "#412F1B",
+      text: "立即开通",
+    },
+    price: {
+      number: 50000,
+      color: "#412F1B",
+      unit: "/3账号/年",
+      extraPrice: "3000/账号/年",
     },
     list: [],
   },
@@ -168,12 +200,17 @@ const handleClick = (item) => {
   if (_id !== 0 && !getToken()) {
     return useUserStore().openLogin(true);
   }
-  if (_id === 1) {
-    useUserStore().openMembersBuy(true);
+  if (_id === 0) {
+    router.push("/home");
   } else {
-    _id === 0 && router.push("/home");
-    _id === 2 && (QRvisible.value = true);
+    QRvisible.value = true;
   }
+  // if (_id === 1) {
+  //   useUserStore().openMembersBuy(true);
+  // } else {
+  //   _id === 0 && router.push("/home");
+  //   _id === 2 && (QRvisible.value = true);
+  // }
 };
 // 获取vip配置
 const getVipConfigList = async () => {
@@ -205,7 +242,7 @@ getVipConfigList();
     display: flex;
     justify-content: flex-start;
     .item {
-      width: 368px;
+      width: 270px;
       position: relative;
       border: 1px solid #dbdce2;
       border-radius: 8px;
@@ -214,7 +251,7 @@ getVipConfigList();
         @include widthAndHeight(100%, 104px);
       }
       .item_btn {
-        @include widthAndHeight(320px, 40px);
+        @include widthAndHeight(220px, 40px);
         border-radius: 4px;
         @include font(16px, 400, rgba(0, 0, 0), 40px);
         text-align: center;
@@ -275,6 +312,7 @@ getVipConfigList();
   padding: 40px 24px 28px 24px;
 }
 .es-vip-price {
+  height: 60px;
   margin: 0 auto 16px;
 }
 .es-vip-module__title {
@@ -291,9 +329,16 @@ getVipConfigList();
   margin-bottom: 10px;
   @include flex(center, space-between, nowrap);
   img {
-    @include widthAndHeight(18px, 18px);
+    @include widthAndHeight(15px, 15px);
     flex: 0;
-    margin-right: 5px;
+    margin-right: 10px;
+  }
+  span {
+    display: inline-block;
+    @include widthAndHeight(15px, 15px);
+    @include flex(center, center, nowrap);
+    @include font(14px, 400, rgba(0, 0, 0, 0.26), 22px);
+    margin-right: 10px;
   }
   div {
     @include flex(center, flex-start, nowrap);

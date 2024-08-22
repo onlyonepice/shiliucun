@@ -3,37 +3,43 @@
   <div v-loading="loading" :class="ns.b()">
     <!-- 招标分析 -->
     <div :class="ns.b('filter')">
-      <Select
-        title="招标内容"
-        :options="contentList"
-        valueKey="id"
-        labelKey="paramDesc"
-        :defaultValue="searchParams.contentDict"
-        @triggerForm="handleTriggerForm"
-        @on-change="(val) => handleChange(val, 'contentDict')"
-      />
-      <Select
-        title="发布日期"
-        :options="dateList"
-        valueKey="paramValue"
-        labelKey="paramDesc"
-        :defaultValue="searchParams.releaseTime"
-        @triggerForm="handleTriggerForm"
-        @on-change="(val) => handleChange(val, 'releaseTime')"
-      />
-      <Select
-        title="招标地区"
-        :options="regionList"
-        valueKey="paramValue"
-        labelKey="paramDesc"
-        :defaultValue="searchParams.partition"
-        @triggerForm="handleTriggerForm"
-        @on-change="(val) => handleChange(val, 'partition')"
-      />
+      <div :class="ns.be('top', 'left')">
+        <Select
+          title="招标内容"
+          :options="contentList"
+          valueKey="id"
+          labelKey="paramDesc"
+          :defaultValue="searchParams.contentDict"
+          @triggerForm="handleTriggerForm"
+          @on-change="(val) => handleChange(val, 'contentDict')"
+        />
+        <Select
+          title="发布日期"
+          :options="dateList"
+          valueKey="paramValue"
+          labelKey="paramDesc"
+          :defaultValue="searchParams.releaseTime"
+          @triggerForm="handleTriggerForm"
+          @on-change="(val) => handleChange(val, 'releaseTime')"
+        />
+        <Select
+          title="招标地区"
+          :options="regionList"
+          valueKey="paramValue"
+          labelKey="paramDesc"
+          :defaultValue="searchParams.partition"
+          @triggerForm="handleTriggerForm"
+          @on-change="(val) => handleChange(val, 'partition')"
+        />
+      </div>
+      <div :class="ns.be('top', 'right')">
+        <el-button type="primary" @click="exportResult">下载图片</el-button>
+      </div>
     </div>
-    <div :class="ns.b('btns')">
+    <EchartsTips title="仅含项目级招标，不含集采/框采" />
+    <!-- <div :class="ns.b('btns')">
       <el-button type="primary" @click="exportResult">下载图片</el-button>
-    </div>
+    </div> -->
     <div :class="ns.b('content')">
       <div
         v-if="!isEmptyData"
@@ -228,7 +234,7 @@ window.trackFunction("pc_Bidding_TimeAnalysis_click");
 
 .es-durationAnalysis {
   .es-durationAnalysis-filter {
-    display: flex;
+    @include flex(center, space-between, nowrap);
   }
 
   .es-durationAnalysis-btns {
@@ -244,6 +250,27 @@ window.trackFunction("pc_Bidding_TimeAnalysis_click");
     #eChart-duration-analysis {
       @include widthAndHeight(100%, 642px);
     }
+  }
+}
+.es-durationAnalysis-top__left {
+  width: 80%;
+  height: 32px;
+  @include flex(center, space-between, nowrap);
+  .es-durationAnalysis-top__title {
+    @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+    margin-right: 16px;
+    flex: 1;
+  }
+}
+.es-durationAnalysis-top__right {
+  height: 32px;
+  @include flex();
+  &::before {
+    content: "";
+    @include widthAndHeight(1px, 24px);
+    display: inline-block;
+    background: #dbdce2;
+    margin-right: 24px;
   }
 }
 </style>

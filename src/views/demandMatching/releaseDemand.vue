@@ -289,6 +289,28 @@
           </div>
           <div
             :class="ns.be('content', 'infoDialog')"
+            style="display: flex; align-items: flex-start; height: auto"
+          >
+            <span>内容标签</span>
+            <Select
+              type="select"
+              :defaultValue="needData.tab"
+              :options="tabList"
+              :multiple="true"
+              labelKey="labelName"
+              valueKey="id"
+              @onChange="
+                (val) => {
+                  return onChangeNeed(val, 'tab');
+                }
+              "
+            />
+            <span :class="ns.b('add-tab')" @click="addTabDialog = true"
+              >添加标签</span
+            >
+          </div>
+          <div
+            :class="ns.be('content', 'infoDialog')"
             style="height: 79px; align-items: flex-start"
           >
             <span required>需求描述</span>
@@ -328,28 +350,7 @@
             </div>
           </div>
           <div class="hint">最多上传三张图片</div>
-          <div
-            :class="ns.be('content', 'infoDialog')"
-            style="display: flex; align-items: flex-start; height: auto"
-          >
-            <span>标签</span>
-            <Select
-              type="select"
-              :defaultValue="needData.tab"
-              :options="tabList"
-              :multiple="true"
-              labelKey="labelName"
-              valueKey="id"
-              @onChange="
-                (val) => {
-                  return onChangeNeed(val, 'tab');
-                }
-              "
-            />
-            <span :class="ns.b('add-tab')" @click="addTabDialog = true"
-              >添加标签</span
-            >
-          </div>
+
           <div class="btn-box">
             <el-button @click="backStep" style="margin-right: 231px"
               >上一步</el-button
@@ -399,7 +400,7 @@ import businessCard from "@/views/demandMatching/detail/components/businessCard.
 import NoChoseRadio from "@/assets/img/common/i-Report-radio-false.png";
 import HasChoseRadio from "@/assets/img/common/i-Report-radio-true.png";
 import UploadImg from "@/assets/img/common/upload-image.png";
-import { onMounted, ref, Ref, watch } from "vue";
+import { onMounted, ref, Ref, watch, onActivated } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
@@ -522,6 +523,9 @@ onMounted(() => {
   getNeedType();
   getRoleConfig();
 });
+onActivated(() => {
+  onGetUserInfo();
+});
 const onChangeNeed = (value: any, type: string) => {
   needData.value[type] = value;
   if (type === "type") {
@@ -565,21 +569,23 @@ const handleReleaseNeed = async () => {
   });
   needData.value.imageUrls = needData.value.imageUrls.join(",");
   needData.value.dhLabelDTOList = [{ id: needData.value.role }];
-  needData.value.tab.map((item) => {
-    if (typeof item === "number") {
-      needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({
-        id: item,
-      });
-    } else {
-      needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({
-        labelName: item,
-      });
-    }
-  });
+  needData.value.tab.length > 0 &&
+    needData.value.tab.map((item) => {
+      if (typeof item === "number") {
+        needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({
+          id: item,
+        });
+      } else {
+        needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({
+          labelName: item,
+        });
+      }
+    });
   const data = needData.value.id
     ? await updateNeedApi(needData.value)
     : await releaseNeedApi(needData.value);
   if (data.resp_code === 0) {
+    needData.value = {};
     ElMessage.success("提交发布成功");
     emits("success");
   }

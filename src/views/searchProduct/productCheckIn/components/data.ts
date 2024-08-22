@@ -85,6 +85,77 @@ export const step2Field = [
   },
 ];
 
+export const step2FieldVariable = [
+  {
+    label: "产品名称",
+    prop: "productName",
+    type: "input",
+    rules: [
+      {
+        required: true,
+        message: "请输入产品名称",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    label: "企业名称",
+    prop: "enterpriseName",
+    type: "autocomplete",
+    rules: [
+      {
+        required: true,
+        message: "请选择企业名称",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    label: "产品发布时间",
+    prop: "releaseTime",
+    type: "month",
+    rules: [
+      {
+        required: true,
+        message: "请选择产品发布时间",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    label: "产品说明书/产品文档",
+    prop: "specificationDocumentFileList",
+    type: "uploadField",
+    accept: ["pdf", "jpg", "jpeg"],
+    limit: 5,
+    btnText: "上传pdf/jpg文件",
+    size: 10,
+    rules: [
+      {
+        required: true,
+        message: "请上传图片",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    label: "产品介绍",
+    prop: "productIntroductionFile",
+    type: "uploadImgs",
+    accept: ["jpg", "jpeg", "png"],
+    limit: 10,
+    size: 10,
+    text: "上传1:1，格式jpg、png且不大于10M的图片，最多10张",
+    rules: [
+      {
+        required: true,
+        message: "请上传产品介绍图",
+        trigger: "change",
+      },
+    ],
+  },
+];
+
 export const step3Field = [
   {
     label: "产品型号",
@@ -151,7 +222,7 @@ export const step3Field = [
     prop: "nominalVoltageMin",
     prop1: "nominalVoltageMax",
     showProp: "nominalVoltage",
-    type: "inputs",
+    type: "numbers",
   },
   {
     label: "额定功率/kW",
@@ -265,7 +336,7 @@ export const step3FieldVariable = [
     prop: "dcVoltageRangeMin",
     prop1: "dcVoltageRangeMaX",
     showProp: "dcVoltageRange",
-    type: "inputs",
+    type: "numbers",
     required: true,
     rules: [
       {
@@ -309,13 +380,13 @@ export const step3FieldVariable = [
     label: "额定交流电压/V",
     prop: "ratedACVoltage",
     showProp: "ratedACVoltage",
-    type: "number",
+    type: "input",
   },
   {
     label: "额定交流电流/A",
     prop: "ratedAlternatingCurrent",
     showProp: "ratedAlternatingCurrent",
-    type: "number",
+    type: "input",
   },
   {
     label: "额定交流频率",

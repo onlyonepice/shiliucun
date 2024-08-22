@@ -12,9 +12,17 @@
       <el-table :data="mainData" style="width: 810px">
         <el-table-column label="产品名称" prop="name" />
         <el-table-column label="企业名称" prop="enterprise" min-width="120px" />
-        <el-table-column label="产品白底图" width="110px">
+        <el-table-column
+          label="产品白底图"
+          width="110px"
+          v-if="choseTabs === 0"
+        >
           <template #default="scope">
-            <div @click="handleViewImages(scope.row.image)" class="table-image">
+            <div
+              v-if="scope.row.image && scope.row.image.length > 0"
+              @click="handleViewImages(scope.row.image)"
+              class="table-image"
+            >
               <img class="image" :src="fileUrl + scope.row.image[0]" />
               <div v-if="scope.row.image.length > 1" class="image-marck">
                 +{{ scope.row.image.length - 1 }}
@@ -104,7 +112,12 @@
           </div>
           <div :class="ns.b('product-info')">
             <div :class="ns.b('product-info-left')">
-              <img :src="fileUrl + detailsData.image[0]" alt="" />
+              <img
+                v-if="detailsData.image && detailsData.image.length > 0"
+                :src="fileUrl + detailsData.image[0]"
+                alt=""
+              />
+              <EmptyProduct v-else size="120px" />
             </div>
             <div :class="ns.b('product-info-right')">
               <div :class="ns.b('product-info-title')">
@@ -165,7 +178,9 @@
                   "
                 >
                   {{
-                    detailsData.models[index][stepField[scope.$index].showProp]
+                    detailsData.models[index][
+                      stepField[scope.$index].showProp
+                    ] || "-"
                   }}
                 </div>
                 <div v-if="stepField[scope.$index].multiple">
@@ -276,6 +291,7 @@ function onSettlement() {
   router.push("/searchProductProductCheckIn");
 }
 async function handelViewAttribute(row) {
+  tableField.value = [];
   const { resp_code, datas } = await getProductDetailsApi({
     id: row.id,
     productType: tabsList.value[choseTabs.value].code,
@@ -284,7 +300,6 @@ async function handelViewAttribute(row) {
     detailsData.value = datas;
   }
   stepField.value = choseTabs.value === 0 ? step3Field : step3FieldVariable;
-  console.log("==============", stepField.value);
   stepField.value.forEach((item) => {
     tableField.value.push({
       label: item.label,
@@ -337,12 +352,13 @@ function handleCurrentChange(val: number) {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
+      text-align: left;
     }
     .table-image {
       width: 80px;
       height: 80px;
       position: relative;
-      cursor: pointer;
+      cursor: zoom-in;
       @include flex(center, center);
       .image {
         max-width: 80px;

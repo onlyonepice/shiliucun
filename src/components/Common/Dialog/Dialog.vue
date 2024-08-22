@@ -13,6 +13,7 @@
       :src="CancelIcon"
       @click="handleClose(false)"
       alt=""
+      v-if="showClose"
     />
     <slot name="content" />
     <template #footer v-if="showFoot">
@@ -42,6 +43,7 @@ const props = defineProps({
   height: { type: String, default: "" },
   showFoot: { type: Boolean, default: true },
   appendToBody: { type: Boolean, default: true },
+  showClose: { type: Boolean, default: true },
 });
 watch(
   () => props.visible,

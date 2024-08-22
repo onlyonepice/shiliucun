@@ -130,7 +130,7 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { ref, watch, reactive } from "vue";
-import { step2Field } from "./data";
+import { step2Field, step2FieldVariable } from "./data";
 import { ElMessage } from "element-plus";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
@@ -168,11 +168,33 @@ const prop = defineProps({
     type: Object,
     default: null,
   },
+  productType: {
+    type: String,
+    default: "INDUSTRY_ENERGY_STORAGE",
+  },
 });
+
+const { fileUrl } = useUserStoreHook().$state;
+const formField = ref(null);
+const ns = useNamespace("step2");
+const showBigImgList = ref([]);
+const showBig = ref(false);
+const formRef = ref(null);
+const form = ref<any>({
+  enterpriseId: null,
+  enterpriseName: null,
+});
+
+const emits = defineEmits(["next", "back", "saveDraft"]);
 watch(
   () => prop.draftData,
   () => {
-    if (prop.draftData) {
+    if (prop.draftData && formField.value !== null) {
+      if (prop.productType === "INDUSTRY_ENERGY_STORAGE") {
+        formField.value = step2Field;
+      } else {
+        formField.value = step2FieldVariable;
+      }
       for (const key in prop.draftData) {
         formField.value.forEach((item) => {
           if (item.prop === key) {
@@ -187,20 +209,18 @@ watch(
     immediate: true,
   },
 );
-
-const { fileUrl } = useUserStoreHook().$state;
-const formField = ref(step2Field);
-const ns = useNamespace("step2");
-const showBigImgList = ref([]);
-const showBig = ref(false);
-const formRef = ref(null);
-const form = ref<any>({
-  enterpriseId: null,
-  enterpriseName: null,
-});
-
-const emits = defineEmits(["next", "back", "saveDraft"]);
-
+watch(
+  () => prop.productType,
+  (val) => {
+    console.log(val);
+    if (val === "INDUSTRY_ENERGY_STORAGE") {
+      formField.value = step2Field;
+    } else {
+      formField.value = step2FieldVariable;
+    }
+  },
+  { immediate: true },
+);
 // 校验文件
 function beforeAvatarUpload(rawFile, { accept, size }) {
   if (!accept.includes(getFileType(rawFile.name))) {
