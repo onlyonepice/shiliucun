@@ -229,7 +229,7 @@ const modules = [Controller, Autoplay, Navigation, Pagination];
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 
 const autoplay: any = ref({
-  delay: 90000,
+  delay: 3000,
   pauseOnMouseEnter: false,
   disableOnInteraction: false,
 });
