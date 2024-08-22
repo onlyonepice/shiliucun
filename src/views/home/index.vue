@@ -107,6 +107,7 @@
                 <div
                   v-if="index >= i * 18 && index < (i + 1) * 18"
                   :class="ns.b('enterpriseItem')"
+                  @click="handleGoEnterpriseDetails(item)"
                 >
                   <img
                     :key="item"
@@ -334,6 +335,13 @@ function onDemandHallTitle() {
 
 function onReportWhitePaper() {
   router.push("/reportWhitePaper");
+}
+
+function handleGoEnterpriseDetails(row) {
+  window.open(
+    `${VITE_INDUSTRIALMAP_URL}/home?enterpriseId=${row.id}`,
+    "_blank",
+  );
 }
 
 function onFunctionNav(row) {
@@ -586,6 +594,7 @@ getFrontSelectList();
         flex-wrap: wrap;
         .es-home-enterpriseItem {
           padding: 16px;
+          cursor: pointer;
           margin-top: 8px;
           margin-left: 8px;
           border-radius: 8px;
@@ -593,6 +602,10 @@ getFrontSelectList();
           background: #ffffff;
           border: 1px solid #dbdce2;
           @include widthAndHeight(calc(100% / 6 - 8px * 5 / 6), 128px);
+
+          // &:hover {
+          //   box-shadow: 0px 4px 10px 0px rgba(139, 139, 139, 0.1);
+          // }
 
           img {
             max-width: 100%;
