@@ -18,7 +18,9 @@ export const useUserStore = defineStore({
     token: "", // 用户token 用于判断用户登录还是退出 通过watch监听
     fileUrl: "", // 文件路径
     imgUrl: {}, // i-report报告缓存
-    userInfo: {}, // 用户信息
+    userInfo: {
+      roles: [],
+    }, // 用户信息
     accountInfo: {}, // account用户信息
     publicKey: "", // 加密密钥 用于监听
     openLoginVisible: false, // 打开登录弹窗

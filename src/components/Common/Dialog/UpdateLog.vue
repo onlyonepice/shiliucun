@@ -9,9 +9,9 @@
   >
     <img :class="ns.b('bg')" :src="UpdateLogBg" alt="" />
     <p :class="ns.b('title')">发现新版本</p>
-    <div :class="ns.b('version')">V{{ updateInfo.version }}</div>
+    <div :class="ns.b('version')">{{ updateInfo.version }}</div>
     <el-scrollbar height="320px" :class="ns.b('content')">
-      <div v-html="updateInfo.content" />
+      <div v-html="content" />
     </el-scrollbar>
     <el-button
       type="primary"
@@ -27,21 +27,18 @@ import { Ref, ref, watch } from "vue";
 import UpdateLogBg from "@/assets/img/common/update-log-bg.png";
 import { getUpdateLogApi } from "@/api/home";
 import useNamespace from "@/utils/nameSpace";
+import { useUserStore } from "@/store/modules/user";
 const ns = useNamespace("updateLog");
 const dialogVisible: Ref<boolean> = ref(false);
 const updateInfo: Ref<any> = ref({}); // 更新日志
+const content: Ref<string> = ref(""); // 更新日志
 // const emits = defineEmits(["onHandleClose"]);
-const props = defineProps({
-  visible: {
-    type: Boolean,
-    default: false,
-  },
-});
 watch(
-  () => props.visible,
+  () => useUserStore().$state.token,
   (val) => {
-    val && getUpdateLog();
+    val !== "" && getUpdateLog();
   },
+  { immediate: true },
 );
 // 获取更新日志
 function getUpdateLog() {
@@ -50,7 +47,12 @@ function getUpdateLog() {
       if (res.datas === null) {
         dialogVisible.value = false;
       } else {
+        console.log(useUserStore().fileUrl);
         dialogVisible.value = true;
+        content.value = res.datas.content.replace(
+          /img src="/g,
+          `img src="${useUserStore().fileUrl}`,
+        );
         updateInfo.value = res.datas;
       }
     }

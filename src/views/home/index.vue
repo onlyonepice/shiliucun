@@ -196,6 +196,7 @@
       </div>
     </div>
   </div>
+  <UpdateLog />
 </template>
 
 <script lang="ts" setup>
