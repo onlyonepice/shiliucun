@@ -74,6 +74,23 @@ export const updateCompanyName = (params) => {
     },
   );
 };
+// 查询明星企业
+export const frontSelectList = () => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "post",
+    `/eesa-industrial-map/tAd/front/V1.0/frontSelectList`,
+    {
+      data: { regionCodes: ["156"], searchBox: "", sysDictIds: [] },
+    },
+  );
+};
+// 需求大厅
+export const getHomePage = () => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    "/eesa-data-center/need/need/openApi/v1.0/homePage",
+  );
+};
 
 // 更新日志
 export const getUpdateLogApi = () => {

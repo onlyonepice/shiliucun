@@ -154,11 +154,15 @@ function saveDraft(formData) {
       data.energyStorageInverterModels = data.models;
     }
     delete data.models;
-    productCheckInSaveOrUpdateApi(data).then(({ resp_code, datas }) => {
-      id.value = datas;
-      loading.value = false;
-      resp_code === 0 && ElMessage.success("保存成功");
-    });
+    productCheckInSaveOrUpdateApi(data)
+      .then(({ resp_code, datas }) => {
+        id.value = datas;
+        loading.value = false;
+        resp_code === 0 && ElMessage.success("保存成功");
+      })
+      .catch(() => {
+        loading.value = false;
+      });
   } catch (e) {
     loading.value = false;
     console.error(e);
@@ -191,14 +195,18 @@ function handleSubmit(formData) {
     ) {
       delete data.displayChannels;
     }
-    productCheckInSaveOrUpdateApi(data).then(({ resp_code }) => {
-      if (resp_code === 0) {
+    productCheckInSaveOrUpdateApi(data)
+      .then(({ resp_code }) => {
+        if (resp_code === 0) {
+          loading.value = false;
+          route.query.id ? router.go(-1) : router.push("homePersonal?id=6");
+        } else {
+          loading.value = false;
+        }
+      })
+      .catch(() => {
         loading.value = false;
-        route.query.id ? router.go(-1) : router.push("homePersonal?id=6");
-      } else {
-        ElMessage.error("产品上传失败");
-      }
-    });
+      });
   } catch (e) {
     console.error(e);
     loading.value = false;
