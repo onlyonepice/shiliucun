@@ -38,6 +38,7 @@ watch(
   (val) => {
     val !== "" && getUpdateLog();
   },
+  { immediate: true },
 );
 // 获取更新日志
 function getUpdateLog() {

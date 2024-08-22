@@ -56,7 +56,6 @@
     :visible="useUserStore().$state.showNewUserVip"
     @onHandleClose="useUserStore().$state.showNewUserVip = false"
   />
-  <UpdateLog />
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, Ref, computed, watch } from "vue";
@@ -126,7 +125,6 @@ watch(useUserStore().$state, (val: any) => {
       showMembersBuy.value = false;
     }, 500);
   }
-  console.log(val.token);
 
   val.publicKey !== "" &&
     useUserStore().$state.fileUrl === "" &&
