@@ -316,7 +316,7 @@
             <span required>需求描述</span>
             <Select
               type="input"
-              :maxlength="150"
+              :maxlength="500"
               specialType="textarea"
               :defaultValue="needData.description"
               @onChange="
