@@ -2,7 +2,7 @@ export default {
   path: "/calculation",
   name: "Calculation",
   components: {
-    default: () => import("@/views/calculation/index.vue"),
+    default: () => import("@/views/calculate/calculateBasic/index.vue"),
   },
   meta: {
     title: "工商业测算",
@@ -12,7 +12,7 @@ export default {
       path: "/calculationLite",
       name: "CalculationLite",
       components: {
-        default: () => import("@/views/calculation/lite/index.vue"),
+        default: () => import("@/views/calculate/calculateLite/index.vue"),
       },
       meta: {
         title: "工商业测算Lite版",
@@ -22,7 +22,7 @@ export default {
       path: "/calculationBasic",
       name: "CalculationBasic",
       components: {
-        default: () => import("@/views/calculation/basic/index.vue"),
+        default: () => import("@/views/calculate/calculateBasic/index.vue"),
       },
       meta: {
         title: "工商业测算Basic版",

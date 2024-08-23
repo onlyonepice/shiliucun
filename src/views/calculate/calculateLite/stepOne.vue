@@ -114,6 +114,7 @@ import { stepOneBasics, stepOneElectricity } from "./index";
 import ImageChoseIcon from "@/assets/img/common/image-chose-icon.png";
 import { getRegionColorApi, getTechnologyType_V2Api } from "@/api/calculation";
 const ns = useNamespace("liteStepOne");
+const emit = defineEmits(["onNext"]);
 const stepOneBasicsList: Ref<Array<any>> = ref(stepOneBasics);
 const regionList: Ref<Array<any>> = ref([]); // 地区列表
 const basicInfo: Ref<any> = ref({
@@ -206,9 +207,9 @@ async function getElectricityTypeTwo() {
 function handleNext() {
   formRef.value.validate((valid) => {
     if (!valid) {
-      emit("onNext");
+      return false;
     } else {
-      return "true";
+      emit("onNext", basicInfo.value);
     }
   });
 }

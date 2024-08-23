@@ -217,8 +217,13 @@ const navList: Ref<Array<NavList>> = ref([
     children: [
       {
         id: 1,
-        text: "工商业测算",
-        path: "/calculate",
+        text: "工商业测算basic",
+        path: "/calculationBasic",
+      },
+      {
+        id: 2,
+        text: "工商业测算lite",
+        path: "/calculationLite",
       },
     ],
   },
@@ -500,7 +505,8 @@ const onLogin = () => {
     height: 56px;
     width: 88px;
     @include flex(flex-start, center, wrap);
-    @include padding(0, 16px, 0, 0);
+    // @include padding(0, 16px, 0, 0);
+    margin-right: 16px;
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease-out;
@@ -519,15 +525,22 @@ const onLogin = () => {
     }
 
     .es-pageNav-item--box {
-      height: 0;
       opacity: 0;
       transition: all 0.5s linear;
-      overflow: hidden;
+      div {
+        width: 150px;
+        transition: all 0.3s ease-in-out;
+        overflow: hidden;
+        height: 0;
+        opacity: 0;
+      }
     }
-
     &:hover .es-pageNav-item--box {
-      height: auto;
       opacity: 1;
+      & div {
+        height: auto;
+        opacity: 1;
+      }
     }
   }
 
@@ -539,7 +552,7 @@ const onLogin = () => {
   }
 }
 .es-pageNav-item--title {
-  @include widthAndHeight(auto, 56px);
+  @include widthAndHeight(100%, 56px);
   line-height: 56px;
   @include relative();
 }
