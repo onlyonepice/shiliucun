@@ -206,7 +206,7 @@ const titleSkip = ref({
 });
 // 查询参数
 const searchParamsA: Ref<any> = ref({
-  emcComprehensiveTaxRate: 87,
+  emcComprehensiveTaxRate: 13,
   ownersShare: 10,
   dividedByInvestors: 90,
 });
@@ -541,14 +541,14 @@ async function onAnalysis(data: any, type: string) {
     searchParamsA.value.annualDays = 300;
     searchParamsA.value.bankRate = "5%";
     searchParamsA.value.calculationPeriod = "10年";
-    searchParamsA.value.emcComprehensiveTaxRate = 87;
+    searchParamsA.value.emcComprehensiveTaxRate = 13;
   } else {
     titleB.value = data.regionName;
     searchParamsB.value = Object.assign(searchParamsB.value, cloneDeep(data));
     searchParamsB.value.annualDays = 300;
     searchParamsB.value.bankRate = "5%";
     searchParamsB.value.calculationPeriod = "10年";
-    searchParamsB.value.emcComprehensiveTaxRate = 87;
+    searchParamsB.value.emcComprehensiveTaxRate = 13;
   }
   nextTick(() => {
     showInvestment.value = true;
