@@ -183,3 +183,87 @@ export const stepOneElectricity = [
     ],
   },
 ];
+
+// 第二步
+export const stepTwoCapacity = [
+  {
+    type: "input",
+    prop: "amount",
+    title: "设备数量",
+    inputText: "台",
+    rules: [
+      {
+        required: true,
+        message: "请输入设备数量",
+        trigger: "change",
+      },
+    ],
+  },
+];
+
+export const stepTwoCooperate = [
+  {
+    type: "select",
+    prop: "investmentModel",
+    title: "投资模式",
+    options: [
+      {
+        label: "EMC合同能源管理",
+        value: 1,
+      },
+      {
+        label: "业主自投",
+        value: 2,
+      },
+    ],
+    rules: [
+      {
+        required: true,
+        message: "请输入投资模式",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    type: "slider",
+    prop: "sharingRatio",
+    title: "分成比例",
+    sliderText: [],
+    rules: [
+      {
+        required: true,
+        message: "请输入分成比例",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    type: "input",
+    prop: "totalCost",
+    title: "系统初始投资",
+    inputText: "元/Wh",
+    rules: [
+      {
+        required: true,
+        message: "请输入系统初始投资",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    type: "radio",
+    prop: "isFinance",
+    title: "是否融资",
+    options: [
+      { label: "是", value: 1 },
+      { label: "否", value: 0 },
+    ],
+    rules: [
+      {
+        required: true,
+        message: "请选择是否融资",
+        trigger: "change",
+      },
+    ],
+  },
+];

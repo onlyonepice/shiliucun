@@ -17,3 +17,11 @@ export const getTechnologyType_V2Api = (params) =>
       params,
     },
   );
+
+// 获取工商业测算-第二步数据
+export const getBiddingContentApi = (params) =>
+  http.request<responseType>(
+    "get",
+    "/eesa-data-center/electricity/calculate/front/v1.1/save",
+    { params },
+  );

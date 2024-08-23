@@ -24,9 +24,12 @@
     <div v-show="step === 1">
       <StepOne ref="stepOne" @onNext="onNext" />
     </div>
-
-    <StepTwo v-show="step === 2" />
-    <StepThree v-show="step === 3" />
+    <div v-show="step === 2">
+      <StepTwo />
+    </div>
+    <div v-show="step === 3">
+      <StepThree />
+    </div>
   </div>
 </template>
 
@@ -43,7 +46,7 @@ const stepList: Ref<Array<any>> = ref([
   { id: 2, name: "容量测算" },
   { id: 3, name: "经济分析" },
 ]);
-const step: Ref<number> = ref(1);
+const step: Ref<number> = ref(2);
 const stepOne: Ref<any> = ref(null); // 获取子组件-第一步
 // 点击下一步
 const onNextStep = () => {

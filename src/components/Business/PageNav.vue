@@ -13,17 +13,25 @@
           v-for="item in navList"
           :key="item.id"
           @mouseleave="onChoseLeave()"
-          @mouseenter="onChoseNav(item.id, item.path)"
           :class="[
             ns.bm('list', 'item'),
             optionChildren ? ns.bm('list--item', 'chose') : '',
           ]"
         >
-          <div :class="ns.bm('item', 'title')" @click="onToHome(item)">
+          <div
+            :class="ns.bm('item', 'title')"
+            @click="onToHome(item)"
+            @mouseenter="onChoseNav(item.id, item.path)"
+          >
             <span>{{ item.text }}</span>
             <div :class="[ns.b('underline')]" />
           </div>
-          <div :class="ns.bm('item', 'box')">
+          <div
+            :class="[
+              ns.bm('item', 'box'),
+              optionChildren ? ns.bm('item-box', 'hidden') : '',
+            ]"
+          >
             <div v-for="_item in item.children" :key="_item.id">
               <div
                 :class="ns.bm('item', 'text')"
@@ -262,15 +270,13 @@ const onChoseNav = (id: number) => {
   choseNavId.value = id;
   choseExtra.value = true;
   choseExtraContent.value = true;
+  optionChildren.value = false;
 };
 // 选择子菜单
 const onChoseChildTab = (item: any) => {
   if (item.path.indexOf("http") !== -1) {
     optionChildren.value = true;
     onChoseLeave();
-    setTimeout(() => {
-      optionChildren.value = false;
-    }, 100);
     if (item.text === "行业数据库") {
       window.trackFunction("pc_IndustrialDatabase_click");
     }
@@ -327,9 +333,6 @@ const onChildrenPath = (path: string | Array<string>) => {
   if (route.path !== path || route.path !== path[0]) {
     router.push(Array.isArray(path) ? path[0] : path);
     onChoseLeave();
-    setTimeout(() => {
-      optionChildren.value = false;
-    }, 100);
   }
 };
 // 监听路由改变
@@ -525,22 +528,23 @@ const onLogin = () => {
     }
 
     .es-pageNav-item--box {
-      opacity: 0;
       transition: all 0.5s linear;
       div {
-        width: 150px;
+        width: 0;
         transition: all 0.3s ease-in-out;
         overflow: hidden;
-        height: 0;
         opacity: 0;
       }
     }
     &:hover .es-pageNav-item--box {
-      opacity: 1;
       & div {
-        height: auto;
+        width: 150px;
         opacity: 1;
       }
+    }
+    .es-pageNav-item-box--hidden {
+      opacity: 0 !important;
+      height: 0 !important;
     }
   }
 
@@ -548,6 +552,9 @@ const onLogin = () => {
     .es-pageNav-item--box {
       height: 0 !important;
       opacity: 0 !important;
+    }
+    .es-pageNav-underline {
+      width: 0 !important;
     }
   }
 }
