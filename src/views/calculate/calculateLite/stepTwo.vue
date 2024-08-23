@@ -38,6 +38,8 @@
           <p>{{ item.title }}</p>
           <span>{{ item.value }}</span>
         </div>
+        <!-- echarts表格 -->
+        <div />
         <h4 :class="ns.b('h4')">合作方案</h4>
         <el-form-item
           v-for="item in stepTwoCooperateList"
@@ -77,6 +79,7 @@
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { stepTwoCapacity, stepTwoCooperate } from "./index";
+// import { getBiddingContentApi } from "@/api/calculation";
 const ns = useNamespace("liteStepTwo");
 const stepTwoCooperateList: Ref<Array<any>> = ref(stepTwoCooperate);
 const descList: Ref<Array<any>> = ref([
@@ -136,6 +139,7 @@ function onAreaChange(val: any, prop: string) {
   const _basicInfo = basicInfo.value;
   _basicInfo[prop] = val;
 }
+// 获取echarts数据
 </script>
 
 <style lang="scss">
