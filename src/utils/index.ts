@@ -123,3 +123,17 @@ export const exportImg = (type = "png", downLoadName: string, picInfo) => {
       });
   });
 };
+
+// 强制保留两位小数
+export function formatNumberWithTwoDecimals(number) {
+  // 使用 Number() 将输入转换为数字类型
+  const parsedNumber = Number(number);
+  // 如果是 NaN 或者 Infinity，返回原始输入
+  if (isNaN(parsedNumber) || !isFinite(parsedNumber)) {
+    return number;
+  }
+  // 使用 toFixed 获取两位小数，再转换为字符串
+  const formattedNumber = parsedNumber.toFixed(2).toString();
+  // 返回格式化后的字符串
+  return formattedNumber;
+}

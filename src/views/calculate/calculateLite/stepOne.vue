@@ -45,6 +45,8 @@
           :inputText="item.inputText"
           width="100%"
           :options="item.options"
+          :controls="item.controls"
+          :precision="item.precision"
           :valueKey="item.valueKey ? item.valueKey : 'value'"
           :labelKey="item.labelKey ? item.labelKey : 'label'"
           @onChange="
@@ -64,7 +66,8 @@
       >
       <img
         :src="
-          'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/' + choseImgSure
+          'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/' +
+          choseImgSure.src
         "
         alt=""
       />
@@ -83,14 +86,14 @@
         <div
           :class="[
             ns.be('image', 'list'),
-            choseImg === item.src ? ns.bm('image', 'active') : '',
+            choseImg.src === item.src ? ns.bm('image', 'active') : '',
           ]"
           v-for="item in imgList"
           :key="item.chartId"
-          @click="choseImg = item.src"
+          @click="choseImg = item"
         >
           <img
-            v-if="choseImg === item.src"
+            v-if="choseImg.src === item.src"
             :class="ns.b('image-icon')"
             :src="ImageChoseIcon"
             alt=""
@@ -119,15 +122,20 @@ const stepOneBasicsList: Ref<Array<any>> = ref(stepOneBasics);
 const regionList: Ref<Array<any>> = ref([]); // 地区列表
 const basicInfo: Ref<any> = ref({
   projectName: "",
-  regionName: "",
-  electricityTypeOneName: "",
+  region: "",
+  enterpriseName: "",
+  annualElectricityConsumption: null,
+  transformerCapacity: null,
+  photovoltaicInstalledCapacity: "",
+  electricityUsageType1: "",
   transformerInformation: 2,
   industry: "轻工业",
+  chartId: null,
 });
 const formRef = ref(); // 表单
 const imgList: Ref<Array<any>> = ref([]); // 图片列表
-const choseImgSure: Ref<string> = ref(""); // 选中的图片
-const choseImg: Ref<string> = ref(""); // 选中的图片
+const choseImgSure: Ref<any> = ref({}); // 选中的图片
+const choseImg: Ref<any> = ref({}); // 选中的图片
 const imgDialog: Ref<boolean> = ref(false); // 图片弹窗
 watch(
   () => basicInfo.value.industry,
@@ -139,24 +147,31 @@ watch(
             _item.label === val && (imgList.value = _item.list);
           });
       });
-    choseImg.value = imgList.value[0].src;
-    choseImgSure.value = imgList.value[0].src;
+    choseImg.value = imgList.value[0];
+    choseImgSure.value = imgList.value[0];
   },
   {
     immediate: true,
   },
+);
+watch(
+  () => choseImgSure.value,
+  (val) => {
+    basicInfo.value.chartId = val.chartId;
+  },
+  { immediate: true },
 );
 // 获取地区数据
 async function getRegionColor() {
   const { datas, resp_code } = await getRegionColorApi();
   if (resp_code === 0) {
     regionList.value = datas;
-    basicInfo.value.regionName = datas[0].regionName;
-    basicInfo.value.electricityTypeOneName =
-      datas[0].reInvestmentElectricityType[0].paramName;
+    basicInfo.value.region = datas[0].regionName;
+    basicInfo.value.electricityUsageType1 =
+      datas[0].reInvestmentElectricityType[1].paramName;
     stepOneBasicsList.value.map((item) => {
-      item.prop === "regionName" && (item.options = datas);
-      item.prop === "electricityTypeOneName" &&
+      item.prop === "region" && (item.options = datas);
+      item.prop === "electricityUsageType1" &&
         (item.options = datas[0].reInvestmentElectricityType);
     });
     getElectricityTypeTwo();
@@ -167,11 +182,11 @@ function onAreaChange(val: any, prop: string) {
   const _basicInfo = basicInfo.value;
   const _regionList = regionList.value;
   _basicInfo[prop] = val;
-  if (prop === "regionName") {
+  if (prop === "region") {
     _regionList.map((item) => {
-      if (item.prop === "electricityTypeOneName") {
+      if (item.prop === "electricityUsageType1") {
         item.options = item.reInvestmentElectricityType;
-        _basicInfo.electricityTypeOneName =
+        _basicInfo.electricityUsageType1 =
           item.reInvestmentElectricityType[0].paramName;
       }
     });
@@ -189,17 +204,17 @@ function onHandleClose(type: boolean) {
 }
 // 获取用电类型2
 async function getElectricityTypeTwo() {
-  const { electricityTypeOneName, regionName } = basicInfo.value;
+  const { electricityUsageType1, region } = basicInfo.value;
   const { datas, resp_code } = await getTechnologyType_V2Api({
-    electricityTypeOneName,
-    regionName,
+    electricityTypeOneName: electricityUsageType1,
+    regionName: region,
   });
   if (resp_code === 0) {
-    basicInfo.value.electricityTypeTwoName = datas[0].paramName;
-    basicInfo.value.tariffLevelId = datas[0].voltageLevel[0].paramName;
+    basicInfo.value.electricityUsageType2 = datas[0].paramName;
+    basicInfo.value.voltageLevel = datas[0].voltageLevel[0].paramName;
     stepOneBasicsList.value.map((item) => {
-      item.prop === "electricityTypeTwoName" && (item.options = datas);
-      item.prop === "tariffLevelId" && (item.options = datas[0].voltageLevel);
+      item.prop === "electricityUsageType2" && (item.options = datas);
+      item.prop === "voltageLevel" && (item.options = datas[0].voltageLevel);
     });
   }
 }
@@ -209,7 +224,7 @@ function handleNext() {
     if (!valid) {
       return false;
     } else {
-      emit("onNext", basicInfo.value);
+      emit("onNext");
     }
   });
 }
@@ -219,7 +234,7 @@ onMounted(() => {
 });
 
 //]暴露方法
-defineExpose({ handleNext });
+defineExpose({ handleNext, basicInfo });
 </script>
 
 <style lang="scss" scoped>

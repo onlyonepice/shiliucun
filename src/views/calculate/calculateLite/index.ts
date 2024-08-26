@@ -18,7 +18,7 @@ export const stepOneBasics = [
   },
   {
     type: "select",
-    prop: "regionName",
+    prop: "region",
     title: "项目地区",
     options: [],
     valueKey: "regionName",
@@ -33,7 +33,7 @@ export const stepOneBasics = [
   },
   {
     type: "select",
-    prop: "electricityTypeOneName",
+    prop: "electricityUsageType1",
     title: "用电类型I",
     valueKey: "paramName",
     labelKey: "paramDesc",
@@ -48,7 +48,7 @@ export const stepOneBasics = [
   },
   {
     type: "select",
-    prop: "electricityTypeTwoName",
+    prop: "electricityUsageType2",
     title: "用电类型II",
     valueKey: "paramName",
     labelKey: "paramDesc",
@@ -64,7 +64,7 @@ export const stepOneBasics = [
 
   {
     type: "select",
-    prop: "tariffLevelId",
+    prop: "voltageLevel",
     title: "电压等级",
     valueKey: "paramName",
     labelKey: "paramDesc",
@@ -97,10 +97,12 @@ export const stepOneElectricity = [
     ],
   },
   {
-    type: "input",
+    type: "number",
     prop: "transformerCapacity",
     title: "变压器容量",
     inputText: "kVA",
+    controls: false,
+    precision: 0,
     rules: [
       {
         required: true,
@@ -110,10 +112,12 @@ export const stepOneElectricity = [
     ],
   },
   {
-    type: "input",
+    type: "number",
     prop: "annualElectricityConsumption",
     title: "年度用电量",
     inputText: "万度",
+    controls: false,
+    precision: 0,
     rules: [
       {
         required: true,
@@ -123,10 +127,12 @@ export const stepOneElectricity = [
     ],
   },
   {
-    type: "input",
+    type: "number",
     prop: "photovoltaicInstalledCapacity",
     title: "光伏装机量",
     inputText: "kWp",
+    controls: false,
+    precision: 0,
   },
   {
     type: "select",

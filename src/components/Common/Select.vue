@@ -50,11 +50,15 @@
         v-model="value"
         placeholder="请输入"
         controls-position="right"
+        :controls="controls"
         :disabled="props.disabled"
         :precision="precision"
         @focus="handleFocusVerifyLogin"
         @input="handleChange"
       />
+      <span v-if="inputText !== ''" class="select__input-desc">{{
+        inputText
+      }}</span>
     </div>
     <div v-if="props.type === 'cascader'" class="select__input select__content">
       <el-cascader
@@ -208,6 +212,19 @@ const props = defineProps({
   sliderText: {
     type: Array,
     default: () => [],
+  },
+  // 是否使用控制按钮
+  controls: {
+    type: Boolean,
+    default: true,
+  },
+  step: {
+    type: Number,
+    default: 1,
+  },
+  stepStrictly: {
+    type: Boolean,
+    default: true,
   },
 });
 const value: any = ref("" || []); // 选中值

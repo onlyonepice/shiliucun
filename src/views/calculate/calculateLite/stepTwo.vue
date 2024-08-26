@@ -39,7 +39,7 @@
           <span>{{ item.value }}</span>
         </div>
         <!-- echarts表格 -->
-        <div />
+        <div ref="echarts_calculateLite" id="echarts_calculateLite" />
         <h4 :class="ns.b('h4')">合作方案</h4>
         <el-form-item
           v-for="item in stepTwoCooperateList"
@@ -78,10 +78,23 @@
 <script lang="ts" setup>
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import { stepTwoCapacity, stepTwoCooperate } from "./index";
-// import { getBiddingContentApi } from "@/api/calculation";
+import { stepTwoCapacity, stepTwoCooperate, stepOneBasics } from "./index";
+import { getTechnologyContent_V2Api } from "@/api/calculation";
+import { ElectricityUsageEchartsOptions } from "./echarts";
+import * as echarts from "echarts";
 const ns = useNamespace("liteStepTwo");
 const stepTwoCooperateList: Ref<Array<any>> = ref(stepTwoCooperate);
+const echartsOption = ref(ElectricityUsageEchartsOptions());
+const props = defineProps({
+  filterInfo: {
+    type: Object,
+    default: () => {},
+  },
+  step: {
+    type: Number,
+    default: 1,
+  },
+});
 const descList: Ref<Array<any>> = ref([
   {
     title: "功率/容量：",
@@ -134,16 +147,84 @@ watch(
   },
   { immediate: true },
 );
+watch(
+  () => props.step,
+  (val) => {
+    console.log(val);
+    val === 2 && getElectricityTypeTwo();
+  },
+  { immediate: true },
+);
 // 修改地区，获取用电类型1
 function onAreaChange(val: any, prop: string) {
   const _basicInfo = basicInfo.value;
   _basicInfo[prop] = val;
 }
 // 获取echarts数据
+async function getElectricityTypeTwo() {
+  let _data: any = {};
+  Object.assign(_data, props.filterInfo);
+  stepOneBasics.map((item) => {
+    if (item.prop === "electricityUsageType1") {
+      _data.typeOneName = item.options.filter(
+        (v) => v.paramName === _data.electricityUsageType1,
+      )[0].paramDesc;
+    }
+    if (item.prop === "electricityUsageType2") {
+      _data.typeTwoName = item.options.filter(
+        (v) => v.paramName === _data.electricityUsageType2,
+      )[0].paramDesc;
+    }
+    if (item.prop === "voltageLevel") {
+      _data.tariffLevelName = item.options.filter(
+        (v) => v.paramName === _data.voltageLevel,
+      )[0].paramDesc;
+    }
+  });
+  const { datas, resp_code } = await getTechnologyContent_V2Api(_data);
+  if (resp_code === 0) {
+    console.log(datas);
+    echartsOption.value.series.forEach((item) => {
+      switch (item.name) {
+        case "充电":
+          item.data = datas.capacity.chargeList;
+          break;
+        case "放电":
+          item.data = datas.capacity.dischargeList;
+          break;
+        case "安装储能前用电负荷":
+          item.data = datas.capacity.powerList;
+          break;
+        case "安装储能后用电负荷":
+          item.data = datas.capacity.optimizedLoadList;
+          break;
+        case "安装储能后最大负荷":
+          item.markLine.data[0].yAxis = datas.capacity.optimizedMaxLoad;
+          break;
+        default:
+          break;
+      }
+    });
+    props.step === 2 && createECharts();
+  }
+}
+
+// 创建图表
+function createECharts() {
+  const myChart = echarts.init(
+    document.getElementById("echarts_calculateLite"),
+  );
+  myChart.setOption(echartsOption.value);
+}
 </script>
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+
+#echarts_calculateLite {
+  @include widthAndHeight(100%, 344px);
+  margin: 16px 0 24px;
+}
 .es-liteStepTwo {
   @include flex(flex-start, space-between, nowrap);
   margin: 24px 0 0;

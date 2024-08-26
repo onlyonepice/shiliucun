@@ -25,7 +25,7 @@
       <StepOne ref="stepOne" @onNext="onNext" />
     </div>
     <div v-show="step === 2">
-      <StepTwo />
+      <StepTwo :filterInfo="filterInfo" :step="step" />
     </div>
     <div v-show="step === 3">
       <StepThree />
@@ -46,21 +46,22 @@ const stepList: Ref<Array<any>> = ref([
   { id: 2, name: "容量测算" },
   { id: 3, name: "经济分析" },
 ]);
-const step: Ref<number> = ref(2);
+const step: Ref<number> = ref(1);
 const stepOne: Ref<any> = ref(null); // 获取子组件-第一步
+const filterInfo: Ref<any> = ref({}); // 筛选项数据
 // 点击下一步
 const onNextStep = () => {
   if (step.value === 1) {
     stepOne.value.handleNext();
+    filterInfo.value = Object.assign(filterInfo.value, stepOne.value.basicInfo);
   } else {
+    step.value < 3 && step.value++;
     onNext();
   }
 };
 // 下一步增加步数
 const onNext = () => {
-  if (step.value < 3) {
-    step.value++;
-  }
+  step.value < 3 && step.value++;
 };
 </script>
 
