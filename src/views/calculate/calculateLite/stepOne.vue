@@ -233,7 +233,7 @@ onMounted(() => {
   getRegionColor();
 });
 
-//]暴露方法
+// 暴露方法
 defineExpose({ handleNext, basicInfo });
 </script>
 
@@ -254,31 +254,6 @@ defineExpose({ handleNext, basicInfo });
 }
 .es-liteStepOne-filter {
   @include flex(center, space-between, wrap);
-}
-.es-liteStepOne-filter__item {
-  @include flex(center, flex-start, nowrap);
-  margin-bottom: 16px;
-  span {
-    width: 70px;
-    margin-right: 16px;
-  }
-  span[required]::before {
-    content: "*"; /* 添加一个星号作为标识符 */
-    color: red; /* 可以根据需要设置颜色 */
-    display: inline-block;
-    margin-right: 4px;
-  }
-  span[required="false"]::before {
-    content: "";
-    width: 5px;
-    display: inline-block;
-    margin-right: 4px;
-  }
-  &:nth-of-type(2n) {
-    span {
-      margin-left: 24px;
-    }
-  }
 }
 .es-liteStepOne-imageBox {
   @include widthAndHeight(564px, 317px);
@@ -323,6 +298,9 @@ defineExpose({ handleNext, basicInfo });
 .es-liteStepOne-form {
   .el-form-item {
     width: 48%;
+  }
+  .el-form-item__label {
+    justify-content: flex-start;
   }
 }
 </style>

@@ -4,8 +4,9 @@
       <el-form
         ref="formRef"
         :model="basicInfo"
-        label-width="auto"
+        label-width="110px"
         :class="ns.b('form')"
+        label-position="right"
       >
         <h4 :class="ns.b('h4')">容量推荐</h4>
         <el-form-item
@@ -19,7 +20,7 @@
             :type="item.type"
             :defaultValue="basicInfo[item.prop]"
             :inputText="item.inputText"
-            width="268px"
+            width="100%"
             :options="item.options"
             :valueKey="item.valueKey ? item.valueKey : 'value'"
             :labelKey="item.labelKey ? item.labelKey : 'label'"
@@ -52,7 +53,7 @@
             :type="item.type"
             :defaultValue="basicInfo[item.prop]"
             :inputText="item.inputText"
-            width="268px"
+            width="100%"
             :options="item.options"
             :sliderText="item.sliderText"
             :valueKey="item.valueKey ? item.valueKey : 'value'"
@@ -85,6 +86,8 @@ import * as echarts from "echarts";
 const ns = useNamespace("liteStepTwo");
 const stepTwoCooperateList: Ref<Array<any>> = ref(stepTwoCooperate);
 const echartsOption = ref(ElectricityUsageEchartsOptions());
+const formRef = ref(); // 表单
+const emit = defineEmits(["onNext"]);
 const props = defineProps({
   filterInfo: {
     type: Object,
@@ -216,6 +219,17 @@ function createECharts() {
   );
   myChart.setOption(echartsOption.value);
 }
+function handleNext() {
+  formRef.value.validate((valid) => {
+    if (!valid) {
+      return false;
+    } else {
+      emit("onNext");
+    }
+  });
+}
+// 暴露方法
+defineExpose({ handleNext, basicInfo });
 </script>
 
 <style lang="scss">
@@ -270,6 +284,17 @@ function createECharts() {
   }
   span {
     @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+  }
+}
+</style>
+
+<style lang="scss">
+.es-liteStepTwo-form {
+  .el-form-item {
+    width: 49%;
+  }
+  .el-form-item__label {
+    justify-content: flex-start;
   }
 }
 </style>

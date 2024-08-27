@@ -77,12 +77,9 @@ const handleClearTap = () => {
 
     .icon_clear {
       @include widthAndHeight(20px, 20px);
-      @include absolute(1, 10px, 105px, none, none);
+      @include absolute(1, 50%, 15%, none, none);
+      transform: translate(-50%, -50%);
       cursor: pointer;
-
-      &:hover {
-        @include widthAndHeight(22px, 22px);
-      }
     }
   }
 

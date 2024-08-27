@@ -2,7 +2,9 @@
   <div :class="[ns.b(), 'es-commonPage']">
     <div :class="ns.b('title')">
       <h1>工商业测算Lite版</h1>
-      <el-button type="primary" @click="onNextStep">下一步</el-button>
+      <el-button type="primary" @click="onNextStep">{{
+        step === 3 ? "编辑项目" : "下一步"
+      }}</el-button>
     </div>
     <div :class="ns.b('step')">
       <template v-for="item in stepList" :key="item.id">
@@ -25,7 +27,12 @@
       <StepOne ref="stepOne" @onNext="onNext" />
     </div>
     <div v-show="step === 2">
-      <StepTwo :filterInfo="filterInfo" :step="step" />
+      <StepTwo
+        ref="stepTwo"
+        :filterInfo="filterInfo"
+        :step="step"
+        @onNext="onNext"
+      />
     </div>
     <div v-show="step === 3">
       <StepThree />
@@ -46,16 +53,23 @@ const stepList: Ref<Array<any>> = ref([
   { id: 2, name: "容量测算" },
   { id: 3, name: "经济分析" },
 ]);
-const step: Ref<number> = ref(1);
+const step: Ref<number> = ref(3);
 const stepOne: Ref<any> = ref(null); // 获取子组件-第一步
+const stepTwo: Ref<any> = ref(null); // 获取子组件-第二步
 const filterInfo: Ref<any> = ref({}); // 筛选项数据
 // 点击下一步
 const onNextStep = () => {
   if (step.value === 1) {
     stepOne.value.handleNext();
     filterInfo.value = Object.assign(filterInfo.value, stepOne.value.basicInfo);
+  } else if (step.value === 2) {
+    stepTwo.value.handleNext();
+    filterInfo.value = Object.assign(filterInfo.value, stepTwo.value.basicInfo);
   } else {
-    step.value < 3 && step.value++;
+    if (step.value === 3) {
+      return (step.value = 1);
+    }
+    step.value++;
     onNext();
   }
 };
