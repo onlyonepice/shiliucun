@@ -192,6 +192,24 @@ function onAreaChange(val: any, prop: string) {
     });
     getElectricityTypeTwo();
   }
+  const _data = basicInfo.value;
+  stepOneBasics.map((item) => {
+    if (item.prop === "electricityUsageType1") {
+      _data.typeOneName = item.options.filter(
+        (v) => v.paramName === _data.electricityUsageType1,
+      )[0].paramDesc;
+    }
+    if (item.prop === "electricityUsageType2") {
+      _data.typeTwoName = item.options.filter(
+        (v) => v.paramName === _data.electricityUsageType2,
+      )[0].paramDesc;
+    }
+    if (item.prop === "voltageLevel") {
+      _data.tariffLevelName = item.options.filter(
+        (v) => v.paramName === _data.voltageLevel,
+      )[0].paramDesc;
+    }
+  });
 }
 // 关闭弹窗
 function onHandleClose(type: boolean) {

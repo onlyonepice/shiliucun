@@ -244,10 +244,12 @@ export const stepTwoCooperate = [
     ],
   },
   {
-    type: "input",
+    type: "number",
     prop: "totalCost",
     title: "系统初始投资",
     inputText: "元/Wh",
+    controls: false,
+    precision: 0,
     rules: [
       {
         required: true,

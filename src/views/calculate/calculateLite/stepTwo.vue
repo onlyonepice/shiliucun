@@ -56,6 +56,8 @@
             width="100%"
             :options="item.options"
             :sliderText="item.sliderText"
+            :controls="item.controls"
+            :precision="item.precision"
             :valueKey="item.valueKey ? item.valueKey : 'value'"
             :labelKey="item.labelKey ? item.labelKey : 'label'"
             @onChange="
@@ -79,7 +81,7 @@
 <script lang="ts" setup>
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import { stepTwoCapacity, stepTwoCooperate, stepOneBasics } from "./index";
+import { stepTwoCapacity, stepTwoCooperate } from "./index";
 import { getTechnologyContent_V2Api } from "@/api/calculation";
 import { ElectricityUsageEchartsOptions } from "./echarts";
 import * as echarts from "echarts";
@@ -88,6 +90,7 @@ const stepTwoCooperateList: Ref<Array<any>> = ref(stepTwoCooperate);
 const echartsOption = ref(ElectricityUsageEchartsOptions());
 const formRef = ref(); // 表单
 const emit = defineEmits(["onNext"]);
+const step2Info: Ref<any> = ref({}); // 筛选项数据
 const props = defineProps({
   filterInfo: {
     type: Object,
@@ -115,7 +118,11 @@ const basicInfo: Ref<any> = ref({
   isFinance: 0,
   sharingRatio: 20,
   totalCost: null,
+  financeRatio: null, // 融资比例
+  financeRate: null, // 融资利率
+  financePeriod: null, // 融资年限
 });
+const filterInfoOut: Ref<any> = ref({}); // 筛选项数据
 const deviceInformation: Ref<Array<any>> = ref([
   {
     label: "设备单价",
@@ -153,40 +160,125 @@ watch(
 watch(
   () => props.step,
   (val) => {
-    console.log(val);
     val === 2 && getElectricityTypeTwo();
+    val === 2 && changeFilter();
   },
   { immediate: true },
 );
+// 修改筛选项的值
+function changeFilter() {
+  const {
+    investmentModel,
+    isFinance,
+    totalCost,
+    sharingRatio,
+    financeRatio,
+    financeRate,
+    financePeriod,
+  } = basicInfo.value;
+  filterInfoOut.value = {
+    capacity: step2Info.value.capacity,
+    cooperationPlan: {
+      investmentModel,
+      isFinance,
+      totalCost,
+      proportion: sharingRatio,
+      financeRatio,
+      financeRate,
+      financePeriod,
+    },
+    createdBy: step2Info.value.createdBy,
+    createdDate: step2Info.value.createdDate,
+    updatedBy: step2Info.value.updatedBy,
+    updatedDate: step2Info.value.updatedDate,
+  };
+}
 // 修改地区，获取用电类型1
 function onAreaChange(val: any, prop: string) {
   const _basicInfo = basicInfo.value;
   _basicInfo[prop] = val;
+  changeFilter();
+  if (prop === "amount") {
+    getElectricityTypeTwo();
+  }
+  if (prop === "isFinance" && val === 1) {
+    stepTwoCooperateList.value.push(
+      {
+        type: "number",
+        prop: "financeRatio",
+        title: "融资比例",
+        inputText: "%",
+        controls: false,
+        precision: 0,
+        rules: [
+          {
+            required: true,
+            message: "请输入系统初始投资",
+            trigger: "change",
+          },
+        ],
+      },
+      {
+        type: "number",
+        prop: "financeRate",
+        title: "融资利率",
+        inputText: "%",
+        controls: false,
+        precision: 0,
+        rules: [
+          {
+            required: true,
+            message: "请输入系统初始投资",
+            trigger: "change",
+          },
+        ],
+      },
+      {
+        type: "number",
+        prop: "financePeriod",
+        title: "融资年限",
+        inputText: "年",
+        controls: false,
+        precision: 0,
+        rules: [
+          {
+            required: true,
+            message: "请输入系统初始投资",
+            trigger: "change",
+          },
+        ],
+      },
+    );
+  }
+  if (prop === "isFinance" && val === 0) {
+    stepTwoCooperateList.value.splice(
+      stepTwoCooperateList.value.findIndex(
+        (item) => item.prop === "financePeriod",
+      ),
+      1,
+    );
+    stepTwoCooperateList.value.splice(
+      stepTwoCooperateList.value.findIndex(
+        (item) => item.prop === "financeRate",
+      ),
+      1,
+    );
+    stepTwoCooperateList.value.splice(
+      stepTwoCooperateList.value.findIndex(
+        (item) => item.prop === "financeRatio",
+      ),
+      1,
+    );
+  }
 }
 // 获取echarts数据
 async function getElectricityTypeTwo() {
-  let _data: any = {};
-  Object.assign(_data, props.filterInfo);
-  stepOneBasics.map((item) => {
-    if (item.prop === "electricityUsageType1") {
-      _data.typeOneName = item.options.filter(
-        (v) => v.paramName === _data.electricityUsageType1,
-      )[0].paramDesc;
-    }
-    if (item.prop === "electricityUsageType2") {
-      _data.typeTwoName = item.options.filter(
-        (v) => v.paramName === _data.electricityUsageType2,
-      )[0].paramDesc;
-    }
-    if (item.prop === "voltageLevel") {
-      _data.tariffLevelName = item.options.filter(
-        (v) => v.paramName === _data.voltageLevel,
-      )[0].paramDesc;
-    }
-  });
-  const { datas, resp_code } = await getTechnologyContent_V2Api(_data);
+  const { amount } = basicInfo.value;
+  const { datas, resp_code } = await getTechnologyContent_V2Api(
+    Object.assign(props.filterInfo, { capacity: { amount } }),
+  );
   if (resp_code === 0) {
-    console.log(datas);
+    step2Info.value = datas;
     echartsOption.value.series.forEach((item) => {
       switch (item.name) {
         case "充电":
@@ -229,7 +321,7 @@ function handleNext() {
   });
 }
 // 暴露方法
-defineExpose({ handleNext, basicInfo });
+defineExpose({ handleNext, filterInfoOut });
 </script>
 
 <style lang="scss">

@@ -57,16 +57,26 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref } from "vue";
+import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import Plan1 from "@/assets/img/calculate/calculateLite-step3-plan-1.png";
 import Plan2 from "@/assets/img/calculate/calculateLite-step3-plan-2.png";
-
 import Consult1 from "@/assets/img/calculate/calculateLite-step3-consult-1.png";
 import Consult2 from "@/assets/img/calculate/calculateLite-step3-consult-2.png";
 import Consult3 from "@/assets/img/calculate/calculateLite-step3-consult-3.png";
 import Consult4 from "@/assets/img/calculate/calculateLite-step3-consult-4.png";
+import { getTechnologyContent_V3Api } from "@/api/calculation";
 const ns = useNamespace("liteStepThree");
+const props = defineProps({
+  filterInfo: {
+    type: Object,
+    default: () => {},
+  },
+  step: {
+    type: Number,
+    default: 1,
+  },
+});
 const myProject: Ref<Array<any>> = ref([
   { title: "项目名称：", value: "1" },
   { title: "分成比例：", value: "1" },
@@ -127,6 +137,23 @@ const income20: Ref<Array<any>> = ref([
   { text: "业主总收益（万元）", value: "12", width: "182px" },
   { text: "业主平均收益（万元）", value: "12", width: "182px" },
 ]);
+watch(
+  () => props.step,
+  (val) => {
+    val === 3 && getReportContent();
+  },
+  { immediate: true },
+);
+// 获取报告内容
+async function getReportContent() {
+  let _data = {};
+  const { datas, resp_code } = await getTechnologyContent_V3Api(
+    Object.assign(props.filterInfo, { capacityMw: "233kWh", powerMw: "100kW" }),
+  );
+  if (resp_code === 0) {
+    console.log(datas);
+  }
+}
 </script>
 
 <style lang="scss">

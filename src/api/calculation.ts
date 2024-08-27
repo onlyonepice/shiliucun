@@ -25,3 +25,11 @@ export const getTechnologyContent_V2Api = (data) =>
     "/eesa-data-center/electricity/calculate/front/v1.1/save",
     { data },
   );
+
+// 获取工商业测算-第三步数据
+export const getTechnologyContent_V3Api = (data) =>
+  http.request<responseType>(
+    "post",
+    "/eesa-data-center/electricity/calculate/front/v1.1/generateReport",
+    { data },
+  );
