@@ -77,7 +77,7 @@ import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import Plan1 from "@/assets/img/calculate/calculateLite-step3-plan-1.png";
 import Plan2 from "@/assets/img/calculate/calculateLite-step3-plan-2.png";
-import AddWeChatPng from "@/assets/img/calculate/add-weCHat.png";
+import AddWeChatPng from "@/assets/img/calculate/add-weChat.png";
 import Consult1 from "@/assets/img/calculate/calculateLite-step3-consult-1.png";
 import Consult2 from "@/assets/img/calculate/calculateLite-step3-consult-2.png";
 import Consult3 from "@/assets/img/calculate/calculateLite-step3-consult-3.png";
