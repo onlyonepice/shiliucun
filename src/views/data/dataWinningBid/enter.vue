@@ -74,9 +74,9 @@ const tabList = ref([
     value: "scale",
   },
   {
-    name: "中标企业分析",
-    value: "enterprise",
-    code: "bidwin_company_click",
+    code: "centralized",
+    name: "企业集采入围",
+    value: "centralized",
   },
   {
     name: "应用场景分析",
@@ -89,9 +89,9 @@ const tabList = ref([
     code: "bidwin_scenes_click",
   },
   {
-    code: "centralized",
-    name: "企业集采入围",
-    value: "centralized",
+    name: "中标企业分析",
+    value: "enterprise",
+    code: "bidwin_company_click",
   },
 ]);
 
