@@ -18,7 +18,6 @@
         <p v-if="item.value === currentTab" class="active_line" />
       </div>
     </div>
-    <!-- <WinningBidPrice v-if="currentTab === 'price'" :formOptions="formOptions" /> -->
     <BidPriceNew v-if="currentTab === 'price'" :formOptions="formOptions" />
     <BidScale v-if="currentTab === 'scale'" :formOptions="formOptions" />
     <BidEnterprise
@@ -53,7 +52,6 @@ import {
 } from "@/api/data";
 import { ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
-// import WinningBidPrice from "./winningBidPrice/enter.vue"; //老版价格分析
 import BidPriceNew from "./winningBidPriceNew/enter.vue";
 import BidScale from "./winningBidScale/enter.vue";
 import BidReport from "./winningBidReport/enter.vue";
