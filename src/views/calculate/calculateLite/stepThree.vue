@@ -13,14 +13,25 @@
         <div v-for="item in planList" :key="item.title">
           <img :src="item.imgSrc" alt="" />
           <span>{{ item.desc }}</span>
-          <el-link type="primary" :underline="false">{{
-            item.linkText
-          }}</el-link>
+          <el-link
+            type="primary"
+            :underline="false"
+            :href="item.linkUrl"
+            :download="item.desc"
+            @click="
+              item.linkText === '免费咨询' ? (addWeChatDialog = true) : ''
+            "
+            >{{ item.linkText }}</el-link
+          >
         </div>
       </div>
       <h4 :class="ns.b('title')">项目咨询</h4>
       <div :class="ns.b('consult')">
-        <div v-for="item in consultList" :key="item.title">
+        <div
+          v-for="item in consultList"
+          :key="item.title"
+          @click="addWeChatDialog = true"
+        >
           <img :src="item.imgSrc" alt="" />
           <p>{{ item.text }}</p>
         </div>
@@ -54,6 +65,11 @@
       </div>
     </div>
   </div>
+  <AddWeChat
+    :visible="addWeChatDialog"
+    :src="AddWeChatPng"
+    @onHandleClose="addWeChatDialog = false"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -61,11 +77,15 @@ import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import Plan1 from "@/assets/img/calculate/calculateLite-step3-plan-1.png";
 import Plan2 from "@/assets/img/calculate/calculateLite-step3-plan-2.png";
+import AddWeChatPng from "@/assets/img/calculate/add-weCHat.png";
 import Consult1 from "@/assets/img/calculate/calculateLite-step3-consult-1.png";
 import Consult2 from "@/assets/img/calculate/calculateLite-step3-consult-2.png";
 import Consult3 from "@/assets/img/calculate/calculateLite-step3-consult-3.png";
 import Consult4 from "@/assets/img/calculate/calculateLite-step3-consult-4.png";
 import { getTechnologyContent_V3Api } from "@/api/calculation";
+// import { useRoute } from "vue-router";
+// const route = useRoute();
+const addWeChatDialog: Ref<boolean> = ref(false); // 加微信弹窗
 const ns = useNamespace("liteStepThree");
 const props = defineProps({
   filterInfo: {
@@ -78,18 +98,16 @@ const props = defineProps({
   },
 });
 const myProject: Ref<Array<any>> = ref([
-  { title: "项目名称：", value: "1" },
-  { title: "分成比例：", value: "1" },
-  { title: "项目地区：", value: "1" },
-  { title: "总开发成本：", value: "1" },
-  { title: "功率/容量：", value: "1" },
-  { title: "是否融资：", value: "1" },
-  { title: "投资模式：", value: "1" },
-  { title: "融资比例：", value: "1" },
-  { title: "用电类型：", value: "1" },
-  { title: "融资成本：", value: "1" },
-  { title: "电压等级：", value: "1" },
-  { title: "融资年限：", value: "1" },
+  { title: "项目名称：", value: "" },
+  { title: "项目地区：", value: "" },
+  { title: "功率/容量：", value: "" },
+  { title: "设备数量：", value: "" },
+  { title: "投资模式：", value: "" },
+  { title: "用电类型：", value: "" },
+  { title: "电压等级：", value: "" },
+  { title: "分成比例：", value: "" },
+  { title: "系统初始投资：", value: "" },
+  { title: "是否融资：", value: "" },
 ]);
 const planList: Ref<any[]> = ref([
   {
@@ -124,34 +142,82 @@ const consultList: Ref<any[]> = ref([
   },
 ]);
 const income15: Ref<Array<any>> = ref([
-  { text: "EIRR", value: "12", width: "120px" },
-  { text: "IRR", value: "12", width: "120px" },
-  { text: "回收年限", value: "12", width: "120px" },
-  { text: "业主总收益（万元）", value: "12", width: "182px" },
-  { text: "业主平均收益（万元）", value: "12", width: "182px" },
+  { type: "eirr", text: "EIRR", value: "0", width: "120px" },
+  { type: "irr", text: "IRR", value: "0", width: "120px" },
+  { type: "years", text: "回收年限", value: "0", width: "120px" },
+  { type: "profit", text: "业主总收益（万元）", value: "0", width: "182px" },
+  { type: "eirr", text: "业主平均收益（万元）", value: "0", width: "182px" },
 ]);
 const income20: Ref<Array<any>> = ref([
-  { text: "EIRR", value: "12", width: "120px" },
-  { text: "IRR", value: "12", width: "120px" },
-  { text: "回收年限", value: "12", width: "120px" },
-  { text: "业主总收益（万元）", value: "12", width: "182px" },
-  { text: "业主平均收益（万元）", value: "12", width: "182px" },
+  { type: "eirr", text: "EIRR", value: "0", width: "120px" },
+  { type: "irr", text: "IRR", value: "0", width: "120px" },
+  { type: "years", text: "回收年限", value: "0", width: "120px" },
+  { type: "profit", text: "业主总收益（万元）", value: "0", width: "182px" },
+  { type: "eirr", text: "业主平均收益（万元）", value: "0", width: "182px" },
 ]);
 watch(
   () => props.step,
   (val) => {
-    val === 3 && getReportContent();
+    if (val === 3) {
+      getReportContent();
+      changeFilter();
+    }
   },
   { immediate: true },
 );
+// 修改筛选项
+function changeFilter() {
+  const _data = props.filterInfo;
+  console.log("-=-=-===", _data);
+  myProject.value[0].value = _data.projectName;
+  myProject.value[1].value = _data.region;
+  myProject.value[2].value = `${_data.powerMw}kW / ${_data.capacityMw}kWh`;
+  myProject.value[3].value = _data.capacity.amount;
+  myProject.value[4].value =
+    _data.investmentModel === 1 ? "EMC合同能源管理" : "业主自投";
+  myProject.value[5].value = `${_data.typeOneName}-${_data.typeTwoName}`;
+  myProject.value[6].value = _data.tariffLevelName;
+  myProject.value[7].value = `业主${_data.cooperationPlan.proportion}% / 投资方${100 - _data.cooperationPlan.proportion}%`;
+  myProject.value[8].value = `${_data.cooperationPlan.totalCost}元/Wh`;
+  myProject.value[9].value = `${_data.cooperationPlan.isFinance === 0 ? "否" : "是"}`;
+  if (_data.cooperationPlan.isFinance === 1) {
+    myProject.value.push(
+      {
+        title: "融资比例：",
+        value: `${_data.cooperationPlan.financeRatio}%`,
+      },
+      {
+        title: "融资利率：",
+        value: `${_data.cooperationPlan.financeRate}%`,
+      },
+      {
+        title: "融资年限：",
+        value: `${_data.cooperationPlan.financePeriod}年`,
+      },
+    );
+  }
+}
 // 获取报告内容
 async function getReportContent() {
-  let _data = {};
+  let _amount = props.filterInfo.capacity.amount;
   const { datas, resp_code } = await getTechnologyContent_V3Api(
-    Object.assign(props.filterInfo, { capacityMw: "233kWh", powerMw: "100kW" }),
+    Object.assign(props.filterInfo, {
+      capacityMw: `${233 * _amount}kWh`,
+      powerMw: `${100 * _amount}kW`,
+    }),
   );
   if (resp_code === 0) {
-    console.log(datas);
+    planList.value[0].linkUrl = datas.report.url;
+    for (let index = 0; index < datas.report.revenueList.length; index++) {
+      const { eirr, irr, years, profit, paybackPeriod } =
+        datas.report.revenueList[index];
+      const _data = index === 0 ? income15.value : income20.value;
+      _data[0].value = `${(eirr * 100).toFixed(2)}%`;
+      _data[1].value = `${(irr * 100).toFixed(2)}%`;
+      _data[2].value = paybackPeriod.toFixed(2);
+      _data[3].value = (profit / 10000).toFixed(2);
+      _data[4].value = (profit / years / 10000).toFixed(2);
+    }
   }
 }
 </script>
@@ -174,6 +240,7 @@ async function getReportContent() {
   margin-bottom: 24px;
   div {
     width: 50%;
+    margin-bottom: 8px;
     span:nth-of-type(1) {
       @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
     }

@@ -24,7 +24,7 @@
       </template>
     </div>
     <div v-show="step === 1">
-      <StepOne ref="stepOne" @onNext="onNext" />
+      <StepOne ref="stepOne" @onNext="onNext" :filterInfo="filterInfo" />
     </div>
     <div v-show="step === 2">
       <StepTwo
@@ -41,12 +41,15 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref } from "vue";
+import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import StepOne from "./stepOne.vue";
 import StepTwo from "./stepTwo.vue";
 import StepThree from "./stepThree.vue";
 import IconSuccess from "@/assets/img/common/icon-success.png";
+import { getCheckLiteInfoApi } from "@/api/calculation";
+import { useRoute } from "vue-router";
+const route = useRoute();
 const ns = useNamespace("calculationLite");
 const stepList: Ref<Array<any>> = ref([
   { id: 1, name: "基本信息" },
@@ -63,6 +66,7 @@ const onNextStep = () => {
     stepOne.value.handleNext();
     filterInfo.value = Object.assign(filterInfo.value, stepOne.value.basicInfo);
   } else if (step.value === 2) {
+    stepTwo.value.changeFilter();
     stepTwo.value.handleNext();
     filterInfo.value = Object.assign(
       filterInfo.value,
@@ -80,6 +84,22 @@ const onNextStep = () => {
 const onNext = () => {
   step.value < 3 && step.value++;
 };
+watch(
+  () => route.query.id,
+  (val) => {
+    val && onCheckReport();
+  },
+  { immediate: true },
+);
+// 查询lite测算报告
+async function onCheckReport() {
+  const { datas, resp_code } = await getCheckLiteInfoApi({
+    id: route.query.id,
+  });
+  if (resp_code === 0) {
+    filterInfo.value = datas;
+  }
+}
 </script>
 
 <style lang="scss">

@@ -278,3 +278,12 @@ export function getMessageApi(params: any) {
     { params },
   );
 }
+
+// 查询我的项目列表
+export function getMyProjectListApi(data: any) {
+  return http.request<responseType>(
+    "post",
+    `/eesa-data-center/electricity/calculate/front/v1.1/findByUserId`,
+    { data },
+  );
+}

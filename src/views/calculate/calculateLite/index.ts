@@ -210,6 +210,7 @@ export const stepTwoCapacity = [
 export const stepTwoCooperate = [
   {
     type: "select",
+    show: true,
     prop: "investmentModel",
     title: "投资模式",
     options: [
@@ -232,6 +233,7 @@ export const stepTwoCooperate = [
   },
   {
     type: "slider",
+    show: true,
     prop: "sharingRatio",
     title: "分成比例",
     sliderText: [],
@@ -245,6 +247,7 @@ export const stepTwoCooperate = [
   },
   {
     type: "number",
+    show: true,
     prop: "totalCost",
     title: "系统初始投资",
     inputText: "元/Wh",
@@ -260,6 +263,7 @@ export const stepTwoCooperate = [
   },
   {
     type: "radio",
+    show: true,
     prop: "isFinance",
     title: "是否融资",
     options: [
@@ -270,6 +274,54 @@ export const stepTwoCooperate = [
       {
         required: true,
         message: "请选择是否融资",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    type: "number",
+    show: false,
+    prop: "financeRatio",
+    title: "融资比例",
+    inputText: "%",
+    controls: false,
+    precision: 0,
+    rules: [
+      {
+        required: true,
+        message: "请输入系统初始投资",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    type: "number",
+    show: false,
+    prop: "financeRate",
+    title: "融资利率",
+    inputText: "%",
+    controls: false,
+    precision: 0,
+    rules: [
+      {
+        required: true,
+        message: "请输入系统初始投资",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    type: "number",
+    show: false,
+    prop: "financePeriod",
+    title: "融资年限",
+    inputText: "年",
+    controls: false,
+    precision: 0,
+    rules: [
+      {
+        required: true,
+        message: "请输入系统初始投资",
         trigger: "change",
       },
     ],

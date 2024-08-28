@@ -50,6 +50,7 @@
           <collectionComponent v-if="choseTab === 4" />
           <orderComponent v-if="choseTab === 5" />
           <MyUploadsBox v-if="choseTab === 6" />
+          <MyProjectBox v-if="choseTab === 9" />
           <passwordComponent v-if="choseTab === 7" />
         </div>
       </div>
@@ -77,6 +78,8 @@ import Password from "@/assets/img/homePersonal/password.png";
 import PasswordChose from "@/assets/img/homePersonal/password-chose.png";
 import MyUploads from "@/assets/img/homePersonal/myUploads.png";
 import MyUploadsChose from "@/assets/img/homePersonal/myUploads-chose.png";
+import MyProject from "@/assets/img/homePersonal/myProject.png";
+import MyProjectChose from "@/assets/img/homePersonal/myProject-chose.png";
 import LogoutImg from "@/assets/img/homePersonal/logout.png";
 import MapIcon from "@/assets/img/common/map-logo.png";
 import ClassRoomIcon from "@/assets/img/common/classroom-logo.png";
@@ -88,6 +91,7 @@ import needComponent from "./components/need.vue";
 import orderComponent from "./components/order.vue";
 import passwordComponent from "./components/password.vue";
 import MyUploadsBox from "./components/myUploads.vue";
+import MyProjectBox from "./components/myProject.vue";
 const ns = useNamespace("homePersonal");
 const { VITE_INDUSTRIALMAP_URL, VITE_CLASSROOM_URL } = import.meta.env;
 const route = useRoute();
@@ -116,6 +120,7 @@ const tabList: Ref<Array<any>> = ref([
   { id: 1, text: "我的名片", iconChose: InfoChose, icon: Info },
   { id: 2, text: "我的企业", iconChose: CompanyChose, icon: Company },
   { id: 6, text: "我的产品", iconChose: MyUploadsChose, icon: MyUploads },
+  { id: 9, text: "我的项目", iconChose: MyProjectChose, icon: MyProject },
   { id: 3, text: "我的需求", iconChose: NeedChose, icon: Need },
   { id: 4, text: "我的收藏", iconChose: CollectionChose, icon: Collection },
   { id: 5, text: "我的订单", iconChose: OrderChose, icon: Order },

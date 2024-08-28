@@ -116,6 +116,9 @@ import useNamespace from "@/utils/nameSpace";
 import { stepOneBasics, stepOneElectricity } from "./index";
 import ImageChoseIcon from "@/assets/img/common/image-chose-icon.png";
 import { getRegionColorApi, getTechnologyType_V2Api } from "@/api/calculation";
+import { useUserStore } from "@/store/modules/user";
+import { useRoute } from "vue-router";
+const route = useRoute();
 const ns = useNamespace("liteStepOne");
 const emit = defineEmits(["onNext"]);
 const stepOneBasicsList: Ref<Array<any>> = ref(stepOneBasics);
@@ -131,6 +134,12 @@ const basicInfo: Ref<any> = ref({
   transformerInformation: 2,
   industry: "轻工业",
   chartId: null,
+});
+const props = defineProps({
+  filterInfo: {
+    type: Object,
+    default: () => {},
+  },
 });
 const formRef = ref(); // 表单
 const imgList: Ref<Array<any>> = ref([]); // 图片列表
@@ -158,6 +167,27 @@ watch(
   () => choseImgSure.value,
   (val) => {
     basicInfo.value.chartId = val.chartId;
+  },
+  { immediate: true },
+);
+watch(
+  () => props.filterInfo,
+  (val) => {
+    if (route.query.id && val.id) {
+      basicInfo.value = val;
+      stepOneElectricity.map((item) => {
+        item.prop === "industry" &&
+          item.options.map((_item) => {
+            _item.label === val.industry &&
+              _item.list.map((__item) => {
+                if (__item.chartId === val.chartId) {
+                  choseImg.value = __item;
+                  choseImgSure.value = __item;
+                }
+              });
+          });
+      });
+    }
   },
   { immediate: true },
 );
@@ -249,6 +279,7 @@ function handleNext() {
 
 onMounted(() => {
   getRegionColor();
+  basicInfo.value.enterpriseName = useUserStore().userInfo.company;
 });
 
 // 暴露方法

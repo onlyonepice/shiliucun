@@ -42,31 +42,32 @@
         <!-- echarts表格 -->
         <div ref="echarts_calculateLite" id="echarts_calculateLite" />
         <h4 :class="ns.b('h4')">合作方案</h4>
-        <el-form-item
-          v-for="item in stepTwoCooperateList"
-          :key="item.prop"
-          :prop="item.prop"
-          :rules="item.rules"
-          :label="item.title"
-        >
-          <Select
-            :type="item.type"
-            :defaultValue="basicInfo[item.prop]"
-            :inputText="item.inputText"
-            width="100%"
-            :options="item.options"
-            :sliderText="item.sliderText"
-            :controls="item.controls"
-            :precision="item.precision"
-            :valueKey="item.valueKey ? item.valueKey : 'value'"
-            :labelKey="item.labelKey ? item.labelKey : 'label'"
-            @onChange="
-              ($event) => {
-                onAreaChange($event, item.prop);
-              }
-            "
-          />
-        </el-form-item>
+        <template v-for="item in stepTwoCooperateList" :key="item.prop">
+          <el-form-item
+            v-if="item.show"
+            :prop="item.prop"
+            :rules="item.rules"
+            :label="item.title"
+          >
+            <Select
+              :type="item.type"
+              :defaultValue="basicInfo[item.prop]"
+              :inputText="item.inputText"
+              width="100%"
+              :options="item.options"
+              :sliderText="item.sliderText"
+              :controls="item.controls"
+              :precision="item.precision"
+              :valueKey="item.valueKey ? item.valueKey : 'value'"
+              :labelKey="item.labelKey ? item.labelKey : 'label'"
+              @onChange="
+                ($event) => {
+                  onAreaChange($event, item.prop);
+                }
+              "
+            />
+          </el-form-item>
+        </template>
       </el-form>
     </div>
     <div :class="ns.b('right')">
@@ -85,6 +86,8 @@ import { stepTwoCapacity, stepTwoCooperate } from "./index";
 import { getTechnologyContent_V2Api } from "@/api/calculation";
 import { ElectricityUsageEchartsOptions } from "./echarts";
 import * as echarts from "echarts";
+import { useRoute } from "vue-router";
+const route = useRoute();
 const ns = useNamespace("liteStepTwo");
 const stepTwoCooperateList: Ref<Array<any>> = ref(stepTwoCooperate);
 const echartsOption = ref(ElectricityUsageEchartsOptions());
@@ -160,8 +163,32 @@ watch(
 watch(
   () => props.step,
   (val) => {
-    val === 2 && getElectricityTypeTwo();
-    val === 2 && changeFilter();
+    if (val !== 2) {
+      return;
+    }
+    getElectricityTypeTwo();
+  },
+  { immediate: true },
+);
+watch(
+  () => basicInfo.value.isFinance,
+  (val) => {
+    stepTwoCooperateList.value.map((item) => {
+      item.prop === "financeRatio" && (item.show = val === 1);
+      item.prop === "financeRate" && (item.show = val === 1);
+      item.prop === "financePeriod" && (item.show = val === 1);
+    });
+  },
+  { immediate: true },
+);
+watch(
+  () => props.filterInfo,
+  (val) => {
+    if (route.query.id && val.id) {
+      basicInfo.value.amount = val.capacity.amount;
+      Object.assign(basicInfo.value, val.cooperationPlan);
+      step2Info.value.capacity = val.capacity;
+    }
   },
   { immediate: true },
 );
@@ -191,84 +218,15 @@ function changeFilter() {
     createdDate: step2Info.value.createdDate,
     updatedBy: step2Info.value.updatedBy,
     updatedDate: step2Info.value.updatedDate,
+    id: route.query.id ? route.query.id : step2Info.value.id,
   };
 }
 // 修改地区，获取用电类型1
 function onAreaChange(val: any, prop: string) {
   const _basicInfo = basicInfo.value;
   _basicInfo[prop] = val;
-  changeFilter();
   if (prop === "amount") {
     getElectricityTypeTwo();
-  }
-  if (prop === "isFinance" && val === 1) {
-    stepTwoCooperateList.value.push(
-      {
-        type: "number",
-        prop: "financeRatio",
-        title: "融资比例",
-        inputText: "%",
-        controls: false,
-        precision: 0,
-        rules: [
-          {
-            required: true,
-            message: "请输入系统初始投资",
-            trigger: "change",
-          },
-        ],
-      },
-      {
-        type: "number",
-        prop: "financeRate",
-        title: "融资利率",
-        inputText: "%",
-        controls: false,
-        precision: 0,
-        rules: [
-          {
-            required: true,
-            message: "请输入系统初始投资",
-            trigger: "change",
-          },
-        ],
-      },
-      {
-        type: "number",
-        prop: "financePeriod",
-        title: "融资年限",
-        inputText: "年",
-        controls: false,
-        precision: 0,
-        rules: [
-          {
-            required: true,
-            message: "请输入系统初始投资",
-            trigger: "change",
-          },
-        ],
-      },
-    );
-  }
-  if (prop === "isFinance" && val === 0) {
-    stepTwoCooperateList.value.splice(
-      stepTwoCooperateList.value.findIndex(
-        (item) => item.prop === "financePeriod",
-      ),
-      1,
-    );
-    stepTwoCooperateList.value.splice(
-      stepTwoCooperateList.value.findIndex(
-        (item) => item.prop === "financeRate",
-      ),
-      1,
-    );
-    stepTwoCooperateList.value.splice(
-      stepTwoCooperateList.value.findIndex(
-        (item) => item.prop === "financeRatio",
-      ),
-      1,
-    );
   }
 }
 // 获取echarts数据
@@ -321,7 +279,7 @@ function handleNext() {
   });
 }
 // 暴露方法
-defineExpose({ handleNext, filterInfoOut });
+defineExpose({ handleNext, filterInfoOut, changeFilter });
 </script>
 
 <style lang="scss">

@@ -78,7 +78,7 @@ export const updateCompanyName = (params) => {
 export const frontSelectList = () => {
   return http.request<{ resp_code: number; datas: any }>(
     "post",
-    `/eesa-industrial-map/tAd/front/V1.0/frontSelectList`,
+    `/eesa-industrial-map/tAd/openApi/v1.0/frontSelectList`,
     {
       data: { regionCodes: ["156"], searchBox: "", sysDictIds: [] },
     },

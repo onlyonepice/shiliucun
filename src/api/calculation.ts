@@ -33,3 +33,11 @@ export const getTechnologyContent_V3Api = (data) =>
     "/eesa-data-center/electricity/calculate/front/v1.1/generateReport",
     { data },
   );
+
+// 查询工商业测算lite信息
+export const getCheckLiteInfoApi = (params: any) =>
+  http.request<responseType>(
+    "get",
+    "/eesa-data-center/electricity/calculate/front/v1.0/findById",
+    { params },
+  );
