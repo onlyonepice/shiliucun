@@ -24,9 +24,11 @@
         <template #default="scope">
           <p>
             {{
-              scope.row.cooperationPlan.investmentModel === 1
-                ? "EMC合同能源管理"
-                : "业主自投"
+              scope.row.cooperationPlan === null
+                ? "-"
+                : scope.row.cooperationPlan.investmentModel === 1
+                  ? "EMC合同能源管理"
+                  : "业主自投"
             }}
           </p>
         </template>
