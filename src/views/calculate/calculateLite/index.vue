@@ -53,6 +53,8 @@ import StepThree from "./stepThree.vue";
 import IconSuccess from "@/assets/img/common/icon-success.png";
 import { getCheckLiteInfoApi } from "@/api/calculation";
 import { useRoute, useRouter } from "vue-router";
+import { useUserStore } from "@/store/modules/user";
+import { getToken } from "@/utils/auth";
 const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("calculationLite");
@@ -67,6 +69,10 @@ const stepTwo: Ref<any> = ref(null); // 获取子组件-第二步
 const filterInfo: Ref<any> = ref({}); // 筛选项数据
 // 点击下一步
 const onNextStep = () => {
+  if (!getToken()) {
+    useUserStore().openLogin(true);
+    return;
+  }
   if (step.value === 1) {
     stepOne.value.handleNext();
     filterInfo.value = Object.assign(filterInfo.value, stepOne.value.basicInfo);
