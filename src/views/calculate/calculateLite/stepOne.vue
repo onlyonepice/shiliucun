@@ -281,7 +281,7 @@ function handleNext() {
 }
 
 onMounted(() => {
-  getRegionColor();
+  !route.query.id && getRegionColor();
   basicInfo.value.enterpriseName = useUserStore().userInfo.company;
 });
 

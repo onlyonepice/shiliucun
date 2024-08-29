@@ -287,3 +287,10 @@ export function getMyProjectListApi(data: any) {
     { data },
   );
 }
+// 删除我的项目
+export function deleteMyProjectApi(id: string) {
+  return http.request<responseType>(
+    "post",
+    `/eesa-data-center/electricity/calculate/front/v1.0/delete?id=${id}`,
+  );
+}

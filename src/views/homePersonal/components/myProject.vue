@@ -35,12 +35,27 @@
       </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
-          <p :class="[ns.b('buy')]" @click="onChick(scope.row.id)">查看</p>
+          <div style="display: flex; align-items: center">
+            <span :class="[ns.b('buy')]" @click="onChick(scope.row.id, 'check')"
+              >查看</span
+            >
+            <span :class="[ns.b('line')]" />
+            <span
+              :class="[ns.b('buy')]"
+              @click="onChick(scope.row.id, 'delete')"
+              >删除</span
+            >
+          </div>
         </template>
       </el-table-column>
     </el-table>
     <Pagination :total="total" @onchangeCurrent="onchangeCurrent" />
   </div>
+  <DeleteConfirm
+    text="确定删除该项目吗？"
+    :visible="deleteVisible"
+    @onHandleClose="onHandleClose"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -49,14 +64,17 @@ interface PAGEINFO {
   limit: Number;
 }
 import { ref, Ref } from "vue";
-import { getMyProjectListApi } from "@/api/user";
+import { getMyProjectListApi, deleteMyProjectApi } from "@/api/user";
 import useNamespace from "@/utils/nameSpace";
 import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 const router = useRouter();
 const ns = useNamespace("myProject");
 const tableData: Ref<any> = ref([]);
 const loading: Ref<boolean> = ref(false); // 加载数据
 const total: Ref<number> = ref(0); // 数据总数
+const deleteVisible: Ref<boolean> = ref(false); // 删除弹窗
+const deleteId: Ref<string> = ref(""); // 删除id
 const pageInfo: Ref<PAGEINFO> = ref({
   page: 1,
   limit: 10,
@@ -72,14 +90,32 @@ const getProjectList = async () => {
   const { resp_code, datas }: any = await getMyProjectListApi(pageInfo.value);
   if (resp_code === 0) {
     tableData.value = datas.content;
-    total.value = datas.total;
+    total.value = datas.totalElements;
     loading.value = false;
   }
 };
 getProjectList();
 // 支付
-const onChick = (id: string) => {
-  router.push(`/calculationLite?id=${id}`);
+const onChick = async (id: string, type: string) => {
+  type === "check" && router.push(`/calculationLite?id=${id}`);
+  if (type === "delete") {
+    deleteVisible.value = true;
+    deleteId.value = id;
+  }
+};
+const onHandleClose = (type: boolean) => {
+  deleteVisible.value = false;
+  type && deleteMyProject();
+};
+// 删除数据
+const deleteMyProject = async () => {
+  const { datas, resp_code } = await deleteMyProjectApi(deleteId.value);
+  if (resp_code === 0) {
+    ElMessage.success("删除成功");
+    getProjectList();
+  } else {
+    ElMessage.error(datas);
+  }
 };
 </script>
 
@@ -95,6 +131,13 @@ const onChick = (id: string) => {
 .es-myProject-buy {
   @include font(14px, 400, #244bf1, 22px);
   cursor: pointer;
+}
+.es-myProject-line {
+  display: inline-block;
+  height: 16px;
+  width: 1px;
+  background-color: #dbdce2;
+  margin: 0 8px;
 }
 .es-myProject-invoicing {
   @include widthAndHeight(512px, 312px);

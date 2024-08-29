@@ -180,7 +180,7 @@
                     :key="item.id"
                   >
                     <div class="data-box_item_top">
-                      <div style="display: flex">
+                      <div style="display: flex; align-items: center">
                         <p class="data-box_item_type">
                           {{ item.typeName }}
                         </p>
@@ -245,7 +245,7 @@
                     :key="item.id"
                   >
                     <div class="data-box_item_top">
-                      <div style="display: flex">
+                      <div style="display: flex; align-items: center">
                         <p class="data-box_item_type">
                           {{ item.type }}
                         </p>
