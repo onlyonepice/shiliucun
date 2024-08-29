@@ -333,6 +333,9 @@ const onChildrenPath = (path: string | Array<string>) => {
   if (route.path !== path || route.path !== path[0]) {
     router.push(Array.isArray(path) ? path[0] : path);
     onChoseLeave();
+    setTimeout(() => {
+      location.reload();
+    }, 500);
   }
 };
 // 监听路由改变
