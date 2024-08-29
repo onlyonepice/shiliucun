@@ -234,7 +234,7 @@ export const stepTwoCooperate = [
   {
     type: "slider",
     show: true,
-    prop: "sharingRatio",
+    prop: "proportion",
     title: "分成比例",
     sliderText: [],
     rules: [

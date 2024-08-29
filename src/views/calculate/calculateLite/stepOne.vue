@@ -198,15 +198,17 @@ async function getRegionColor() {
   const { datas, resp_code } = await getRegionColorApi();
   if (resp_code === 0) {
     regionList.value = datas;
-    basicInfo.value.region = datas[0].regionName;
-    basicInfo.value.electricityUsageType1 =
-      datas[0].reInvestmentElectricityType[1].paramName;
     stepOneBasicsList.value.map((item) => {
       item.prop === "region" && (item.options = datas);
       item.prop === "electricityUsageType1" &&
         (item.options = datas[0].reInvestmentElectricityType);
     });
     getElectricityTypeTwo();
+    if (!route.query.id) {
+      basicInfo.value.region = datas[0].regionName;
+      basicInfo.value.electricityUsageType1 =
+        datas[0].reInvestmentElectricityType[1].paramName;
+    }
   }
 }
 // 修改地区，获取用电类型1
@@ -262,8 +264,10 @@ async function getElectricityTypeTwo() {
     regionName: region,
   });
   if (resp_code === 0) {
-    basicInfo.value.electricityUsageType2 = datas[0].paramName;
-    basicInfo.value.voltageLevel = datas[0].voltageLevel[0].paramName;
+    if (!route.query.id) {
+      basicInfo.value.electricityUsageType2 = datas[0].paramName;
+      basicInfo.value.voltageLevel = datas[0].voltageLevel[0].paramName;
+    }
     stepOneBasicsList.value.map((item) => {
       item.prop === "electricityUsageType2" && (item.options = datas);
       item.prop === "voltageLevel" && (item.options = datas[0].voltageLevel);
@@ -282,7 +286,7 @@ function handleNext() {
 }
 
 onMounted(() => {
-  !route.query.id && getRegionColor();
+  getRegionColor();
   basicInfo.value.enterpriseName = useUserStore().userInfo.company;
 });
 

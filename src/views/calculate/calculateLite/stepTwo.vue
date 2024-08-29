@@ -119,7 +119,7 @@ const basicInfo: Ref<any> = ref({
   amount: 1,
   investmentModel: 1,
   isFinance: 0,
-  sharingRatio: 20,
+  proportion: 20,
   totalCost: null,
   financeRatio: null, // 融资比例
   financeRate: null, // 融资利率
@@ -149,10 +149,10 @@ const deviceInformation: Ref<Array<any>> = ref([
   },
 ]);
 watch(
-  () => basicInfo.value.sharingRatio,
+  () => basicInfo.value.proportion,
   (val) => {
     stepTwoCooperateList.value.map((item) => {
-      if (item.prop === "sharingRatio") {
+      if (item.prop === "proportion") {
         item.sliderText[0] = "业主" + val + "%";
         item.sliderText[1] = "投资方" + Number(100 - val) + "%";
       }
@@ -194,7 +194,7 @@ watch(
   (val) => {
     if (route.query.id && val.id) {
       basicInfo.value.amount = val.capacity.amount;
-      basicInfo.value.sharingRatio = val.cooperationPlan.proportion;
+      basicInfo.value.proportion = val.cooperationPlan.proportion;
       Object.assign(basicInfo.value, val.cooperationPlan);
       step2Info.value.capacity = val.capacity;
     }
@@ -207,7 +207,7 @@ function changeFilter() {
     investmentModel,
     isFinance,
     totalCost,
-    sharingRatio,
+    proportion,
     financeRatio,
     financeRate,
     financePeriod,
@@ -218,7 +218,7 @@ function changeFilter() {
       investmentModel,
       isFinance,
       totalCost,
-      proportion: sharingRatio,
+      proportion,
       financeRatio,
       financeRate,
       financePeriod,
@@ -239,7 +239,7 @@ function onAreaChange(val: any, prop: string) {
   }
   if (prop === "investmentModel") {
     stepTwoCooperateList.value.map((item) => {
-      item.prop === "sharingRatio" && (item.show = val === 1);
+      item.prop === "proportion" && (item.show = val === 1);
     });
   }
   changeFilter();
