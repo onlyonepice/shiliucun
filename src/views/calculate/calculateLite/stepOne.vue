@@ -220,7 +220,6 @@ function onAreaChange(val: any, prop: string) {
           item.reInvestmentElectricityType[0].paramName;
       }
     });
-    getElectricityTypeTwo();
   }
   if (prop === "region" || prop === "electricityUsageType1") {
     getElectricityTypeTwo();
