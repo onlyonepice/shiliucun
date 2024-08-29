@@ -429,6 +429,7 @@ getFrontSelectList();
   min-height: 100vh;
   margin: 160px 0 80px;
   @include relative(1, 160px, none, none, none);
+  padding-bottom: 240px;
   .es-home-homeTop {
     height: 168px;
     background-image: url(../../assets/img/common/home-top-icon.png);
