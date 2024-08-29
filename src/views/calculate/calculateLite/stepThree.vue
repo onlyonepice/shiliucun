@@ -169,7 +169,6 @@ watch(
 );
 // 修改筛选项
 function changeFilter() {
-  console.log("=========", props.filterInfo);
   const _data = props.filterInfo;
   myProject.value[0].value = _data.projectName;
   myProject.value[1].value = _data.region;

@@ -85,8 +85,8 @@ const onNextStep = () => {
     onNext();
   }
 };
-const onBack = () => {
-  router.push("/calculationLite");
+const onBack = async () => {
+  await router.push("/calculationLite");
   location.reload();
 };
 // 下一步增加步数

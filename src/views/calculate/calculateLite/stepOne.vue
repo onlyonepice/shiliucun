@@ -173,21 +173,23 @@ watch(
 watch(
   () => props.filterInfo,
   (val) => {
-    if (route.query.id && val.id) {
-      basicInfo.value = val;
-      stepOneElectricity.map((item) => {
-        item.prop === "industry" &&
-          item.options.map((_item) => {
-            _item.label === val.industry &&
-              _item.list.map((__item) => {
-                if (__item.chartId === val.chartId) {
-                  choseImg.value = __item;
-                  choseImgSure.value = __item;
-                }
-              });
-          });
-      });
-    }
+    setTimeout(() => {
+      if (route.query.id && val.id) {
+        basicInfo.value = val;
+        stepOneElectricity.map((item) => {
+          item.prop === "industry" &&
+            item.options.map((_item) => {
+              _item.label === val.industry &&
+                _item.list.map((__item) => {
+                  if (__item.chartId === val.chartId) {
+                    choseImg.value = __item;
+                    choseImgSure.value = __item;
+                  }
+                });
+            });
+        });
+      }
+    }, 500);
   },
   { immediate: true },
 );

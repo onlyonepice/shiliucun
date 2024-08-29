@@ -194,6 +194,7 @@ watch(
   (val) => {
     if (route.query.id && val.id) {
       basicInfo.value.amount = val.capacity.amount;
+      basicInfo.value.sharingRatio = val.cooperationPlan.proportion;
       Object.assign(basicInfo.value, val.cooperationPlan);
       step2Info.value.capacity = val.capacity;
     }
@@ -242,7 +243,6 @@ function onAreaChange(val: any, prop: string) {
     });
   }
   changeFilter();
-  console.log("============", basicInfo.value, "11111111", filterInfoOut.value);
 }
 // 获取echarts数据
 async function getElectricityTypeTwo() {
