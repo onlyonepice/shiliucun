@@ -259,7 +259,6 @@ function onHandleClose(type: boolean) {
 // 获取用电类型2
 async function getElectricityTypeTwo() {
   const { electricityUsageType1, region } = basicInfo.value;
-  console.log("=========", basicInfo.value);
   const { datas, resp_code } = await getTechnologyType_V2Api({
     electricityTypeOneName: electricityUsageType1,
     regionName: region,
