@@ -327,3 +327,18 @@ export const stepTwoCooperate = [
     ],
   },
 ];
+
+export function getUnit(amount: number) {
+  const _kw =
+    amount * 100 >= 1000
+      ? ((amount * 100) / 1000).toFixed(3) + "MW"
+      : amount * 100 + "kW";
+  const _kWh =
+    amount * 233 >= 1000
+      ? ((amount * 233) / 1000).toFixed(3) + "MWh"
+      : amount * 233 + "kWh";
+  return {
+    kw: _kw,
+    kWh: _kWh,
+  };
+}

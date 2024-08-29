@@ -222,6 +222,9 @@ function onAreaChange(val: any, prop: string) {
     });
     getElectricityTypeTwo();
   }
+  if (prop === "region" || prop === "electricityUsageType1") {
+    getElectricityTypeTwo();
+  }
   const _data = basicInfo.value;
   stepOneBasics.map((item) => {
     if (item.prop === "electricityUsageType1") {

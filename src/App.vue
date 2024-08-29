@@ -98,8 +98,8 @@ onMounted(() => {
 const windowScroll = windowScrollStore();
 watch(
   () => route.path,
-  (path) => {
-    opacityBg.value = path === "/home";
+  () => {
+    opacityBg.value = false;
     windowScroll.SET_SCROLL_TOP(0);
   },
   { immediate: true },

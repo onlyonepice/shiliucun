@@ -427,8 +427,8 @@ getFrontSelectList();
 
 .es-home {
   min-height: 100vh;
-  @include padding(160px, 0, 80px, 0);
-  @include relative();
+  margin: 160px 0 80px;
+  @include relative(1, 160px, none, none, none);
   .es-home-homeTop {
     height: 168px;
     background-image: url(../../assets/img/common/home-top-icon.png);

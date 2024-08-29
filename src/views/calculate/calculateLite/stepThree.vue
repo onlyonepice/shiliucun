@@ -83,6 +83,7 @@ import Consult2 from "@/assets/img/calculate/calculateLite-step3-consult-2.png";
 import Consult3 from "@/assets/img/calculate/calculateLite-step3-consult-3.png";
 import Consult4 from "@/assets/img/calculate/calculateLite-step3-consult-4.png";
 import { getTechnologyContent_V3Api } from "@/api/calculation";
+import { getUnit } from "./index";
 // import { useRoute } from "vue-router";
 // const route = useRoute();
 const addWeChatDialog: Ref<boolean> = ref(false); // 加微信弹窗
@@ -168,10 +169,9 @@ watch(
 // 修改筛选项
 function changeFilter() {
   const _data = props.filterInfo;
-  console.log("-=-=-===", _data);
   myProject.value[0].value = _data.projectName;
   myProject.value[1].value = _data.region;
-  myProject.value[2].value = `${_data.powerMw}kW / ${_data.capacityMw}kWh`;
+  myProject.value[2].value = `${getUnit(_data.capacity.amount).kw} / ${getUnit(_data.capacity.amount).kWh}`;
   myProject.value[3].value = _data.capacity.amount;
   myProject.value[4].value =
     _data.investmentModel === 1 ? "EMC合同能源管理" : "业主自投";

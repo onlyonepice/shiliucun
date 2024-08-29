@@ -82,7 +82,7 @@
 <script lang="ts" setup>
 import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import { stepTwoCapacity, stepTwoCooperate } from "./index";
+import { stepTwoCapacity, stepTwoCooperate, getUnit } from "./index";
 import { getTechnologyContent_V2Api } from "@/api/calculation";
 import { ElectricityUsageEchartsOptions } from "./echarts";
 import * as echarts from "echarts";
@@ -157,6 +157,14 @@ watch(
         item.sliderText[1] = "投资方" + Number(100 - val) + "%";
       }
     });
+  },
+  { immediate: true },
+);
+watch(
+  () => basicInfo.value.amount,
+  (val) => {
+    descList.value[0].value = getUnit(val).kw + " / " + getUnit(val).kWh;
+    descList.value[1].value = `从经济性和实用性角度出发，综合考虑峰谷套利和需量控制的影响，本项目建议配置${getUnit(val).kw} / ${getUnit(val).kWh}储能`;
   },
   { immediate: true },
 );
