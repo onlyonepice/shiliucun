@@ -102,7 +102,7 @@ export const stepOneElectricity = [
     title: "变压器容量",
     inputText: "kVA",
     controls: false,
-    precision: 0,
+    precision: 2,
     rules: [
       {
         required: true,
@@ -117,7 +117,7 @@ export const stepOneElectricity = [
     title: "年度用电量",
     inputText: "万度",
     controls: false,
-    precision: 0,
+    precision: 2,
     rules: [
       {
         required: true,
@@ -132,7 +132,7 @@ export const stepOneElectricity = [
     title: "光伏装机量",
     inputText: "kWp",
     controls: false,
-    precision: 0,
+    precision: 2,
   },
   {
     type: "select",
@@ -183,7 +183,7 @@ export const stepOneElectricity = [
     rules: [
       {
         required: true,
-        message: "请输入所属行业",
+        message: "请选择所属行业",
         trigger: "change",
       },
     ],
@@ -252,7 +252,7 @@ export const stepTwoCooperate = [
     title: "系统初始投资",
     inputText: "元/Wh",
     controls: false,
-    precision: 0,
+    precision: 2,
     rules: [
       {
         required: true,
@@ -285,11 +285,11 @@ export const stepTwoCooperate = [
     title: "融资比例",
     inputText: "%",
     controls: false,
-    precision: 0,
+    precision: 2,
     rules: [
       {
         required: true,
-        message: "请输入系统初始投资",
+        message: "请输入融资比例",
         trigger: "change",
       },
     ],
@@ -301,11 +301,11 @@ export const stepTwoCooperate = [
     title: "融资利率",
     inputText: "%",
     controls: false,
-    precision: 0,
+    precision: 2,
     rules: [
       {
         required: true,
-        message: "请输入系统初始投资",
+        message: "请输入融资利率",
         trigger: "change",
       },
     ],
@@ -321,7 +321,7 @@ export const stepTwoCooperate = [
     rules: [
       {
         required: true,
-        message: "请输入系统初始投资",
+        message: "请输入融资年限",
         trigger: "change",
       },
     ],

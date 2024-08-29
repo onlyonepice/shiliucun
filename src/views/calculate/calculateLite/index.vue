@@ -2,9 +2,13 @@
   <div :class="[ns.b(), 'es-commonPage']">
     <div :class="ns.b('title')">
       <h1>工商业测算Lite版</h1>
-      <el-button type="primary" @click="onNextStep">{{
-        step === 3 ? "编辑项目" : "下一步"
-      }}</el-button>
+      <div>
+        <el-button v-if="step === 2" @click="step--">上一步</el-button>
+        <el-button v-if="step === 3" @click="onBack">新建测算</el-button>
+        <el-button type="primary" @click="onNextStep">{{
+          step === 3 ? "编辑项目" : "下一步"
+        }}</el-button>
+      </div>
     </div>
     <div :class="ns.b('step')">
       <template v-for="item in stepList" :key="item.id">
@@ -48,8 +52,9 @@ import StepTwo from "./stepTwo.vue";
 import StepThree from "./stepThree.vue";
 import IconSuccess from "@/assets/img/common/icon-success.png";
 import { getCheckLiteInfoApi } from "@/api/calculation";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
+const router = useRouter();
 const ns = useNamespace("calculationLite");
 const stepList: Ref<Array<any>> = ref([
   { id: 1, name: "基本信息" },
@@ -79,6 +84,10 @@ const onNextStep = () => {
     step.value++;
     onNext();
   }
+};
+const onBack = () => {
+  router.push("/calculationLite");
+  location.reload();
 };
 // 下一步增加步数
 const onNext = () => {

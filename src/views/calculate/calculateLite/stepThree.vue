@@ -1,5 +1,5 @@
 <template>
-  <div :class="ns.b()">
+  <div :class="ns.b()" v-loading="loading">
     <div :class="ns.b('left')">
       <h4 :class="ns.b('title')">我的项目</h4>
       <div :class="ns.b('project')">
@@ -84,6 +84,7 @@ import Consult3 from "@/assets/img/calculate/calculateLite-step3-consult-3.png";
 import Consult4 from "@/assets/img/calculate/calculateLite-step3-consult-4.png";
 import { getTechnologyContent_V3Api } from "@/api/calculation";
 import { getUnit } from "./index";
+const loading: Ref<boolean> = ref(false);
 // import { useRoute } from "vue-router";
 // const route = useRoute();
 const addWeChatDialog: Ref<boolean> = ref(false); // 加微信弹窗
@@ -168,16 +169,22 @@ watch(
 );
 // 修改筛选项
 function changeFilter() {
+  console.log("=========", props.filterInfo);
   const _data = props.filterInfo;
   myProject.value[0].value = _data.projectName;
   myProject.value[1].value = _data.region;
   myProject.value[2].value = `${getUnit(_data.capacity.amount).kw} / ${getUnit(_data.capacity.amount).kWh}`;
-  myProject.value[3].value = _data.capacity.amount;
+  myProject.value[3].value = _data.capacity.amount + "台";
   myProject.value[4].value =
-    _data.investmentModel === 1 ? "EMC合同能源管理" : "业主自投";
+    _data.cooperationPlan.investmentModel === 1
+      ? "EMC合同能源管理"
+      : "业主自投";
   myProject.value[5].value = `${_data.typeOneName}-${_data.typeTwoName}`;
   myProject.value[6].value = _data.tariffLevelName;
-  myProject.value[7].value = `业主${_data.cooperationPlan.proportion}% / 投资方${100 - _data.cooperationPlan.proportion}%`;
+  myProject.value[7].value =
+    _data.cooperationPlan.investmentModel !== 1
+      ? "-"
+      : `业主${_data.cooperationPlan.proportion}% / 投资方${100 - _data.cooperationPlan.proportion}%`;
   myProject.value[8].value = `${_data.cooperationPlan.totalCost}元/Wh`;
   myProject.value[9].value = `${_data.cooperationPlan.isFinance === 0 ? "否" : "是"}`;
   if (_data.cooperationPlan.isFinance === 1) {
@@ -199,6 +206,7 @@ function changeFilter() {
 }
 // 获取报告内容
 async function getReportContent() {
+  loading.value = true;
   let _amount = props.filterInfo.capacity.amount;
   const { datas, resp_code } = await getTechnologyContent_V3Api(
     Object.assign(props.filterInfo, {
@@ -207,6 +215,7 @@ async function getReportContent() {
     }),
   );
   if (resp_code === 0) {
+    loading.value = false;
     planList.value[0].linkUrl = datas.report.url;
     for (let index = 0; index < datas.report.revenueList.length; index++) {
       const { eirr, irr, years, profit, paybackPeriod } =

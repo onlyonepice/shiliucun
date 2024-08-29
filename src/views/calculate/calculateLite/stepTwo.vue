@@ -229,13 +229,20 @@ function changeFilter() {
     id: route.query.id ? route.query.id : step2Info.value.id,
   };
 }
-// 修改地区，获取用电类型1
+// 修改数量
 function onAreaChange(val: any, prop: string) {
   const _basicInfo = basicInfo.value;
   _basicInfo[prop] = val;
   if (prop === "amount") {
     getElectricityTypeTwo();
   }
+  if (prop === "investmentModel") {
+    stepTwoCooperateList.value.map((item) => {
+      item.prop === "sharingRatio" && (item.show = val === 1);
+    });
+  }
+  changeFilter();
+  console.log("============", basicInfo.value, "11111111", filterInfoOut.value);
 }
 // 获取echarts数据
 async function getElectricityTypeTwo() {

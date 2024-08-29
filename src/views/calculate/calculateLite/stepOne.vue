@@ -129,7 +129,7 @@ const basicInfo: Ref<any> = ref({
   enterpriseName: "",
   annualElectricityConsumption: null,
   transformerCapacity: null,
-  photovoltaicInstalledCapacity: "",
+  photovoltaicInstalledCapacity: null,
   electricityUsageType1: "",
   transformerInformation: 2,
   industry: "轻工业",
