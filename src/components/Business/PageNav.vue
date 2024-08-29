@@ -225,7 +225,7 @@ const navList: Ref<Array<NavList>> = ref([
     children: [
       {
         id: 1,
-        text: "工商业测算basic",
+        text: "工商业测算Basic",
         path: "/calculationBasic",
       },
       {
