@@ -196,6 +196,10 @@ watch(
       basicInfo.value.amount = val.capacity.amount;
       basicInfo.value.proportion = val.cooperationPlan.proportion;
       Object.assign(basicInfo.value, val.cooperationPlan);
+      stepTwoCooperateList.value.map((item) => {
+        item.prop === "proportion" &&
+          (item.show = basicInfo.value.proportion === 1);
+      });
       step2Info.value.capacity = val.capacity;
     }
   },

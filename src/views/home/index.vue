@@ -292,7 +292,7 @@ const functionNavTwo = ref([
     path: "/quarterlyMonthlyReports",
     icon: homeNavBottom_7,
   },
-  { title: "工商业测算", path: "/calculate", icon: homeNavBottom_8 },
+  { title: "工商业测算", path: "/calculationBasic", icon: homeNavBottom_8 },
 ]);
 // 搜索事件
 const onSearch = () => {

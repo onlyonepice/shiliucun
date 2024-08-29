@@ -113,6 +113,9 @@ async function onCheckReport() {
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+.es-calculationLite {
+  padding-bottom: 80px;
+}
 .es-calculationLite-title {
   @include flex(center, space-between, nowrap);
   margin: 80px 0 40px;
