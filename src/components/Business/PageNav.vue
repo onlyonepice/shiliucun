@@ -230,7 +230,7 @@ const navList: Ref<Array<NavList>> = ref([
       },
       {
         id: 2,
-        text: "工商业测算lite",
+        text: "工商业测算Lite",
         path: "/calculationLite",
       },
     ],

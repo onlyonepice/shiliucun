@@ -75,7 +75,6 @@
       <div :class="[ns.b('content-top')]" style="margin-top: 24px">
         <!-- 产品参数 -->
         <div :class="[ns.b('content-detail')]">
-          <h3>产品参数</h3>
           <Tabs
             :tabsList="tabsList"
             @onHandleClick="onHandleClick"
