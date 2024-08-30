@@ -4,7 +4,11 @@
     <div :class="ns.b('underline')" />
     <div :class="ns.b('info')" v-for="item in applyData" :key="item.id">
       <div :class="ns.be('info', 'icon')">
-        <img :src="useUserStore().fileUrl + item.logo" alt="" />
+        <img
+          v-if="item.logo"
+          :src="useUserStore().fileUrl + item.logo"
+          alt=""
+        />
       </div>
       <div :class="ns.be('info', 'content')">
         <p :class="ns.be('info', 'user')">
@@ -52,6 +56,10 @@ defineProps({
     border-radius: 3px;
     border: 1px solid #dbdce2;
     margin-right: 16px;
+    img {
+      @include widthAndHeight(80px, 80px);
+      object-fit: contain;
+    }
   }
   .es-applyData-info__user {
     @include font(20px, 400, rgba(0, 0, 0, 0.9), 28px);
