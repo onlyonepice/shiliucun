@@ -546,6 +546,9 @@ const onLogin = () => {
     .es-pageNav-item-box--hidden {
       opacity: 0 !important;
       height: 0 !important;
+      div {
+        height: 0 !important;
+      }
     }
   }
 
