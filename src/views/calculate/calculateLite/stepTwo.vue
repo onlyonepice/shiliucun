@@ -250,12 +250,12 @@ function onAreaChange(val: any, prop: string) {
 }
 // 获取echarts数据
 async function getElectricityTypeTwo() {
-  const { amount } = basicInfo.value;
   const { datas, resp_code } = await getTechnologyContent_V2Api(
-    Object.assign(props.filterInfo, { capacity: { amount } }),
+    Object.assign(props.filterInfo),
   );
   if (resp_code === 0) {
     step2Info.value = datas;
+    basicInfo.value.amount = datas.capacity.amount;
     echartsOption.value.series.forEach((item) => {
       switch (item.name) {
         case "充电":

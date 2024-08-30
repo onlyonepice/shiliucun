@@ -10,7 +10,13 @@
       style="width: 100%"
       header-row-class-name="table-class"
     >
-      <el-table-column prop="createdDate" label="时间" />
+      <el-table-column prop="createdDate" label="时间">
+        <template #default="scope">
+          <p>
+            {{ scope.row.createdDate || scope.row.updatedDate }}
+          </p>
+        </template>
+      </el-table-column>
       <el-table-column prop="projectName" label="项目名称" />
       <el-table-column prop="enterpriseName" label="企业">
         <template #default="scope">

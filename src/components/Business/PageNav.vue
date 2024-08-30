@@ -157,6 +157,7 @@ const extraAvatar: Ref<any> = ref([
   { id: 1, text: "我的名片", path: "/homePersonal?id=1" },
   { id: 2, text: "我的企业", path: "/homePersonal?id=2" },
   { id: 3, text: "我的产品", path: "/homePersonal?id=6" },
+  { id: 3, text: "我的项目", path: "/homePersonal?id=9" },
   { id: 3, text: "我的需求", path: "/homePersonal?id=3" },
   { id: 4, text: "修改密码", path: "/homePersonal?id=7" },
   { id: 5, text: "退出登录", path: "" },
@@ -428,7 +429,7 @@ const onLogin = () => {
   @include widthAndHeight(120px, 0);
   @include absolute(2, 28px, 100px, none, none);
   background-image: url("@/assets/img/common/avatar-extra.png");
-  background-size: 100% 190px;
+  background-size: 100% 220px;
   background-repeat: no-repeat;
   background-position: 0 10px;
   transition: all 0.2s linear;
@@ -458,7 +459,7 @@ const onLogin = () => {
   color: rgba(0, 0, 0, 0.9);
 }
 .es-pageNav-extraAvatar--show {
-  @include widthAndHeight(120px, 200px);
+  @include widthAndHeight(120px, 230px);
 }
 .es-pageNav-extraAvatar--position {
   right: 0;
