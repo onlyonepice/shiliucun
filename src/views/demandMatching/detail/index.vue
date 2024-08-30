@@ -78,6 +78,7 @@
           </div>
         </template>
       </div>
+      <ApplyData v-if="applyData.length > 0" :applyData="applyData" />
       <Reviews
         v-if="detailInfo.isApply && !detailInfo.isEvaluate"
         @onSubmit="onSubmit"
@@ -130,6 +131,7 @@ import useNamespace from "@/utils/nameSpace";
 import BusinessCard from "./components/businessCard.vue";
 import DetailInfo from "./components/detailInfo.vue";
 import ApplyList from "./components/applyList.vue";
+import ApplyData from "./components/applyData.vue";
 import ApplyDialog from "./dialog/apply.vue";
 import DeleteDialog from "./dialog/delete.vue";
 import SolveDialog from "./dialog/solve.vue";
@@ -163,6 +165,7 @@ const showExtra: Ref<boolean> = ref(true); // 是否显示额外信息
 const totalApply: Ref<number> = ref(0); // 报名总数
 const drawer: Ref<boolean> = ref(false); // 报名列表弹窗
 const applyList: Ref<Array<any>> = ref([]); // 报名列表
+const applyData: Ref<Array<any>> = ref([]); // 报名列表数据
 watch(
   () => drawer.value,
   (val) => {
@@ -183,6 +186,7 @@ onMounted(() => {
   }
   getDemandDetail();
   getApplyList();
+  getApplyData();
 });
 // 提交评价
 const onSubmit = () => {
@@ -244,6 +248,15 @@ const getApplyList = async () => {
   if (resp_code === 0) {
     totalApply.value = datas.total;
     applyList.value = datas.records;
+  }
+};
+// 获取两个报名列表信息
+const getApplyData = async () => {
+  const { datas, resp_code } = await getApplyListApi(
+    Object.assign({ page: 1, limit: 2 }, { needId: route.query.id }),
+  );
+  if (resp_code === 0) {
+    applyData.value = datas.records;
   }
 };
 // 报名列表分页
