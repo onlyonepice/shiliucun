@@ -70,76 +70,79 @@
             >
           </div>
           <div :class="ns.b('data-box')">
-            <template v-if="demandList.length > 0">
-              <div
-                class="data-box_item animate__animated animate__fadeIn"
-                @click="handleDetailClick(item)"
-                v-for="item in demandList"
-                :key="item.id"
-              >
-                <div class="data-box_item_top">
-                  <div style="display: flex; align-items: center">
-                    <p class="data-box_item_type">
-                      {{ item.typeName }}
-                    </p>
-                    <p class="line" v-if="item.typeName" />
-                    <p class="data-box_item_title">{{ item.title }}</p>
-                    <template
-                      v-for="statusItem in demandStatus"
-                      :key="statusItem.name"
-                    >
+            <DemandMatchingSkeletonList v-if="skeletonListLoading" />
+            <template v-else>
+              <template v-if="demandList.length > 0">
+                <div
+                  class="data-box_item animate__animated animate__fadeIn"
+                  @click="handleDetailClick(item)"
+                  v-for="item in demandList"
+                  :key="item.id"
+                >
+                  <div class="data-box_item_top">
+                    <div style="display: flex; align-items: center">
+                      <p class="data-box_item_type">
+                        {{ item.typeName }}
+                      </p>
+                      <p class="line" v-if="item.typeName" />
+                      <p class="data-box_item_title">{{ item.title }}</p>
+                      <template
+                        v-for="statusItem in demandStatus"
+                        :key="statusItem.name"
+                      >
+                        <p
+                          class="tag"
+                          v-if="statusItem.value == item.status"
+                          :style="{
+                            background: statusItem.background,
+                            color: statusItem.color,
+                            borderColor: statusItem.color,
+                          }"
+                        >
+                          {{ statusItem.name }}
+                        </p>
+                      </template>
                       <p
                         class="tag"
-                        v-if="statusItem.value == item.status"
                         :style="{
-                          background: statusItem.background,
-                          color: statusItem.color,
-                          borderColor: statusItem.color,
+                          background: '#EAEDFE',
+                          color: '#244BF1',
+                          borderColor: '#244BF1',
                         }"
+                        v-if="item.tags && item.tags.includes('海外')"
                       >
-                        {{ statusItem.name }}
+                        海外
                       </p>
-                    </template>
-                    <p
-                      class="tag"
-                      :style="{
-                        background: '#EAEDFE',
-                        color: '#244BF1',
-                        borderColor: '#244BF1',
-                      }"
-                      v-if="item.tags && item.tags.includes('海外')"
-                    >
-                      海外
-                    </p>
+                    </div>
+                    <h5 style="font-weight: 400; float: right">
+                      发布时间：{{ item.releaseTime }}
+                    </h5>
                   </div>
-                  <h5 style="font-weight: 400; float: right">
-                    发布时间：{{ item.releaseTime }}
-                  </h5>
+                  <div class="data-box_item_desc">
+                    {{ item.description }}
+                  </div>
                 </div>
-                <div class="data-box_item_desc">
-                  {{ item.description }}
+                <div class="Pagination">
+                  <Pagination
+                    :pageSize="filterParams.pageSize"
+                    :total="total"
+                    @onchangeCurrent="onchangeCurrent"
+                  />
                 </div>
-              </div>
-              <div class="Pagination">
-                <Pagination
-                  :pageSize="filterParams.pageSize"
-                  :total="total"
-                  @onchangeCurrent="onchangeCurrent"
-                />
-              </div>
-            </template>
-            <!-- 搜索结果没有数据 -->
-            <template v-else>
-              <div
-                :class="[
-                  ns.be('search', 'empty'),
-                  'animate__animated animate__fadeIn',
-                ]"
-              >
-                <img :src="DemandHallIcon" alt="" />
-                <h3>暂无搜索结果</h3>
-                <h5>可以试试搜索其他关键词哦～</h5>
-              </div>
+              </template>
+              <!-- 搜索结果没有数据 -->
+              <template v-else>
+                <div
+                  :class="[
+                    ns.be('search', 'empty'),
+                    'animate__animated animate__fadeIn',
+                  ]"
+                >
+                  <img :src="DemandHallIcon" alt="" />
+                  <h3>暂无搜索结果</h3>
+                  <h5>可以试试搜索其他关键词哦～</h5>
+                </div>
+              </template>
             </template>
           </div>
         </div>
@@ -172,134 +175,142 @@
             <!-- 我发布的 -->
             <div style="width: 760px" v-show="currentManageTab === 'release'">
               <div :class="ns.b('data-box')">
-                <template v-if="releaseList.length > 0">
-                  <div
-                    class="data-box_item"
-                    @click="handleDetailClick(item)"
-                    v-for="item in releaseList"
-                    :key="item.id"
-                  >
-                    <div class="data-box_item_top">
-                      <div style="display: flex; align-items: center">
-                        <p class="data-box_item_type">
-                          {{ item.typeName }}
-                        </p>
-                        <p class="line" />
-                        <p class="data-box_item_title">{{ item.title }}</p>
-                        <template
-                          v-for="statusItem in demandStatus"
-                          :key="statusItem.name"
-                        >
-                          <p
-                            class="tag"
-                            v-if="statusItem.value == item.status"
-                            :style="{
-                              background: statusItem.background,
-                              color: statusItem.color,
-                              borderColor: statusItem.color,
-                            }"
-                          >
-                            {{ statusItem.name }}
-                          </p>
-                        </template>
-                      </div>
-                      <h5 style="font-weight: 400">
-                        发布时间：{{ item.releaseTime }}
-                      </h5>
-                    </div>
-                    <div class="data-box_item_desc">
-                      {{ item.description }}
-                    </div>
-                  </div>
-                  <div class="Pagination">
-                    <Pagination
-                      :pageSize="releaseParams.pageSize"
-                      :total="releaseTotal"
-                      @onchangeCurrent="onchangeCurrentRelease"
-                    />
-                  </div>
-                </template>
-                <!-- 我发布的没有数据 -->
+                <DemandMatchingSkeletonMyList v-if="skeletonListLoadingMy" />
                 <template v-else>
-                  <div
-                    :class="[
-                      ns.be('search', 'empty'),
-                      'animate__animated animate__fadeIn',
-                    ]"
-                  >
-                    <img :src="DemandReleaseIcon" alt="" />
-                    <h3>暂无需求内容</h3>
-                    <h5>发布需求寻求优秀合作伙伴</h5>
-                  </div>
+                  <template v-if="releaseList.length > 0">
+                    <div
+                      class="data-box_item"
+                      @click="handleDetailClick(item)"
+                      v-for="item in releaseList"
+                      :key="item.id"
+                    >
+                      <div class="data-box_item_top">
+                        <div style="display: flex; align-items: center">
+                          <p class="data-box_item_type">
+                            {{ item.typeName }}
+                          </p>
+                          <p class="line" />
+                          <p class="data-box_item_title">{{ item.title }}</p>
+                          <template
+                            v-for="statusItem in demandStatus"
+                            :key="statusItem.name"
+                          >
+                            <p
+                              class="tag"
+                              v-if="statusItem.value == item.status"
+                              :style="{
+                                background: statusItem.background,
+                                color: statusItem.color,
+                                borderColor: statusItem.color,
+                              }"
+                            >
+                              {{ statusItem.name }}
+                            </p>
+                          </template>
+                        </div>
+                        <h5 style="font-weight: 400">
+                          发布时间：{{ item.releaseTime }}
+                        </h5>
+                      </div>
+                      <div class="data-box_item_desc">
+                        {{ item.description }}
+                      </div>
+                    </div>
+                    <div class="Pagination">
+                      <Pagination
+                        :pageSize="releaseParams.pageSize"
+                        :total="releaseTotal"
+                        @onchangeCurrent="onchangeCurrentRelease"
+                      />
+                    </div>
+                  </template>
+                  <!-- 我发布的没有数据 -->
+                  <template v-else>
+                    <div
+                      :class="[
+                        ns.be('search', 'empty'),
+                        'animate__animated animate__fadeIn',
+                      ]"
+                    >
+                      <img :src="DemandReleaseIcon" alt="" />
+                      <h3>暂无需求内容</h3>
+                      <h5>发布需求寻求优秀合作伙伴</h5>
+                    </div>
+                  </template>
                 </template>
               </div>
             </div>
             <!-- 我报名的 -->
             <div style="width: 760px" v-show="currentManageTab === 'apply'">
               <div :class="ns.b('data-box')">
-                <template v-if="applyList.length > 0">
-                  <div
-                    class="data-box_item"
-                    @click="handleDetailClick(item)"
-                    v-for="item in applyList"
-                    :key="item.id"
-                  >
-                    <div class="data-box_item_top">
-                      <div style="display: flex; align-items: center">
-                        <p class="data-box_item_type">
-                          {{ item.type }}
-                        </p>
-                        <p class="line" />
-                        <p class="data-box_item_title">{{ item.needTitle }}</p>
-                        <template
-                          v-for="statusItem in applicationStatus"
-                          :key="statusItem.name"
-                        >
-                          <p
-                            class="tag"
-                            v-if="statusItem.value == item.status"
-                            :style="{
-                              background: statusItem.background,
-                              color: statusItem.color,
-                              borderColor: statusItem.color,
-                            }"
-                          >
-                            {{ statusItem.name }}
-                          </p>
-                        </template>
-                      </div>
-                      <h5 style="font-weight: 400">
-                        报名时间：{{
-                          item.applyTime.indexOf(" ") > -1
-                            ? item.applyTime.split(" ")[0]
-                            : item.applyTime
-                        }}
-                      </h5>
-                    </div>
-                    <div class="data-box_item_desc">
-                      {{ item.description }}
-                    </div>
-                  </div>
-                  <div class="Pagination">
-                    <Pagination
-                      :pageSize="applyParams.limit"
-                      :total="applyTotal"
-                      @onchangeCurrent="onchangeCurrentApply"
-                    />
-                  </div>
-                </template>
-                <!-- 搜索结果没有数据 -->
+                <DemandMatchingSkeletonMyList v-if="skeletonListLoadingMy" />
                 <template v-else>
-                  <div
-                    :class="[
-                      ns.be('search', 'empty'),
-                      'animate__animated animate__fadeIn',
-                    ]"
-                  >
-                    <img :src="DemandReleaseIcon" alt="" />
-                    <h3>暂无报名内容</h3>
-                    <h5>为客户提供解决方案，建立长久合作</h5>
-                  </div>
+                  <template v-if="applyList.length > 0">
+                    <div
+                      class="data-box_item"
+                      @click="handleDetailClick(item)"
+                      v-for="item in applyList"
+                      :key="item.id"
+                    >
+                      <div class="data-box_item_top">
+                        <div style="display: flex; align-items: center">
+                          <p class="data-box_item_type">
+                            {{ item.type }}
+                          </p>
+                          <p class="line" />
+                          <p class="data-box_item_title">
+                            {{ item.needTitle }}
+                          </p>
+                          <template
+                            v-for="statusItem in applicationStatus"
+                            :key="statusItem.name"
+                          >
+                            <p
+                              class="tag"
+                              v-if="statusItem.value == item.status"
+                              :style="{
+                                background: statusItem.background,
+                                color: statusItem.color,
+                                borderColor: statusItem.color,
+                              }"
+                            >
+                              {{ statusItem.name }}
+                            </p>
+                          </template>
+                        </div>
+                        <h5 style="font-weight: 400">
+                          报名时间：{{
+                            item.applyTime.indexOf(" ") > -1
+                              ? item.applyTime.split(" ")[0]
+                              : item.applyTime
+                          }}
+                        </h5>
+                      </div>
+                      <div class="data-box_item_desc">
+                        {{ item.description }}
+                      </div>
+                    </div>
+                    <div class="Pagination">
+                      <Pagination
+                        :pageSize="applyParams.limit"
+                        :total="applyTotal"
+                        @onchangeCurrent="onchangeCurrentApply"
+                      />
+                    </div>
+                  </template>
+                  <!-- 搜索结果没有数据 -->
+                  <template v-else>
+                    <div
+                      :class="[
+                        ns.be('search', 'empty'),
+                        'animate__animated animate__fadeIn',
+                      ]"
+                    >
+                      <img :src="DemandReleaseIcon" alt="" />
+                      <h3>暂无报名内容</h3>
+                      <h5>为客户提供解决方案，建立长久合作</h5>
+                    </div>
+                  </template>
                 </template>
               </div>
             </div>
@@ -337,7 +348,9 @@ import DemandReleaseIcon from "@/assets/img/demand/demand-release-icon.png";
 import RoleDialog from "./roleDialog.vue";
 import NewIcon from "@/assets/img/common/new-icon.png";
 import DemandMatchingSkeleton from "../skeleton/demandMatchingSkeleton.vue";
+import DemandMatchingSkeletonList from "../skeleton/demandMatchingSkeletonList.vue";
 import DemandMatchingSkeletonMy from "../skeleton/demandMatchingSkeletonMy.vue";
+import DemandMatchingSkeletonMyList from "../skeleton/demandMatchingSkeletonMyList.vue";
 const ns = useNamespace("demand-list");
 import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
@@ -358,6 +371,8 @@ const isLogin = ref(getToken());
 const roleDialogVisible: Ref<boolean> = ref(false); // 角色弹窗
 const loadingList: Ref<boolean> = ref(true); // 加载
 const loadingMy: Ref<boolean> = ref(true); // 加载
+const skeletonListLoading: Ref<boolean> = ref(true); // 列表数据骨架屏
+const skeletonListLoadingMy: Ref<boolean> = ref(true); // 列表数据骨架屏
 const tabList = ref([
   {
     name: "需求大厅",
@@ -497,9 +512,11 @@ const getTypeNotNull = async () => {
 };
 // 获取需求大厅列表数据
 const getNeed = async () => {
+  skeletonListLoading.value = true;
   const data = await getNeedApi(filterParams.value);
   if (data.resp_code === 0) {
     loadingList.value = false;
+    skeletonListLoading.value = false;
     data.datas.records.forEach((item) => {
       item.tags && (item.tags = item.tags.split(","));
     });
@@ -523,8 +540,10 @@ const releaseParams = ref({
 const releaseTotal = ref(0);
 const releaseList = ref([]);
 const getReleaseNeed = async () => {
+  skeletonListLoadingMy.value = true;
   const data = await getReleaseNeedApi(releaseParams.value);
   if (data.resp_code === 0) {
+    skeletonListLoadingMy.value = false;
     releaseTotal.value = data.datas.total;
     releaseList.value = data.datas.records;
     releaseList.value.forEach((item) => {
@@ -545,8 +564,10 @@ const applyParams = ref({
 const applyTotal = ref(0);
 const applyList = ref([]);
 const getApplyNeed = async () => {
+  skeletonListLoadingMy.value = true;
   const data = await getApplyNeedApi(applyParams.value);
   if (data.resp_code === 0) {
+    skeletonListLoadingMy.value = false;
     applyTotal.value = data.datas.total;
     applyList.value = data.datas.records;
   }
