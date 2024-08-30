@@ -280,6 +280,8 @@
               :options="roleList"
               labelKey="labelName"
               valueKey="id"
+              :multiple="true"
+              :multipleLimit="2"
               @onChange="
                 (val) => {
                   return onChangeNeed(val, 'role');

@@ -15,6 +15,7 @@
       @visible-change="handleVerifyLogin"
       :disabled="props.disabled"
       :multiple="multiple"
+      :multiple-limit="multipleLimit"
       ref="selectDom"
     >
       <el-option
@@ -193,6 +194,10 @@ const props = defineProps({
   multiple: {
     type: Boolean,
     default: false,
+  },
+  multipleLimit: {
+    type: Number,
+    default: 0,
   },
   // 选择范围时的分隔符
   rangeSeparator: {
