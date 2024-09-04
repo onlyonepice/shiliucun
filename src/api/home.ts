@@ -99,3 +99,11 @@ export const getUpdateLogApi = () => {
     `/eesa-data-center/system/sysUpdateLog/openApi/v1.0/getSysUpdateLog?platform=WEB`,
   );
 };
+
+// 获取需求数量
+export const getNeedAmountApi = () => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    `/eesa-data-center/need/need/openApi/v1.0/quantityRequired`,
+  );
+};

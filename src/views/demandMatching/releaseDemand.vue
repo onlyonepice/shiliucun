@@ -570,7 +570,10 @@ const handleReleaseNeed = async () => {
       : item.url;
   });
   needData.value.imageUrls = needData.value.imageUrls.join(",");
-  needData.value.dhLabelDTOList = [{ id: needData.value.role }];
+  needData.value.dhLabelDTOList = [];
+  needData.value.role.map((item) => {
+    needData.value.dhLabelDTOList.push({ id: item });
+  });
   needData.value.tab.length > 0 &&
     needData.value.tab.map((item) => {
       if (typeof item === "number") {

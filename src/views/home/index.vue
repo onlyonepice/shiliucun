@@ -1,31 +1,6 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
-    <div :class="ns.b('homeTop')">
-      <img :src="HomeTopIcon" />
-      <div :class="ns.b('homeTopSearch')">
-        <el-input
-          v-model="searchContent"
-          placeholder="请输入关键字…"
-          @keyup.enter="onSearch"
-          autocomplete="off"
-          :disabled="useUserStore().$state.openLoginVisible"
-        />
-        <div :class="ns.b('homeTopSearchIcon')" @click.stop="onSearch">
-          搜索
-        </div>
-      </div>
-    </div>
     <div :class="ns.b('homeContent')">
-      <div :class="ns.b('homeMiniNavList')">
-        <div
-          v-for="item in searchKey"
-          @click="onSearchKey(item)"
-          :key="item.title"
-          :class="ns.b('homeMiniNavListItem')"
-        >
-          {{ item.title }}
-        </div>
-      </div>
       <div :class="ns.b('homeSupplyDemandDocking')">
         <div :class="ns.b('homeSupplyDemandDockingLeft')">
           <div :class="ns.b('homeSupplyDemandDockingTop')">
@@ -53,11 +28,35 @@
           </div>
         </div>
         <div :class="ns.b('homeSupplyDemandDockingRight')">
-          <img
-            @click="onDemandHallTitle"
-            src="@/assets/img/home/home-supply-demand-docking.png"
-            alt=""
-          />
+          <div :class="ns.b('homeTopSearch')">
+            <el-input
+              v-model="searchContent"
+              placeholder="请输入关键字…"
+              @keyup.enter="onSearch"
+              autocomplete="off"
+              :disabled="useUserStore().$state.openLoginVisible"
+            />
+            <div :class="ns.b('homeTopSearchIcon')" @click.stop="onSearch">
+              搜索
+            </div>
+          </div>
+          <div :class="ns.b('amount')">
+            <img
+              @click="onDemandHallTitle"
+              src="@/assets/img/home/home-supply-demand-docking.png"
+              alt=""
+            />
+            <div :class="ns.be('amount', 'list')">
+              <div>
+                <span>{{ amountData.alreadyEnded }}</span>
+                <p>已解决需求</p>
+              </div>
+              <div>
+                <span>{{ amountData.pendingDemand }}</span>
+                <p>待解决需求</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div :class="ns.b('demandHall')">
@@ -212,8 +211,7 @@ import { useUserStore } from "@/store/modules/user";
 import { useUserStoreHook } from "@/store/modules/user";
 
 import { getProductListApi } from "@/api/searchProduct";
-import { getHomePage, frontSelectList } from "@/api/home";
-import HomeTopIcon from "@/assets/img/common/home-top-icon.png";
+import { getHomePage, frontSelectList, getNeedAmountApi } from "@/api/home";
 import homeNav_1 from "@/assets/img/home/home-nav-1.png";
 import homeNav_2 from "@/assets/img/home/home-nav-2.png";
 import homeNav_3 from "@/assets/img/home/home-nav-3.png";
@@ -240,6 +238,7 @@ const productList = ref([]);
 const demandHallList = ref([]);
 const searchContent: Ref<string> = ref("");
 const logoList = ref([]);
+const amountData: Ref<any> = ref({}); // 需求量
 const params = {
   limit: 4,
   sortType: 1,
@@ -248,14 +247,6 @@ const params = {
   coolingMethodIds: null,
   productType: "INDUSTRY_ENERGY_STORAGE",
 };
-const searchKey = ref([
-  { title: "工商业" },
-  { title: "电价" },
-  { title: "招标" },
-  { title: "中标" },
-  { title: "行业数据" },
-  { title: "企业排名" },
-]);
 
 const functionNav = ref([
   {
@@ -303,15 +294,6 @@ const onSearch = () => {
   router.push({
     name: "HomeSearchDetail",
     params: { searchContent: searchContent.value },
-  });
-  window.trackFunction("pc_Home_Search_click");
-};
-
-const onSearchKey = (row) => {
-  searchContent.value = row.title;
-  router.push({
-    name: "HomeSearchDetail",
-    params: { searchContent: row.title },
   });
   window.trackFunction("pc_Home_Search_click");
 };
@@ -421,6 +403,17 @@ async function getFrontSelectList() {
 getHomeDemand();
 getProductList(1);
 getFrontSelectList();
+// 获取需求数量
+async function getDemandCount() {
+  const { datas, resp_code } = await getNeedAmountApi();
+  if (resp_code === 0) {
+    amountData.value = {
+      pendingDemand: datas.pendingDemand,
+      alreadyEnded: datas.alreadyEnded,
+    };
+  }
+}
+getDemandCount();
 </script>
 
 <style lang="scss" scoped>
@@ -437,30 +430,8 @@ getFrontSelectList();
       @include widthAndHeight(1152px, 168px);
       @include absolute(-1, 0, none, none, none);
     }
-    .es-home-homeTopSearch {
-      @include relative(1, 128px, none, none, none);
-      @include widthAndHeight(564px, 40px);
-      border-radius: 0 8px 8px 0;
-      overflow: hidden;
-      @include relative();
-      margin: 0 auto;
-      .es-home-homeTopSearchIcon {
-        @include widthAndHeight(104px, 40px);
-        @include absolute(1, 0, 0, 0, none);
-        background: #244bf1;
-        @include flex(center, center);
-        cursor: pointer;
-        font-weight: 400;
-        font-size: 16px;
-        color: rgba(255, 255, 255, 0.9);
-        img {
-          @include widthAndHeight(20px, 20px);
-        }
-      }
-    }
   }
   .es-home-homeContent {
-    margin-top: 148px;
     .es-home-homeMiniNavList {
       @include flex(center);
       .es-home-homeMiniNavListItem {
@@ -481,7 +452,6 @@ getFrontSelectList();
       }
     }
     .es-home-homeSupplyDemandDocking {
-      margin-top: 82px;
       display: flex;
       .es-home-homeSupplyDemandDockingLeft {
         flex: 1;
@@ -541,8 +511,51 @@ getFrontSelectList();
         cursor: pointer;
 
         img {
-          width: 478px;
-          height: 280px;
+          width: 464px;
+          height: 216px;
+          margin-top: 24px;
+        }
+        .es-home-homeTopSearch {
+          @include relative(1, 0, none, none, none);
+          @include widthAndHeight(464px, 40px);
+          border-radius: 0 8px 8px 0;
+          overflow: hidden;
+          @include relative();
+          margin: 0 auto;
+          .es-home-homeTopSearchIcon {
+            @include widthAndHeight(104px, 40px);
+            @include absolute(1, 0, 0, 0, none);
+            background: #244bf1;
+            @include flex(center, center);
+            cursor: pointer;
+            font-weight: 400;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            img {
+              @include widthAndHeight(20px, 20px);
+            }
+          }
+        }
+        .es-home-amount {
+          position: relative;
+          .es-home-amount__list {
+            @include widthAndHeight(192px, 60px);
+            @include absolute(1, 132px, none, none, 0);
+            @include flex(center, center);
+            text-align: center;
+            span {
+              @include font(16px, 600, #ff892e, 24px);
+            }
+            div:nth-of-type(1) {
+              margin-right: 16px;
+              span {
+                @include font(16px, 600, #244bf1, 24px);
+              }
+            }
+            p {
+              @include font(12px, 400, rgba(0, 0, 0, 0.6), 20px);
+            }
+          }
         }
       }
     }
@@ -558,7 +571,7 @@ getFrontSelectList();
         }
       }
       .es-home-demandHallRight {
-        width: 478px;
+        width: 464px;
         .es-home-demandHallTitle {
           @include flex(center, space-between);
           .es-home-demandHallTitleLeft {

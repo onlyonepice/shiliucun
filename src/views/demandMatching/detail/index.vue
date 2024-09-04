@@ -184,6 +184,11 @@ onMounted(() => {
       path: "/homePersonal?id=3",
     };
   }
+  if (route.query.beforeRouter) {
+    breadcrumbList.value[0] = {
+      path: "/demandMatching/list",
+    };
+  }
   getDemandDetail();
   getApplyList();
   getApplyData();
