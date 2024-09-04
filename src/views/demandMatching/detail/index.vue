@@ -186,6 +186,7 @@ onMounted(() => {
   }
   if (route.query.beforeRouter) {
     breadcrumbList.value[0] = {
+      text: "需求大厅",
       path: "/demandMatching/list",
     };
   }
