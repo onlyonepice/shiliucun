@@ -1,6 +1,7 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
     <div :class="ns.b('homeTop')">
+      <img :src="HomeTopIcon" />
       <div :class="ns.b('homeTopSearch')">
         <el-input
           v-model="searchContent"
@@ -212,7 +213,7 @@ import { useUserStoreHook } from "@/store/modules/user";
 
 import { getProductListApi } from "@/api/searchProduct";
 import { getHomePage, frontSelectList } from "@/api/home";
-
+import HomeTopIcon from "@/assets/img/common/home-top-icon.png";
 import homeNav_1 from "@/assets/img/home/home-nav-1.png";
 import homeNav_2 from "@/assets/img/home/home-nav-2.png";
 import homeNav_3 from "@/assets/img/home/home-nav-3.png";
@@ -427,23 +428,22 @@ getFrontSelectList();
 
 .es-home {
   min-height: 100vh;
-  margin: 160px 0 80px;
-  @include relative(1, 160px, none, none, none);
   padding-bottom: 240px;
+  @include relative(1, 0, none, none, none);
+  padding-top: 104px;
   .es-home-homeTop {
-    height: 168px;
-    background-image: url(../../assets/img/common/home-top-icon.png);
-    background-size: auto 100%;
-    background-position: center center;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: end;
+    @include relative(-1, 0, none, none, none);
+    img {
+      @include widthAndHeight(1152px, 168px);
+      @include absolute(-1, 0, none, none, none);
+    }
     .es-home-homeTopSearch {
+      @include relative(1, 128px, none, none, none);
       @include widthAndHeight(564px, 40px);
       border-radius: 0 8px 8px 0;
-      margin: 0 auto;
       overflow: hidden;
       @include relative();
+      margin: 0 auto;
       .es-home-homeTopSearchIcon {
         @include widthAndHeight(104px, 40px);
         @include absolute(1, 0, 0, 0, none);
@@ -460,7 +460,7 @@ getFrontSelectList();
     }
   }
   .es-home-homeContent {
-    margin-top: 20px;
+    margin-top: 148px;
     .es-home-homeMiniNavList {
       @include flex(center);
       .es-home-homeMiniNavListItem {

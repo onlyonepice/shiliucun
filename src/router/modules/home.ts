@@ -6,6 +6,7 @@ export default {
   },
   meta: {
     title: "掌上储能",
+    backgroundColor: "#FFFFFF",
   },
   children: [
     {

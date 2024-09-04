@@ -1,5 +1,10 @@
 <template>
   <div :class="['es-commonPage', ns.b()]">
+    <img
+      :class="ns.b('topIcon')"
+      :src="DemandMatchingListImg"
+      @click="demandImgVisible = true"
+    />
     <p :class="[ns.b('identity'), 'animate__animated animate__fadeIn']">
       当前身份：{{ getRole }}<span @click="onModify()">修改</span>
     </p>
@@ -336,6 +341,21 @@
       getNeed();
     "
   />
+  <Dialog
+    :visible="demandImgVisible"
+    :class="ns.b('tipsDialog')"
+    :showClose="false"
+    :showFoot="false"
+  >
+    <template #content>
+      <img :class="ns.be('tipsDialog', 'img')" :src="DemandContentImg" />
+      <img
+        :class="ns.be('tipsDialog', 'close')"
+        :src="CloseIcon"
+        @click="demandImgVisible = false"
+      />
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -351,6 +371,9 @@ import DemandMatchingSkeleton from "../skeleton/demandMatchingSkeleton.vue";
 import DemandMatchingSkeletonList from "../skeleton/demandMatchingSkeletonList.vue";
 import DemandMatchingSkeletonMy from "../skeleton/demandMatchingSkeletonMy.vue";
 import DemandMatchingSkeletonMyList from "../skeleton/demandMatchingSkeletonMyList.vue";
+import DemandMatchingListImg from "@/assets/img/demand/demandMatching-list-img.png";
+import DemandContentImg from "@/assets/img/demand/demand-content-img.png";
+import CloseIcon from "@/assets/img/demand/close-icon-circle.png";
 const ns = useNamespace("demand-list");
 import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
@@ -373,6 +396,7 @@ const loadingList: Ref<boolean> = ref(true); // 加载
 const loadingMy: Ref<boolean> = ref(true); // 加载
 const skeletonListLoading: Ref<boolean> = ref(true); // 列表数据骨架屏
 const skeletonListLoadingMy: Ref<boolean> = ref(true); // 列表数据骨架屏
+const demandImgVisible: Ref<boolean> = ref(false); // 需求对接弹窗图片
 const tabList = ref([
   {
     name: "需求大厅",
@@ -612,8 +636,13 @@ onMounted(() => {
   position: relative;
   padding-bottom: 24px;
 }
+.es-demand-list-topIcon {
+  @include widthAndHeight(1152px, 80px);
+  cursor: pointer;
+  margin-bottom: 16px;
+}
 .es-demand-list-identity {
-  @include absolute(1, 97px, 0, none, none);
+  @include absolute(1, 197px, 0, none, none);
   @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
   display: inline-block;
   span {
@@ -783,6 +812,29 @@ onMounted(() => {
     color: rgba(0, 0, 0, 0.6);
     line-height: 22px;
     padding-bottom: 64px;
+  }
+}
+</style>
+
+<style lang="scss">
+@import "@/style/mixin.scss";
+
+.es-demand-list-tipsDialog {
+  @include widthAndHeight(560px, 816px);
+  background: transparent !important;
+  box-shadow: none;
+  text-align: center;
+  .el-dialog__header,
+  .el-dialog__body {
+    padding: 0 !important;
+  }
+  .es-demand-list-tipsDialog__img {
+    @include widthAndHeight(560px, 760px);
+  }
+  .es-demand-list-tipsDialog__close {
+    @include widthAndHeight(32px, 32px);
+    margin: 24px auto 0;
+    cursor: pointer;
   }
 }
 </style>
