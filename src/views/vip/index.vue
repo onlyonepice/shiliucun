@@ -24,6 +24,41 @@
             {{ item.btnConfig.text }}
           </div>
         </div>
+        <template v-if="item.id === 0">
+          <div
+            v-for="(itemData, indexData) in vipConfigList[0].moduleTypes"
+            :key="indexData"
+            :class="ns.b('config')"
+          >
+            <p>{{ itemData.moduleCode }}</p>
+            <p
+              v-for="(_item, _index) in itemData.modulePermissions"
+              :key="_index"
+            >
+              {{ _item.moduleName }}
+            </p>
+          </div>
+        </template>
+        <template v-else>
+          <div
+            v-for="(itemData, indexData) in item.list"
+            :key="indexData"
+            :class="ns.b('config')"
+          >
+            <p :class="ns.b('empty')" />
+            <div
+              v-for="(_item, _index) in itemData.modulePermissions"
+              :key="_index"
+            >
+              <p v-if="_item.conditions !== null">{{ _item.conditions }}</p>
+              <img
+                v-else
+                :src="_item.isPermission ? VipTick : VipFork"
+                alt=""
+              />
+            </div>
+          </div>
+        </template>
       </div>
     </div>
     <div
@@ -56,8 +91,8 @@ import Bg1 from "@/assets/img/vip/bg-1.png";
 import Bg3 from "@/assets/img/vip/bg-3.png";
 import Bg4 from "@/assets/img/vip/bg-4.png";
 import Bg5 from "@/assets/img/vip/bg-5.png";
-// import VipTick from "@/assets/img/vip/vip-tick.png";
-// import VipFork from "@/assets/img/vip/vip-fork.png";
+import VipTick from "@/assets/img/vip/vip-tick.png";
+import VipFork from "@/assets/img/vip/vip-fork.png";
 import PayQR from "@/assets/img/vip/pay-member-qr.png";
 import { getVipConfigListApi } from "@/api/vip";
 import { getToken } from "@/utils/auth";
@@ -192,7 +227,7 @@ getVipConfigList();
   }
   .wrapper {
     width: 100%;
-    @include flex(center, center, nowrap);
+    @include flex(flex-start, center, nowrap);
     .item {
       width: 232px;
       position: relative;
@@ -222,6 +257,24 @@ getVipConfigList();
   @include font(24px, 600, rgba(0, 0, 0, 0.9), 32px);
   text-align: center;
 }
+.es-vip-config {
+  padding-left: 16px;
+  @include font(14px, 400, rgba(0, 0, 0, 0.9), 40px);
+  margin-bottom: 8px;
+  div {
+    height: 40px;
+    @include flex(center, center, nowrap);
+    p {
+      @include font(14px, 400, rgba(0, 0, 0, 0.9), 40px);
+    }
+    img {
+      @include widthAndHeight(24px, 24px);
+    }
+  }
+}
+.es-vip-empty {
+  height: 40px;
+}
 .es-vip-price__desc {
   @include font(14px, 600, rgba(0, 0, 0, 0.6), 22px);
   text-align: center;
@@ -229,7 +282,7 @@ getVipConfigList();
 }
 .es-vip-price__btn {
   @include widthAndHeight(200px, 40px);
-  margin: 32px auto 0;
+  margin: 32px auto 24px;
   text-align: center;
   line-height: 40px;
   border-radius: 4px;
