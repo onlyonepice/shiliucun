@@ -126,6 +126,7 @@ const basicInfo: Ref<any> = ref({
   financePeriod: null, // 融资年限
 });
 const filterInfoOut: Ref<any> = ref({}); // 筛选项数据
+const id: Ref<String> = ref(""); // 测算id
 const deviceInformation: Ref<Array<any>> = ref([
   {
     label: "设备单价",
@@ -251,7 +252,7 @@ function onAreaChange(val: any, prop: string) {
 // 获取echarts数据
 async function getElectricityTypeTwo() {
   let _data = {};
-  route.query.id && (_data = { id: route.query.id });
+  id.value !== "" && (_data = { id: id.value });
   const { datas, resp_code } = await getTechnologyContent_V2Api(
     Object.assign(
       props.filterInfo,
@@ -263,6 +264,7 @@ async function getElectricityTypeTwo() {
   );
   if (resp_code === 0) {
     step2Info.value = datas;
+    id.value = datas.id;
     basicInfo.value.amount = datas.capacity.amount;
     echartsOption.value.series.forEach((item) => {
       switch (item.name) {
