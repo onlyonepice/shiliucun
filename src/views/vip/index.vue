@@ -24,7 +24,7 @@
             {{ item.btnConfig.text }}
           </div>
         </div>
-        <template v-if="item.id === 0">
+        <template v-if="item.id === 0 && vipConfigList[0]">
           <div
             v-for="(itemData, indexData) in vipConfigList[0].moduleTypes"
             :key="indexData"

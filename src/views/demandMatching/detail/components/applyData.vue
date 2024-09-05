@@ -5,17 +5,20 @@
     <div :class="ns.b('info')" v-for="item in applyData" :key="item.id">
       <div :class="ns.be('info', 'icon')">
         <img
-          v-if="item.logo"
-          :src="useUserStore().fileUrl + item.logo"
+          :src="
+            !item.userInfo.companyLogo
+              ? 'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/no_img.png'
+              : useUserStore().fileUrl + item.userInfo.companyLogo
+          "
           alt=""
         />
       </div>
       <div :class="ns.be('info', 'content')">
         <p :class="ns.be('info', 'user')">
-          {{ item.userName }}｜{{ item.position }}
+          {{ item.userInfo.realName }}｜{{ item.userInfo.position }}
         </p>
-        <p :class="ns.be('info', 'company')">{{ item.enterpriseName }}</p>
-        <p :class="ns.be('info', 'time')">申请时间：{{ item.applyTime }}</p>
+        <p :class="ns.be('info', 'company')">{{ item.userInfo.company }}</p>
+        <p :class="ns.be('info', 'time')">申请时间：{{ item.createTime }}</p>
       </div>
     </div>
   </div>

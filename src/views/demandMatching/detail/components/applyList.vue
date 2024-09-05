@@ -15,7 +15,7 @@
     >
       <img
         :src="
-          !item.logo
+          !item.userInfo.companyLogo
             ? 'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/no_img.png'
             : useUserStore().fileUrl + item.userInfo.companyLogo
         "
@@ -199,6 +199,10 @@ const onAgreeOrRefuse = async (type: number) => {
   width: 288px;
   margin: 16px 0 8px;
   @include flex(center, space-between, nowrap);
+  h3 {
+    width: 230px;
+    @include textOverflow();
+  }
   div {
     @include widthAndHeight(54px, 24px);
     padding: 2px 8px;
