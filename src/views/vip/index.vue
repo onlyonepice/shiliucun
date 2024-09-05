@@ -135,8 +135,7 @@ const accountList = ref([
       text: "立即开通",
     },
     price: {
-      number: "¥ 11000",
-      desc: "账号数量不限",
+      number: "¥ 11000/年",
     },
     list: [],
   },
@@ -151,8 +150,7 @@ const accountList = ref([
       text: "立即开通",
     },
     price: {
-      number: "¥ 25000",
-      desc: "账号数量不限",
+      number: "¥ 25000/年",
     },
     list: [],
   },
@@ -167,8 +165,7 @@ const accountList = ref([
       text: "立即开通",
     },
     price: {
-      number: "¥ 50000",
-      desc: "账号数量不限",
+      number: "¥ 50000/年",
     },
     list: [],
   },
