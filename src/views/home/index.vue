@@ -238,7 +238,10 @@ const productList = ref([]);
 const demandHallList = ref([]);
 const searchContent: Ref<string> = ref("");
 const logoList = ref([]);
-const amountData: Ref<any> = ref({}); // 需求量
+const amountData: Ref<any> = ref({
+  pendingDemand: 0,
+  alreadyEnded: 0,
+}); // 需求量
 const params = {
   limit: 4,
   sortType: 1,
@@ -309,7 +312,7 @@ function handleGoDetails(row) {
 }
 
 function handleGoDemandDetails(row) {
-  router.push(`/demandMatching/detail?id=${row.id}`);
+  router.push(`/demandMatching/detail?id=${row.id}&source=home`);
 }
 
 function onDemandHallTitle() {

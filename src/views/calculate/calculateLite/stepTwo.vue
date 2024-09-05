@@ -251,7 +251,9 @@ function onAreaChange(val: any, prop: string) {
 // 获取echarts数据
 async function getElectricityTypeTwo() {
   const { datas, resp_code } = await getTechnologyContent_V2Api(
-    Object.assign(props.filterInfo),
+    Object.assign(props.filterInfo, {
+      capacity: { amount: basicInfo.value.amount },
+    }),
   );
   if (resp_code === 0) {
     step2Info.value = datas;

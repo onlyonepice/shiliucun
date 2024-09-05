@@ -1,77 +1,27 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
-    <p class="title">会员中心</p>
     <div class="wrapper">
       <div class="item" v-for="item in accountList" :key="item.id">
+        <img
+          v-if="item.background"
+          class="item_bg"
+          :src="item.background"
+          alt=""
+        />
         <img class="item_log" :src="item.topIcon" alt="" />
-        <div :class="ns.b('content')">
-          <div :class="ns.b('price')">
-            <span
-              v-if="item.price.number"
-              style="font-size: 12px; margin-right: 6px"
-              >¥</span
-            >
-            <span
-              :style="{
-                color: item.price.color,
-                'font-size': '32px',
-                'font-weight': 600,
-              }"
-              >{{
-                item.price.number === null ? "免费" : item.price.number
-              }}</span
-            >
-            <template v-if="item.price.number">
-              <span style="font-size: 20px; margin-left: 8px">{{
-                item.price.unit
-              }}</span>
-              <p
-                style="
-                  font-size: 16px;
-                  color: rgba(0, 0, 0, 0.6);
-                  margin-top: 6px;
-                "
-              >
-                <span style="font-size: 12px; margin-right: 6px">¥</span
-                >{{ item.price.extraPrice }}
-              </p>
-            </template>
-          </div>
+        <div :class="ns.b('price')">
+          <p :class="ns.be('price', 'number')">{{ item.price.number }}</p>
+          <p :class="ns.be('price', 'desc')">{{ item.price.desc }}</p>
           <div
-            @click="handleClick(item)"
-            class="item_btn"
+            :class="ns.be('price', 'btn')"
+            v-if="item.btnConfig"
             :style="{
-              border: `1px solid ${item.btnConfig.borderColor}`,
-              color: item.btnConfig.color,
               background: item.btnConfig.bgColor,
+              color: item.btnConfig.color,
             }"
+            @click="handleClick(item)"
           >
             {{ item.btnConfig.text }}
-          </div>
-          <div
-            :class="ns.b('module')"
-            v-for="_item in item.list"
-            :key="_item.moduleCode"
-          >
-            <h5 :class="ns.be('module', 'title')">{{ _item.moduleCode }}</h5>
-            <div
-              v-for="__item in _item.modulePermissions"
-              :key="__item.moduleName"
-              :class="ns.be('module', 'content')"
-            >
-              <div>
-                <template v-if="__item.isPermission">
-                  <img :src="VipTick" alt="" />
-                </template>
-                <template v-else>
-                  <span>-</span>
-                </template>
-                <h5 :class="ns.be('module_item', 'title')">
-                  {{ __item.moduleName }}
-                </h5>
-              </div>
-              <!-- <p>{{ __item.conditions }}</p> -->
-            </div>
           </div>
         </div>
       </div>
@@ -97,11 +47,16 @@
 import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import cancel_icon from "@/assets/img/common/icon_clear.png";
-import VipTopNormal from "@/assets/img/vip/vip-top-normal.png"; // 普通会员
-import VipTopNormal2 from "@/assets/img/vip/vip-top-normal2.png"; // EESA普通会员
-import VipTopNormal3 from "@/assets/img/vip/vip-top-normal3.png"; // EESA理事普通会员
-import VipTopNormal4 from "@/assets/img/vip/vip-top-normal4.png"; // EESA副理事长普通会员
-import VipTick from "@/assets/img/vip/vip-tick.png";
+import VipCOnfig from "@/assets/img/vip/vip-config.png";
+import VipTopl from "@/assets/img/vip/vip-1.png"; // 普通会员
+import VipTop2 from "@/assets/img/vip/vip-2.png"; // EESA普通会员
+import VipTop3 from "@/assets/img/vip/vip-3.png"; // EESA理事普通会员
+import VipTop4 from "@/assets/img/vip/vip-4.png"; // EESA副理事长普通会员
+import Bg1 from "@/assets/img/vip/bg-1.png";
+import Bg3 from "@/assets/img/vip/bg-3.png";
+import Bg4 from "@/assets/img/vip/bg-4.png";
+import Bg5 from "@/assets/img/vip/bg-5.png";
+// import VipTick from "@/assets/img/vip/vip-tick.png";
 // import VipFork from "@/assets/img/vip/vip-fork.png";
 import PayQR from "@/assets/img/vip/pay-member-qr.png";
 import { getVipConfigListApi } from "@/api/vip";
@@ -115,71 +70,69 @@ const vipConfigList: Ref<Array<any>> = ref([]); // vip列表配置
 const accountList = ref([
   {
     id: 0,
-    topIcon: VipTopNormal,
+    topIcon: VipCOnfig,
     code: "PERSON_ORDINARY_USER",
-    btnConfig: {
-      color: "rgba(0,0,0,0.9)",
-      bgColor: "#ffffff",
-      borderColor: "#DBDCE2",
-      text: "立即体验",
-    },
+    background: Bg1,
     price: {
-      color: "#5B6985",
       number: null,
     },
     list: [],
   },
   {
     id: 1,
-    topIcon: VipTopNormal2,
-    code: "ENTERPRISE_EESA_MEMBER_USER",
-    btnConfig: {
-      color: "rgba(255,255,255,0.9)",
-      bgColor: "#244BF1",
-      borderColor: "#244BF1",
-      text: "立即开通",
-    },
+    topIcon: VipTopl,
+    code: "PERSON_ORDINARY_USER",
+    forFree: true,
     price: {
-      number: 11000,
-      color: "#244BF1",
-      unit: "/1账号/年",
-      extraPrice: "1000/账号/年",
+      number: "免费版",
     },
     list: [],
   },
   {
     id: 2,
-    topIcon: VipTopNormal3,
-    code: "CHAIRMAN_MEMBER",
+    topIcon: VipTop2,
+    code: "ENTERPRISE_EESA_MEMBER_USER",
+    background: Bg3,
     btnConfig: {
-      color: "#E5BC68",
-      bgColor: "#412F1B",
-      borderColor: "#412F1B",
+      color: "rgba(255,255,255,0.9)",
+      bgColor: "#244BF1",
       text: "立即开通",
     },
     price: {
-      number: 25000,
-      color: "#412F1B",
-      unit: "/3账号/年",
-      extraPrice: "3000/账号/年",
+      number: "¥ 11000",
+      desc: "账号数量不限",
     },
     list: [],
   },
   {
     id: 3,
-    topIcon: VipTopNormal4,
-    code: "VICE_CHAIRMAN_MEMBER",
+    topIcon: VipTop3,
+    code: "CHAIRMAN_MEMBER",
+    background: Bg4,
     btnConfig: {
       color: "#E5BC68",
       bgColor: "#412F1B",
-      borderColor: "#412F1B",
       text: "立即开通",
     },
     price: {
-      number: 50000,
-      color: "#412F1B",
-      unit: "/3账号/年",
-      extraPrice: "3000/账号/年",
+      number: "¥ 25000",
+      desc: "账号数量不限",
+    },
+    list: [],
+  },
+  {
+    id: 4,
+    topIcon: VipTop4,
+    code: "VICE_CHAIRMAN_MEMBER",
+    background: Bg5,
+    btnConfig: {
+      color: "#F3EEE1",
+      bgColor: "#191923",
+      text: "立即开通",
+    },
+    price: {
+      number: "¥ 50000",
+      desc: "账号数量不限",
     },
     list: [],
   },
@@ -191,9 +144,9 @@ const handleSkip = () => {
 const handleClick = (item) => {
   const _id = item.id;
   window.trackFunction(
-    _id === 0
+    _id === 1
       ? "pc_OrdinaryMember_click"
-      : _id === 1
+      : _id === 2
         ? "pc_IndividualMember_click"
         : "pc_CorporateMember_click",
   );
@@ -239,14 +192,14 @@ getVipConfigList();
   }
   .wrapper {
     width: 100%;
-    display: flex;
-    justify-content: flex-start;
+    @include flex(center, center, nowrap);
     .item {
-      width: 270px;
+      width: 232px;
       position: relative;
-      border: 1px solid #dbdce2;
-      border-radius: 8px;
-      margin-right: 20px;
+      .item_bg {
+        @include absolute(-1, 0, 0, none, none);
+        @include widthAndHeight(100%, 100%);
+      }
       .item_log {
         @include widthAndHeight(100%, 104px);
       }
@@ -260,94 +213,73 @@ getVipConfigList();
       }
     }
   }
-  .dialog-wrapper {
-    position: fixed;
-    left: 0%;
-    top: 0%;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: -10;
-    opacity: 0;
-    transition: all 0.25s;
-
-    .dialog {
-      width: min-content;
-      height: min-content;
-      text-align: center;
-      position: fixed;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      margin: auto;
-      transition: all 0.25s;
-      transform: translateY(50px);
-      z-index: 9;
-
-      .QR {
-        width: 320px;
-      }
-
-      .cancel {
-        width: 32px;
-        height: 32px;
-        margin-top: 16px;
-        cursor: pointer;
-        background-color: transparent;
-      }
-    }
-
-    &.dialog-wrapper-active {
-      z-index: 999;
-      opacity: 1;
-
-      .dialog {
-        transform: translateY(0px);
-      }
-    }
-  }
-}
-.es-vip-content {
-  padding: 40px 24px 28px 24px;
 }
 .es-vip-price {
-  height: 60px;
-  margin: 0 auto 16px;
+  @include widthAndHeight(100%, 154px);
+  padding: 24px 0;
 }
-.es-vip-module__title {
-  color: rgba(0, 0, 0, 0.6);
-  line-height: 22px;
-  margin-bottom: 8px;
+.es-vip-price__number {
+  @include font(24px, 600, rgba(0, 0, 0, 0.9), 32px);
+  text-align: center;
 }
-.es-vip-module_item__title {
-  color: rgba(0, 0, 0, 0.6);
-  line-height: 22px;
+.es-vip-price__desc {
+  @include font(14px, 600, rgba(0, 0, 0, 0.6), 22px);
+  text-align: center;
+  margin-top: 4px;
 }
-.es-vip-module__content {
-  height: 22px;
-  margin-bottom: 10px;
-  @include flex(center, space-between, nowrap);
-  img {
-    @include widthAndHeight(15px, 15px);
-    flex: 0;
-    margin-right: 10px;
-  }
-  span {
-    display: inline-block;
-    @include widthAndHeight(15px, 15px);
-    @include flex(center, center, nowrap);
-    @include font(14px, 400, rgba(0, 0, 0, 0.26), 22px);
-    margin-right: 10px;
-  }
-  div {
-    @include flex(center, flex-start, nowrap);
-    h5 {
-      font-weight: 400;
+.es-vip-price__btn {
+  @include widthAndHeight(200px, 40px);
+  margin: 32px auto 0;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.dialog-wrapper {
+  position: fixed;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: -10;
+  opacity: 0;
+  transition: all 0.25s;
+
+  .dialog {
+    width: min-content;
+    height: min-content;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    transition: all 0.25s;
+    transform: translateY(50px);
+    z-index: 9;
+
+    .QR {
+      width: 320px;
+    }
+
+    .cancel {
+      width: 32px;
+      height: 32px;
+      margin-top: 16px;
+      cursor: pointer;
+      background-color: transparent;
     }
   }
-  p {
-    @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
+
+  &.dialog-wrapper-active {
+    z-index: 999;
+    opacity: 1;
+
+    .dialog {
+      transform: translateY(0px);
+    }
   }
 }
 </style>

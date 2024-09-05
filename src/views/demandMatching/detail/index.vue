@@ -178,7 +178,13 @@ const pageInfo: Ref<any> = ref({
   limit: 10,
 });
 onMounted(() => {
-  if (route.query.source) {
+  if (route.query.source === "home") {
+    breadcrumbList.value[0] = {
+      text: "首页",
+      path: "/home",
+    };
+  }
+  if (route.query.source === "homePersonal") {
     breadcrumbList.value[0] = {
       text: "个人中心",
       path: "/homePersonal?id=3",
