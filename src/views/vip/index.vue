@@ -34,6 +34,7 @@
             <p
               v-for="(_item, _index) in itemData.modulePermissions"
               :key="_index"
+              style="color: rgba(0, 0, 0, 0.6)"
             >
               {{ _item.moduleName }}
             </p>
