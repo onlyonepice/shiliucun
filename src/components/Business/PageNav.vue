@@ -3,11 +3,7 @@
     <!-- 子菜单栏展开背景图 -->
     <div :class="[ns.b('extra'), choseExtra ? ns.bm('extra', 'open') : '']" />
     <div :class="['es-commonPage', ns.b('content')]">
-      <img
-        :src="choseExtra || !opacityBg ? LogoIconBlue : LogoIcon"
-        alt=""
-        @click="onBackHome"
-      />
+      <img :src="LogoIconBlue" alt="" @click="onBackHome" />
       <div :class="[ns.b('list')]">
         <div
           v-for="item in navList"
@@ -100,7 +96,7 @@ interface NavList {
 }
 import { Ref, ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import LogoIcon from "@/assets/img/common/logo-icon.png";
+// import LogoIcon from "@/assets/img/common/logo-icon.png";
 import LogoIconBlue from "@/assets/img/common/logo-icon-blue.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
@@ -409,6 +405,7 @@ const onLogin = () => {
   @include margin(0, auto, 0, auto);
   @include flex(center, space-between, nowrap);
   @include relative();
+  background-color: #ffffff;
   img {
     @include widthAndHeight(64px, 30px);
     @include relative(10);

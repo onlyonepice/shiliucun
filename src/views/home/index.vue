@@ -424,7 +424,7 @@ getDemandCount();
 
 .es-home {
   min-height: 100vh;
-  padding-bottom: 240px;
+  padding-bottom: 80px;
   @include relative(1, 0, none, none, none);
   padding-top: 104px;
   .es-home-homeTop {
