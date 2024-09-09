@@ -1,6 +1,7 @@
 <template>
   <div :class="[ns.b(), 'es-commonPage']">
-    <div :class="ns.b('homeContent')">
+    <Skeleton v-if="homeLoading" />
+    <div v-else :class="ns.b('homeContent')">
       <div :class="ns.b('homeSupplyDemandDocking')">
         <div :class="ns.b('homeSupplyDemandDockingLeft')">
           <div :class="ns.b('homeSupplyDemandDockingTop')">
@@ -40,13 +41,13 @@
               搜索
             </div>
           </div>
-          <div :class="ns.b('amount')">
+          <div :class="ns.b('amount')" @click="onDemandHallTitle">
             <img
-              @click="onDemandHallTitle"
               src="@/assets/img/home/home-supply-demand-docking.png"
               alt=""
             />
             <div :class="ns.be('amount', 'list')">
+              <img :src="AmountImg" alt="" />
               <div>
                 <span>{{ amountData.alreadyEnded }}</span>
                 <p>已解决需求</p>
@@ -209,7 +210,7 @@ import useNamespace from "@/utils/nameSpace";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { useUserStore } from "@/store/modules/user";
 import { useUserStoreHook } from "@/store/modules/user";
-
+import Skeleton from "./homeComponents/skeleton.vue";
 import { getProductListApi } from "@/api/searchProduct";
 import { getHomePage, frontSelectList, getNeedAmountApi } from "@/api/home";
 import homeNav_1 from "@/assets/img/home/home-nav-1.png";
@@ -223,6 +224,7 @@ import homeNavBottom_5 from "@/assets/img/home/home-nav-bottom-5.png";
 import homeNavBottom_6 from "@/assets/img/home/home-nav-bottom-6.png";
 import homeNavBottom_7 from "@/assets/img/home/home-nav-bottom-7.png";
 import homeNavBottom_8 from "@/assets/img/home/home-nav-bottom-8.png";
+import AmountImg from "@/assets/img/home/amount-bg.png";
 import { Controller, Autoplay, Navigation, Pagination } from "swiper/modules";
 const modules = [Controller, Autoplay, Navigation, Pagination];
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
@@ -235,6 +237,7 @@ const autoplay: any = ref({
 const router = useRouter();
 const ns = useNamespace("home");
 const productList = ref([]);
+const homeLoading: Ref<Boolean> = ref(false); // 需求量加载
 const demandHallList = ref([]);
 const searchContent: Ref<string> = ref("");
 const logoList = ref([]);
@@ -394,8 +397,10 @@ async function changeGetProductList(page) {
 }
 
 async function getHomeDemand() {
+  homeLoading.value = true;
   const { datas } = await getHomePage();
   demandHallList.value = datas;
+  homeLoading.value = false;
 }
 
 async function getFrontSelectList() {
@@ -543,9 +548,14 @@ getDemandCount();
           position: relative;
           .es-home-amount__list {
             @include widthAndHeight(192px, 60px);
-            @include absolute(1, 132px, none, none, 0);
+            @include absolute(2, 132px, none, none, 0);
             @include flex(center, center);
             text-align: center;
+            img {
+              @include widthAndHeight(100%, 100%);
+              @include absolute(2, 0, none, none, 0);
+              margin: 0;
+            }
             span {
               @include font(16px, 600, #ff892e, 24px);
             }
