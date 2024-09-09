@@ -127,13 +127,6 @@
                     {{ item.description }}
                   </div>
                 </div>
-                <div class="Pagination">
-                  <Pagination
-                    :pageSize="filterParams.pageSize"
-                    :total="total"
-                    @onchangeCurrent="onchangeCurrent"
-                  />
-                </div>
               </template>
               <!-- 搜索结果没有数据 -->
               <template v-else>
@@ -153,6 +146,13 @@
         </div>
       </template>
       <DemandMatchingSkeleton v-else />
+      <div class="Pagination" v-if="total !== 0">
+        <Pagination
+          :pageSize="filterParams.pageSize"
+          :total="total"
+          @onchangeCurrent="onchangeCurrent"
+        />
+      </div>
     </div>
     <div v-show="currentPage === 'manage'">
       <template v-if="!loadingMy">
@@ -221,13 +221,6 @@
                         {{ item.description }}
                       </div>
                     </div>
-                    <div class="Pagination">
-                      <Pagination
-                        :pageSize="releaseParams.pageSize"
-                        :total="releaseTotal"
-                        @onchangeCurrent="onchangeCurrentRelease"
-                      />
-                    </div>
                   </template>
                   <!-- 我发布的没有数据 -->
                   <template v-else>
@@ -243,6 +236,13 @@
                     </div>
                   </template>
                 </template>
+              </div>
+              <div class="Pagination" v-if="releaseTotal !== 0">
+                <Pagination
+                  :pageSize="releaseParams.pageSize"
+                  :total="releaseTotal"
+                  @onchangeCurrent="onchangeCurrentRelease"
+                />
               </div>
             </div>
             <!-- 我报名的 -->
@@ -295,13 +295,6 @@
                         {{ item.description }}
                       </div>
                     </div>
-                    <div class="Pagination">
-                      <Pagination
-                        :pageSize="applyParams.limit"
-                        :total="applyTotal"
-                        @onchangeCurrent="onchangeCurrentApply"
-                      />
-                    </div>
                   </template>
                   <!-- 搜索结果没有数据 -->
                   <template v-else>
@@ -317,6 +310,13 @@
                     </div>
                   </template>
                 </template>
+              </div>
+              <div class="Pagination" v-if="applyTotal !== 0">
+                <Pagination
+                  :pageSize="applyParams.limit"
+                  :total="applyTotal"
+                  @onchangeCurrent="onchangeCurrentApply"
+                />
               </div>
             </div>
             <businessCard style="margin-top: 24px" :info="userDetailInfo" />

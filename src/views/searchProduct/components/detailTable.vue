@@ -205,7 +205,10 @@ defineProps({
 <style lang="scss">
 @import "@/style/mixin.scss";
 .es-searchProductDetail .el-table .el-table__cell {
-  padding: 8px 15px 7px 16px !important;
+  padding: 8px 10px 7px 10px !important;
+}
+.es-searchProductDetail .el-table .cell {
+  width: 120px;
 }
 .es-searchProductDetail .el-table__row {
   height: 32px;

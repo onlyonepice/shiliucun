@@ -88,12 +88,11 @@
               :span-method="arraySpanMethod"
               type="index"
             >
-              <el-table-column fixed prop="name" label="" width="160">
+              <el-table-column fixed prop="name" label="" width="200">
                 <template #default="scope">
                   <p
                     v-if="route.query.productType === 'INDUSTRY_ENERGY_STORAGE'"
                     :style="{
-                      'text-align': 'center',
                       color: 'rgba(0, 0, 0, 0.9)',
                       'font-weight':
                         scope.$index === 1 ||
@@ -108,7 +107,6 @@
                   <p
                     v-if="route.query.productType === 'ENERGY_STORAGE_INVERTER'"
                     :style="{
-                      'text-align': 'center',
                       color: 'rgba(0, 0, 0, 0.9)',
                       'font-weight':
                         scope.$index === 1 ||
@@ -122,10 +120,7 @@
                   </p>
                   <p
                     v-if="route.query.productType === 'ELECTRIC_CORE'"
-                    style="
-                      text-align: center;
-                      color: &quot;rgba(0, 0, 0, 0.9)&quot;;
-                    "
+                    style="color: &quot;rgba(0, 0, 0, 0.9)&quot;"
                   >
                     {{ scope.row.name }}
                   </p>
@@ -137,9 +132,9 @@
                 :prop="'info' + item"
                 label=""
                 :width="
-                  943 / tableData[0].info.length < 300
+                  904 / tableData[0].info.length < 300
                     ? 300
-                    : 943 / tableData[0].info.length
+                    : 904 / tableData[0].info.length
                 "
               >
                 <template #default="scope">
@@ -493,20 +488,20 @@ function generateComparisonMatrix(data) {
 // 合并单元格
 /* eslint-disable */
 const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
-  if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
-    if (rowIndex === 1 || rowIndex === 5 || rowIndex === 8) {
-      if (columnIndex === 0) {
-        return [1, productDetail.value.models.length + 1]; // 合并第一行第二列和第三列单元格
-      }
-    }
-  }
-  if (route.query.productType === "ENERGY_STORAGE_INVERTER") {
-    if (rowIndex === 1 || rowIndex === 4 || rowIndex === 9) {
-      if (columnIndex === 0) {
-        return [1, productDetail.value.models.length + 1]; // 合并第一行第二列和第三列单元格
-      }
-    }
-  }
+  // if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
+  //   if (rowIndex === 1 || rowIndex === 5 || rowIndex === 8) {
+  //     if (columnIndex === 0) {
+  //       return [1, productDetail.value.models.length + 1]; // 合并第一行第二列和第三列单元格
+  //     }
+  //   }
+  // }
+  // if (route.query.productType === "ENERGY_STORAGE_INVERTER") {
+  //   if (rowIndex === 1 || rowIndex === 4 || rowIndex === 9) {
+  //     if (columnIndex === 0) {
+  //       return [1, productDetail.value.models.length + 1]; // 合并第一行第二列和第三列单元格
+  //     }
+  //   }
+  // }
   const _list = [];
   productDetail.value.models.map((item) => {
     var _data = {};
@@ -778,15 +773,7 @@ const onConnectCompany = (id: string) => {
   .el-table__body {
     .el-table__row {
       td {
-        text-align: center;
-      }
-      td[colspan="1"] {
-        div {
-          text-align: left;
-        }
-        p {
-          text-align: left;
-        }
+        text-align: left;
       }
     }
   }
