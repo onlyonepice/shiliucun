@@ -1,183 +1,86 @@
 <template>
   <template v-if="productType === 'INDUSTRY_ENERGY_STORAGE'">
-    <div
+    <Swiper
       v-if="index === 0"
-      :class="ns.b('common')"
-      name="产品型号"
-      style="font-weight: 600"
-    >
-      {{ info.modelName ? info.modelName : "-" }}
-    </div>
-    <div v-if="index === 1" :class="ns.b('common')" name="电池参数" />
-    <div v-if="index === 2" :class="ns.b('common')" name="电芯类型">
-      {{ info.batteryTypeName ? info.batteryTypeName : "-" }}
-    </div>
-    <div v-if="index === 3" :class="ns.b('common')" name="电池系统能量/kWh">
-      {{ info.batterySystemEnergy ? info.batterySystemEnergy + "kWh" : "-" }}
-    </div>
-    <div v-if="index === 4" :class="ns.b('common')" name="放电深度/%">
-      {{ info.dischargeDepth ? info.dischargeDepth + "%" : "-" }}
-    </div>
-    <div v-if="index === 5" :class="ns.b('common')" name="PCS参数" />
-    <div v-if="index === 6" :class="ns.b('common')" name="标称电压/V">
-      {{
-        info.nominalVoltage && info.nominalVoltage.length !== 0
-          ? info.nominalVoltage.join("-")
-          : "-"
-      }}
-    </div>
-    <div v-if="index === 7" :class="ns.b('common')" name="额定功率/kW">
-      {{ info.ratedPower ? info.ratedPower + "kW" : "-" }}
-    </div>
-    <div v-if="index === 8" :class="ns.b('common')" name="系统参数" />
-    <div v-if="index === 9" :class="ns.b('common')" name="产品形态">
-      {{ info.productFormName ? info.productFormName : "-" }}
-    </div>
-    <div v-if="index === 10" :class="ns.b('common')" name="系统综合效率/%">
-      {{
-        info.systemOverallEfficiency ? info.systemOverallEfficiency + "%" : "-"
-      }}
-    </div>
-    <div v-if="index === 11" :class="ns.b('common')" name="年衰减率/%">
-      {{ info.annualDecayRate ? info.annualDecayRate + "%" : "-" }}
-    </div>
-    <div v-if="index === 12" :class="ns.b('common')" name="冷却方式">
-      {{
-        info.coolingMethodName.length !== 0
-          ? info.coolingMethodName.join(",")
-          : "-"
-      }}
-    </div>
-    <div v-if="index === 13" :class="ns.b('common')" name="尺寸/m*m*m">
-      {{ info.size ? info.size : "-" }}
-    </div>
-    <div v-if="index === 14" :class="ns.b('common')" name="产品单价/元/kWh">
-      {{
-        info.energyStorageSystemProductUnitPrice
-          ? info.energyStorageSystemProductUnitPrice
-          : "-"
-      }}
-    </div>
+      :info="info"
+      prop="modelName"
+      @onSlideChange="onSlideChange"
+    />
+    <Swiper v-if="index === 1" :info="info" prop="" />
+    <Swiper v-if="index === 2" :info="info" prop="batteryTypeName" />
+    <Swiper v-if="index === 3" :info="info" prop="batterySystemEnergy" />
+    <Swiper v-if="index === 4" :info="info" prop="dischargeDepth" />
+    <Swiper v-if="index === 5" :info="info" prop="" />
+    <Swiper v-if="index === 6" :info="info" prop="nominalVoltage" />
+    <Swiper v-if="index === 7" :info="info" prop="ratedPower" />
+    <Swiper v-if="index === 8" :info="info" prop="" />
+    <Swiper v-if="index === 9" :info="info" prop="productFormName" />
+    <Swiper v-if="index === 10" :info="info" prop="systemOverallEfficiency" />
+    <Swiper v-if="index === 11" :info="info" prop="annualDecayRate" />
+    <Swiper v-if="index === 12" :info="info" prop="coolingMethodName" />
+    <Swiper v-if="index === 13" :info="info" prop="size" />
+    <Swiper
+      v-if="index === 14"
+      :info="info"
+      prop="energyStorageSystemProductUnitPrice"
+    />
   </template>
   <template v-if="productType === 'ENERGY_STORAGE_INVERTER'">
-    <div
+    <Swiper
       v-if="index === 0"
-      :class="ns.b('common')"
-      name="产品型号"
-      style="font-weight: 600"
-    >
-      {{ info.modelName ? info.modelName : "-" }}
-    </div>
-    <div v-if="index === 1" :class="ns.b('common')" name="直流侧参数" />
-    <div v-if="index === 2" :class="ns.b('common')" name="直流电压范围/V">
-      {{
-        info.dcVoltageRange
-          ? info.dcVoltageRange[0] + "-" + info.dcVoltageRange[1]
-          : "-"
-      }}
-    </div>
-    <div v-if="index === 3" :class="ns.b('common')" name="最大直流电流/A">
-      {{ info.maximumDirectCurrent ? info.maximumDirectCurrent : "-" }}
-    </div>
-    <div v-if="index === 4" :class="ns.b('common')" name="交流侧参数" />
-    <div v-if="index === 5" :class="ns.b('common')" name="额定输出功率">
-      {{
-        info.ratedOutputPower
-          ? info.ratedOutputPower +
-            (info.ratedOutputUnit === null
-              ? ""
-              : info.ratedOutputUnit === 0
-                ? "kW"
-                : "kVA")
-          : "-"
-      }}
-    </div>
-    <div v-if="index === 6" :class="ns.b('common')" name="额定交流电压/V">
-      {{ info.ratedACVoltage ? info.ratedACVoltage : "-" }}
-    </div>
-    <div v-if="index === 7" :class="ns.b('common')" name="额定交流电流/A">
-      {{ info.ratedAlternatingCurrent ? info.ratedAlternatingCurrent : "-" }}
-    </div>
-    <div v-if="index === 8" :class="ns.b('common')" name="额定交流频率">
-      {{ info.ratedACFrequency ? info.ratedACFrequency : "-" }}
-    </div>
-    <div v-if="index === 9" :class="ns.b('common')" name="系统参数" />
-    <div v-if="index === 10" :class="ns.b('common')" name="最大效率/%">
-      {{ info.maximumEfficiency ? info.maximumEfficiency : "-" }}
-    </div>
-    <div v-if="index === 11" :class="ns.b('common')" name="工作温度范围">
-      {{
-        info.operatingTemperatureRange ? info.operatingTemperatureRange : "-"
-      }}
-    </div>
-    <div v-if="index === 12" :class="ns.b('common')" name="相对湿度范围">
-      {{ info.relativeHumidityRange ? info.relativeHumidityRange : "-" }}
-    </div>
-    <div v-if="index === 13" :class="ns.b('common')" name="海拔高度">
-      {{ info.altitude ? info.altitude : "-" }}
-    </div>
-    <div v-if="index === 14" :class="ns.b('common')" name="冷却方式">
-      {{
-        info.coolingMethodName.length !== 0
-          ? info.coolingMethodName.join(",")
-          : "-"
-      }}
-    </div>
-    <div v-if="index === 15" :class="ns.b('common')" name="尺寸（W*H*D）/mm">
-      {{ info.size ? info.size : "-" }}
-    </div>
-    <div v-if="index === 16" :class="ns.b('common')" name="重量/kg">
-      {{ info.weight ? info.weight : "-" }}
-    </div>
-    <div v-if="index === 17" :class="ns.b('common')" name="产品单价/元/台">
-      {{ info.productPrice ? info.productPrice : "-" }}
-    </div>
+      :info="info"
+      prop="modelName"
+      @onSlideChange="onSlideChange"
+    />
+    <Swiper v-if="index === 1" :info="info" prop="/" />
+    <Swiper v-if="index === 2" :info="info" prop="dcVoltageRange" />
+    <Swiper v-if="index === 3" :info="info" prop="maximumDirectCurrent" />
+    <Swiper v-if="index === 4" :info="info" prop="/" />
+    <Swiper v-if="index === 5" :info="info" prop="ratedOutputPower" />
+    <Swiper v-if="index === 6" :info="info" prop="ratedACVoltage" />
+    <Swiper v-if="index === 7" :info="info" prop="ratedAlternatingCurrent" />
+    <Swiper v-if="index === 8" :info="info" prop="ratedACFrequency" />
+    <Swiper v-if="index === 9" :info="info" prop="/" />
+    <Swiper v-if="index === 10" :info="info" prop="maximumEfficiency" />
+    <Swiper v-if="index === 11" :info="info" prop="operatingTemperatureRange" />
+    <Swiper v-if="index === 12" :info="info" prop="relativeHumidityRange" />
+    <Swiper v-if="index === 13" :info="info" prop="altitude" />
+    <Swiper v-if="index === 14" :info="info" prop="coolingMethodName" />
+    <Swiper v-if="index === 15" :info="info" prop="size" />
+    <Swiper v-if="index === 16" :info="info" prop="weight" />
+    <Swiper v-if="index === 17" :info="info" prop="productPrice" />
   </template>
   <template v-if="productType === 'ELECTRIC_CORE'">
-    <div
+    <Swiper
       v-if="index === 0"
-      :class="ns.b('common')"
-      name="产品型号"
-      style="font-weight: 600"
-    >
-      {{ info.modelName ? info.modelName : "-" }}
-    </div>
-    <div v-if="index === 1" :class="ns.b('common')" name="形态">
-      {{ info.shapeName ? info.shapeName : "-" }}
-    </div>
-    <div v-if="index === 2" :class="ns.b('common')" name="容量/Ah">
-      {{ info.batteryCapacity ? info.batteryCapacity : "-" }}
-    </div>
-    <div v-if="index === 3" :class="ns.b('common')" name="充/放电倍率">
-      {{ info.chargeDischargeRate ? info.chargeDischargeRate : "-" }}
-    </div>
-    <div v-if="index === 4" :class="ns.b('common')" name="能量密度">
-      {{ info.energyDensity ? info.energyDensity : "-" }}
-    </div>
-    <div v-if="index === 5" :class="ns.b('common')" name="循环寿命">
-      {{ info.cycleLife ? info.cycleLife : "-" }}
-    </div>
-    <div v-if="index === 6" :class="ns.b('common')" name="尺寸">
-      {{ info.size ? info.size : "-" }}
-    </div>
-    <div v-if="index === 7" :class="ns.b('common')" name="产品单价（元/Wh）">
-      {{ info.productPrice ? info.productPrice : "-" }}
-    </div>
+      :info="info"
+      prop="modelName"
+      @onSlideChange="onSlideChange"
+    />
+    <Swiper v-if="index === 1" :info="info" prop="shapeName" />
+    <Swiper v-if="index === 2" :info="info" prop="batteryCapacity" />
+    <Swiper v-if="index === 3" :info="info" prop="chargeDischargeRate" />
+    <Swiper v-if="index === 4" :info="info" prop="energyDensity" />
+    <Swiper v-if="index === 5" :info="info" prop="cycleLife" />
+    <Swiper v-if="index === 6" :info="info" prop="size" />
+    <Swiper v-if="index === 7" :info="info" prop="productPrice" />
   </template>
 </template>
 
 <script lang="ts" setup>
 // import { computed } from "vue";
-import useNamespace from "@/utils/nameSpace";
-const ns = useNamespace("searchProduct-comparedTable");
+import Swiper from "./Swiper.vue";
+// import useNamespace from "@/utils/nameSpace";
+// const ns = useNamespace("searchProduct-comparedTable");
+const emits = defineEmits(["onSlideChange"]);
 defineProps({
   index: {
     type: Number,
     default: 0,
   },
   info: {
-    type: Object as any,
-    default: () => {},
+    type: Array,
+    default: () => [],
   },
   productType: {
     type: String,
@@ -188,18 +91,16 @@ defineProps({
     default: () => [],
   },
 });
-// const getMerge = computed(() => {
-//   return (name: string) => {
-//     return props.merge.indexOf(name) !== -1 ? "center" : "left";
-//   };
-// });
+function onSlideChange(data) {
+  emits("onSlideChange", data);
+}
 </script>
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
 .es-searchProduct-comparedTable-common {
-  @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
-  height: 22px;
+  @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+  text-align: center;
 }
 </style>
 <style lang="scss">
@@ -208,7 +109,10 @@ defineProps({
   padding: 8px 10px 7px 10px !important;
 }
 .es-searchProductDetail .el-table .cell {
-  width: 120px;
+  width: 100%;
+  overflow: visible;
+  min-height: 22px;
+  line-height: 22px;
 }
 .es-searchProductDetail .el-table__row {
   height: 32px;

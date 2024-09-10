@@ -80,7 +80,22 @@
             @onHandleClick="onHandleClick"
             :defaultId="choseTabs"
           />
-          <template v-if="choseTabs === 0">
+          <div v-if="choseTabs === 0" style="position: relative">
+            <div
+              class="swiperINDUSTRY swiperINDUSTRY-prev"
+              v-show="tableData[0].info.length > 6 && swiperCurrent !== 0"
+            >
+              <img :src="PreIconChose" alt="" />
+            </div>
+            <div
+              class="swiperINDUSTRY swiperINDUSTRY-next"
+              v-show="
+                tableData[0].info.length > 6 &&
+                swiperCurrent !== tableData[0].info.length - 6
+              "
+            >
+              <img :src="NextIconChose" alt="" />
+            </div>
             <el-table
               :data="tableData"
               style="width: 100%"
@@ -93,7 +108,12 @@
                   <p
                     v-if="route.query.productType === 'INDUSTRY_ENERGY_STORAGE'"
                     :style="{
-                      color: 'rgba(0, 0, 0, 0.9)',
+                      color:
+                        scope.$index === 1 ||
+                        scope.$index === 5 ||
+                        scope.$index === 8
+                          ? 'rgba(0, 0, 0, 0.9 )'
+                          : 'rgba(0, 0, 0, 0.6 )',
                       'font-weight':
                         scope.$index === 1 ||
                         scope.$index === 5 ||
@@ -107,7 +127,12 @@
                   <p
                     v-if="route.query.productType === 'ENERGY_STORAGE_INVERTER'"
                     :style="{
-                      color: 'rgba(0, 0, 0, 0.9)',
+                      color:
+                        scope.$index === 1 ||
+                        scope.$index === 4 ||
+                        scope.$index === 9
+                          ? 'rgba(0, 0, 0, 0.9 )'
+                          : 'rgba(0, 0, 0, 0.6 )',
                       'font-weight':
                         scope.$index === 1 ||
                         scope.$index === 4 ||
@@ -120,34 +145,25 @@
                   </p>
                   <p
                     v-if="route.query.productType === 'ELECTRIC_CORE'"
-                    style="color: &quot;rgba(0, 0, 0, 0.9)&quot;"
+                    style="color: &quot;rgba(0, 0, 0, 0.6)&quot;"
                   >
                     {{ scope.row.name }}
                   </p>
                 </template>
               </el-table-column>
-              <el-table-column
-                v-for="item in tableData[0].info.length"
-                :key="item"
-                :prop="'info' + item"
-                label=""
-                :width="
-                  904 / tableData[0].info.length < 300
-                    ? 300
-                    : 904 / tableData[0].info.length
-                "
-              >
+              <el-table-column prop="info" label="" :width="904">
                 <template #default="scope">
                   <detailTable
                     :index="scope.$index"
-                    :info="scope.row.info[item - 1] || {}"
+                    :info="tableData[0].info || []"
                     :productType="route.query.productType"
+                    @onSlideChange="onSlideChange"
                   />
                   <div>{{ scope.$rowIndex }}</div>
                 </template>
               </el-table-column>
             </el-table>
-          </template>
+          </div>
           <template v-else>
             <DetailCompany :companyInfo="companyInfo" />
           </template>
@@ -164,7 +180,7 @@
         v-if="productDetailList.length !== 0"
       >
         <h3>公司其他产品</h3>
-        <div style="display: flex">
+        <div style="display: flex; flex-wrap: wrap">
           <div
             :class="[ns.be('content', 'item')]"
             v-for="item in productDetailList"
@@ -219,6 +235,8 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { cloneDeep } from "lodash";
 import { getEnterpriseDetailApi } from "@/api/searchProduct";
 import { ElMessage } from "element-plus";
+import PreIconChose from "@/assets/img/searchProduct/chose-pre-icon.png";
+import NextIconChose from "@/assets/img/searchProduct/chose-next-icon.png";
 const companyInfo: Ref<any> = ref({}); // 获取企业信息
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const productConnectVisible: Ref<boolean> = ref(false); // 修改企业弹窗
@@ -449,6 +467,10 @@ const getCompanyInfo = async (id: string) => {
     datas === null && (tabsList.value = [{ id: 0, name: "产品参数" }]);
   }
 };
+const swiperCurrent = ref(0); // swiper的当前页
+function onSlideChange(data: number) {
+  swiperCurrent.value = data;
+}
 // 寻找出相同的key
 function generateComparisonMatrix(data) {
   if (data.length === 0) return [];
@@ -698,10 +720,13 @@ const onConnectCompany = (id: string) => {
   cursor: pointer;
   text-align: center;
   overflow: hidden;
-  margin-right: 16px;
   position: relative;
+  margin: 0 16px 16px 0;
   &:hover {
     box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+  }
+  &:nth-of-type(5n) {
+    margin-right: 0;
   }
 }
 .es-searchProductDetail-item__icon {
@@ -751,6 +776,24 @@ const onConnectCompany = (id: string) => {
     margin-top: 24px;
   }
 }
+.swiperINDUSTRY {
+  @include widthAndHeight(24px, 24px);
+  background: #ffffff;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 1px solid #dbdce2;
+  @include flex(center, center, nowrap);
+  img {
+    @include widthAndHeight(20px, 20px);
+    cursor: pointer;
+  }
+}
+.swiperINDUSTRY-prev {
+  @include absolute(999, 20px, none, none, 190px);
+}
+.swiperINDUSTRY-next {
+  @include absolute(999, 20px, -10px, none, none);
+}
 </style>
 <style lang="scss">
 @import "@/style/mixin.scss";
@@ -759,7 +802,7 @@ const onConnectCompany = (id: string) => {
     height: 0;
   }
   .el-table .el-table__cell {
-    padding: 9px 15px 7px 15px;
+    padding: 8px 15px 7px 15px;
   }
   .el-table .cell {
     padding: 0;

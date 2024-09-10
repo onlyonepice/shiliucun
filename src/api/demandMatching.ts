@@ -48,7 +48,7 @@ export const changeApplyStatusApi = (params: number) => {
 export const getCloseReasonApi = (params: any) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    `/eesa-data-center/sysDict/back/V1.0/findListByTypeAndValue`,
+    `/eesa-data-center/sysDict/front/v1.0/findListByTypeAndValue`,
     { params },
   );
 };
@@ -73,7 +73,7 @@ export const deleteDemandApi = (id: number) => {
 export const getAssignConfigApi = (params: any) => {
   return http.request<{ datas; resp_code }>(
     "get",
-    `/eesa-industrial-map/sysDict/back/v1.0/findAllByTypeAndValue`,
+    `/eesa-industrial-map/sysDict/front/v1.0/findAllByTypeAndValue`,
     { params },
   );
 };

@@ -201,7 +201,7 @@ export function getPermissionApi() {
 export function getTimesApi(params: any) {
   return http.request<responseType>(
     "get",
-    `/eesa-report/homePage/reportNewDataCenter/back/v1.1/numberUses`,
+    `/eesa-report/homePage/reportNewDataCenter/front/v1.1/numberUses`,
     { params },
   );
 }
@@ -233,7 +233,7 @@ export function getCompanyInfoApi() {
 export function trackApi(data: any) {
   return http.request<responseType>(
     "post",
-    `/eesa-data-center/event/back/V1.0/creat`,
+    `/eesa-data-center/event/openApi/V1.0/create`,
     { data },
   );
 }

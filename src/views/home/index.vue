@@ -91,13 +91,31 @@
         </div>
       </div>
       <div :class="ns.b('enterprise')">
-        <div :class="ns.b('enterpriseTitle')">明星企业</div>
+        <div :class="ns.b('enterpriseTitle')">
+          <span>明星企业</span>
+          <div>
+            <img
+              class="starSwiper-prev"
+              :src="getSwiper('starSwiper', 'pre')"
+              alt=""
+            />
+            <img
+              class="starSwiper-next"
+              :src="getSwiper('starSwiper', 'next')"
+              alt=""
+            />
+          </div>
+        </div>
         <swiper
           :modules="modules"
           :space-between="8"
-          :loop="true"
-          class="swiperBox"
-          :autoplay="autoplay"
+          class="swiperBox swiperStar"
+          ref="starSwiper"
+          :navigation="{
+            nextEl: '.starSwiper-next',
+            prevEl: '.starSwiper-prev',
+          }"
+          @slideChange="getSwiperFun"
         >
           <swiper-slide
             v-for="(data, i) in Math.ceil(logoList.length / 18)"
@@ -122,14 +140,30 @@
         </swiper>
       </div>
       <div :class="ns.b('product')">
-        <div :class="ns.b('productTitle')">产品动态</div>
+        <div :class="ns.b('productTitle')">
+          <span>产品动态</span>
+          <div>
+            <img
+              class="productSwiper-prev"
+              :src="getSwiper('productSwiper', 'pre')"
+              alt=""
+            />
+            <img
+              class="productSwiper-next"
+              :src="getSwiper('productSwiper', 'next')"
+              alt=""
+            />
+          </div>
+        </div>
         <swiper
           :modules="modules"
           :space-between="24"
-          :loop="true"
           class="swiperBox"
-          :autoplay="autoplay"
           @slideChange="onSlideChange"
+          :navigation="{
+            nextEl: '.productSwiper-next',
+            prevEl: '.productSwiper-prev',
+          }"
         >
           <template v-for="(group, i) in productList" :key="i">
             <swiper-slide>
@@ -224,16 +258,20 @@ import homeNavBottom_5 from "@/assets/img/home/home-nav-bottom-5.png";
 import homeNavBottom_6 from "@/assets/img/home/home-nav-bottom-6.png";
 import homeNavBottom_7 from "@/assets/img/home/home-nav-bottom-7.png";
 import homeNavBottom_8 from "@/assets/img/home/home-nav-bottom-8.png";
+import PreIcon from "@/assets/img/home/pre-icon.png";
+import PreIconChose from "@/assets/img/home/chose-pre-icon.png";
+import NextIcon from "@/assets/img/home/next-icon.png";
+import NextIconChose from "@/assets/img/home/chose-next-icon.png";
 import AmountImg from "@/assets/img/home/amount-bg.png";
 import { Controller, Autoplay, Navigation, Pagination } from "swiper/modules";
 const modules = [Controller, Autoplay, Navigation, Pagination];
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
-
-const autoplay: any = ref({
-  delay: 3000,
-  pauseOnMouseEnter: false,
-  disableOnInteraction: false,
-});
+const starSwiper = ref(); // 轮播图
+// const autoplay: any = ref({
+//   delay: 3000,
+//   pauseOnMouseEnter: false,
+//   disableOnInteraction: false,
+// });
 const router = useRouter();
 const ns = useNamespace("home");
 const productList = ref([]);
@@ -274,6 +312,35 @@ const functionNav = ref([
     bgc: "linear-gradient( 90deg, #FFFAF5 0%, #FFF0E1 100%)",
   },
 ]);
+// 获取
+function getSwiper(type: string, data: string) {
+  let _data = null;
+  if (type === "starSwiper") {
+    if (data === "pre") {
+      _data = starSwiperCurrent.value === 0 ? PreIcon : PreIconChose;
+    } else {
+      _data =
+        starSwiperCurrent.value === Math.ceil(logoList.value.length / 18) - 1
+          ? NextIcon
+          : NextIconChose;
+    }
+  } else {
+    if (data === "pre") {
+      _data = productSwiperCurrent.value === 0 ? PreIcon : PreIconChose;
+    } else {
+      _data =
+        productSwiperCurrent.value === totalPages.value - 1
+          ? NextIcon
+          : NextIconChose;
+    }
+  }
+  return _data;
+}
+const starSwiperCurrent = ref(0); // 记录幻灯片位置
+const productSwiperCurrent = ref(0); // 记录幻灯片位置
+function getSwiperFun({ realIndex }) {
+  starSwiperCurrent.value = realIndex;
+}
 const functionNavTwo = ref([
   { title: "项目", path: "/dataProject", icon: homeNavBottom_1 },
   { title: "招标", path: "/dataTender", icon: homeNavBottom_2 },
@@ -341,12 +408,14 @@ function onFunctionNav(row) {
   }
 }
 
+const totalPages = ref(0); // 产品动态
 async function getProductList(page) {
   const { datas } = await getProductListApi({ page, ...params });
   if (page === 1)
     for (let i = 0; i < datas.totalPages; i++) {
       productList.value.push([]);
     }
+  totalPages.value = datas.totalPages;
   productList.value[page - 1] = datas.content;
   if (page === 1) {
     if (datas.totalPages > 1) {
@@ -361,6 +430,7 @@ async function getProductList(page) {
 }
 let lastTimeIndex = 0;
 async function onSlideChange({ realIndex }) {
+  productSwiperCurrent.value = realIndex;
   if (
     isNaN(realIndex) ||
     !productList.value.length ||
@@ -615,6 +685,17 @@ getDemandCount();
       padding-top: 80px;
       .es-home-enterpriseTitle {
         @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px);
+        @include flex(center, space-between, nowrap);
+        img {
+          @include widthAndHeight(24px, 24px);
+          cursor: pointer;
+          &:nth-of-type(1) {
+            margin-right: 16px;
+          }
+          &:hover {
+            background: rgba(0, 0, 0, 0.1);
+          }
+        }
       }
       .es-home-enterpriseContent {
         display: flex;
@@ -658,6 +739,17 @@ getDemandCount();
       padding-top: 80px;
       .es-home-productTitle {
         @include font(36px, 600, rgba(0, 0, 0, 0.9), 44px);
+        @include flex(center, space-between, nowrap);
+        img {
+          @include widthAndHeight(24px, 24px);
+          cursor: pointer;
+          &:nth-of-type(1) {
+            margin-right: 16px;
+          }
+          &:hover {
+            background: rgba(0, 0, 0, 0.1);
+          }
+        }
       }
       .es-home-productContent {
         display: flex;

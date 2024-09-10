@@ -95,7 +95,7 @@ export const getProductCheckInListApi = (data: {
 export const getEnterpriseListApi = (params: any) => {
   return http.request<void>(
     "get",
-    "/eesa-industrial-map/tEnterprise/back/V1.0/fuzzyMatching",
+    "/eesa-industrial-map/tEnterprise/front/v1.0/fuzzyMatching",
     { params },
   );
 };
