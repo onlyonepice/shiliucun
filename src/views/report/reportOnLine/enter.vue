@@ -117,7 +117,7 @@ const getFreeOnlineReportSelectedFn = async () => {
       years: checkedYearIds.value.join(","),
     });
     if (_data.resp_code === 0) {
-      freeReportList.value.push(..._data.datas.records);
+      freeReportList.value = _data.datas.records;
     }
     loading.value = false;
   } catch (e) {
