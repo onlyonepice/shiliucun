@@ -100,7 +100,6 @@
               :data="tableData"
               style="width: 100%"
               :border="true"
-              :span-method="arraySpanMethod"
               type="index"
             >
               <el-table-column fixed prop="name" label="" width="200">
@@ -268,23 +267,6 @@ const tabNameList = ref([
   "尺寸/m*m*m",
   "产品单价/元/kWh",
 ]);
-const tabNameListEn = ref([
-  "modelName",
-  "a",
-  "batteryTypeName",
-  "batterySystemEnergy",
-  "dischargeDepth",
-  "b",
-  "nominalVoltage",
-  "ratedPower",
-  "c",
-  "productFormName",
-  "systemOverallEfficiency",
-  "annualDecayRate",
-  "coolingMethodName",
-  "size",
-  "energyStorageSystemProductUnitPrice",
-]);
 const tabNameList2 = ref([
   "产品型号",
   "形态",
@@ -294,16 +276,6 @@ const tabNameList2 = ref([
   "循环寿命",
   "尺寸",
   "产品单价（元/Wh）",
-]);
-const tabNameList2En = ref([
-  "modelName",
-  "shapeName",
-  "batteryCapacity",
-  "chargeDischargeRate",
-  "energyDensity",
-  "cycleLife",
-  "size",
-  "productPrice",
 ]);
 const tabNameList3 = ref([
   "产品型号",
@@ -324,26 +296,6 @@ const tabNameList3 = ref([
   "尺寸（W*H*D）/mm",
   "重量/kg",
   "产品单价/元/台",
-]);
-const tabNameList3En = ref([
-  "modelName",
-  "a",
-  "dcVoltageRange",
-  "maximumDirectCurrent",
-  "b",
-  "ratedOutputPower",
-  "ratedACVoltage",
-  "ratedAlternatingCurrent",
-  "ratedACFrequency",
-  "c",
-  "maximumEfficiency",
-  "operatingTemperatureRange",
-  "relativeHumidityRange",
-  "altitude",
-  "coolingMethod",
-  "size",
-  "weight",
-  "productPrice",
 ]);
 const tableData: Ref<any> = ref([]);
 const route = useRoute();
@@ -471,80 +423,6 @@ const swiperCurrent = ref(0); // swiper的当前页
 function onSlideChange(data: number) {
   swiperCurrent.value = data;
 }
-// 寻找出相同的key
-function generateComparisonMatrix(data) {
-  if (data.length === 0) return [];
-
-  const keys = Object.keys(data[0]);
-  const matrix = [];
-
-  keys.forEach((key) => {
-    const valueOccurrences = {};
-    const row = new Array(data.length).fill(0);
-
-    // Collect occurrences of each value
-    data.forEach((item, index) => {
-      const value = item[key];
-      if (!valueOccurrences[value]) {
-        valueOccurrences[value] = [];
-      }
-      valueOccurrences[value].push(index);
-    });
-
-    // Populate the result row based on occurrences
-    Object.values(valueOccurrences).forEach((indices) => {
-      indices.forEach((index, i) => {
-        if (i === 0) {
-          row[index] = indices.length;
-        } else {
-          row[index] = 0;
-        }
-      });
-    });
-
-    matrix.push(row);
-  });
-
-  return matrix;
-}
-// 合并单元格
-/* eslint-disable */
-const arraySpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
-  // if (route.query.productType === "INDUSTRY_ENERGY_STORAGE") {
-  //   if (rowIndex === 1 || rowIndex === 5 || rowIndex === 8) {
-  //     if (columnIndex === 0) {
-  //       return [1, productDetail.value.models.length + 1]; // 合并第一行第二列和第三列单元格
-  //     }
-  //   }
-  // }
-  // if (route.query.productType === "ENERGY_STORAGE_INVERTER") {
-  //   if (rowIndex === 1 || rowIndex === 4 || rowIndex === 9) {
-  //     if (columnIndex === 0) {
-  //       return [1, productDetail.value.models.length + 1]; // 合并第一行第二列和第三列单元格
-  //     }
-  //   }
-  // }
-  const _list = [];
-  productDetail.value.models.map((item) => {
-    var _data = {};
-    const _value =
-      route.query.productType === "INDUSTRY_ENERGY_STORAGE"
-        ? tabNameListEn.value
-        : route.query.productType === "ENERGY_STORAGE_INVERTER"
-          ? tabNameList3En.value
-          : tabNameList2En.value;
-    _value.map((_item) => {
-      _data[_item] = item[_item] || "";
-    });
-    _list.push(_data);
-  });
-  if (columnIndex > 0) {
-    return {
-      rowspan: 1,
-      colspan: generateComparisonMatrix(_list)[rowIndex][columnIndex - 1],
-    };
-  }
-};
 // 获取产品详情
 const getProductDetail = async () => {
   const { datas, resp_code }: any = await getProductDetailApi({

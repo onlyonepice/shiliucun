@@ -69,7 +69,7 @@
 
 <script lang="ts" setup>
 // import { computed } from "vue";
-import Swiper from "./Swiper.vue";
+import Swiper from "./swiper.vue";
 // import useNamespace from "@/utils/nameSpace";
 // const ns = useNamespace("searchProduct-comparedTable");
 const emits = defineEmits(["onSlideChange"]);
