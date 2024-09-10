@@ -574,7 +574,7 @@ const handleReleaseNeed = async () => {
   needData.value.role.map((item) => {
     needData.value.dhLabelDTOList.push({ id: item });
   });
-  needData.value.tab.length > 0 &&
+  (needData.value.tab.length > 0 || needData.value.tab.length == 0) &&
     needData.value.tab.map((item) => {
       if (typeof item === "number") {
         needData.value.dhLabelDTOList = needData.value.dhLabelDTOList.concat({

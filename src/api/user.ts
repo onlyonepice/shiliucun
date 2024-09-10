@@ -233,7 +233,7 @@ export function getCompanyInfoApi() {
 export function trackApi(data: any) {
   return http.request<responseType>(
     "post",
-    `/eesa-data-center/event/openApi/V1.0/create`,
+    `/eesa-data-center/event/openApi/v1.0/create`,
     { data },
   );
 }

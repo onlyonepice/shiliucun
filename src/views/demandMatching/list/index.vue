@@ -127,6 +127,14 @@
                     {{ item.description }}
                   </div>
                 </div>
+                <div class="Pagination" v-if="total !== 0">
+                  <Pagination
+                    :pageSize="filterParams.pageSize"
+                    :currentPage="filterParams.pageNumber"
+                    :total="total"
+                    @onchangeCurrent="onchangeCurrent"
+                  />
+                </div>
               </template>
               <!-- 搜索结果没有数据 -->
               <template v-else>
@@ -146,13 +154,6 @@
         </div>
       </template>
       <DemandMatchingSkeleton v-else />
-      <div class="Pagination" v-if="total !== 0">
-        <Pagination
-          :pageSize="filterParams.pageSize"
-          :total="total"
-          @onchangeCurrent="onchangeCurrent"
-        />
-      </div>
     </div>
     <div v-show="currentPage === 'manage'">
       <template v-if="!loadingMy">
@@ -221,6 +222,14 @@
                         {{ item.description }}
                       </div>
                     </div>
+                    <div class="Pagination" v-if="releaseTotal !== 0">
+                      <Pagination
+                        :pageSize="releaseParams.pageSize"
+                        :currentPage="releaseParams.pageNumber"
+                        :total="releaseTotal"
+                        @onchangeCurrent="onchangeCurrentRelease"
+                      />
+                    </div>
                   </template>
                   <!-- 我发布的没有数据 -->
                   <template v-else>
@@ -236,13 +245,6 @@
                     </div>
                   </template>
                 </template>
-              </div>
-              <div class="Pagination" v-if="releaseTotal !== 0">
-                <Pagination
-                  :pageSize="releaseParams.pageSize"
-                  :total="releaseTotal"
-                  @onchangeCurrent="onchangeCurrentRelease"
-                />
               </div>
             </div>
             <!-- 我报名的 -->
@@ -359,7 +361,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted, onMounted, Ref, computed } from "vue";
+import { ref, onUnmounted, onMounted, Ref, computed, onActivated } from "vue";
 import ReleaseDemand from "../releaseDemand.vue";
 import useNamespace from "@/utils/nameSpace";
 import businessCard from "@/views/demandMatching/detail/components/businessCard.vue";
@@ -376,7 +378,7 @@ import DemandContentImg from "@/assets/img/demand/demand-content-img.png";
 import CloseIcon from "@/assets/img/demand/close-icon-circle.png";
 const ns = useNamespace("demand-list");
 import { useUserStore } from "@/store/modules/user";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 import { getToken } from "@/utils/auth";
 import { windowScrollStore } from "@/store/modules/windowScroll";
@@ -390,6 +392,7 @@ import {
   getIdentityApi,
 } from "@/api/demandList";
 import { getUserDetailInfo } from "@/api/user";
+const route = useRoute();
 const isLogin = ref(getToken());
 const roleDialogVisible: Ref<boolean> = ref(false); // 角色弹窗
 const loadingList: Ref<boolean> = ref(true); // 加载
@@ -622,7 +625,20 @@ const onChangeType = (value, key) => {
     getNeed();
   }
 };
+onActivated(() => {
+  if (route.query.type === "operate") {
+    if (currentPage.value === "demand") {
+      getNeed();
+    } else if (currentPage.value === "manage") {
+      getReleaseNeed();
+    }
+  }
+  if (currentManageTab.value === "apply") {
+    getApplyNeed();
+  }
+});
 onMounted(() => {
+  route.query.type = "";
   getTypeNotNull();
   getSortTypeList();
   getToken() && getIdentity();
