@@ -6,7 +6,7 @@
       <div :class="ns.be('info', 'icon')">
         <img
           :src="
-            !item.userInfo.companyLogo
+            !item.userInfo?.companyLogo
               ? 'https://cdn.eesaenergy.com/mini-app/i-report/v1.0/no_img.png'
               : useUserStore().fileUrl + item.userInfo.companyLogo
           "
@@ -15,9 +15,9 @@
       </div>
       <div :class="ns.be('info', 'content')">
         <p :class="ns.be('info', 'user')">
-          {{ item.userInfo.realName }}｜{{ item.userInfo.position }}
+          {{ item.userInfo?.realName }}｜{{ item.userInfo?.position }}
         </p>
-        <p :class="ns.be('info', 'company')">{{ item.userInfo.company }}</p>
+        <p :class="ns.be('info', 'company')">{{ item.userInfo?.company }}</p>
         <p :class="ns.be('info', 'time')">申请时间：{{ item.createTime }}</p>
       </div>
     </div>

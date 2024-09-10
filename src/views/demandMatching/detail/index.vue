@@ -152,7 +152,7 @@ const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("demandMatchingDetail");
 const breadcrumbList: Ref<Array<any>> = ref([
-  { text: "需求大厅", path: "goBack" },
+  { text: "需求大厅", path: "/demandMatching/list" },
   { text: "需求详情", path: "" },
 ]);
 const minePublish: Ref<boolean> = ref(false); // 是否是我发布的需求
@@ -235,14 +235,24 @@ const onOpenApplyDialog = () => {
 const onDelete = async (type: boolean) => {
   deleteDialogVisible.value = false;
   if (type) {
-    router.go(-1);
+    router.replace({
+      path: "/demandMatching/list",
+      query: {
+        type: "operate",
+      },
+    });
   }
 };
 
 const onSolve = async (type: boolean) => {
   solveDialogVisible.value = false;
   if (type) {
-    router.go(-1);
+    router.replace({
+      path: "/demandMatching/list",
+      query: {
+        type: "operate",
+      },
+    });
   }
 };
 // 撤销报名

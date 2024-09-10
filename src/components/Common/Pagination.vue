@@ -8,6 +8,7 @@
       layout="prev, pager, next"
       :total="total"
       :page-size="pageSize"
+      :current-page="currentPage"
       @current-change="onchangeCurrent"
     />
   </div>
@@ -29,6 +30,10 @@ defineProps({
   desc: {
     type: String,
     default: "",
+  },
+  currentPage: {
+    type: Number,
+    default: 1,
   },
 });
 const onchangeCurrent = (data: any) => {
