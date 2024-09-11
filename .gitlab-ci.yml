@@ -36,7 +36,7 @@ test_install:
      - pnpm -v
      - pnpm install --no-frozen-lockfile --registry "https://registry.npmmirror.com"
   tags:   #runner标签
-    - data-report
+    - front
   rules:
     - if: '$CI_COMMIT_REF_NAME == "test"'
       changes:
@@ -57,7 +57,7 @@ prod_install:
      - pnpm -v
      - pnpm install --registry "https://registry.npmmirror.com"
   tags:   #runner标签
-    - data-report
+    - front
   rules:
     - if: '$CI_COMMIT_REF_NAME =~ /^Rel-.*/'
       changes:
@@ -77,7 +77,7 @@ test_build:
   script:
      - pnpm run build:test
   tags:
-    - data-report
+    - front
   only:
     - test
 
@@ -95,7 +95,7 @@ prod_build:
   script:
      - pnpm run build:prod
   tags:
-    - data-report
+    - front
   only:
     - /^Rel-.*/
 
@@ -114,7 +114,7 @@ test_deploy:
      - ssh-keyscan -H $TEST_SERVER >> ~/.ssh/known_hosts
      - scp -i ~/.ssh/id_rsa -r dist/* root@$TEST_SERVER:/opt/nginx/html/$TEST_PATH/
   tags:
-    - data-report
+    - front
   only:
     - test
 
@@ -130,7 +130,7 @@ prod_deploy:
     - ossutil rm oss://eesa-data-report/ --exclude "*.py" -rf
     - ossutil cp -r dist/ oss://eesa-data-report/
   tags:
-    - data-report
+    - front
   only:
     - /^Rel-.*/
   when: manual  #手动触发
@@ -144,7 +144,7 @@ post_build_task:
   - |  
     aliyun cdn BatchSetCdnDomainConfig --region cn-shanghai --Functions '[{"functionArgs": [{"argName": "key","argValue": "Cache-Control"},{"argName": "value","argValue": "no-cache, no-store"}],"functionName": "set_resp_header", "parentId": 355497228443648} ] ' --DomainNames 'data-report.eesaenergy.com'
   tags:
-    - data-report
+    - front
   only:
     - /^Rel-.*/
   needs: ['prod_deploy']
