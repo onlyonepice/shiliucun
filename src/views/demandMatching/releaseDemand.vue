@@ -277,6 +277,7 @@
               :options="tabList"
               :multiple="true"
               labelKey="labelName"
+              placeholder="添加标签，让更多人关注到你"
               valueKey="id"
               @onChange="
                 (val) => {

@@ -9,7 +9,7 @@
     <el-select
       v-if="props.type === 'select'"
       v-model="value"
-      placeholder="请选择"
+      :placeholder="placeholder !== '' ? placeholder : '请选择'"
       class="select__content"
       @change="handleChange"
       @visible-change="handleVerifyLogin"
@@ -32,7 +32,7 @@
     <div v-if="props.type === 'input'" class="select__input select__content">
       <el-input
         v-model="value"
-        placeholder="请输入"
+        :placeholder="placeholder !== '' ? placeholder : '请输入'"
         :type="props.specialType"
         :disabled="props.disabled"
         :maxlength="maxlength"
@@ -49,7 +49,7 @@
     <div v-if="props.type === 'number'" class="select__input select__content">
       <el-input-number
         v-model="value"
-        placeholder="请输入"
+        :placeholder="placeholder !== '' ? placeholder : '请输入'"
         controls-position="right"
         :controls="controls"
         :disabled="props.disabled"
@@ -64,7 +64,7 @@
     <div v-if="props.type === 'cascader'" class="select__input select__content">
       <el-cascader
         v-model="value"
-        placeholder="请选择"
+        :placeholder="placeholder !== '' ? placeholder : '请选择'"
         :options="options"
         :props="cascaderOption"
         :disabled="props.disabled"
@@ -126,6 +126,11 @@ const props = defineProps({
     type: Number,
     default: 70,
   },
+  // 暗文
+  placeholder: {
+    type: String,
+    default: "",
+  },
   // 标题对其方式
   textAlign: {
     type: String,
@@ -153,10 +158,6 @@ const props = defineProps({
   specialType: {
     type: String,
     default: "text",
-  },
-  placeholder: {
-    type: String,
-    default: "请选择",
   },
   options: {
     type: Array as any,
