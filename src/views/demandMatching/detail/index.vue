@@ -74,7 +74,7 @@
           />
           <div :class="ns.be('content', 'extra')" v-if="showExtra">
             <img :src="LamentIcon" alt="" />
-            <p>需求方同意报名后将显示联系方式</p>
+            <p>报名后可查看需求方名片</p>
           </div>
         </template>
       </div>
