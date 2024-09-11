@@ -54,7 +54,7 @@
       title="发布需求"
       :visible="visibleInfo"
       width="560px"
-      :height="step === 1 ? '568px' : 'auto'"
+      :height="step === 1 ? '488px' : 'auto'"
       :showFoot="false"
       :appendToBody="appendToBody"
       @onHandleClose="onHandleCloseDialog"
@@ -200,29 +200,6 @@
                 "
               />
             </div>
-          </div>
-          <div :class="ns.be('content', 'infoDialog')">
-            <span>出生日期</span>
-            <el-date-picker
-              style="flex: 1"
-              v-model="modifyInfoFreeze.birthday"
-              type="date"
-              placeholder=""
-            />
-          </div>
-          <div :class="ns.be('content', 'infoDialog')">
-            <span>所在地区</span>
-            <Select
-              :options="areaList"
-              :defaultValue="modifyInfoFreeze.regionCode"
-              :cascaderOption="cascaderOption"
-              type="cascader"
-              @onChange="
-                (val) => {
-                  return onChangeInfo(val, 'regionCode');
-                }
-              "
-            />
           </div>
           <div class="release-demand-footer">
             <div class="footer-left" @click="handleConfirmUserInfo">
@@ -420,7 +397,6 @@ import {
   verifyMbCode,
   modifyMb,
   getUserDetailInfo,
-  getAreaApi,
   editUserInfoApi,
   getPositionTypeApi,
 } from "@/api/user";
@@ -430,7 +406,6 @@ import {
   updateNeedApi,
   getRoleConfigApi,
 } from "@/api/demandList";
-import { getInnermostObject } from "@/utils/index";
 const uploadToken: Ref<any> = ref({
   Authorization: "Bearer " + getToken(),
   Tenant: "iReport-front",
@@ -460,19 +435,11 @@ const visibleMobile: Ref<boolean> = ref(false); // 修改手机号弹窗
 const visibleInfo: Ref<boolean> = ref(false); // 编辑信息弹窗
 const visibleInfoSet: Ref<boolean> = ref(false); // 编辑信息弹窗-延迟
 const btnDesc: Ref<string> = ref("获取验证码"); // 倒计时文案
-const areaList: Ref<any> = ref([]); // 地区数据
-const cascaderOption: Ref<any> = ref({
-  expandTrigger: "hover",
-  label: "name",
-  value: "code",
-  children: "regionResps",
-}); // 地区级联配置项
 const modifyInfo: Ref<any> = ref({
   avatarImg: "",
   realName: "",
   company: "",
   position: "",
-  regionCode: "",
   mobile: "",
   weCat: "",
   email: "",
@@ -520,7 +487,6 @@ onMounted(() => {
   showInfo.value.weChat = userInfo.value.wecatHide;
   showInfo.value.email = userInfo.value.emailHide;
   onGetUserInfo();
-  onGetArea();
   getPositionType();
   getNeedType();
   getRoleConfig();
@@ -597,9 +563,7 @@ const handleReleaseNeed = async () => {
 };
 // 修改用户信息
 const onChangeInfo = (value: any, type: string) => {
-  type === "regionCode" &&
-    (modifyInfo.value.regionCode = value[value.length - 1]);
-  type !== "regionCode" && (modifyInfo.value[type] = value);
+  modifyInfo.value[type] = value;
 };
 const onHandleCloseDialog = () => {
   emits("close");
@@ -669,16 +633,8 @@ const onGetUserInfo = async () => {
     const _modifyInfo = modifyInfo.value;
     // 重置用户信息
     Object.assign(_modifyInfo, datas);
-    datas.region !== null &&
-      (_modifyInfo.regionCode = getInnermostObject(datas.region).code);
     modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo));
   }
-};
-
-// 获取地区数据
-const onGetArea = async () => {
-  const { resp_code, datas }: any = await getAreaApi();
-  resp_code === 0 && (areaList.value = datas.records);
 };
 // 修改手机号
 const onModifyMobile = () => {
