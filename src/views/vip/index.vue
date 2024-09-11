@@ -73,7 +73,7 @@
     >
       <div class="dialog">
         <img class="QR" :src="PayQR" />
-        <img class="cancel" :src="cancel_icon" @click="handleSkip()" alt="" />
+        <div class="cancel" @click="handleSkip()" />
       </div>
     </div>
   </div>
@@ -82,7 +82,6 @@
 <script lang="ts" setup>
 import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import cancel_icon from "@/assets/img/common/icon_clear.png";
 import VipCOnfig from "@/assets/img/vip/vip-config.png";
 import VipTopl from "@/assets/img/vip/vip-1.png"; // 普通会员
 import VipTop2 from "@/assets/img/vip/vip-2.png"; // EESA普通会员
@@ -312,15 +311,16 @@ getVipConfigList();
     z-index: 9;
 
     .QR {
-      width: 320px;
+      width: 400px;
+      height: 328px;
     }
 
     .cancel {
-      width: 32px;
-      height: 32px;
-      margin-top: 16px;
+      width: 24px;
+      height: 24px;
       cursor: pointer;
       background-color: transparent;
+      @include absolute(1, 14px, 14px, none, none);
     }
   }
 

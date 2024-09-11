@@ -57,7 +57,11 @@
               </div>
             </div>
             <template v-if="useUserStoreHook().$state.userInfo.roles">
-              <img :class="ns.b('vip')" :src="getVIPIcon" />
+              <img
+                :class="ns.b('vip')"
+                :src="getVIPIcon"
+                @click="router.push({ path: '/vip' })"
+              />
             </template>
           </div>
           <div
@@ -609,6 +613,7 @@ const onLogin = () => {
   @include widthAndHeight(88px, 20px);
   object-fit: contain;
   margin-left: 10px;
+  cursor: pointer;
 }
 
 .es-pageNav-extra {
