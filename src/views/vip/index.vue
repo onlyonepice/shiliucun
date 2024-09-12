@@ -62,21 +62,12 @@
         </template>
       </div>
     </div>
-    <div
-      class="dialog-wrapper"
-      :style="{ pointerEvents: QRvisible ? 'all' : 'none' }"
-      :class="[
-        {
-          'dialog-wrapper-active': QRvisible,
-        },
-      ]"
-    >
-      <div class="dialog">
-        <img class="QR" :src="PayQR" />
-        <div class="cancel" @click="handleSkip()" />
-      </div>
-    </div>
   </div>
+  <openDialog
+    title="开通VIP"
+    :visible="QRvisible"
+    @onClose="QRvisible = false"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -93,7 +84,6 @@ import Bg4 from "@/assets/img/vip/bg-4.png";
 import Bg5 from "@/assets/img/vip/bg-5.png";
 import VipTick from "@/assets/img/vip/vip-tick.png";
 import VipFork from "@/assets/img/vip/vip-fork.png";
-import PayQR from "@/assets/img/vip/pay-member-qr.png";
 import { getVipConfigListApi } from "@/api/vip";
 import { getToken } from "@/utils/auth";
 import { useRouter } from "vue-router";
@@ -169,10 +159,7 @@ const accountList = ref([
     list: [],
   },
 ]);
-// 账户信息
-const handleSkip = () => {
-  QRvisible.value = false;
-};
+
 const handleClick = (item) => {
   const _id = item.id;
   window.trackFunction(
@@ -284,53 +271,5 @@ getVipConfigList();
   line-height: 40px;
   border-radius: 4px;
   cursor: pointer;
-}
-.dialog-wrapper {
-  position: fixed;
-  left: 0%;
-  top: 0%;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: -10;
-  opacity: 0;
-  transition: all 0.25s;
-
-  .dialog {
-    width: min-content;
-    height: min-content;
-    text-align: center;
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    transition: all 0.25s;
-    transform: translateY(50px);
-    z-index: 9;
-
-    .QR {
-      width: 400px;
-      height: 328px;
-    }
-
-    .cancel {
-      width: 24px;
-      height: 24px;
-      cursor: pointer;
-      background-color: transparent;
-      @include absolute(1, 14px, 14px, none, none);
-    }
-  }
-
-  &.dialog-wrapper-active {
-    z-index: 999;
-    opacity: 1;
-
-    .dialog {
-      transform: translateY(0px);
-    }
-  }
 }
 </style>
