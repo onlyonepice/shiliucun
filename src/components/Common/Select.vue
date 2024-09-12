@@ -42,7 +42,7 @@
         @input="handleChange"
         resize="none"
         @focus="handleFocusVerifyLogin"
-        :show-word-limit="specialType === 'textarea' || specialType === 'text'"
+        :show-word-limit="specialType === 'textarea' || showWordLimit"
         :rows="3"
       />
       <span v-if="inputText !== ''" class="select__input-desc">{{
@@ -145,6 +145,10 @@ const props = defineProps({
   },
   // 自定义下拉菜单的头部
   showSelectHead: {
+    type: Boolean,
+    default: false,
+  },
+  showWordLimit: {
     type: Boolean,
     default: false,
   },

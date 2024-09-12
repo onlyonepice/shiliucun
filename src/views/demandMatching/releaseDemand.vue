@@ -54,7 +54,7 @@
       title="发布需求"
       :visible="visibleInfo"
       width="560px"
-      :height="step === 1 ? '488px' : 'auto'"
+      :height="step === 1 ? '528px' : 'auto'"
       :showFoot="false"
       :appendToBody="appendToBody"
       @onHandleClose="onHandleCloseDialog"
@@ -152,6 +152,22 @@
             />
           </div>
           <div :class="ns.be('content', 'infoDialog')">
+            <span required>业务范围</span>
+            <Select
+              type="select"
+              :defaultValue="modifyInfoFreeze.business"
+              :options="useUserStore().$state.businessList"
+              labelKey="label"
+              valueKey="value"
+              :multiple="true"
+              @onChange="
+                (val) => {
+                  return onChangeInfo(val, 'business');
+                }
+              "
+            />
+          </div>
+          <div :class="ns.be('content', 'infoDialog')">
             <span>手机号码</span>
             <Select
               type="input"
@@ -231,7 +247,7 @@
               type="input"
               :defaultValue="needData.title"
               :maxlength="20"
-              specialType="text"
+              :showWordLimit="true"
               @onChange="
                 (val) => {
                   return onChangeNeed(val, 'title');
@@ -416,7 +432,6 @@ import {
   modifyMbCode1,
   verifyMbCode,
   modifyMb,
-  getUserDetailInfo,
   editUserInfoApi,
   getPositionTypeApi,
 } from "@/api/user";
@@ -624,6 +639,7 @@ const onHandleCloseInfo = async (type: boolean) => {
     delete _modifyInfo.email;
   }
   delete _modifyInfo.region;
+  _modifyInfo.business = _modifyInfo.business.join(",");
   const { resp_code }: any = await editUserInfoApi(_modifyInfo);
   if (resp_code === 0) {
     step.value = 2;
@@ -646,15 +662,14 @@ const getPositionType = async () => {
   }
 };
 // 获取用户详细信息
-const onGetUserInfo = async () => {
-  const { resp_code, datas } = await getUserDetailInfo();
-  if (resp_code === 0) {
-    userDetailInfo.value = datas;
-    const _modifyInfo = modifyInfo.value;
-    // 重置用户信息
-    Object.assign(_modifyInfo, datas);
-    modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo));
-  }
+const onGetUserInfo = () => {
+  const datas = useUserStore().$state.userInfo;
+  userDetailInfo.value = datas;
+  const _modifyInfo = modifyInfo.value;
+  // 重置用户信息
+  Object.assign(_modifyInfo, datas);
+  _modifyInfo.business = _modifyInfo.business.split(",");
+  modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo));
 };
 // 修改手机号
 const onModifyMobile = () => {

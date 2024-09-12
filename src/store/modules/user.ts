@@ -32,6 +32,33 @@ export const useUserStore = defineStore({
     comparedList: [], // 产品对比列表
     showConsultationNav: true, // 展示产品二维码
     showNewUserVip: false, // 新用户开通会员
+    businessList: [
+      { label: "材料", value: "材料" },
+      { label: "电芯", value: "电芯" },
+      { label: "PCS", value: "PCS" },
+      { label: "BMS", value: "BMS" },
+      { label: "EMS", value: "EMS" },
+      { label: "大储系统", value: "大储系统" },
+      { label: "工商业系统", value: "工商业系统" },
+      { label: "户用系统", value: "户用系统" },
+      { label: "半导体", value: "半导体" },
+      { label: "消防热管理", value: "消防热管理" },
+      { label: "集装箱", value: "集装箱" },
+      { label: "生产设备", value: "生产设备" },
+      { label: "测控设备", value: "测控设备" },
+      { label: "投资", value: "投资" },
+      { label: "EPC", value: "EPC" },
+      { label: "认证", value: "认证" },
+      { label: "业主", value: "业主" },
+      { label: "回收", value: "回收" },
+      { label: "充电", value: "充电" },
+      { label: "运营", value: "运营" },
+      { label: "行业咨询", value: "行业咨询" },
+      { label: "金融租赁", value: "金融租赁" },
+      { label: "云服务", value: "云服务" },
+      { label: "物流", value: "物流" },
+      { label: "协会联盟", value: "协会联盟" },
+    ], // 业务范围数组
   }),
   getters: {
     getFileUrl(): string {

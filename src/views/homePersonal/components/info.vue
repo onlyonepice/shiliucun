@@ -288,7 +288,7 @@
           <Select
             type="select"
             :defaultValue="modifyInfoFreeze.business"
-            :options="businessList"
+            :options="useUserStore().$state.businessList"
             :multiple="true"
             labelKey="label"
             valueKey="value"
@@ -406,33 +406,6 @@ const modifyInfo: Ref<any> = ref({
   email: "",
 }); // 修改信息
 const positionList: Ref<Array<any>> = ref([]); // 岗位类型数组
-const businessList: Ref<Array<any>> = ref([
-  { label: "材料", value: "材料" },
-  { label: "电芯", value: "电芯" },
-  { label: "PCS", value: "PCS" },
-  { label: "BMS", value: "BMS" },
-  { label: "EMS", value: "EMS" },
-  { label: "大储系统", value: "大储系统" },
-  { label: "工商业系统", value: "工商业系统" },
-  { label: "户用系统", value: "户用系统" },
-  { label: "半导体", value: "半导体" },
-  { label: "消防热管理", value: "消防热管理" },
-  { label: "集装箱", value: "集装箱" },
-  { label: "生产设备", value: "生产设备" },
-  { label: "测控设备", value: "测控设备" },
-  { label: "投资", value: "投资" },
-  { label: "EPC", value: "EPC" },
-  { label: "认证", value: "认证" },
-  { label: "业主", value: "业主" },
-  { label: "回收", value: "回收" },
-  { label: "充电", value: "充电" },
-  { label: "运营", value: "运营" },
-  { label: "行业咨询", value: "行业咨询" },
-  { label: "金融租赁", value: "金融租赁" },
-  { label: "云服务", value: "云服务" },
-  { label: "物流", value: "物流" },
-  { label: "协会联盟", value: "协会联盟" },
-]); // 业务范围数组
 const modifyInfoFreeze: Ref<any> = ref({});
 const timer = ref(null); // 定时器
 const userDetailInfo: Ref<any> = ref(); // 用户详细信息

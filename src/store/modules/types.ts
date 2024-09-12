@@ -51,4 +51,5 @@ export type userType = {
   comparedList: Array<any>;
   showConsultationNav: boolean;
   showNewUserVip: boolean;
+  businessList: Array<any>;
 };
