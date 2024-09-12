@@ -18,6 +18,9 @@
       :multiple-limit="multipleLimit"
       ref="selectDom"
     >
+      <template v-if="showSelectHead" #header>
+        <slot name="header" />
+      </template>
       <el-option
         v-for="item in options"
         :key="item[valueKey]"
@@ -139,6 +142,11 @@ const props = defineProps({
   precision: {
     type: Number,
     default: 2,
+  },
+  // 自定义下拉菜单的头部
+  showSelectHead: {
+    type: Boolean,
+    default: false,
   },
   // 输入框/选择器标题
   title: {

@@ -163,7 +163,11 @@
                 }
               "
             />
-            <div @click="onHandleModifyMobile" class="edit-phone-number_btn">
+            <div
+              v-if="false"
+              @click="onHandleModifyMobile"
+              class="edit-phone-number_btn"
+            >
               修改
             </div>
             <div class="isShow">
@@ -250,7 +254,7 @@
             />
           </div>
           <div :class="ns.be('content', 'infoDialog')">
-            <span required>寻求资源</span>
+            <span required>寻求客户</span>
             <Select
               type="select"
               :defaultValue="needData.role"
@@ -259,12 +263,19 @@
               valueKey="id"
               :multiple="true"
               :multipleLimit="2"
+              :showSelectHead="true"
               @onChange="
                 (val) => {
                   return onChangeNeed(val, 'role');
                 }
               "
-            />
+            >
+              <template #header>
+                <div :class="ns.b('upperLimit')">
+                  已选{{ needData.role ? needData.role.length : 0 }}/2
+                </div>
+              </template>
+            </Select>
           </div>
           <div
             :class="ns.be('content', 'infoDialog')"
@@ -279,12 +290,19 @@
               labelKey="labelName"
               placeholder="添加标签，让更多人关注到你"
               valueKey="id"
+              :showSelectHead="true"
               @onChange="
                 (val) => {
                   return onChangeNeed(val, 'tab');
                 }
               "
-            />
+            >
+              <template #header>
+                <div :class="ns.b('upperLimit')">
+                  已选{{ needData.tab ? needData.tab.length : 0 }}/3
+                </div>
+              </template>
+            </Select>
             <span :class="ns.b('add-tab')" @click="addTabDialog = true"
               >添加标签</span
             >
@@ -836,6 +854,10 @@ watch(
 .es-releaseDemand-content {
   @include flex(flex-start, space-between, nowrap);
 }
+.es-releaseDemand-upperLimit {
+  background: #f2f3f5;
+  @include font(12px, 600, rgba(0, 0, 0, 0.9), 20px);
+}
 .es-releaseDemand-add-tab {
   @include font(14px, 400, #244bf1, 22px);
   margin-left: 8px;
@@ -1077,5 +1099,12 @@ watch(
   .el-upload--picture-card {
     display: none !important;
   }
+}
+.el-select-dropdown__header {
+  background: #f2f3f5;
+  border: none;
+  margin-top: 8px;
+  height: 24px;
+  padding: 2px 16px;
 }
 </style>
