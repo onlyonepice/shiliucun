@@ -1,14 +1,13 @@
 <template>
-  <Dialog
-    title="申请报名"
-    :visible="visibleApply"
-    width="400px"
-    height="522px"
-    @onHandleClose="onHandleClose"
+  <el-drawer
+    title="立即报名"
+    v-model="visibleApply"
     confirmText="提交申请"
     :class="ns.b()"
+    @close="onHandleClose(false)"
+    :append-to-body="true"
   >
-    <template #content>
+    <template #default>
       <BusinessCard
         :info="Object.assign(useUserStore().userInfo, { companyLogo })"
         width="352px"
@@ -31,11 +30,20 @@
         show-word-limit
         resize="none"
       />
-      <el-button :class="ns.b('edit')" @click="visibleInfo = true"
-        >编辑名片</el-button
-      >
+      <div />
     </template>
-  </Dialog>
+    <template #footer>
+      <div :class="ns.b('footer')">
+        <el-button @click="visibleInfo = true">编辑名片</el-button>
+        <div>
+          <el-button @click="onHandleClose(false)">取消</el-button>
+          <el-button type="primary" @click="onHandleClose(true)"
+            >提交申请</el-button
+          >
+        </div>
+      </div>
+    </template>
+  </el-drawer>
   <InfoDialog :visible="visibleInfo" @onHandleCloseInfo="visibleInfo = false" />
 </template>
 
@@ -95,7 +103,9 @@ const onHandleClose = async (type: boolean) => {
       resp_code === 0 && ElMessage.success("报名成功");
     }
   }
-  emits("onApply");
+  setTimeout(() => {
+    emits("onApply");
+  }, 300);
 };
 // 获取用户信息
 const geuUserInfo = async () => {
@@ -111,6 +121,7 @@ geuUserInfo();
 @import "@/style/mixin.scss";
 
 .es-demandMatchingDetail-apply {
+  width: 400px !important;
   h5 {
     color: rgba(0, 0, 0, 0.6);
     font-weight: 400;
@@ -123,8 +134,20 @@ geuUserInfo();
   .el-input__count {
     background: #f2f3f5;
   }
+  .el-drawer__header {
+    margin-top: 0;
+    padding: 16px 24px;
+  }
+  .el-drawer__body {
+    padding: 0 24px;
+  }
+  .el-drawer__footer {
+    border-top: 1px solid #dbdce2;
+    padding: 16px 24px 24px;
+  }
 }
-.es-demandMatchingDetail-apply-edit {
-  @include absolute(1, none, none, 12px, 24px);
+.es-demandMatchingDetail-apply-footer {
+  width: 100%;
+  @include flex(center, space-between, nowrap);
 }
 </style>

@@ -22,7 +22,7 @@ import miniAppHover from "@/assets/img/consultationNav/miniApp-hover.png";
 import weChatHover from "@/assets/img/consultationNav/weChat-hover.png";
 import customerServiceHover from "@/assets/img/consultationNav/customerService-hover.png";
 const ns = useNamespace("consultation-nav");
-const showConsultation: Ref<boolean> = ref(true);
+const showConsultation: Ref<boolean> = ref(false);
 const navList = ref([
   {
     name: "掌上\n储能",
@@ -66,7 +66,7 @@ watch(
     0px 4px 10px 0px rgba(0, 0, 0, 0.1)
   );
   @include widthAndHeight(64px, auto);
-  @include flex();
+  @include flex(100);
   padding: 11px 4px;
 
   .es-consultation-nav-item {

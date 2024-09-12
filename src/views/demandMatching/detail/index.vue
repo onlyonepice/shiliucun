@@ -10,7 +10,7 @@
       :totalApply="totalApply"
       @onApply="onOpenApplyDialog()"
       @onDelete="deleteDialogVisible = true"
-      @onSolve="solveDialogVisible = true"
+      @onSolve="onSolveApply()"
       @onCheckApplyList="drawer = true"
       @onResetApply="resetDialogVisible = true"
       @onRevocation="onRevocation"
@@ -122,6 +122,7 @@
     @success="releaseDemandSuccess"
     @close="resetDialogVisible = false"
   />
+  <SkipMask title="该需求是否成功解决？" />
 </template>
 
 <script setup lang="ts">
@@ -204,6 +205,10 @@ onMounted(() => {
 const onSubmit = () => {
   ElMessage.success("评价成功");
   getDemandDetail();
+};
+// 点击需求已解决
+const onSolveApply = () => {
+  solveDialogVisible.value = true;
 };
 const releaseDemandSuccess = () => {
   getDemandDetail();
