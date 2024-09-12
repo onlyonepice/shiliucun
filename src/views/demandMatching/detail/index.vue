@@ -10,7 +10,7 @@
       :totalApply="totalApply"
       @onApply="onOpenApplyDialog()"
       @onDelete="deleteDialogVisible = true"
-      @onSolve="onSolveApply()"
+      @onSolve="showDialog = true"
       @onCheckApplyList="drawer = true"
       @onResetApply="resetDialogVisible = true"
       @onRevocation="onRevocation"
@@ -122,7 +122,14 @@
     @success="releaseDemandSuccess"
     @close="resetDialogVisible = false"
   />
-  <SkipMask title="该需求是否成功解决？" />
+  <SkipMask
+    title="该需求是否成功解决？"
+    :show="showDialog"
+    :showIcon="false"
+    cancel="未解决"
+    confirm="已成功解决"
+    @onClose="onCloseSkipMask"
+  />
 </template>
 
 <script setup lang="ts">
@@ -156,6 +163,7 @@ const breadcrumbList: Ref<Array<any>> = ref([
   { text: "需求大厅", path: "/demandMatching/list" },
   { text: "需求详情", path: "" },
 ]);
+const showDialog: Ref<boolean> = ref(false); // 需求已解决二次弹窗
 const minePublish: Ref<boolean> = ref(false); // 是否是我发布的需求
 const detailInfo: Ref<any> = ref({}); // 需求详情
 const applyDialogVisible: Ref<boolean> = ref(false); // 申请报名弹窗
@@ -207,8 +215,9 @@ const onSubmit = () => {
   getDemandDetail();
 };
 // 点击需求已解决
-const onSolveApply = () => {
-  solveDialogVisible.value = true;
+const onCloseSkipMask = (type: boolean) => {
+  showDialog.value = false;
+  type && (solveDialogVisible.value = true);
 };
 const releaseDemandSuccess = () => {
   getDemandDetail();
