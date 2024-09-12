@@ -42,7 +42,7 @@
         @input="handleChange"
         resize="none"
         @focus="handleFocusVerifyLogin"
-        :show-word-limit="specialType === 'textarea'"
+        :show-word-limit="specialType === 'textarea' || specialType === 'text'"
         :rows="3"
       />
       <span v-if="inputText !== ''" class="select__input-desc">{{

@@ -231,6 +231,7 @@
               type="input"
               :defaultValue="needData.title"
               :maxlength="20"
+              specialType="text"
               @onChange="
                 (val) => {
                   return onChangeNeed(val, 'title');
