@@ -639,7 +639,7 @@ const onHandleCloseInfo = async (type: boolean) => {
     delete _modifyInfo.email;
   }
   delete _modifyInfo.region;
-  _modifyInfo.business = _modifyInfo.business.join(",");
+  _modifyInfo.business = _modifyInfo.business.join("、");
   const { resp_code }: any = await editUserInfoApi(_modifyInfo);
   if (resp_code === 0) {
     step.value = 2;
@@ -668,7 +668,7 @@ const onGetUserInfo = () => {
   const _modifyInfo = modifyInfo.value;
   // 重置用户信息
   Object.assign(_modifyInfo, datas);
-  _modifyInfo.business = _modifyInfo.business.split(",");
+  _modifyInfo.business = _modifyInfo.business.split("、");
   modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo));
 };
 // 修改手机号
