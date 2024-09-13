@@ -370,6 +370,7 @@ import CompanyVip from "@/assets/img/vip/company-vip.png";
 import EESAOrdinaryVip from "@/assets/img/vip/eesa-ordinary-vip.png";
 import ViceDirectorVip from "@/assets/img/vip/vice-director-vip.png";
 import DirectorVip from "@/assets/img/vip/director-vip.png";
+import { splitOrJoin } from "@/utils";
 import {
   updateUserInfo,
   modifyMbCode,
@@ -503,7 +504,7 @@ const onHandleCloseInfo = async (type: boolean) => {
   }
   delete _modifyInfo.region;
   typeof _modifyInfo.business !== "string" &&
-    (_modifyInfo.business = _modifyInfo.business.join("、"));
+    (_modifyInfo.business = splitOrJoin(_modifyInfo.business));
   const { resp_code }: any = await editUserInfoApi(_modifyInfo);
   if (resp_code === 0) {
     ElMessage.success("编辑成功");
@@ -534,7 +535,7 @@ const onGetUserInfo = async () => {
   modifyInfoFreeze.value.business =
     useUserStore().$state.userInfo.business === ""
       ? null
-      : useUserStore().$state.userInfo.business.split("、");
+      : splitOrJoin(useUserStore().$state.userInfo.business);
 };
 // 获取用户地区信息
 const onGetRegionInfo = computed(() => {

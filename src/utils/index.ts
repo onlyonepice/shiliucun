@@ -137,3 +137,12 @@ export function formatNumberWithTwoDecimals(number) {
   // 返回格式化后的字符串
   return formattedNumber;
 }
+
+// 使用 、拼接字符串或者拆分
+export function splitOrJoin(
+  str: String | Array<String>,
+  separator = "、",
+): String | Array<String> {
+  // 如果是数组，则使用 join 方法，否则使用 split 方法
+  return Array.isArray(str) ? str.join(separator) : str.split(separator);
+}

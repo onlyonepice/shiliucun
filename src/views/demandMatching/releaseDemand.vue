@@ -424,6 +424,7 @@ import { regMobile, regEmail } from "@/utils/rule";
 import type { UploadProps } from "element-plus";
 import { cloneDeep } from "lodash";
 import { getToken } from "@/utils/auth";
+import { splitOrJoin } from "@/utils";
 const emits = defineEmits(["close"]);
 const { VITE_GLOB_API_URL } = import.meta.env;
 import {
@@ -639,7 +640,7 @@ const onHandleCloseInfo = async (type: boolean) => {
     delete _modifyInfo.email;
   }
   delete _modifyInfo.region;
-  _modifyInfo.business = _modifyInfo.business.join("、");
+  _modifyInfo.business = splitOrJoin(_modifyInfo.business);
   const { resp_code }: any = await editUserInfoApi(_modifyInfo);
   if (resp_code === 0) {
     step.value = 2;
@@ -668,7 +669,7 @@ const onGetUserInfo = () => {
   const _modifyInfo = modifyInfo.value;
   // 重置用户信息
   Object.assign(_modifyInfo, datas);
-  _modifyInfo.business = _modifyInfo.business.split("、");
+  _modifyInfo.business = splitOrJoin(_modifyInfo.business);
   modifyInfoFreeze.value = JSON.parse(JSON.stringify(_modifyInfo));
 };
 // 修改手机号
