@@ -36,10 +36,12 @@
     </div>
     <div :class="ns.b('operate')">
       <div>
-        <el-button v-if="step === 2" @click="step--">上一步</el-button>
+        <el-button v-if="step === 2" @click="onGoPreviousStep"
+          >上一步</el-button
+        >
         <el-button v-if="step === 3" @click="onBack">新建测算</el-button>
         <el-button type="primary" @click="onNextStep">{{
-          step === 3 ? "编辑项目" : "下一步"
+          step === 3 ? "编辑项目" : step === 2 ? "生成报告" : "下一步"
         }}</el-button>
       </div>
     </div>
@@ -57,6 +59,8 @@ import { getCheckLiteInfoApi } from "@/api/calculation";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
+import { windowScrollStore } from "@/store/modules/windowScroll";
+const windowScroll = windowScrollStore();
 const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("calculationLite");
@@ -69,6 +73,12 @@ const step: Ref<number> = ref(1);
 const stepOne: Ref<any> = ref(null); // 获取子组件-第一步
 const stepTwo: Ref<any> = ref(null); // 获取子组件-第二步
 const filterInfo: Ref<any> = ref({}); // 筛选项数据
+
+// 点击上一步
+const onGoPreviousStep = () => {
+  step.value--;
+  windowScroll.SET_SCROLL_TOP(0);
+};
 // 点击下一步
 const onNextStep = () => {
   if (!getToken()) {
@@ -87,11 +97,13 @@ const onNextStep = () => {
     );
   } else {
     if (step.value === 3) {
+      windowScroll.SET_SCROLL_TOP(0);
       return (step.value = 1);
     }
     step.value++;
     onNext();
   }
+  windowScroll.SET_SCROLL_TOP(0);
 };
 const onBack = async () => {
   await router.push("/calculationLite");
