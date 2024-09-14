@@ -154,9 +154,15 @@
           </div>
         </div>
       </div>
-      <p @click="handleSetDetailShowClick()" class="hidden-detail">
-        收起详情&nbsp;&nbsp;^
-      </p>
+      <div class="hidden-detail">
+        <div class="share-btn" @click="handleShareDetail()">
+          分享
+          <img :src="shareIcon" alt="" />
+        </div>
+        <div class="close-detail" @click="handleSetDetailShowClick()">
+          收起详情&nbsp;&nbsp;^
+        </div>
+      </div>
     </div>
     <el-dialog
       v-model="dialogVisible"
@@ -189,9 +195,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { cloneDeep } from "lodash";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { getToken } from "@/utils/auth";
 import { ElMessage } from "element-plus";
 import useNamespace from "@/utils/nameSpace";
@@ -200,10 +206,13 @@ import redNew from "@/assets/img/red_new.png";
 import { getBidFinderDetail } from "@/api/data";
 import { getTimesApi } from "@/api/user";
 import { useUserStore } from "@/store/modules/user";
+import useClipboard from "vue-clipboard3";
+const { VITE_DARAREPORT_URL } = import.meta.env;
 import CancelIcon from "@/assets/img/common/cancel.png";
 import copy_icon from "@/assets/img/common/copy_icon.png";
 import right_more from "@/assets/img/common/right-more.png";
 import lament_icon from "@/assets/img/common/lament_icon.png";
+import shareIcon from "@/assets/img/common/share-icon.png";
 function copyToClipboard(text) {
   var textarea: any = document.createElement("textarea");
   textarea.style.position = "fixed";
@@ -219,6 +228,7 @@ const checked = ref(false);
 const ns = useNamespace("biddingDynamicsList");
 const dialog = useNamespace("prompt");
 const router = useRouter();
+const route = useRoute();
 const props = defineProps({
   pageData: {
     type: Object,
@@ -229,6 +239,8 @@ const props = defineProps({
     default: "",
   },
 });
+
+const { toClipboard } = useClipboard();
 
 const isVip = ref(false);
 const dialogVisible = ref(false);
@@ -272,6 +284,13 @@ const currentData = ref<dataType>(null);
 
 const detailData = ref(null);
 
+const handleShareDetail = async () => {
+  await toClipboard(
+    `${VITE_DARAREPORT_URL}/#/dataTender?id=${currentData.value.id}&title=${currentData.value.tenderName}`,
+  );
+  ElMessage.success("分享链接已复制");
+};
+
 const handleSetDetailShowClick = async () => {
   if (props.source === "policy") {
     router.push({
@@ -289,7 +308,6 @@ const handleSetDetailShowClick = async () => {
       return;
     }
   }
-
   if (currentData.value.showDetail) {
     setTimeout(() => {
       currentData.value.showDetail = false;
@@ -349,20 +367,50 @@ const handleSetDetailShowClick = async () => {
 const handleLinkClick = (link) => {
   window.open(link);
 };
+const shareId = ref("") as any;
 watch(
   () => props.pageData,
   (newVal) => {
     currentData.value = cloneDeep(newVal) as any;
-    if (newVal?.showDetail === true) {
-      setTimeout(() => {
-        currentData.value.showDetail = false;
-      }, 450);
-      currentData.value.className = "hide";
-      handleSetDetailShowClick();
-    }
+    setTimeout(() => {
+      if (newVal?.showDetail === true) {
+        if (!shareId.value) {
+          setTimeout(() => {
+            currentData.value.showDetail = false;
+          }, 450);
+          currentData.value.className = "hide";
+          handleSetDetailShowClick();
+        }
+      }
+    }, 450);
   },
   { deep: true, immediate: true },
 );
+
+// 监听登录
+watch(
+  () => useUserStore().$state.token,
+  (token) => {
+    if (token) {
+      if (shareId.value) {
+        setTimeout(() => {
+          handleSetDetailShowClick();
+        }, 200);
+      }
+    }
+  },
+);
+onMounted(() => {
+  shareId.value = route.query.id as any;
+  const _title = route.query.title as string;
+  if (!shareId.value) return;
+  if (currentData.value.id === shareId.value) {
+    currentData.value.showDetail = false;
+    setTimeout(() => {
+      handleSetDetailShowClick();
+    }, 450);
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -434,10 +482,32 @@ watch(
       height: 32px;
       align-items: center;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       margin-top: 13px;
       @include font(14px, 400, #244bf1, 22px);
-      cursor: pointer;
+      cursor: default;
+
+      .share-btn {
+        width: 84px;
+        height: 32px;
+        background: #eaedfe;
+        border-radius: 4px;
+        padding: 5px 16px;
+        display: flex;
+        justify-self: start;
+        align-items: center;
+        cursor: pointer;
+
+        img {
+          width: 16px;
+          height: 16px;
+          margin-left: 8px;
+        }
+      }
+
+      .close-detail {
+        cursor: pointer;
+      }
     }
 
     .detail_content {

@@ -234,7 +234,7 @@ async function getReportContent() {
 @import "@/style/mixin.scss";
 
 .es-liteStepThree {
-  padding: 44px 0 80px;
+  padding: 44px 0 8px;
   @include flex(flex-start, space-between, nowrap);
 }
 .es-liteStepThree-left {
