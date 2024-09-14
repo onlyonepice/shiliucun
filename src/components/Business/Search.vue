@@ -53,6 +53,9 @@ watch(
   () => value.value,
   (val) => {
     model.value = val;
+    if (!val) {
+      emit("onSearch", value.value);
+    }
   },
 );
 function onSearch() {
@@ -64,6 +67,7 @@ const handleClearTap = () => {
   model.value = value.value;
   emit("onSearch", value.value);
 };
+defineExpose({ value });
 </script>
 
 <style lang="scss" scoped>
@@ -77,7 +81,7 @@ const handleClearTap = () => {
 
     .icon_clear {
       @include widthAndHeight(20px, 20px);
-      @include absolute(1, 50%, 15%, none, none);
+      @include absolute(1, 50%, 10%, none, none);
       transform: translate(-50%, -50%);
       cursor: pointer;
     }

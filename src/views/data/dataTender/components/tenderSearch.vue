@@ -116,6 +116,7 @@
     <div :class="ns.b('right')">
       <Search
         width="858px"
+        ref="searchRef"
         v-model="filterParams.keyword"
         @onSearch="onSearch"
       />
@@ -147,6 +148,7 @@ import { getBidFinderApi, getTenderLookupApi } from "@/api/data";
 import { useRoute } from "vue-router";
 import { cloneDeep } from "lodash";
 import { windowScrollStore } from "@/store/modules/windowScroll";
+import router from "@/router";
 const route = useRoute();
 const loading = ref(false);
 const filterParams = ref({
@@ -165,8 +167,10 @@ const defaultProps = ref({
 const page = ref(1);
 const limit = ref(20);
 const total = ref(0);
+const searchRef = ref(null);
 const onSearch = () => {
   page.value = 1;
+  router.replace("/dataTender"); // 清除路由上的id和title
   getData();
 };
 const showOpen = (data) => {
@@ -314,8 +318,20 @@ const changeYearRangeTag = (e, row) => {
     e.paramValue === filterParams.value[row.paramValue] ? "" : e.paramValue;
   getData();
 };
-onMounted(() => {
+
+const getShareData = () => {
+  const _id = route.query.id;
+  const _title = route.query.title as string;
+  if (_id && _title) {
+    setTimeout(() => {
+      searchRef.value.value = _title;
+    }, 400);
+    filterParams.value.keyword = _title;
+  }
   getData();
+};
+onMounted(() => {
+  getShareData();
   getTenderLookupFn();
 });
 </script>
