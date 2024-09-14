@@ -59,7 +59,7 @@ export const ElectricityUsageEchartsOptions = () => {
       },
     },
     grid: {
-      left: "5%",
+      left: "8%",
       right: "8%",
       bottom: "13%",
       top: "10%",
