@@ -144,5 +144,9 @@ export function splitOrJoin(
   separator = "、",
 ): String | Array<String> {
   // 如果是数组，则使用 join 方法，否则使用 split 方法
-  return Array.isArray(str) ? str.join(separator) : str.split(separator);
+  return Array.isArray(str)
+    ? str.join(separator)
+    : str && str.length
+      ? str.split(separator)
+      : "";
 }

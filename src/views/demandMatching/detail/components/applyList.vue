@@ -74,7 +74,7 @@
       <p :class="ns.b('desc')">{{ applyDetail.enterpriseSummary }}</p>
       <h4 :class="ns.b('title')" v-if="applyDetail.message !== ''">留言</h4>
       <p :class="ns.b('desc')">{{ applyDetail.message }}</p>
-      <div
+      <!-- <div
         :class="ns.b('option')"
         v-if="applyDetail.status === 1 || applyDetail.status === 4"
       >
@@ -82,7 +82,7 @@
         <el-button type="primary" @click="onAgreeOrRefuse(2)"
           >同意申请</el-button
         >
-      </div>
+      </div> -->
       <div />
     </el-drawer>
   </el-drawer>
@@ -96,15 +96,15 @@ import BusinessCard from "./businessCard.vue";
 import LamentIcon from "@/assets/img/common/lament_icon.png";
 import { searchApplicationStatus } from "../../config";
 import {
-  agreeOrRefuseApplyApi,
+  // agreeOrRefuseApplyApi,
   changeApplyStatusApi,
 } from "@/api/demandMatching";
-import { ElMessage } from "element-plus";
+// import { ElMessage } from "element-plus";
 const ns = useNamespace("demandMatching-applyList");
 const emits = defineEmits([
   "onHandleClose",
   "onchangeCurrent",
-  "onAgreeOrRefuse",
+  // "onAgreeOrRefuse",
 ]);
 const drawerType: Ref<boolean> = ref(false);
 const drawerDetail: Ref<boolean> = ref(false);
@@ -147,18 +147,18 @@ const onCheckDetail = async (data: any) => {
   await changeApplyStatusApi(data.id);
 };
 // 同意或拒绝申请
-const onAgreeOrRefuse = async (type: number) => {
-  const { resp_code } = await agreeOrRefuseApplyApi({
-    applyId: choseId.value,
-    status: type,
-  });
-  if (resp_code === 0) {
-    drawerDetail.value = false;
-    type === 2 && ElMessage.success("已同意该申请");
-    type === 3 && ElMessage.warning("已拒绝该申请");
-    emits("onAgreeOrRefuse");
-  }
-};
+// const onAgreeOrRefuse = async (type: number) => {
+//   const { resp_code } = await agreeOrRefuseApplyApi({
+//     applyId: choseId.value,
+//     status: type,
+//   });
+//   if (resp_code === 0) {
+//     drawerDetail.value = false;
+//     type === 2 && ElMessage.success("已同意该申请");
+//     type === 3 && ElMessage.warning("已拒绝该申请");
+//     emits("onAgreeOrRefuse");
+//   }
+// };
 </script>
 <style lang="scss">
 @import "@/style/mixin.scss";
@@ -204,7 +204,8 @@ const onAgreeOrRefuse = async (type: number) => {
     @include textOverflow();
   }
   div {
-    @include widthAndHeight(54px, 24px);
+    min-width: 56px;
+    height: 24px;
     padding: 2px 8px;
     border-radius: 4px;
     @include font(12px, 400, #ff892e, 20px);

@@ -95,6 +95,7 @@ import useNamespace from "@/utils/nameSpace";
 import ElectricityApiImage from "@/assets/img/dataBase/electricity-api-img.png";
 import { getVerificationCode, openApiApi } from "@/api/data";
 import { ElMessage } from "element-plus";
+import { login } from "@/api/user";
 const ns = useNamespace("openDialog");
 const visibleInfo: Ref<boolean> = ref(false); // 弹窗显示
 const emits = defineEmits(["onClose"]);
