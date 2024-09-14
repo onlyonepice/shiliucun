@@ -2,13 +2,6 @@
   <div :class="[ns.b(), 'es-commonPage']">
     <div :class="ns.b('title')">
       <h1>工商业测算Lite版</h1>
-      <div>
-        <el-button v-if="step === 2" @click="step--">上一步</el-button>
-        <el-button v-if="step === 3" @click="onBack">新建测算</el-button>
-        <el-button type="primary" @click="onNextStep">{{
-          step === 3 ? "编辑项目" : "下一步"
-        }}</el-button>
-      </div>
     </div>
     <div :class="ns.b('step')">
       <template v-for="item in stepList" :key="item.id">
@@ -40,6 +33,15 @@
     </div>
     <div v-show="step === 3">
       <StepThree :filterInfo="filterInfo" :step="step" />
+    </div>
+    <div :class="ns.b('operate')">
+      <div>
+        <el-button v-if="step === 2" @click="step--">上一步</el-button>
+        <el-button v-if="step === 3" @click="onBack">新建测算</el-button>
+        <el-button type="primary" @click="onNextStep">{{
+          step === 3 ? "编辑项目" : "下一步"
+        }}</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -155,5 +157,13 @@ async function onCheckReport() {
   @include widthAndHeight(96px, 1px);
   background: #dbdce2;
   margin: 0 40px;
+}
+
+.es-calculationLite-operate {
+  padding-top: 24px;
+  margin-top: 24px;
+  border-top: 1px solid #dbdce2;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
