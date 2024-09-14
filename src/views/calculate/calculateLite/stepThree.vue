@@ -236,6 +236,9 @@ async function getReportContent() {
 .es-liteStepThree {
   padding: 44px 0 8px;
   @include flex(flex-start, space-between, nowrap);
+  .el-loading-mask {
+    height: 620px;
+  }
 }
 .es-liteStepThree-left {
   width: 760px;

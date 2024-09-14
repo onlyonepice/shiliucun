@@ -41,7 +41,7 @@
         >
         <el-button v-if="step === 3" @click="onBack">新建测算</el-button>
         <el-button type="primary" @click="onNextStep">{{
-          step === 3 ? "编辑项目" : "下一步"
+          step === 3 ? "编辑项目" : step === 2 ? "生成报告" : "下一步"
         }}</el-button>
       </div>
     </div>
