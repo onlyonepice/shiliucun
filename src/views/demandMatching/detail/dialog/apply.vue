@@ -20,6 +20,7 @@
         maxlength="500"
         show-word-limit
         resize="none"
+        :rows="8"
       />
       <h5>留言</h5>
       <el-input
@@ -29,6 +30,7 @@
         maxlength="150"
         show-word-limit
         resize="none"
+        :rows="6"
       />
       <div />
     </template>
@@ -105,7 +107,7 @@ const onHandleClose = async (type: boolean) => {
   }
   setTimeout(() => {
     emits("onApply");
-  }, 300);
+  }, 500);
 };
 // 获取用户信息
 const geuUserInfo = async () => {
@@ -128,7 +130,7 @@ geuUserInfo();
     margin: 16px 0 8px;
   }
   .el-textarea__inner {
-    @include widthAndHeight(100%, 64px);
+    // @include widthAndHeight(100%, 64px);
     background: #f2f3f5;
   }
   .el-input__count {
