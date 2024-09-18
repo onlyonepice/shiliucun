@@ -304,6 +304,7 @@
               :defaultValue="needData.tab"
               :options="tabList"
               :multiple="true"
+              :multipleLimit="3"
               labelKey="labelName"
               placeholder="添加标签，让更多人关注到你"
               valueKey="id"
