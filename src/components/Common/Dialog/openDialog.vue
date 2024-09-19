@@ -123,6 +123,12 @@ watch(
   () => props.visible,
   (val) => {
     visibleInfo.value = val;
+    if (val) {
+      activateInfo.value.userName = useUserStore().userInfo.realName;
+      activateInfo.value.mobile = useUserStore().userInfo.mobile;
+      activateInfo.value.company = useUserStore().userInfo.company;
+      activateInfo.value.position = useUserStore().userInfo.position;
+    }
   },
 );
 // 开通弹窗信息修改
