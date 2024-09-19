@@ -44,7 +44,7 @@
     </div>
   </div>
   <openDialog
-    title="开通API"
+    title="电价API"
     :visible="visibleInfo"
     @onClose="visibleInfo = false"
   />
@@ -245,15 +245,6 @@ const errorTable: Ref<Array<any>> = ref([
     color: rgba(0, 0, 0, 0.6);
     line-height: 22px;
   }
-}
-.es-electricityApi-input--codeBtn {
-  width: 100px;
-  text-align: center;
-  cursor: pointer;
-  @include font(14px, 400, #244bf1, 22px);
-}
-.es-electricityApi-input--down {
-  color: #999999;
 }
 </style>
 <style lang="scss">

@@ -55,7 +55,7 @@ import useNamespace from "@/utils/nameSpace";
 import BusinessCard from "../components/businessCard.vue";
 import { useUserStore } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
-import { applyDemandApi } from "@/api/demandMatching";
+import { applyDemandApi, getApplyMessageApi } from "@/api/demandMatching";
 import { getUserDetailInfo } from "@/api/user";
 const emits = defineEmits(["onApply"]);
 const ns = useNamespace("demandMatchingDetail-apply");
@@ -81,8 +81,6 @@ watch(
   () => props.visible,
   (newVal) => {
     visibleApply.value = newVal;
-    applyInfo.value.enterpriseSummary =
-      useUserStore().$state.userInfo.introduction;
   },
   { immediate: true },
 );
@@ -113,11 +111,21 @@ const onHandleClose = async (type: boolean) => {
 const geuUserInfo = async () => {
   const { datas, resp_code } = await getUserDetailInfo();
   if (resp_code === 0) {
-    applyInfo.value.enterpriseSummary = datas.introduction;
+    !applyInfo.value.enterpriseSummary &&
+      (applyInfo.value.enterpriseSummary = datas.introduction);
     companyLogo.value = datas.companyLogo;
   }
 };
-geuUserInfo();
+// 获取上次报名信息
+const getApplyMessage = async () => {
+  const { resp_code, datas } = await getApplyMessageApi();
+  if (resp_code === 0) {
+    applyInfo.value.enterpriseSummary = datas.enterpriseSummary;
+    applyInfo.value.message = datas.message;
+    geuUserInfo();
+  }
+};
+getApplyMessage();
 </script>
 <style lang="scss">
 @import "@/style/mixin.scss";

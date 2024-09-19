@@ -321,9 +321,7 @@
                 </div>
               </template>
             </Select>
-            <span :class="ns.b('add-tab')" @click="addTabDialog = true"
-              >添加标签</span
-            >
+            <span :class="ns.b('add-tab')" @click="onAddTag()">添加标签</span>
           </div>
           <div
             :class="ns.be('content', 'infoDialog')"
@@ -513,6 +511,13 @@ const getRoleConfig = async () => {
       }
     });
   }
+};
+// 点击添加标签
+const onAddTag = () => {
+  if (needData.value.tab.length >= 3) {
+    return ElMessage.warning("最多添加3个标签");
+  }
+  addTabDialog.value = true;
 };
 // 添加标签名称
 const onChange = (value: any) => {

@@ -102,3 +102,11 @@ export const submitEvaluateApi = (data: any) => {
     { data },
   );
 };
+
+// 报名需求回显留言
+export const getApplyMessageApi = () => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    `/eesa-data-center/need/apply/front/v1.0/getLastTime`,
+  );
+};

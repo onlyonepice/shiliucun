@@ -60,10 +60,6 @@
       "
     >
       <BusinessCard :info="applyDetail.userInfo" style="margin: 0 auto" />
-      <div :class="ns.be('content', 'extra')" v-if="applyDetail.status !== 2">
-        <img :src="LamentIcon" alt="" />
-        <p>需求方同意报名后将显示联系方式</p>
-      </div>
       <h4
         :class="ns.b('title')"
         :style="{ 'margin-top': applyDetail.status !== 2 ? '48px' : '16px' }"
@@ -93,7 +89,6 @@ import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import BusinessCard from "./businessCard.vue";
-import LamentIcon from "@/assets/img/common/lament_icon.png";
 import { searchApplicationStatus } from "../../config";
 import {
   // agreeOrRefuseApplyApi,

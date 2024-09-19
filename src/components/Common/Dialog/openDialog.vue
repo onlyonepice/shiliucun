@@ -96,6 +96,9 @@ import ElectricityApiImage from "@/assets/img/dataBase/electricity-api-img.png";
 import { getVerificationCode, openApiApi } from "@/api/data";
 import { ElMessage } from "element-plus";
 import { login } from "@/api/user";
+import { useUserStore } from "@/store/modules/user";
+import { setToken } from "@/utils/auth";
+import { NOOP } from "@vue/shared";
 const ns = useNamespace("openDialog");
 const visibleInfo: Ref<boolean> = ref(false); // 弹窗显示
 const emits = defineEmits(["onClose"]);
@@ -129,6 +132,7 @@ const onChangeInfo = (value: any, type: string) => {
 const btnDesc: Ref<string> = ref("获取验证码");
 const timer: Ref<any> = ref(null); // 定时器
 const openApiFn = async () => {
+  activateInfo.value.source = props.title;
   const { resp_code } = await openApiApi(activateInfo.value);
   if (resp_code === 0) {
     ElMessage.success("信息已提交，24小时内会有工作人员与您联系");
@@ -244,5 +248,14 @@ const onClose = () => {
 .dialog-footer {
   @include flex(center, flex-end);
   margin-bottom: 24px;
+}
+.es-openDialog-input--codeBtn {
+  width: 100px;
+  text-align: center;
+  cursor: pointer;
+  @include font(14px, 400, #244bf1, 22px);
+}
+.es-openDialog-input--down {
+  color: #999999;
 }
 </style>
