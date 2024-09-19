@@ -254,4 +254,9 @@ const onCheckDetail = async (data: any) => {
     z-index: -1 !important;
   }
 }
+.es-demandMatching-applyList {
+  .el-drawer__body {
+    max-height: 80%;
+  }
+}
 </style>
