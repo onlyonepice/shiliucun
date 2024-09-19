@@ -54,7 +54,7 @@
       title="发布需求"
       :visible="visibleInfo"
       width="560px"
-      :height="step === 1 ? '528px' : 'auto'"
+      :height="step === 1 ? 'auto' : 'auto'"
       :showFoot="false"
       :appendToBody="appendToBody"
       @onHandleClose="onHandleCloseDialog"
@@ -151,7 +151,7 @@
               "
             />
           </div>
-          <div :class="ns.be('content', 'infoDialog')">
+          <div :class="ns.be('content', 'infoDialog')" style="height: auto">
             <span required>业务范围</span>
             <Select
               type="select"
