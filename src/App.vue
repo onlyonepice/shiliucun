@@ -68,7 +68,6 @@ import { generateUUID } from "@/utils/richText";
 const opacityBg: Ref<boolean> = ref(true); // 是否展示透明背景
 const route = useRoute();
 const showNavBar: Ref<boolean> = ref(true);
-const lastScrollY: Ref<number> = ref(0);
 const openLoginAnimate: Ref<boolean> = ref(false); // 登录动画执行完毕弹窗
 const showMembersBuy: Ref<boolean> = ref(false); //订阅会员弹框状态
 // 埋点方法
@@ -139,9 +138,7 @@ const getBg = computed(() => {
   return route.meta.backgroundColor ? route.meta.backgroundColor : "#ffffff";
 });
 const onScroll = ({ scrollTop }: any) => {
-  showNavBar.value = scrollTop < lastScrollY.value;
   windowScroll.SET_SCROLL_TOP(scrollTop);
-  lastScrollY.value = scrollTop;
   if (route.path === "/home") {
     opacityBg.value = scrollTop < 200;
   }
