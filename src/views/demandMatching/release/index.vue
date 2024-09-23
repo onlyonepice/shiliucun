@@ -277,15 +277,17 @@
         <div class="hint">最多上传三张图片</div>
 
         <div class="btn-box">
-          <el-button @click="backStep" style="margin-right: 231px"
-            >上一步</el-button
-          >
-          <el-button @click="onHandleCloseInfo(false)">取消</el-button>
-          <el-button type="primary" @click="handleReleaseNeed()"
-            >发布需求</el-button
-          >
+          <div>
+            <el-button type="primary" @click="handleReleaseNeed()"
+              >发布需求</el-button
+            >
+            <el-button @click="onHandleCloseInfo(false)">取消</el-button>
+          </div>
+          <el-button @click="backStep">上一步</el-button>
         </div>
-        <BusinessCard :info="userDetailInfo" class="info-card" />
+        <div :class="ns.b('card')">
+          <BusinessCard :info="userDetailInfo" class="info-card" />
+        </div>
       </div>
     </div>
   </div>
@@ -326,8 +328,9 @@ import type { UploadProps } from "element-plus";
 import { cloneDeep } from "lodash";
 import { getToken } from "@/utils/auth";
 import { splitOrJoin } from "@/utils";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
+const route = useRoute();
 const emits = defineEmits(["close"]);
 const { VITE_GLOB_API_URL } = import.meta.env;
 import {
@@ -341,6 +344,7 @@ import {
   updateNeedApi,
   getRoleConfigApi,
 } from "@/api/demandList";
+import { getDemandDetailApi } from "@/api/demandMatching";
 // 步骤数组信息
 const stepList: Ref<Array<any>> = ref([
   { id: 1, name: "编辑/确认个人信息" },
@@ -604,6 +608,21 @@ const onChangeSwitch = async (val: boolean, type: string) => {
   onGetUserInfo();
   resp_code === 0 && ElMessage.success("修改成功");
 };
+// 获取需求详情
+const getDemandDetail = async (id: String) => {
+  const { resp_code, datas }: any = await getDemandDetailApi({
+    id,
+  });
+  if (resp_code === 0) {
+    needData.value = datas;
+    imageList.value = needData.value.imageUrls.split(",").map((item) => {
+      return {
+        name: "",
+        url: useUserStore().fileUrl + item,
+      };
+    });
+  }
+};
 watch(
   () => props.show,
   (e) => {
@@ -611,6 +630,15 @@ watch(
     visibleInfo.value = e;
     visibleInfoSet.value = e;
     isConfirmUserInfo.value = false;
+  },
+  { deep: true, immediate: true },
+);
+watch(
+  () => route.query.id,
+  (val) => {
+    if (val) {
+      getDemandDetail(val);
+    }
   },
   { deep: true, immediate: true },
 );
@@ -679,7 +707,7 @@ watch(
 @import "@/style/mixin.scss";
 .hint {
   position: relative;
-  top: -18px;
+  top: -12px;
   left: 79px;
   font-size: 12px;
   font-weight: 400;
@@ -874,6 +902,19 @@ watch(
     @include widthAndHeight(26px, 26px);
     @include absolute(1, none, none, 0, 123px);
   }
+}
+.btn-box {
+  @include flex(center, space-between, nowrap);
+  padding-left: 80px;
+  padding-right: 16px;
+}
+
+.es-releaseDemand-card {
+  @include widthAndHeight(512px, 280px);
+  @include flex(center, center, nowrap);
+  background: #f2f3f5;
+  border-radius: 8px;
+  margin: 56px auto 0;
 }
 </style>
 
