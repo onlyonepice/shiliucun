@@ -27,5 +27,16 @@ export default {
         backgroundColor: "#F2F3F5",
       },
     },
+    {
+      path: "/demandMatching/release",
+      name: "DemandMatchingRelease",
+      components: {
+        default: () => import("@/views/demandMatching/release/index.vue"),
+      },
+      meta: {
+        title: "发布需求",
+        backgroundColor: "#F2F3F5",
+      },
+    },
   ],
 };

@@ -327,12 +327,6 @@
       </template>
       <DemandMatchingSkeletonMy v-else />
     </div>
-    <ReleaseDemand
-      v-if="isLogin"
-      @close="releaseDemandClose"
-      @success="releaseDemandSuccess"
-      :show="releaseDemandShow"
-    />
   </div>
   <RoleDialog
     :visible="roleDialogVisible"
@@ -361,8 +355,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted, onMounted, Ref, computed, onActivated } from "vue";
-import ReleaseDemand from "../releaseDemand.vue";
+import { ref, onMounted, Ref, computed, onActivated } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import businessCard from "@/views/demandMatching/detail/components/businessCard.vue";
 import DemandHallIcon from "@/assets/img/demand/demand-hall-icon.png";
@@ -459,7 +452,9 @@ const handleReleaseClick = () => {
   if (!getToken()) {
     return useUserStore().openLogin(true);
   }
-  releaseDemandShow.value = true;
+  router.push({
+    path: "/demandMatching/release",
+  });
 };
 // 点击修改
 const onModify = () => {
@@ -485,14 +480,6 @@ const changeManageTab = (value) => {
     getApplyNeed();
   }
   currentManageTab.value = value;
-};
-const releaseDemandShow = ref(false);
-const releaseDemandSuccess = () => {
-  getReleaseNeed();
-  releaseDemandShow.value = false;
-};
-const releaseDemandClose = () => {
-  releaseDemandShow.value = false;
 };
 const onSearch = (value) => {
   filterParams.value.title = value;
@@ -604,9 +591,6 @@ const onchangeCurrentApply = (number: number) => {
   getApplyNeed();
   windowScrollStore().SET_SCROLL_TOP(0);
 };
-onUnmounted(() => {
-  releaseDemandShow.value = false;
-});
 // 获取排序筛选项
 const getSortTypeList = async () => {
   const { datas, resp_code } = await getNeedEvaluateApi({
