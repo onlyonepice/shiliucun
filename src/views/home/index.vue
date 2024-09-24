@@ -315,37 +315,72 @@ const functionNav = ref([
     path: VITE_INDUSTRIALMAP_URL,
     icon: homeNav_1,
     bgc: "linear-gradient( 135deg, #F7FCFC 0%, #E7F7F6 100%)",
+    trackFunction: "pc_Home_Enterprise_click",
   },
   {
     title: "产品库",
     path: "/searchProduct",
     icon: homeNav_2,
     bgc: "linear-gradient( 90deg, #FFFCF6 0%, #FFF6E4 100%)",
+    trackFunction: "pc_Home_Product_click",
   },
   {
     title: "查电价",
     path: "/electricityPrice",
     icon: homeNav_3,
     bgc: "linear-gradient( 90deg, #FFFAF5 0%, #FFF0E1 100%)",
+    trackFunction: "pc_Home_Elecprice_click",
   },
 ]);
 const functionNavTwo = ref([
-  { title: "项目", path: "/dataProject", icon: homeNavBottom_1 },
-  { title: "招标", path: "/dataTender", icon: homeNavBottom_2 },
-  { title: "中标", path: "/dataWinningBid", icon: homeNavBottom_3 },
-  { title: "政策", path: "/policy", icon: homeNavBottom_4 },
-  { title: "行业洞察", path: "/industryInsight", icon: homeNavBottom_5 },
+  {
+    title: "项目",
+    path: "/dataProject",
+    icon: homeNavBottom_1,
+    trackFunction: "pc_Home_Project_click",
+  },
+  {
+    title: "招标",
+    path: "/dataTender",
+    icon: homeNavBottom_2,
+    trackFunction: "pc_Home_Bidding_click",
+  },
+  {
+    title: "中标",
+    path: "/dataWinningBid",
+    icon: homeNavBottom_3,
+    trackFunction: "pc_Home_Winbid_click",
+  },
+  {
+    title: "政策",
+    path: "/policy",
+    icon: homeNavBottom_4,
+    trackFunction: "pc_Home_Policy_click",
+  },
+  {
+    title: "行业洞察",
+    path: "/industryInsight",
+    icon: homeNavBottom_5,
+    trackFunction: "pc_Home_ReportInsight_click",
+  },
   {
     title: "在线报告",
     path: "/reportOnLine?source=在线报告",
     icon: homeNavBottom_6,
+    trackFunction: "pc_Home_OnlineReport_click",
   },
   {
     title: "周月季报",
     path: "/quarterlyMonthlyReports",
     icon: homeNavBottom_7,
+    trackFunction: "pc_Home_PeriodReport_click",
   },
-  { title: "工商业测算", path: "/calculationBasic", icon: homeNavBottom_8 },
+  {
+    title: "工商业测算",
+    path: "/calculationBasic",
+    icon: homeNavBottom_8,
+    trackFunction: "pc_Home_BasicCalculation_click",
+  },
 ]);
 const dateList: Ref<Array<any>> = ref(generateDatesBackward(30)); // 日期列表
 const choseDate: Ref<string> = ref(generateDatesBackward(30)[0]); // 日期选择
@@ -358,7 +393,6 @@ const onSearch = () => {
     name: "HomeSearchDetail",
     params: { searchContent: searchContent.value },
   });
-  window.trackFunction("pc_Home_Search_click");
 };
 // 查看热点详情
 const onDetailReport = (type: String, data: any) => {
@@ -410,10 +444,12 @@ function handleGoDetails(row) {
 // }
 
 function onDemandHallTitle() {
+  window.trackFunction("pc_Home_RequestConnect_click");
   router.push("/demandMatching/list");
 }
 
 function onReportWhitePaper() {
+  window.trackFunction("pc_Home_WhitePaperBanner_click");
   router.push("/reportWhitePaper");
 }
 
@@ -425,6 +461,7 @@ function handleGoEnterpriseDetails(row) {
 }
 
 function onFunctionNav(row) {
+  window.trackFunction(row.trackFunction);
   if (row.path.includes("http")) {
     window.open(row.path, "_blank");
   } else {

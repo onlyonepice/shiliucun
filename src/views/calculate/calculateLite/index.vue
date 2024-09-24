@@ -88,6 +88,7 @@ const onNextStep = () => {
   if (step.value === 1) {
     stepOne.value.handleNext();
     filterInfo.value = Object.assign(filterInfo.value, stepOne.value.basicInfo);
+    window.trackFunction("pc_CalculationLite_Next_click");
   } else if (step.value === 2) {
     stepTwo.value.changeFilter();
     stepTwo.value.handleNext();
@@ -95,6 +96,7 @@ const onNextStep = () => {
       filterInfo.value,
       stepTwo.value.filterInfoOut,
     );
+    window.trackFunction("pc_CalculationLite_Create_click");
   } else {
     if (step.value === 3) {
       windowScroll.SET_SCROLL_TOP(0);
