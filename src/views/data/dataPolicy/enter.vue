@@ -8,6 +8,7 @@
     <PolicyList v-if="choseTabs === 1" />
     <PolicyAnalysis v-if="choseTabs === 2" />
     <ElectricityText :url="VITE_DATABASE_URL + '#/policyLibraryManage'" />
+    <NpsMark module="查政策" title="「查政策」" npsConfigCode="Policy" />
   </div>
 </template>
 

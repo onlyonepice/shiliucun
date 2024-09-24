@@ -145,7 +145,7 @@ onMounted(async () => {
     const { datas, resp_code } = await isNpsMarkApi(props.module);
     if (resp_code === 0) {
       dialogVisible.value = datas;
-      getNpsConfig();
+      props.apiText !== "" && getNpsConfig();
     }
   } else {
     dialogVisible.value = false;

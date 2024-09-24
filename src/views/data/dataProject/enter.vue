@@ -24,12 +24,7 @@
       :formOptions="formOptions"
     />
   </div>
-  <!-- <NpsMark
-    module="查中标"
-    title="「查中标」"
-    apiText="checkWinningNpsFeedBack"
-    npsConfigCode="FIND_WINNINGBIDS"
-  /> -->
+  <NpsMark module="查项目" title="「查项目」" npsConfigCode="Project" />
 </template>
 
 <script setup lang="ts">
