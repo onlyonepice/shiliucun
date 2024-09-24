@@ -5,6 +5,7 @@
         width="368px"
         @onSearch="onSearch"
         v-model="filterParams.keyword"
+        ref="searchRef"
       />
     </div>
     <template v-if="!filterLoading">
@@ -347,6 +348,11 @@ async function policyFilterSearchFn() {
         filterOptions.value.push(item);
       }
     });
+  }
+  console.log(monthList.value);
+  if (route.query.id && route.query.title) {
+    getShareData();
+  } else {
     getData();
   }
 }
@@ -511,21 +517,20 @@ const filterOptionsData = computed(() => {
 const handleShowAllClick = (key, _data) => {
   filterOptions.value[key].showAll = !filterOptions.value[key].showAll;
 };
-
-policyFilterSearchFn();
-
+const searchRef = ref(null);
 const getShareData = () => {
   const _id = route.query.id;
   const _title = route.query.title as string;
   if (_id && _title) {
     setTimeout(() => {
-      filterParams.value.keyword = _title;
+      searchRef.value.value = _title;
     }, 400);
+    filterParams.value.keyword = _title;
   }
   getData();
 };
 onMounted(() => {
-  route.query.id && route.query.title && getShareData();
+  policyFilterSearchFn();
 });
 </script>
 <style lang="scss" scoped>

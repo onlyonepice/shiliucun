@@ -104,7 +104,8 @@
                 :key="_item.id"
                 @click="onDetailReport(item.tag, _item)"
               >
-                {{ _item.title }}
+                {{ item.tag === "供需" ? _item.typeName + " | " : ""
+                }}{{ _item.title }}
               </p>
             </div>
           </el-scrollbar>
