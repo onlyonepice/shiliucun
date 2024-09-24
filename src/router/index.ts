@@ -15,6 +15,10 @@ const routes: any = [
   {
     path: "/",
     redirect: "/home",
+    meta: {
+      title: "掌上储能",
+      keepAlive: true,
+    },
   },
 ];
 

@@ -150,3 +150,22 @@ export function splitOrJoin(
       ? str.split(separator)
       : "";
 }
+// 生成日期数组函数
+export function generateDatesBackward(days) {
+  const dates = [];
+  const today = new Date();
+  for (let i = 0; i < days; i++) {
+    // 创建一个新的日期对象，基于今天减去i天
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+
+    // 格式化日期为 "YYYY/MM/DD"
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份是从0开始的，所以加1，并且保证两位数
+    const day = String(date.getDate()).padStart(2, "0");
+    const formattedDate = `${year}/${month}/${day}`;
+
+    dates.push(formattedDate);
+  }
+  return dates;
+}

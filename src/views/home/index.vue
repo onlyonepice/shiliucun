@@ -70,24 +70,44 @@
         </div>
         <div :class="ns.b('demandHallRight')">
           <div :class="ns.b('demandHallTitle')">
-            <div :class="ns.b('demandHallTitleLeft')">需求大厅</div>
-            <div
-              :class="ns.b('demandHallTitleRight')"
-              @click="onDemandHallTitle"
-            >
-              查看更多
+            <div :class="ns.b('demandHallTitleLeft')">
+              <span>今日储能</span>
+              <el-dropdown>
+                <span class="el-dropdown-link">{{ choseDate }}</span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-scrollbar height="330px">
+                      <el-dropdown-item
+                        v-for="item in dateList"
+                        :key="item"
+                        @click="
+                          choseDate = item;
+                          getAmountData();
+                        "
+                        >{{ item }}</el-dropdown-item
+                      >
+                    </el-scrollbar>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </div>
           </div>
-          <div :class="ns.b('demandList')">
+          <el-scrollbar height="343px">
             <div
-              v-for="item in demandHallList"
-              :key="item.id"
-              @click="handleGoDemandDetails(item)"
-              :class="ns.b('demandItem')"
+              v-for="item in todayEnergyData"
+              :key="item"
+              :class="ns.b('demandHallContent')"
             >
-              {{ item.typeName }}｜{{ item.title }}
+              <h4>· {{ item.tag }}</h4>
+              <p
+                v-for="_item in item.data"
+                :key="_item.id"
+                @click="onDetailReport(item.tag, _item.id)"
+              >
+                {{ _item.title }}
+              </p>
             </div>
-          </div>
+          </el-scrollbar>
         </div>
       </div>
       <div :class="ns.b('enterprise')">
@@ -216,12 +236,18 @@ import { ref, Ref } from "vue";
 import { useRouter } from "vue-router";
 import { getToken } from "@/utils/auth";
 import useNamespace from "@/utils/nameSpace";
+import { generateDatesBackward } from "@/utils/index";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { useUserStore } from "@/store/modules/user";
 import { useUserStoreHook } from "@/store/modules/user";
 import Skeleton from "./homeComponents/skeleton.vue";
 import { getProductListApi } from "@/api/searchProduct";
-import { getHomePage, frontSelectList, getNeedAmountApi } from "@/api/home";
+import {
+  getHomePage,
+  frontSelectList,
+  getNeedAmountApi,
+  getTodayEnergyStorageApi,
+} from "@/api/home";
 import homeNav_1 from "@/assets/img/home/home-nav-1.png";
 import homeNav_2 from "@/assets/img/home/home-nav-2.png";
 import homeNav_3 from "@/assets/img/home/home-nav-3.png";
@@ -265,7 +291,6 @@ const params = {
 const pagination = ref({
   clickable: true,
   renderBullet: function (index, className) {
-    console.log(index, className);
     return `<span class="${className}"></span>`;
   },
 });
@@ -307,6 +332,8 @@ const functionNavTwo = ref([
   },
   { title: "工商业测算", path: "/calculationBasic", icon: homeNavBottom_8 },
 ]);
+const dateList: Ref<Array<any>> = ref(generateDatesBackward(30)); // 日期列表
+const choseDate: Ref<string> = ref(generateDatesBackward(30)[0]); // 日期选择
 // 搜索事件
 const onSearch = () => {
   if (searchContent.value === "") {
@@ -318,6 +345,29 @@ const onSearch = () => {
   });
   window.trackFunction("pc_Home_Search_click");
 };
+// 查看热点详情
+const onDetailReport = (type: String, id: String) => {
+  console.log(type, id);
+  switch (type) {
+    case "热点":
+      router.push(`/hotSpots?id=${id}`);
+      break;
+    default:
+      break;
+  }
+};
+const todayEnergyData: Ref<Array<any>> = ref([]);
+// 获取今日储能数据
+const getAmountData = async () => {
+  const { resp_code, datas }: any = await getTodayEnergyStorageApi({
+    homePage: false,
+    date: choseDate.value,
+  });
+  if (resp_code === 0) {
+    todayEnergyData.value = datas;
+  }
+};
+getAmountData();
 
 function handleGoDetails(row) {
   if (!getToken()) {
@@ -329,9 +379,9 @@ function handleGoDetails(row) {
   );
 }
 
-function handleGoDemandDetails(row) {
-  router.push(`/demandMatching/detail?id=${row.id}&source=home`);
-}
+// function handleGoDemandDetails(row) {
+//   router.push(`/demandMatching/detail?id=${row.id}&source=home`);
+// }
 
 function onDemandHallTitle() {
   router.push("/demandMatching/list");
@@ -575,12 +625,10 @@ getDemandCount();
         width: 464px;
         .es-home-demandHallTitle {
           @include flex(center, space-between);
+          margin-bottom: 16px;
           .es-home-demandHallTitleLeft {
             @include font(20px, 600, rgba(0, 0, 0, 0.9), 28px);
-          }
-          .es-home-demandHallTitleRight {
-            @include font(14px, 400, #244bf1, 22px);
-            cursor: pointer;
+            @include flex(center, flex-start, nowrap);
           }
         }
         .es-home-demandList {
@@ -729,6 +777,17 @@ getDemandCount();
     }
   }
 }
+.es-home-demandHallContent {
+  h4 {
+    margin-bottom: 4px;
+  }
+  p {
+    padding: 5px 8px;
+    @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+    margin-bottom: 4px;
+    cursor: pointer;
+  }
+}
 </style>
 <style lang="scss">
 @import "@/style/mixin.scss";
@@ -766,5 +825,22 @@ getDemandCount();
 .swiper-pagination-bullet-active {
   @include widthAndHeight(32px, 4px);
   background: rgba(0, 0, 0, 0.9);
+}
+.es-home {
+  .el-dropdown-link {
+    display: inline-block;
+    background: linear-gradient(
+      270deg,
+      rgba(234, 237, 254, 0) 0%,
+      #eaedfe 100%
+    );
+    border-radius: 4px;
+    margin-left: 8px;
+    min-width: 101px;
+    height: 20px;
+    @include flex(center, flex-start, nowrap);
+    padding: 0 8px;
+    @include font(12px, 400, #244bf1, 20px);
+  }
 }
 </style>
