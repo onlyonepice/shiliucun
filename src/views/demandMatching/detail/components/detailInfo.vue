@@ -136,6 +136,7 @@
       :key="item"
       :src="useUserStore().fileUrl + item"
       :preview-src-list="[useUserStore().fileUrl + item]"
+      :hide-on-click-modal="true"
       fit="cover"
     />
     <slot />

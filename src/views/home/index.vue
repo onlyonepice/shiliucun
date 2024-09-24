@@ -73,10 +73,21 @@
             <div :class="ns.b('demandHallTitleLeft')">
               <span>今日储能</span>
               <el-dropdown>
-                <span class="el-dropdown-link">{{ choseDate }}</span>
+                <div
+                  class="el-dropdown"
+                  @mouseenter="hotSpotsUpType = true"
+                  @mouseleave="hotSpotsUpType = false"
+                >
+                  <span class="el-dropdown-link">{{ choseDate }}</span>
+                  <img
+                    class="el-dropdown-icon"
+                    :src="hotSpotsUpType ? HotSpotsUp : HotSpotsDown"
+                    alt=""
+                  />
+                </div>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-scrollbar height="330px">
+                    <el-scrollbar height="144px">
                       <el-dropdown-item
                         v-for="item in dateList"
                         :key="item"
@@ -242,6 +253,8 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { useUserStore } from "@/store/modules/user";
 import { useUserStoreHook } from "@/store/modules/user";
 import Skeleton from "./homeComponents/skeleton.vue";
+import HotSpotsUp from "@/assets/img/common/hotSpots-up.png";
+import HotSpotsDown from "@/assets/img/common/hotSpots-down.png";
 import { getProductListApi } from "@/api/searchProduct";
 import {
   getHomePage,
@@ -277,6 +290,7 @@ const homeLoading: Ref<Boolean> = ref(false); // 需求量加载
 const demandHallList = ref([]);
 const searchContent: Ref<string> = ref("");
 const logoList = ref([]);
+const hotSpotsUpType = ref(false); // 需求量向上
 const amountData: Ref<any> = ref({
   pendingDemand: 0,
   alreadyEnded: 0,
@@ -839,6 +853,10 @@ getDemandCount();
   background: rgba(0, 0, 0, 0.9);
 }
 .es-home {
+  .el-dropdown {
+    @include flex(center, flex-start, nowrap);
+    cursor: pointer;
+  }
   .el-dropdown-link {
     display: inline-block;
     background: linear-gradient(
@@ -848,11 +866,14 @@ getDemandCount();
     );
     border-radius: 4px;
     margin-left: 8px;
-    min-width: 101px;
+    min-width: 61px;
     height: 20px;
     @include flex(center, flex-start, nowrap);
     padding: 0 8px;
     @include font(12px, 400, #244bf1, 20px);
+  }
+  .el-dropdown-icon {
+    @include widthAndHeight(16px, 16px);
   }
 }
 </style>
