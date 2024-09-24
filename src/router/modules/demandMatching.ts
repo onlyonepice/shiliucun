@@ -25,6 +25,7 @@ export default {
       meta: {
         title: "需求对接详情",
         backgroundColor: "#F2F3F5",
+        keepAlive: false,
       },
     },
     {
@@ -36,6 +37,7 @@ export default {
       meta: {
         title: "发布需求",
         backgroundColor: "#F2F3F5",
+        keepAlive: false,
       },
     },
   ],

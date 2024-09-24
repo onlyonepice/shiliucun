@@ -585,7 +585,7 @@ function onHandleModifyMobile() {
   visibleMobile.value = true;
 }
 const needData: Ref<any> = ref({
-  role: null,
+  role: [],
   tab: [],
 });
 const imageList = ref([]);
@@ -615,6 +615,20 @@ const getDemandDetail = async (id: String) => {
   });
   if (resp_code === 0) {
     needData.value = datas;
+    needData.value.role = [];
+    needData.value.tab = [];
+    datas.needLabelListVOList.forEach((item) => {
+      if (item.labelType === "customer_group") {
+        item.needLabelResponseList.map((_item) => {
+          needData.value.role.push(_item.id);
+        });
+      } else {
+        item.needLabelResponseList.map((_item) => {
+          needData.value.tab.push(_item.id);
+        });
+      }
+    });
+    console.log(needData.value);
     imageList.value = needData.value.imageUrls.split(",").map((item) => {
       return {
         name: "",

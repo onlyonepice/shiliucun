@@ -218,7 +218,7 @@ import {
   getPolicyByFiltrateNoPagination,
 } from "@/api/data";
 import { cloneDeep } from "lodash";
-import { ref, computed, Ref } from "vue";
+import { ref, computed, Ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { getToken } from "@/utils/auth";
 import { getTimesApi } from "@/api/user";
@@ -513,6 +513,20 @@ const handleShowAllClick = (key, _data) => {
 };
 
 policyFilterSearchFn();
+
+const getShareData = () => {
+  const _id = route.query.id;
+  const _title = route.query.title as string;
+  if (_id && _title) {
+    setTimeout(() => {
+      filterParams.value.keyword = _title;
+    }, 400);
+  }
+  getData();
+};
+onMounted(() => {
+  route.query.id && route.query.title && getShareData();
+});
 </script>
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";

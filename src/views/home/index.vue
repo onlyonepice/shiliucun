@@ -102,7 +102,7 @@
               <p
                 v-for="_item in item.data"
                 :key="_item.id"
-                @click="onDetailReport(item.tag, _item.id)"
+                @click="onDetailReport(item.tag, _item)"
               >
                 {{ _item.title }}
               </p>
@@ -346,11 +346,22 @@ const onSearch = () => {
   window.trackFunction("pc_Home_Search_click");
 };
 // 查看热点详情
-const onDetailReport = (type: String, id: String) => {
-  console.log(type, id);
+const onDetailReport = (type: String, data: any) => {
   switch (type) {
     case "热点":
-      router.push(`/hotSpots?id=${id}`);
+      router.push(`/hotSpots?id=${data.id}`);
+      break;
+    case "供需":
+      router.push(`/demandMatching/detail?id=${data.id}`);
+      break;
+    case "招标":
+      router.push(`/dataTender?id=${data.id}&title=${data.title}`);
+      break;
+    case "政策":
+      router.push(`/policy?id=${data.id}&title=${data.title}`);
+      break;
+    case "洞察":
+      window.open(data.link, "externalWindow");
       break;
     default:
       break;
