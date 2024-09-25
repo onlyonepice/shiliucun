@@ -574,6 +574,7 @@ const getPositionType = async () => {
 // 获取用户详细信息
 const onGetUserInfo = () => {
   const datas = useUserStore().$state.userInfo;
+  Object.assign(datas, useUserStore().$state.accountInfo);
   userDetailInfo.value = datas;
   const _modifyInfo = modifyInfo.value;
   // 重置用户信息
@@ -934,6 +935,14 @@ watch(
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+.es-releaseDemand-page {
+  .select {
+    height: auto !important;
+  }
+  .es-releaseDemand-content__infoDialog {
+    align-items: flex-start;
+  }
+}
 .el-date-table td.current:not(.disabled) .el-date-table-cell__text {
   background-color: #244bf1 !important;
 }

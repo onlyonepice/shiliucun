@@ -105,7 +105,6 @@ const onOpenCompany = (id: string) => {
 }
 .es-demandMatching-businessCard-content__right {
   @include widthAndHeight(80px, 80px);
-  background: #ffffff;
   border-radius: 4px;
   @include absolute(1, 16px, 16px, none, none);
   object-fit: contain;
