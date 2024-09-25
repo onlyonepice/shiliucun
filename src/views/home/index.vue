@@ -483,6 +483,7 @@ function onDemandHallTitle() {
 function handleClickSwiperItem(index) {
   switch (index) {
     case 1:
+      window.trackFunction("pc_Home_WhitePaperBanner_click");
       router.push("/reportWhitePaper");
       break;
     case 2:
