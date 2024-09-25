@@ -70,27 +70,27 @@
             :autoplay="autoplay"
             :pagination="pagination"
             :navigation="{
-              nextEl: '.productSwiper-next',
-              prevEl: '.productSwiper-prev',
+              nextEl: '.demandHall-swiper-next',
+              prevEl: '.demandHall-swiper-prev',
             }"
           >
             <swiper-slide>
               <img
-                @click="handleClickSwiperItem(1)"
+                @click.stop="handleClickSwiperItem(1)"
                 src="@/assets/img/home/home-demandHall.png"
                 alt=""
               />
             </swiper-slide>
             <swiper-slide>
               <img
-                @click="handleClickSwiperItem(2)"
+                @click.stop="handleClickSwiperItem(2)"
                 src="@/assets/img/home/home-communication-group.png"
                 alt=""
               />
             </swiper-slide>
             <swiper-slide>
               <img
-                @click="handleClickSwiperItem(3)"
+                @click.stop="handleClickSwiperItem(3)"
                 src="@/assets/img/home/sales-ranking.png"
                 alt=""
               />
