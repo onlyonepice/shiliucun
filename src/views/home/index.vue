@@ -69,6 +69,10 @@
             :space-between="8"
             :autoplay="autoplay"
             :pagination="pagination"
+            :navigation="{
+              nextEl: '.productSwiper-next',
+              prevEl: '.productSwiper-prev',
+            }"
           >
             <swiper-slide>
               <img
@@ -335,7 +339,7 @@ const params = {
   coolingMethodIds: null,
   productType: "INDUSTRY_ENERGY_STORAGE",
 };
-const pagination = ref({
+const pagination = ref<any>({
   clickable: true,
   renderBullet: function (index, className) {
     return `<span class="${className}"></span>`;
