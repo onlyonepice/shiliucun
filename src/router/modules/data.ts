@@ -16,6 +16,7 @@ export default {
       },
       meta: {
         title: "项目",
+        keepAlive: false,
       },
     },
     {
@@ -26,6 +27,7 @@ export default {
       },
       meta: {
         title: "招标",
+        keepAlive: false,
       },
     },
     {
@@ -36,6 +38,7 @@ export default {
       },
       meta: {
         title: "电价",
+        keepAlive: false,
       },
     },
     {
