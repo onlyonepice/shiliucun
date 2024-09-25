@@ -39,6 +39,7 @@ export default {
       meta: {
         title: "产品详情",
         backgroundColor: "#F2F3F5",
+        keepAlive: false,
       },
     },
     {
@@ -50,6 +51,7 @@ export default {
       meta: {
         title: "产品对比",
         backgroundColor: "#F2F3F5",
+        keepAlive: false,
       },
     },
   ],
