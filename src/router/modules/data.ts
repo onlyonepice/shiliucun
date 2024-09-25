@@ -57,6 +57,7 @@ export default {
       },
       meta: {
         title: "政策",
+        keepAlive: false,
       },
     },
     {

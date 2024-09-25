@@ -358,7 +358,8 @@ async function getElectricityTypeOneName() {
   );
   eChartsOption.value.series[0].name = seriesName;
   eChartsOption.value.legend.data[0].name = seriesName;
-  eChartsOption.value.series[1].data = datas.map((item) => item.sameRatio);
+  eChartsOption.value.series[1].data = datas.map((item) => item.ringRatio);
+  eChartsOption.value.series[2].data = datas.map((item) => item.sameRatio);
   eChartsOption.value.xAxis.data = datas.map((item) => item.regionName);
   eChartsOption.value.xAxis.axisLabel.rotate = -90;
   eChartsOption.value.xAxis.axisLabel.formatter = (params) => {

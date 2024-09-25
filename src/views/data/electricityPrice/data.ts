@@ -1,7 +1,7 @@
 import { chartWatermark } from "@/utils/echarts/eCharts";
 export const eChartsOptionCommon = () => {
   return {
-    color: ["#244BF1", "#FF892E"],
+    color: ["#244BF1", "#FF892E", "#01B82B"],
     // 图例设置
     legend: {
       data: [
@@ -12,6 +12,10 @@ export const eChartsOptionCommon = () => {
         {
           icon: null,
           name: "环比变化",
+        },
+        {
+          icon: null,
+          name: "同比变化",
         },
       ],
       bottom: "10",
@@ -64,7 +68,13 @@ export const eChartsOptionCommon = () => {
         nameTextStyle: { fontSize: 14, fontWeight: "600", color: "#1D232E" },
         splitLine: {
           show: true,
-          lineStyle: { type: "dashed", color: "#F2F3F5", width: 1 },
+          lineStyle: { type: "dashed", color: "#F2F3F5" },
+        },
+        axisLine: {
+          show: false,
+        },
+        axisTick: {
+          show: false,
         },
       },
       {
@@ -87,6 +97,12 @@ export const eChartsOptionCommon = () => {
       {
         type: "line",
         name: "环比变化",
+        data: [],
+        yAxisIndex: 0,
+      },
+      {
+        type: "line",
+        name: "同比变化",
         data: [],
         yAxisIndex: 1,
       },

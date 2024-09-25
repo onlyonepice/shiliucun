@@ -107,3 +107,21 @@ export const getNeedAmountApi = () => {
     `/eesa-data-center/need/need/openApi/v1.0/quantityRequired`,
   );
 };
+
+// 今日储能
+export const getTodayEnergyStorageApi = (params) => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    `/eesa-report/homePage/homepageFrontier/openApi/v1.0/energyStorageToday`,
+    { params },
+  );
+};
+
+// 获取热点详情
+export const getHotSpotsDetailApi = (params) => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    `/eesa-data-center/homePage/dailyEnergyStorage/openApi/v1.0/detailsById`,
+    { params },
+  );
+};

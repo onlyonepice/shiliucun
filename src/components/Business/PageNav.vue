@@ -191,8 +191,14 @@ const navList: Ref<Array<NavList>> = ref([
         id: 1,
         text: "招标",
         path: "/dataTender",
+        trackFunction: "pc_Bidding_click",
       },
-      { id: 2, text: "中标", path: "/dataWinningBid" },
+      {
+        id: 2,
+        text: "中标",
+        path: "/dataWinningBid",
+        trackFunction: "pc_Winbid_click",
+      },
       {
         id: 3,
         text: "项目",
@@ -202,21 +208,25 @@ const navList: Ref<Array<NavList>> = ref([
         id: 4,
         text: "电价",
         path: "/electricityPrice",
+        trackFunction: "pc_Elecprice_click",
       },
       {
         id: 5,
         text: "政策",
         path: "/policy",
+        trackFunction: "pc_Policy_click",
       },
       {
         id: 5,
         text: "储能数据库",
         path: `${VITE_DATABASE_URL}/#/home`,
+        trackFunction: "pc_IndustrialDatabase_click",
       },
       {
         id: 6,
         text: "电价API",
         path: "/electricityApi",
+        trackFunction: "pc_ElecpriceAPI_click",
       },
     ],
   },
@@ -228,11 +238,13 @@ const navList: Ref<Array<NavList>> = ref([
         id: 1,
         text: "工商业测算Basic",
         path: "/calculationBasic",
+        trackFunction: "pc_BasicCalculation_click",
       },
       {
         id: 2,
         text: "工商业测算Lite",
         path: "/calculationLite",
+        trackFunction: "pc_LiteCalculation_click",
       },
     ],
   },
@@ -241,8 +253,18 @@ const navList: Ref<Array<NavList>> = ref([
     text: "企业/产品",
     path: ["/enterprise"],
     children: [
-      { id: 1, text: "产业链地图", path: VITE_INDUSTRIALMAP_URL },
-      { id: 2, text: "查产品", path: "/searchProduct" },
+      {
+        id: 1,
+        text: "产业链地图",
+        path: VITE_INDUSTRIALMAP_URL,
+        trackFunction: "pc_EnterpriseMap_click",
+      },
+      {
+        id: 2,
+        text: "查产品",
+        path: "/searchProduct",
+        trackFunction: "pc_Product_click",
+      },
     ],
   },
   {
@@ -275,18 +297,11 @@ const onChoseNav = (id: number) => {
 };
 // 选择子菜单
 const onChoseChildTab = (item: any) => {
+  console.log(item.trackFunction);
+  item.trackFunction && window.trackFunction(item.trackFunction);
   if (item.path.indexOf("http") !== -1) {
     optionChildren.value = true;
     onChoseLeave();
-    if (item.text === "行业数据库") {
-      window.trackFunction("pc_IndustrialDatabase_click");
-    }
-    if (item.text === "电价API") {
-      window.trackFunction("pc_ElecpriceAPI_click");
-    }
-    if (item.text === "产业链地图") {
-      window.trackFunction("pc_EnterpriseMap_click");
-    }
     return window.open(item.path, "externalWindow");
   } else if (item.path !== "") {
     onChildrenPath(item.path);

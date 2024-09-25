@@ -6,9 +6,7 @@
     >
       <div>
         <!-- 待审核 -->
-        <template v-if="detailInfo.status === 1">
-          <el-button @click="emits('onDelete')">删除需求</el-button>
-        </template>
+        <template v-if="detailInfo.status === 1" />
         <!-- 需求中 -->
         <template v-if="detailInfo.status === 2">
           <template v-if="!minePublish">
@@ -31,7 +29,6 @@
             <el-button type="primary" @click="emits('onSolve')"
               >需求已解决</el-button
             >
-            <el-button @click="emits('onDelete')">删除需求</el-button>
           </template>
           <el-button @click="onShare()">分享</el-button>
         </template>
@@ -40,7 +37,6 @@
           <el-button type="primary" @click="emits('onResetApply')"
             >重新提交</el-button
           >
-          <el-button @click="emits('onDelete')">删除需求</el-button>
         </template>
         <!-- 已解决 -->
         <template v-if="detailInfo.status === 4" />
@@ -55,6 +51,22 @@
           @click="emits('onCheckApplyList')"
           >报名列表</el-button
         >
+        <img
+          :src="EditIcon"
+          v-if="
+            detailInfo.status === 1 || (detailInfo.status === 2 && minePublish)
+          "
+          @click="router.push('/demandMatching/release?id=' + detailInfo.id)"
+        />
+        <img
+          :src="DeleteIcon"
+          @click="emits('onDelete')"
+          v-if="
+            detailInfo.status === 1 ||
+            (detailInfo.status === 2 && minePublish) ||
+            detailInfo.status === 3
+          "
+        />
       </div>
     </div>
     <!-- <h5
@@ -124,6 +136,7 @@
       :key="item"
       :src="useUserStore().fileUrl + item"
       :preview-src-list="[useUserStore().fileUrl + item]"
+      :hide-on-click-modal="true"
       fit="cover"
     />
     <slot />
@@ -135,8 +148,12 @@ import { computed } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStore } from "@/store/modules/user";
 import useClipboard from "vue-clipboard3";
+import DeleteIcon from "@/assets/img/common/delete-icon.png";
+import EditIcon from "@/assets/img/common/edit-icon.png";
 import { searchDemandStatus, searchApplicationStatus } from "../../config";
 import { ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const emits = defineEmits([
   "onApply",
   "onCheckApplyList",
@@ -144,6 +161,7 @@ const emits = defineEmits([
   "onSolve",
   "onResetApply",
   "onRevocation",
+  "onEdit",
 ]);
 const { toClipboard } = useClipboard();
 const ns = useNamespace("demandMatching-detail");
@@ -194,6 +212,12 @@ const onShare = async () => {
 .es-demandMatching-detail-top__number {
   min-width: 140px;
   @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
+  @include flex(center, flex-start, nowrap);
+  img {
+    @include widthAndHeight(24px, 24px);
+    cursor: pointer;
+    margin-left: 16px;
+  }
 }
 .es-demandMatching-detail-top__removed-head {
   @include flex(center, space-between, nowrap);

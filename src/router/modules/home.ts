@@ -31,5 +31,16 @@ export default {
         keepAlive: true,
       },
     },
+    {
+      path: "/hotSpots",
+      name: "HotSpots",
+      components: {
+        default: () => import("@/views/home/hotSpots.vue"),
+      },
+      meta: {
+        title: "热点想抢",
+        backgroundColor: "#F2F3F5",
+      },
+    },
   ],
 };

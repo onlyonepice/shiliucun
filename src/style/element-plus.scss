@@ -34,6 +34,9 @@ body {
       color: #ffffff;
     }
   }
+  :focus-visible {
+    outline: none;
+  }
 }
 
 .el-textarea__inner:focus {
@@ -79,7 +82,9 @@ body {
   color: rgba(0, 0, 0, 0.9);
   line-height: 22px;
 }
-
+.el-input__count-inner {
+  background-color: transparent !important;
+}
 .el-radio__input.is-checked .el-radio__inner {
   border-color: #244bf1 !important;
   background-color: #244bf1 !important;

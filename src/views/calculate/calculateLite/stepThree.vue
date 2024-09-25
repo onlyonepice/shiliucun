@@ -18,9 +18,7 @@
             :underline="false"
             :href="item.linkUrl"
             :download="item.desc"
-            @click="
-              item.linkText === '免费咨询' ? (addWeChatDialog = true) : ''
-            "
+            @click="onLinkClick(item.linkText)"
             >{{ item.linkText }}</el-link
           >
         </div>
@@ -30,7 +28,7 @@
         <div
           v-for="item in consultList"
           :key="item.title"
-          @click="addWeChatDialog = true"
+          @click="onConsultList(item)"
         >
           <img :src="item.imgSrc" alt="" />
           <p>{{ item.text }}</p>
@@ -129,18 +127,22 @@ const consultList: Ref<any[]> = ref([
   {
     text: "完整测算报告",
     imgSrc: Consult1,
+    trackFunction: "pc_CalculationLite_CompleteReport_click",
   },
   {
     text: "找融资",
     imgSrc: Consult2,
+    trackFunction: "pc_CalculationLite_Financing_click",
   },
   {
     text: "找设备",
     imgSrc: Consult3,
+    trackFunction: "pc_CalculationLite_Machine_click",
   },
   {
     text: "施工方案",
     imgSrc: Consult4,
+    trackFunction: "pc_CalculationLite_Construction_click",
   },
 ]);
 const income15: Ref<Array<any>> = ref([
@@ -167,6 +169,18 @@ watch(
   },
   { immediate: true },
 );
+const onLinkClick = (text: string) => {
+  if (text === "免费咨询") {
+    addWeChatDialog.value = true;
+    window.trackFunction("pc_CalculationLite_Consult_click");
+  } else {
+    window.trackFunction("pc_CalculationLite_Download_click");
+  }
+};
+const onConsultList = (item: any) => {
+  addWeChatDialog.value = true;
+  window.trackFunction(item.trackFunction);
+};
 // 修改筛选项
 function changeFilter() {
   const _data = props.filterInfo;

@@ -54,6 +54,7 @@
       @onchangeCurrent="onchangeCurrent"
     />
   </div>
+  <NpsMark module="查产品" title="「查产品」" npsConfigCode="Company" />
 </template>
 
 <script lang="ts" setup>
