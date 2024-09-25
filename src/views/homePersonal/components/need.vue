@@ -2,7 +2,9 @@
   <div :class="[ns.b()]">
     <div :class="[ns.b('top')]">
       <h3>我的需求</h3>
-      <el-button type="primary" @click="releaseDemandShow = true"
+      <el-button
+        type="primary"
+        @click="router.push('/demandMatching/release?source=homePersonal')"
         >发布需求</el-button
       >
     </div>
@@ -63,11 +65,6 @@
     </div>
     <Pagination :total="total" @onchangeCurrent="onchangeCurrent" />
   </div>
-  <ReleaseDemand
-    @close="releaseDemandClose"
-    @success="releaseDemandSuccess"
-    :show="releaseDemandShow"
-  />
 </template>
 
 <script lang="ts" setup>
@@ -78,11 +75,9 @@ import {
   searchDemandStatus,
 } from "../../demandMatching/config";
 import { getReleaseNeedApi, getApplyNeedApi } from "@/api/demandList";
-import ReleaseDemand from "../../demandMatching/releaseDemand.vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const ns = useNamespace("homePersonalNeed");
-const releaseDemandShow: Ref<boolean> = ref(false); // 发布需求弹窗
 const pageInfo: Ref<any> = ref({
   pageNumber: 1,
   pageSize: 10,
@@ -124,13 +119,6 @@ const handleDetailClick = (row) => {
       source: "homePersonal",
     },
   });
-};
-const releaseDemandSuccess = () => {
-  getNeedList();
-  releaseDemandClose();
-};
-const releaseDemandClose = () => {
-  releaseDemandShow.value = false;
 };
 </script>
 

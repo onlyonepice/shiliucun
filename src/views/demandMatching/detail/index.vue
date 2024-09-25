@@ -12,7 +12,9 @@
       @onDelete="deleteDialogVisible = true"
       @onSolve="showDialog = true"
       @onCheckApplyList="drawer = true"
-      @onResetApply="resetDialogVisible = true"
+      @onResetApply="
+        router.push(`/demandMatching/release?id=${route.query.id}`)
+      "
       @onRevocation="onRevocation"
     >
       <div :class="ns.be('left', 'evaluate')">
@@ -114,14 +116,6 @@
     @onchangeCurrent="onchangeCurrent"
     @onAgreeOrRefuse="getApplyList()"
   />
-  <ReleaseDemand
-    v-if="getToken() && Object.keys(detailInfo).length > 0"
-    :show="resetDialogVisible"
-    :needDetailData="detailInfo"
-    :appendToBody="true"
-    @success="releaseDemandSuccess"
-    @close="resetDialogVisible = false"
-  />
   <SkipMask
     title="该需求是否成功解决？"
     :show="showDialog"
@@ -143,7 +137,6 @@ import ApplyData from "./components/applyData.vue";
 import ApplyDialog from "./dialog/apply.vue";
 import DeleteDialog from "./dialog/delete.vue";
 import SolveDialog from "./dialog/solve.vue";
-import ReleaseDemand from "../releaseDemand.vue";
 import Reviews from "./components/reviews.vue";
 import { useUserStore } from "@/store/modules/user";
 import { useRoute, useRouter } from "vue-router";
@@ -169,7 +162,6 @@ const detailInfo: Ref<any> = ref({}); // 需求详情
 const applyDialogVisible: Ref<boolean> = ref(false); // 申请报名弹窗
 const deleteDialogVisible: Ref<boolean> = ref(false); // 删除需求弹窗
 const solveDialogVisible: Ref<boolean> = ref(false); // 解决需求弹窗
-const resetDialogVisible: Ref<boolean> = ref(false); // 重置报名弹窗
 const showExtra: Ref<boolean> = ref(true); // 是否显示额外信息
 const totalApply: Ref<number> = ref(0); // 报名总数
 const drawer: Ref<boolean> = ref(false); // 报名列表弹窗
@@ -218,10 +210,6 @@ const onSubmit = () => {
 const onCloseSkipMask = (type: boolean) => {
   showDialog.value = false;
   type && (solveDialogVisible.value = true);
-};
-const releaseDemandSuccess = () => {
-  getDemandDetail();
-  resetDialogVisible.value = false;
 };
 // 获取需求详情
 const getDemandDetail = async () => {

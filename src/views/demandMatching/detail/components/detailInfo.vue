@@ -51,22 +51,38 @@
           @click="emits('onCheckApplyList')"
           >报名列表</el-button
         >
-        <img
-          :src="EditIcon"
-          v-if="
-            detailInfo.status === 1 || (detailInfo.status === 2 && minePublish)
-          "
-          @click="router.push('/demandMatching/release?id=' + detailInfo.id)"
-        />
-        <img
-          :src="DeleteIcon"
-          @click="emits('onDelete')"
-          v-if="
-            detailInfo.status === 1 ||
-            (detailInfo.status === 2 && minePublish) ||
-            detailInfo.status === 3
-          "
-        />
+
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          content="编辑需求"
+          placement="bottom"
+        >
+          <img
+            :src="EditIcon"
+            v-if="
+              detailInfo.status === 1 ||
+              (detailInfo.status === 2 && minePublish)
+            "
+            @click="router.push('/demandMatching/release?id=' + detailInfo.id)"
+          />
+        </el-tooltip>
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          content="删除需求"
+          placement="bottom"
+        >
+          <img
+            :src="DeleteIcon"
+            @click="emits('onDelete')"
+            v-if="
+              detailInfo.status === 1 ||
+              (detailInfo.status === 2 && minePublish) ||
+              detailInfo.status === 3
+            "
+          />
+        </el-tooltip>
       </div>
     </div>
     <!-- <h5

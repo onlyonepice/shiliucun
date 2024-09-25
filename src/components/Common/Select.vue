@@ -40,10 +40,11 @@
         :disabled="props.disabled"
         :maxlength="maxlength"
         @input="handleChange"
-        resize="none"
+        :resize="resize"
+        :autosize="autosize"
         @focus="handleFocusVerifyLogin"
         :show-word-limit="specialType === 'textarea' || showWordLimit"
-        :rows="3"
+        :rows="rows"
       />
       <span v-if="inputText !== ''" class="select__input-desc">{{
         inputText
@@ -166,6 +167,21 @@ const props = defineProps({
   type: {
     type: String,
     default: "select",
+  },
+  // 用户缩放
+  resize: {
+    type: String,
+    default: "none",
+  },
+  // 自适应高度
+  autosize: {
+    type: Boolean,
+    default: false,
+  },
+  // 输入框行数
+  rows: {
+    type: Number,
+    default: 3,
   },
   specialType: {
     type: String,

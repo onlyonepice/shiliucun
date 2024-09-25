@@ -236,7 +236,7 @@
         </div>
         <div
           :class="ns.be('content', 'infoDialog')"
-          style="height: 79px; align-items: flex-start"
+          style="height: auto; align-items: flex-start"
         >
           <span required>需求描述</span>
           <Select
@@ -244,6 +244,8 @@
             :maxlength="500"
             specialType="textarea"
             :defaultValue="needData.description"
+            resize="vertical"
+            :rows="5"
             @onChange="
               (val) => {
                 return onChangeNeed(val, 'description');
@@ -331,7 +333,6 @@ import { splitOrJoin } from "@/utils";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
-const emits = defineEmits(["close"]);
 const { VITE_GLOB_API_URL } = import.meta.env;
 import {
   updateUserInfo,
@@ -430,6 +431,9 @@ const onChange = (value: any) => {
   tabName.value = value;
 };
 onMounted(() => {
+  if (route.query.source === "homePersonal") {
+    breadcrumbList.value[0] = { text: "个人中心", path: "/homePersonal?id=3" };
+  }
   userInfo.value = useUserStore().$state.userInfo;
   showInfo.value.mobile = userInfo.value.mobileHide;
   showInfo.value.weChat = userInfo.value.wecatHide;
@@ -520,7 +524,7 @@ const backStep = () => {
 const onHandleCloseInfo = async (type: boolean) => {
   const _modifyInfo = JSON.parse(JSON.stringify(modifyInfo.value));
   if (!type) {
-    emits("close");
+    router.back();
     return;
   }
   if (!isConfirmUserInfo.value) {
@@ -941,6 +945,9 @@ watch(
   }
   .es-releaseDemand-content__infoDialog {
     align-items: flex-start;
+  }
+  .select__input {
+    height: auto !important;
   }
 }
 .el-date-table td.current:not(.disabled) .el-date-table-cell__text {
