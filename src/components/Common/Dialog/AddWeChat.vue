@@ -8,6 +8,11 @@
     style="padding: 0"
   >
     <img :src="src" :class="ns.b('img')" />
+    <img
+      src="@/assets/img/common/close.png"
+      @click="handleClose"
+      :class="ns.b('img-two')"
+    />
     <div :class="ns.b('empty')" @click="handleClose" />
   </el-dialog>
 </template>
@@ -35,7 +40,7 @@ watch(
   },
   { immediate: true },
 );
-const handleClose = (type: boolean) => {
+const handleClose: any = (type: boolean) => {
   emits("onHandleClose", type);
 };
 </script>
@@ -43,13 +48,23 @@ const handleClose = (type: boolean) => {
 <style lang="scss">
 @import "@/style/mixin.scss";
 .es-addWeChat {
+  position: fixed;
+  top: 50% !important;
+  left: 50% !important;
   width: 400px !important;
-  height: 368px !important;
   border-radius: 10px !important;
-  translate: 50vw 50vh;
-  margin-top: -100px !important;
-  margin-left: -184px !important;
+  transform: translate(-50%, -50%);
+  background-color: rgb(0, 0, 0, 0) !important;
+  margin: 0 !important;
   @include relative();
+  .es-addWeChat-img-two {
+    position: absolute;
+    width: 32px;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, calc(100% + 16px));
+    cursor: pointer;
+  }
   .el-dialog__header {
     font-weight: 600;
     line-height: 26px;
@@ -58,6 +73,7 @@ const handleClose = (type: boolean) => {
   }
   .el-dialog__body {
     padding: 0;
+    background-color: rgb(0, 0, 0, 0) !important;
   }
   .el-dialog__headerbtn .el-dialog__close {
     font-size: 24px;

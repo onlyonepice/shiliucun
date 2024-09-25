@@ -62,11 +62,36 @@
       </div>
       <div :class="ns.b('demandHall')">
         <div :class="ns.b('demandHallLeft')">
-          <img
-            @click="onReportWhitePaper"
-            src="@/assets/img/home/home-demandHall.png"
-            alt=""
-          />
+          <swiper
+            style="width: 664px"
+            loop
+            :modules="modules"
+            :space-between="8"
+            :autoplay="autoplay"
+            :pagination="pagination"
+          >
+            <swiper-slide>
+              <img
+                @click="handleClickSwiperItem(1)"
+                src="@/assets/img/home/home-demandHall.png"
+                alt=""
+              />
+            </swiper-slide>
+            <swiper-slide>
+              <img
+                @click="handleClickSwiperItem(2)"
+                src="@/assets/img/home/home-communication-group.png"
+                alt=""
+              />
+            </swiper-slide>
+            <swiper-slide>
+              <img
+                @click="handleClickSwiperItem(3)"
+                src="@/assets/img/home/sales-ranking.png"
+                alt=""
+              />
+            </swiper-slide>
+          </swiper>
         </div>
         <div :class="ns.b('demandHallRight')">
           <div :class="ns.b('demandHallTitle')">
@@ -206,6 +231,11 @@
         </swiper>
       </div>
     </div>
+    <AddWeChat
+      :visible="addWeChatDialog"
+      :src="AddWeChatPng"
+      @onHandleClose="addWeChatDialog = false"
+    />
   </div>
   <UpdateLog />
 </template>
@@ -221,10 +251,10 @@ import { useUserStore } from "@/store/modules/user";
 import { useUserStoreHook } from "@/store/modules/user";
 import Skeleton from "./homeComponents/skeleton.vue";
 import { getProductListApi } from "@/api/searchProduct";
-import { getHomePage, frontSelectList, getNeedAmountApi } from "@/api/home";
 import homeNav_1 from "@/assets/img/home/home-nav-1.png";
 import homeNav_2 from "@/assets/img/home/home-nav-2.png";
 import homeNav_3 from "@/assets/img/home/home-nav-3.png";
+import AmountImg from "@/assets/img/home/amount-bg.png";
 import homeNavBottom_1 from "@/assets/img/home/home-nav-bottom-1.png";
 import homeNavBottom_2 from "@/assets/img/home/home-nav-bottom-2.png";
 import homeNavBottom_3 from "@/assets/img/home/home-nav-bottom-3.png";
@@ -233,8 +263,9 @@ import homeNavBottom_5 from "@/assets/img/home/home-nav-bottom-5.png";
 import homeNavBottom_6 from "@/assets/img/home/home-nav-bottom-6.png";
 import homeNavBottom_7 from "@/assets/img/home/home-nav-bottom-7.png";
 import homeNavBottom_8 from "@/assets/img/home/home-nav-bottom-8.png";
-import AmountImg from "@/assets/img/home/amount-bg.png";
+import AddWeChatPng from "@/assets/img/home/communication-group-banner.png";
 import { Controller, Autoplay, Navigation, Pagination } from "swiper/modules";
+import { getHomePage, frontSelectList, getNeedAmountApi } from "@/api/home";
 const modules = [Controller, Autoplay, Navigation, Pagination];
 const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const starSwiper = ref(); // 轮播图
@@ -243,6 +274,7 @@ const autoplay: any = ref({
   pauseOnMouseEnter: false,
   disableOnInteraction: false,
 });
+const addWeChatDialog = ref(false);
 const router = useRouter();
 const ns = useNamespace("home");
 const productList = ref([]);
@@ -337,8 +369,18 @@ function onDemandHallTitle() {
   router.push("/demandMatching/list");
 }
 
-function onReportWhitePaper() {
-  router.push("/reportWhitePaper");
+function handleClickSwiperItem(index) {
+  switch (index) {
+    case 1:
+      router.push("/reportWhitePaper");
+      break;
+    case 2:
+      addWeChatDialog.value = true;
+      break;
+    case 3:
+      window.open(`${VITE_INDUSTRIALMAP_URL}/home?homeTabName=sort`, "_blank");
+      break;
+  }
 }
 
 function handleGoEnterpriseDetails(row) {
@@ -564,15 +606,18 @@ getDemandCount();
       margin-top: 24px;
       display: flex;
       .es-home-demandHallLeft {
-        flex: 1;
+        width: 664px;
         margin-right: 24px;
         img {
           cursor: pointer;
           width: 100%;
         }
+        .swiper {
+          margin-top: 0;
+        }
       }
       .es-home-demandHallRight {
-        width: 464px;
+        flex: 1;
         .es-home-demandHallTitle {
           @include flex(center, space-between);
           .es-home-demandHallTitleLeft {
