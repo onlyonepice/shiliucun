@@ -117,7 +117,7 @@ const onSubmitScore = async () => {
     moduleName: props.module,
     satisfactionScore: score.value,
   });
-  resp_code === 0 && onSubmitScore2();
+  resp_code === 0 && props.npsConfigCode !== "" && onSubmitScore2();
 };
 // 评价再提交另一个接口
 const onSubmitScore2 = async () => {
