@@ -17,6 +17,7 @@ export default {
       },
       meta: {
         title: "掌上储能",
+        keepAlive: false,
       },
     },
     {
@@ -40,6 +41,7 @@ export default {
       meta: {
         title: "热点详情",
         backgroundColor: "#F2F3F5",
+        keepAlive: false,
       },
     },
   ],
