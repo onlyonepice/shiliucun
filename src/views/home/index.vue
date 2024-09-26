@@ -64,7 +64,6 @@
         <div :class="ns.b('demandHallLeft')">
           <swiper
             style="width: 664px"
-            loop
             :modules="modules"
             :space-between="8"
             :autoplay="autoplay"
