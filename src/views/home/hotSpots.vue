@@ -12,14 +12,24 @@
         <div v-html="hotSpotsDetail.content" :class="ns.b('html')" />
       </div>
     </div>
-    <div :class="[ns.b('common'), ns.b('right')]">
-      <template v-if="hotSpotsDetail.previousPost.id">
+    <div
+      :class="[ns.b('common'), ns.b('right')]"
+      v-if="
+        JSON.stringify(hotSpotsDetail.previousPost) !== '{}' &&
+        JSON.stringify(hotSpotsDetail.nextChapter) !== ''
+      "
+    >
+      <template
+        v-if="hotSpotsDetail.previousPost && hotSpotsDetail.previousPost.id"
+      >
         <p>上一篇</p>
         <h4 @click="onHotSpots(hotSpotsDetail.previousPost.id)">
           {{ hotSpotsDetail.previousPost.title }}
         </h4>
       </template>
-      <template v-if="hotSpotsDetail.nextChapter.id">
+      <template
+        v-if="hotSpotsDetail.nextChapter && hotSpotsDetail.nextChapter.id"
+      >
         <p>下一篇</p>
         <h4 @click="onHotSpots(hotSpotsDetail.nextChapter.id)">
           {{ hotSpotsDetail.nextChapter.title }}
