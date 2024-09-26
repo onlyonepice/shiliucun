@@ -117,7 +117,12 @@ const onSubmitScore = async () => {
     moduleName: props.module,
     satisfactionScore: score.value,
   });
-  resp_code === 0 && props.npsConfigCode !== "" && onSubmitScore2();
+  if (resp_code === 0 && props.npsConfigCode !== "") {
+    onSubmitScore2();
+  } else {
+    ElMessage.success("感谢您的评价");
+    dialogVisible.value = false;
+  }
 };
 // 评价再提交另一个接口
 const onSubmitScore2 = async () => {
