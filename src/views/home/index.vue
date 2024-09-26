@@ -440,10 +440,14 @@ const onDetailReport = (type: String, data: any) => {
       router.push(`/demandMatching/detail?id=${data.id}`);
       break;
     case "招标":
-      router.push(`/dataTender?id=${data.id}&title=${data.title}`);
+      router.push(
+        `/dataTender?id=${data.id}&title=${encodeURIComponent(data.title)}`,
+      );
       break;
     case "政策":
-      router.push(`/policy?id=${data.id}&title=${data.title}`);
+      router.push(
+        `/policy?id=${data.id}&title=${encodeURIComponent(data.title)}`,
+      );
       break;
     case "洞察":
       window.open(data.link, "externalWindow");

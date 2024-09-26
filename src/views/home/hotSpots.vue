@@ -34,6 +34,7 @@ import { Ref, ref } from "vue";
 import { getHotSpotsDetailApi } from "@/api/home";
 import useNamespace from "@/utils/nameSpace";
 import { useRoute, useRouter } from "vue-router";
+import { useUserStore } from "@/store/modules/user";
 const route = useRoute();
 const router = useRouter();
 const ns = useNamespace("hotSpots");
@@ -56,6 +57,10 @@ const getHotSpotsDetail = async () => {
   if (resp_code === 0) {
     console.log(datas);
     hotSpotsDetail.value = datas;
+    hotSpotsDetail.value.content = datas.content.replace(
+      /img src="/g,
+      `img src="${useUserStore().fileUrl}`,
+    );
   }
 };
 getHotSpotsDetail();

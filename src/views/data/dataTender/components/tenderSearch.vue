@@ -128,12 +128,13 @@
           v-if="pageData.length === 0 && !loading"
           description="数据快马加鞭补全中~"
         />
-        <Pagination
-          :pageSize="limit"
-          :total="total"
-          @onchangeCurrent="onchangeCurrent"
-        />
       </div>
+      <Pagination
+        :pageSize="limit"
+        :total="total"
+        :current-page="current"
+        @onchangeCurrent="onchangeCurrent"
+      />
     </div>
   </div>
 </template>
@@ -141,7 +142,7 @@
 <script lang="ts" setup>
 import radio_true from "@/assets/img/common/i-Report-radio-true.png";
 import radio_false from "@/assets/img/common/i-Report-radio-false.png";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("dataSearch");
 import { getBidFinderApi, getTenderLookupApi } from "@/api/data";
@@ -177,6 +178,7 @@ const showOpen = (data) => {
   return "showAll" in data;
 };
 const pageData = ref([]);
+const current: Ref<number> = ref(1); // 当前页码
 const getData = async () => {
   window.trackFunction("pc_Bidding_Search_click");
   loading.value = true;
@@ -196,6 +198,7 @@ const getData = async () => {
         isPermissions: boolean;
       }[];
       total: number;
+      current: number;
     };
     resp_code: number;
   }
@@ -203,6 +206,7 @@ const getData = async () => {
   loading.value = false;
   if (data.resp_code === 0) {
     total.value = data.datas.total;
+    current.value = data.datas.current;
     pageData.value = data.datas.records.map((item, index) => {
       if (route.query.id === item.id) {
         setTimeout(() => {
@@ -321,7 +325,7 @@ const changeYearRangeTag = (e, row) => {
 
 const getShareData = () => {
   const _id = route.query.id;
-  const _title = route.query.title as string;
+  const _title = decodeURIComponent(route.query.title as string);
   if (_id && _title) {
     setTimeout(() => {
       searchRef.value.value = _title;
