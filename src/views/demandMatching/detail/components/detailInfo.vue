@@ -148,11 +148,12 @@
     <h4 :class="ns.be('info', 'description')">{{ detailInfo.description }}</h4>
     <el-image
       :class="ns.be('info', 'img')"
-      v-for="item in getImgList"
-      :key="item"
+      v-for="(item, index) in getImgList"
+      :key="index"
       :src="useUserStore().fileUrl + item"
-      :preview-src-list="[useUserStore().fileUrl + item]"
+      :preview-src-list="getPreview(getImgList)"
       :hide-on-click-modal="true"
+      :initial-index="index"
       fit="cover"
     />
     <slot />
@@ -206,6 +207,11 @@ const getImgList = computed(() => {
 const onShare = async () => {
   await toClipboard(window.location.href);
   ElMessage.success("分享链接已复制");
+};
+// 图片预览列表
+const getPreview = (list: string[]) => {
+  list = list.map((item) => useUserStore().fileUrl + item);
+  return list;
 };
 </script>
 <style lang="scss" scoped>
