@@ -36,13 +36,10 @@
     </template>
     <template #footer>
       <div :class="ns.b('footer')">
-        <el-button @click="visibleInfo = true">编辑名片</el-button>
-        <div>
-          <el-button @click="onHandleClose(false)">取消</el-button>
-          <el-button type="primary" @click="onHandleClose(true)"
-            >提交申请</el-button
-          >
-        </div>
+        <el-button @click="onHandleClose(false)">取消</el-button>
+        <el-button type="primary" @click="onHandleClose(true)"
+          >提交申请</el-button
+        >
       </div>
     </template>
   </el-drawer>
@@ -158,6 +155,6 @@ getApplyMessage();
 }
 .es-demandMatchingDetail-apply-footer {
   width: 100%;
-  @include flex(center, space-between, nowrap);
+  @include flex(center, flex-end, nowrap);
 }
 </style>
