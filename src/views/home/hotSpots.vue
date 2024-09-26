@@ -76,6 +76,10 @@ const onHotSpots = async (id: String) => {
 
 .es-hotSpots {
   @include flex(flex-start, space-between, nowrap);
+  img {
+    width: 100%;
+    object-fit: contain;
+  }
 }
 .es-hotSpots-common {
   background: #ffffff;
