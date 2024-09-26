@@ -485,17 +485,24 @@ function onDemandHallTitle() {
 }
 
 function handleClickSwiperItem(index) {
-  switch (index) {
-    case 1:
-      window.trackFunction("pc_Home_WhitePaperBanner_click");
-      router.push("/reportWhitePaper");
-      break;
-    case 2:
-      addWeChatDialog.value = true;
-      break;
-    case 3:
-      window.open(`${VITE_INDUSTRIALMAP_URL}/home?homeTabName=sort`, "_blank");
-      break;
+  try {
+    switch (index) {
+      case 1:
+        window.trackFunction("pc_Home_WhitePaperBanner_click");
+        router.push("/reportWhitePaper");
+        break;
+      case 2:
+        addWeChatDialog.value = true;
+        break;
+      case 3:
+        window.open(
+          `${VITE_INDUSTRIALMAP_URL}/home?homeTabName=sort`,
+          "_blank",
+        );
+        break;
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
 
