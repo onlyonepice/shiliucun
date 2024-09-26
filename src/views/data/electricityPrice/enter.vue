@@ -20,6 +20,7 @@
     <ElectricityPricePeriod v-if="chosePriceType === 3" />
     <!-- 充放电策略 -->
     <ChargingStrategy v-if="chosePriceType === 4" />
+    <NpsMark module="查电价" title="「查电价」" npsConfigCode="" />
   </div>
 </template>
 
