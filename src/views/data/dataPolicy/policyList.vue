@@ -520,7 +520,7 @@ const handleShowAllClick = (key, _data) => {
 const searchRef = ref(null);
 const getShareData = () => {
   const _id = route.query.id;
-  const _title = route.query.title as string;
+  const _title = decodeURIComponent(route.query.title as string);
   if (_id && _title) {
     setTimeout(() => {
       searchRef.value.value = _title;

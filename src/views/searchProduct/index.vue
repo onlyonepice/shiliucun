@@ -52,6 +52,7 @@
       :total="total"
       :pageSize="16"
       @onchangeCurrent="onchangeCurrent"
+      :currentPage="current"
     />
   </div>
   <NpsMark module="查产品" title="「查产品」" npsConfigCode="Company" />
@@ -219,6 +220,7 @@ const onChoseFilter = (item: any, type: string) => {
   }
   getProductList();
 };
+const current: Ref<number> = ref(1); // 当前页码
 // 查询产品
 const getProductList = async () => {
   loading.value = true;
@@ -234,6 +236,7 @@ const getProductList = async () => {
   if (resp_code === 0) {
     productList.value = datas.content;
     total.value = datas.totalElements;
+    current.value = datas.number + 1;
   }
   loading.value = false;
 };
