@@ -38,7 +38,7 @@ export default {
         default: () => import("@/views/home/hotSpots.vue"),
       },
       meta: {
-        title: "热点想抢",
+        title: "热点详情",
         backgroundColor: "#F2F3F5",
       },
     },
