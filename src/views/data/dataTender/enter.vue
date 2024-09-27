@@ -48,7 +48,7 @@ interface TabsList {
   id: number;
   name: string;
 }
-import { ref, Ref } from "vue";
+import { ref, Ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import TenderSearch from "./components/tenderSearch.vue";
 import AreaAnalysis from "./components/areaAnalysis.vue";
@@ -65,6 +65,9 @@ import {
 } from "@/api/data";
 import { NOOP } from "@vue/shared";
 import { windowScrollStore } from "@/store/modules/windowScroll";
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 const ns = useNamespace("dataTender");
 const windowScroll = windowScrollStore();
 const choseTabs: Ref<number> = ref(1); // 选中的标签栏
@@ -94,8 +97,9 @@ const tabsList: Ref<Array<TabsList>> = ref([
   { id: 6, name: "储能时长分析" },
 ]);
 // 选择标签栏
-const onHandleClick = (id: number) => {
-  choseTabs.value = id;
+const onHandleClick = async (id: number) => {
+  await router.push(`/dataTender?type=${id}`);
+  location.reload();
 };
 // 招标查找-招标内容筛选项
 const getContentFilter = async () => {
@@ -148,6 +152,11 @@ Promise.all([
   getTenderTimeFilter(),
   getTenderArea(),
 ]);
+onMounted(() => {
+  if (route.query.type) {
+    choseTabs.value = Number(route.query.type);
+  }
+});
 </script>
 
 <style lang="scss">
