@@ -931,6 +931,15 @@ getDemandCount();
     border-radius: 8px 0 0 8px;
   }
 }
+// .es-home-demandHallRight {
+// }
+.el-dropdown-menu__item {
+  @include font(12px, 400, rgba(0, 0, 0, 0.6), 20px);
+}
+.el-dropdown-menu__item:not(.is-disabled):focus {
+  background-color: #f2f3f5;
+  @include font(12px, 400, rgba(0, 0, 0, 0.9), 20px);
+}
 .swiper-pagination {
   height: 4px;
   @include flex(center, center, nowrap);
