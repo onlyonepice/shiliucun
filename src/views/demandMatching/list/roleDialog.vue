@@ -8,7 +8,7 @@
     style="padding: 24px"
   >
     <h4>请选择身份和感兴趣的内容,以便我们更好的向您推送</h4>
-    <h5 required>我是<span>（必填且单选）</span></h5>
+    <h5>我是<span>（必填且单选）</span></h5>
     <div
       v-for="item in roleConfig[0].needLabelResponseList"
       :key="item.id"
@@ -21,7 +21,7 @@
       {{ item.labelName }}
     </div>
     <template v-if="choseRole.length > 0">
-      <p :class="ns.b('desc')" v-for="item in getDescription" :key="item">
+      <p :class="ns.b('desc')" v-for="item in descriptionList" :key="item">
         {{ item }}
       </p>
     </template>
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, watch, computed } from "vue";
+import { Ref, ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { getRoleConfigApi, selectIdentityApi } from "@/api/demandList";
 import { getToken } from "@/utils/auth";
@@ -70,6 +70,7 @@ watch(
   (val) => {
     dialogVisible.value = val;
     if (val) {
+      descriptionList.value = [];
       props.roleList.map((item) => {
         if (item.labelType === "customer_group") {
           item.needLabelResponseList.map((_item) => {
@@ -81,25 +82,29 @@ watch(
           });
         }
       });
+      choseRole.value = [...new Set(choseRole.value)];
+      choseLike.value = [...new Set(choseLike.value)];
+      getDescription();
     }
   },
   { immediate: true },
 );
-const getDescription = computed(() => {
-  let _text = [];
+const descriptionList: Ref<Array<any>> = ref([]); // 描述
+const getDescription = () => {
   roleConfig.value.map((item) => {
     if (item.labelType === "customer_group") {
       item.needLabelResponseList.map((_item) => {
         choseRole.value.map((_items) => {
           if (_item.id === _items) {
-            _text.push(_item.description);
+            descriptionList.value.push(_item.description);
           }
         });
       });
     }
   });
-  return _text;
-});
+  descriptionList.value = [...new Set(descriptionList.value)];
+};
+
 // 获取身份配置
 const getAssignConfig = async () => {
   const { datas, resp_code } = await getRoleConfigApi();
@@ -113,12 +118,13 @@ const onChoseRole = (id: number) => {
   if (choseRole.value.includes(id)) {
     choseRole.value = choseRole.value.filter((item) => item !== id);
   } else {
+    console.log(choseRole.value);
     if (choseRole.value.length >= 2) {
       return ElMessage.warning("最多选择两个身份");
     }
     choseRole.value.push(id);
   }
-  console.log(choseRole.value);
+  getDescription();
 };
 // 选择感兴趣
 const onChoseLike = (id: number) => {

@@ -6,7 +6,8 @@
       @click="demandImgVisible = true"
     />
     <p :class="[ns.b('identity'), 'animate__animated animate__fadeIn']">
-      当前身份：{{ getRole.join("，") }}<span @click="onModify()">修改</span>
+      当前身份：{{ getRole.length > 0 ? getRole.join("，") : "暂无身份"
+      }}<span @click="onModify()">修改</span>
     </p>
     <div :class="ns.b('tab-list')">
       <div
