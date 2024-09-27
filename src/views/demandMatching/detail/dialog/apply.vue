@@ -16,7 +16,7 @@
       <el-input
         v-model="applyInfo.enterpriseSummary"
         type="textarea"
-        placeholder="请输入"
+        placeholder="可填写贵司的主营业务、办公地址等信息，以便对方快速了解您~"
         maxlength="500"
         show-word-limit
         resize="none"
