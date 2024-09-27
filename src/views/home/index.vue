@@ -931,8 +931,6 @@ getDemandCount();
     border-radius: 8px 0 0 8px;
   }
 }
-// .es-home-demandHallRight {
-// }
 .el-dropdown-menu__item {
   @include font(12px, 400, rgba(0, 0, 0, 0.6), 20px);
 }
