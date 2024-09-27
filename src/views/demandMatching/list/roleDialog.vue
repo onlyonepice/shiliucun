@@ -15,14 +15,16 @@
       @click="onChoseRole(item.id)"
       :class="[
         ns.b('role'),
-        choseRole === item.id ? ns.bm('role', 'active') : '',
+        choseRole.includes(item.id) ? ns.bm('role', 'active') : '',
       ]"
     >
       {{ item.labelName }}
     </div>
-    <p v-if="choseRole !== -1" :class="ns.b('desc')">
-      {{ getDescription }}
-    </p>
+    <template v-if="choseRole.length > 0">
+      <p :class="ns.b('desc')" v-for="item in getDescription" :key="item">
+        {{ item }}
+      </p>
+    </template>
     <h5>我喜欢<span>（非必填且多选）</span></h5>
     <div
       v-for="item in roleConfig[1].needLabelResponseList"
@@ -46,11 +48,12 @@ import { Ref, ref, watch, computed } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import { getRoleConfigApi, selectIdentityApi } from "@/api/demandList";
 import { getToken } from "@/utils/auth";
+import { ElMessage } from "element-plus";
 const ns = useNamespace("roleConfig");
 const dialogVisible: Ref<boolean> = ref(false);
 const emits = defineEmits(["onHandleClose"]);
 const roleConfig: Ref<Array<any>> = ref([]);
-const choseRole: Ref<number> = ref(-1); // 选择身份
+const choseRole: Ref<Array<any>> = ref([]); // 选择身份
 const choseLike: Ref<Array<any>> = ref([]); // 选择感兴趣
 const props = defineProps({
   visible: {
@@ -69,7 +72,9 @@ watch(
     if (val) {
       props.roleList.map((item) => {
         if (item.labelType === "customer_group") {
-          choseRole.value = item.needLabelResponseList[0].id;
+          item.needLabelResponseList.map((_item) => {
+            choseRole.value = choseRole.value.concat(_item.id);
+          });
         } else if (item.labelType === "content") {
           item.needLabelResponseList.map((_item) => {
             choseLike.value = choseLike.value.concat(_item.id);
@@ -81,13 +86,15 @@ watch(
   { immediate: true },
 );
 const getDescription = computed(() => {
-  let _text = "";
+  let _text = [];
   roleConfig.value.map((item) => {
     if (item.labelType === "customer_group") {
       item.needLabelResponseList.map((_item) => {
-        if (_item.id === choseRole.value) {
-          _text = _item.description;
-        }
+        choseRole.value.map((_items) => {
+          if (_item.id === _items) {
+            _text.push(_item.description);
+          }
+        });
       });
     }
   });
@@ -102,8 +109,16 @@ const getAssignConfig = async () => {
 };
 getToken() && getAssignConfig();
 // 选择身份
-const onChoseRole = (index: number) => {
-  choseRole.value = index;
+const onChoseRole = (id: number) => {
+  if (choseRole.value.includes(id)) {
+    choseRole.value = choseRole.value.filter((item) => item !== id);
+  } else {
+    if (choseRole.value.length >= 2) {
+      return ElMessage.warning("最多选择两个身份");
+    }
+    choseRole.value.push(id);
+  }
+  console.log(choseRole.value);
 };
 // 选择感兴趣
 const onChoseLike = (id: number) => {

@@ -6,7 +6,7 @@
       @click="demandImgVisible = true"
     />
     <p :class="[ns.b('identity'), 'animate__animated animate__fadeIn']">
-      当前身份：{{ getRole }}<span @click="onModify()">修改</span>
+      当前身份：{{ getRole.join("，") }}<span @click="onModify()">修改</span>
     </p>
     <div :class="ns.b('tab-list')">
       <div
@@ -441,10 +441,13 @@ const manageTabArr = ref([
   },
 ]);
 const getRole = computed(() => {
-  let _role = "";
+  let _role = [];
   roleList.value.map((item) => {
-    item.labelType === "customer_group" &&
-      (_role = item.needLabelResponseList[0].labelName);
+    if (item.labelType === "customer_group") {
+      item.needLabelResponseList.map((_item) => {
+        _role.push(_item.labelName);
+      });
+    }
   });
   return _role;
 });
