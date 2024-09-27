@@ -8,7 +8,9 @@
     style="padding: 24px"
   >
     <h4>请选择身份和感兴趣的内容,以便我们更好的向您推送</h4>
-    <h5>我是<span>（必填且单选）</span></h5>
+    <h5>
+      我是<span>（已选{{ choseRole.length }}/2）</span>
+    </h5>
     <div
       v-for="item in roleConfig[0].needLabelResponseList"
       :key="item.id"
@@ -91,6 +93,7 @@ watch(
 );
 const descriptionList: Ref<Array<any>> = ref([]); // 描述
 const getDescription = () => {
+  descriptionList.value = [];
   roleConfig.value.map((item) => {
     if (item.labelType === "customer_group") {
       item.needLabelResponseList.map((_item) => {
@@ -118,7 +121,6 @@ const onChoseRole = (id: number) => {
   if (choseRole.value.includes(id)) {
     choseRole.value = choseRole.value.filter((item) => item !== id);
   } else {
-    console.log(choseRole.value);
     if (choseRole.value.length >= 2) {
       return ElMessage.warning("最多选择两个身份");
     }
