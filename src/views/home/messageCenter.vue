@@ -51,6 +51,9 @@ const onHandleClick = (id: number) => {
 <style lang="scss">
 @import "@/style/mixin.scss";
 
+.es-messageCenter {
+  padding-bottom: 80px;
+}
 .es-messageCenter-content {
   @include widthAndHeight(100%, auto);
   background: #ffffff;
