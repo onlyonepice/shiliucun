@@ -297,7 +297,6 @@ const onChoseNav = (id: number) => {
 };
 // 选择子菜单
 const onChoseChildTab = (item: any) => {
-  console.log(item.trackFunction);
   item.trackFunction && window.trackFunction(item.trackFunction);
   if (item.path.indexOf("http") !== -1) {
     optionChildren.value = true;

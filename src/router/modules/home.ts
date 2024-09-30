@@ -44,5 +44,17 @@ export default {
         keepAlive: false,
       },
     },
+    {
+      path: "/messageCenter",
+      name: "MessageCenter",
+      components: {
+        default: () => import("@/views/home/messageCenter.vue"),
+      },
+      meta: {
+        title: "消息中心",
+        backgroundColor: "#F2F3F5",
+        keepAlive: false,
+      },
+    },
   ],
 };
