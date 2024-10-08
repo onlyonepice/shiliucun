@@ -12,6 +12,7 @@
       src="@/assets/img/common/close.png"
       @click="handleClose"
       :class="ns.b('img-two')"
+      v-if="isBottomClose"
     />
     <div :class="ns.b('empty')" @click="handleClose" />
   </el-dialog>
@@ -27,6 +28,10 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
+  },
+  isBottomClose: {
+    type: Boolean,
+    default: true,
   },
   src: {
     type: String,

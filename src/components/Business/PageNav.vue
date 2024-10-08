@@ -94,6 +94,12 @@
       :visible="miniAppVisible"
       @onHandleClose="miniAppVisible = false"
     />
+    <AddWeChat
+      :visible="addWeChatDialog"
+      :src="AddWeChatPng"
+      @onHandleClose="addWeChatDialog = false"
+      :isBottomClose="false"
+    />
   </nav>
 </template>
 
@@ -118,6 +124,7 @@ import ViceDirectorVip from "@/assets/img/vip/vice-director-vip.png";
 import DirectorVip from "@/assets/img/vip/director-vip.png";
 import SpreadIcon from "@/assets/img/common/spread-out-icon.png";
 import MessageIcon from "@/assets/img/common/message-icon.png";
+import AddWeChatPng from "@/assets/img/common/calculationPro-img.png";
 import { getToken } from "@/utils/auth";
 const { VITE_INDUSTRIALMAP_URL, VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
@@ -131,6 +138,7 @@ const choseExtraContent: Ref<boolean> = ref(false); // 打开下拉菜单
 const showAvatar: Ref<boolean> = ref(false); // 展开个人中心页面
 const showLogin: Ref<boolean> = ref(false); // 展示登录按钮
 const miniAppVisible: Ref<boolean> = ref(false); // 小程序二维码
+const addWeChatDialog: Ref<boolean> = ref(false);
 defineProps({
   opacityBg: {
     type: Boolean,
@@ -253,6 +261,12 @@ const navList: Ref<Array<NavList>> = ref([
         path: "/calculationLite",
         trackFunction: "pc_LiteCalculation_click",
       },
+      {
+        id: 3,
+        text: "工商业测算Pro",
+        path: "/calculationPro",
+        // trackFunction: "pc_LiteCalculation_click",
+      },
     ],
   },
   {
@@ -352,6 +366,9 @@ const optionChildren: Ref<boolean> = ref(false);
 // 子路由跳转
 const onChildrenPath = async (path: string | Array<string>) => {
   optionChildren.value = true;
+  if (path === "/calculationPro") {
+    return (addWeChatDialog.value = true);
+  }
   if (route.path !== path || route.path !== path[0]) {
     await router.push(Array.isArray(path) ? path[0] : path);
     onChoseLeave();
