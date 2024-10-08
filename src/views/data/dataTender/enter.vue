@@ -99,7 +99,7 @@ const tabsList: Ref<Array<TabsList>> = ref([
 // 选择标签栏
 const onHandleClick = async (id: number) => {
   await router.push(`/dataTender?type=${id}`);
-  location.reload();
+  choseTabs.value = id;
 };
 // 招标查找-招标内容筛选项
 const getContentFilter = async () => {

@@ -81,6 +81,12 @@
           </div>
         </div>
         <p v-else :class="ns.b('login')" @click="onLogin">登录/注册</p>
+        <img
+          v-if="showLogin"
+          :class="ns.b('message')"
+          :src="MessageIcon"
+          @click="onMessage"
+        />
       </div>
     </div>
     <Logout :visible="visible" @onHandleClose="onHandleClose" />
@@ -111,6 +117,7 @@ import EESAOrdinaryVip from "@/assets/img/vip/eesa-ordinary-vip.png";
 import ViceDirectorVip from "@/assets/img/vip/vice-director-vip.png";
 import DirectorVip from "@/assets/img/vip/director-vip.png";
 import SpreadIcon from "@/assets/img/common/spread-out-icon.png";
+import MessageIcon from "@/assets/img/common/message-icon.png";
 import { getToken } from "@/utils/auth";
 const { VITE_INDUSTRIALMAP_URL, VITE_DATABASE_URL } = import.meta.env;
 const ns = useNamespace("pageNav");
@@ -392,6 +399,9 @@ computed(() => {
 const onLogin = () => {
   emit("onLogin");
 };
+const onMessage = () => {
+  router.push("/messageCenter");
+};
 </script>
 
 <style scoped lang="scss">
@@ -438,6 +448,11 @@ const onLogin = () => {
   }
   .es-pageNav-login {
     color: rgba(0, 0, 0, 0.9);
+  }
+  .es-pageNav-message {
+    @include widthAndHeight(24px, 24px);
+    margin-left: 23px;
+    cursor: pointer;
   }
 }
 .es-pageNav-extraAvatar {

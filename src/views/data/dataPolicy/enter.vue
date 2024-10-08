@@ -13,10 +13,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from "vue";
+import { ref, Ref, onMounted } from "vue";
 import PolicyList from "./policyList.vue";
 import PolicyAnalysis from "./policyAnalysis.vue";
 import useNamespace from "@/utils/nameSpace";
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 const { VITE_DATABASE_URL } = import.meta.env;
 interface TabsList {
   id: number;
@@ -29,10 +32,16 @@ const tabsList: Ref<Array<TabsList>> = ref([
   { id: 1, name: "政策查找" },
   { id: 2, name: "政策分析" },
 ]);
-const onHandleClick = (id: number) => {
+const onHandleClick = async (id: number) => {
+  await router.push(`/policy?type=${id}`);
   choseTabs.value = id;
 };
 window.trackFunction("pc_Policy_Search_click");
+onMounted(() => {
+  if (route.query.type) {
+    choseTabs.value = Number(route.query.type);
+  }
+});
 </script>
 <style lang="scss" scoped>
 .es-policy {

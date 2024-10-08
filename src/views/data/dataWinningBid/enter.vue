@@ -50,7 +50,7 @@ import {
   bidWinningContentData_V2,
   newEnergyStorageDurationBox,
 } from "@/api/data";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import BidPriceNew from "./winningBidPriceNew/enter.vue";
 import BidScale from "./winningBidScale/enter.vue";
@@ -59,6 +59,9 @@ import BidScenes from "./winningBidScenes/index.vue";
 import TimeAnalysis from "./winningTimeAnalysis/index.vue";
 import BidEnterprise from "./winningBidEnterprise/enter.vue";
 import Centralized from "./winningBidCentralized/index.vue";
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 const ns = useNamespace("dataWinningBid");
 const tabList = ref([
   {
@@ -94,7 +97,8 @@ const tabList = ref([
 ]);
 
 const currentTab = ref("price");
-const handleTabChange = (value: string) => {
+const handleTabChange = async (value: string) => {
+  await router.push(`/dataWinningBid?type=${value}`);
   currentTab.value = value;
 };
 interface response {
@@ -120,6 +124,11 @@ const getSelectData = () => {
   });
 };
 getSelectData();
+onMounted(() => {
+  if (route.query.type) {
+    currentTab.value = route.query.type;
+  }
+});
 </script>
 
 <style lang="scss">

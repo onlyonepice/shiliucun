@@ -7,7 +7,7 @@
         :class="{ 'price-type__item-chose': chosePriceType === item.id }"
         v-for="item in priceTypeList"
         :key="item.id"
-        @click="chosePriceType = item.id"
+        @click="onHandleClick(item.id)"
       >
         {{ item.text }}
       </div>
@@ -25,11 +25,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref } from "vue";
+import { ref, Ref, onMounted } from "vue";
 import ElectricityAnalysis from "./electricityAnalysis.vue";
 import ElectricityPriceTime from "./electricityPriceTime.vue";
 import ElectricityPricePeriod from "./electricityPricePeriod.vue";
 import ChargingStrategy from "./chargingStrategy.vue";
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 const chosePriceType = ref(1);
 const priceTypeList: Ref<Array<{ id: number; text: string }>> = ref([
   { id: 1, text: "分时/分月电价" },
@@ -40,6 +43,15 @@ const priceTypeList: Ref<Array<{ id: number; text: string }>> = ref([
 const onImage = () => {
   window.trackFunction("pc_Elecprice_Banner_click");
 };
+const onHandleClick = async (id: number) => {
+  await router.push(`/electricityPrice?type=${id}`);
+  chosePriceType.value = id;
+};
+onMounted(() => {
+  if (route.query.type) {
+    chosePriceType.value = Number(route.query.type);
+  }
+});
 </script>
 
 <style scoped lang="scss">
