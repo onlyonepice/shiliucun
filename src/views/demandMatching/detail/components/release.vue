@@ -308,7 +308,7 @@ getCommentList();
   div {
     width: 100%;
     h5 {
-      @include font(14px, 600, rgba(0, 0, 0, 0.9), 22px);
+      @include font(14px, 600, rgba(0, 0, 0, 0.9), 14px);
       margin-bottom: 0;
     }
     p {
@@ -341,11 +341,11 @@ getCommentList();
     margin-right: 8px;
   }
   h5 {
-    @include font(14px, 600, rgba(0, 0, 0, 0.9), 24px);
+    @include font(14px, 600, rgba(0, 0, 0, 0.9), 14px);
     margin: 0 16px 0 0;
   }
   p {
-    @include font(12px, 400, rgba(0, 0, 0, 0.4), 24px);
+    @include font(12px, 400, rgba(0, 0, 0, 0.4), 12px);
   }
 }
 .es-demandMatchingRelease-comment_children__option {

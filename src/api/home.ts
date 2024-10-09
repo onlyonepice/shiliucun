@@ -125,3 +125,12 @@ export const getHotSpotsDetailApi = (params) => {
     { params },
   );
 };
+
+// 获取消息中心消息
+export const getMessageListApi = (data: any) => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "post",
+    `/eesa-data-center/comment/notice/front/v1/getNotice`,
+    { data },
+  );
+};
