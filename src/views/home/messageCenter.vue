@@ -25,19 +25,49 @@
         >
           <div :class="ns.be('list', 'top')">
             <img :src="AvatarIcon" alt="" />
-            <h5>{{ item.user.realName }}</h5>
-            <p>{{ item.content }}</p>
+            <h5 :class="item.status ? ns.b('notRead') : ''">
+              {{ item.user.realName }}
+            </h5>
+            <p
+              v-if="choseTabs === 1"
+              :class="item.status ? ns.b('notRead') : ''"
+            >
+              {{ item.content }}
+            </p>
           </div>
-          <div :class="ns.be('list', 'time')">2024-09-10</div>
           <div
-            :class="ns.be('list', 'detail')"
+            :class="[ns.be('list', 'time'), item.status ? ns.b('notRead') : '']"
+          >
+            {{ item.createTime }}
+          </div>
+          <p
+            :class="[
+              ns.be('list', 'reply'),
+              item.status ? ns.b('notRead') : '',
+            ]"
+            v-if="choseTabs === 0"
+          >
+            回复了你的评论：{{ item.content }}
+          </p>
+          <div
+            :class="[ns.be('list', 'detail')]"
             v-if="item.title && item.description"
           >
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.description }}</p>
+            <h3 :class="item.status ? ns.b('notRead') : ''">
+              {{ item.title }}
+            </h3>
+            <p :class="item.status ? ns.b('notRead') : ''">
+              {{ item.description }}
+            </p>
           </div>
         </div>
       </template>
+      <Pagination
+        :pageSize="pageInfo.limit"
+        :currentPage="currentPage"
+        :total="total"
+        @onchangeCurrent="onchangeCurrent"
+      />
     </div>
   </div>
 </template>
@@ -69,6 +99,8 @@ const pageInfo: Ref<any> = ref({
   limit: 10,
   page: 1,
 });
+const total: Ref<number> = ref(0); // 总条数
+const currentPage: Ref<number> = ref(1); // 当前页码
 const messageList: Ref<Array<any>> = ref([]); // 消息列表
 const isEmpty: Ref<boolean> = ref(true); // 是否显示空页面
 
@@ -84,11 +116,17 @@ async function getMessageList() {
   );
   if (resp_code === 0) {
     messageList.value = datas.records;
+    total.value = datas.total;
+    currentPage.value = datas.pages;
   }
   isEmpty.value = datas.records.length === 0;
   loading.value = false;
 }
 getMessageList();
+const onchangeCurrent = (page: number) => {
+  pageInfo.value.page = page;
+  getMessageList();
+};
 </script>
 
 <style lang="scss">
@@ -144,6 +182,10 @@ getMessageList();
   @include font(14px, 400, rgba(0, 0, 0, 0.4), 14px);
   margin: 5px 0 16px 36px;
 }
+.es-messageCenter-list__reply {
+  @include font(14px, 600, rgba(0, 0, 0, 0.9), 14px);
+  margin: 15px 0 16px 36px;
+}
 .es-messageCenter-list__detail {
   width: calc(100% - 24px);
   background: #f2f3f5;
@@ -156,5 +198,8 @@ getMessageList();
   p {
     @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
   }
+}
+.es-messageCenter-notRead {
+  color: rgba(0, 0, 0, 0.4) !important;
 }
 </style>
