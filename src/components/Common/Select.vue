@@ -43,7 +43,7 @@
         :resize="resize"
         :autosize="autosize"
         @focus="handleFocusVerifyLogin"
-        :show-word-limit="specialType === 'textarea' || showWordLimit"
+        :show-word-limit="showWordLimit"
         :rows="rows"
       />
       <span v-if="inputText !== ''" class="select__input-desc">{{

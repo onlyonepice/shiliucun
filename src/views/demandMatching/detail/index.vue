@@ -1,90 +1,92 @@
 <template>
   <breadcrumb :breadcrumbList="breadcrumbList" />
-  <div
-    :class="[ns.b(), 'es-commonPage animate__animated animate__fadeIn']"
-    v-if="detailInfo.id"
-  >
-    <DetailInfo
-      :detailInfo="detailInfo"
-      :minePublish="minePublish"
-      :totalApply="totalApply"
-      @onApply="onOpenApplyDialog()"
-      @onDelete="deleteDialogVisible = true"
-      @onSolve="showDialog = true"
-      @onCheckApplyList="drawer = true"
-      @onResetApply="
-        router.push(`/demandMatching/release?id=${route.query.id}`)
-      "
-      @onRevocation="onRevocation"
-    >
-      <div :class="ns.be('left', 'evaluate')">
-        <h5>真实度评价</h5>
-        <template v-if="detailInfo.applyEvaluateVOList.length !== 0">
-          <div
-            :class="[
-              ns.be('left', 'reviews'),
-              item.code === 'FAVORABLE_COMMENT'
-                ? ns.be('left', 'goodReviews')
-                : ns.be('left', 'badReviews'),
-            ]"
-            v-for="item in detailInfo.applyEvaluateVOList"
-            :key="item.code"
-          >
-            <div :class="ns.be('left', 'reviews-head')">
-              <img
-                :src="
-                  item.code === 'FAVORABLE_COMMENT'
-                    ? GoodReviewsImg
-                    : BadReviewsImg
-                "
-                alt=""
-              />
+  <div class="es-commonPage animate__animated animate__fadeIn">
+    <div :class="[ns.b()]" v-if="detailInfo.id">
+      <DetailInfo
+        :detailInfo="detailInfo"
+        :minePublish="minePublish"
+        :totalApply="totalApply"
+        @onApply="onOpenApplyDialog()"
+        @onDelete="deleteDialogVisible = true"
+        @onSolve="showDialog = true"
+        @onCheckApplyList="drawer = true"
+        @onResetApply="
+          router.push(`/demandMatching/release?id=${route.query.id}`)
+        "
+        @onRevocation="onRevocation"
+      >
+        <div :class="ns.be('left', 'evaluate')">
+          <h5>真实度评价</h5>
+          <template v-if="detailInfo.applyEvaluateVOList.length !== 0">
+            <div
+              :class="[
+                ns.be('left', 'reviews'),
+                item.code === 'FAVORABLE_COMMENT'
+                  ? ns.be('left', 'goodReviews')
+                  : ns.be('left', 'badReviews'),
+              ]"
+              v-for="item in detailInfo.applyEvaluateVOList"
+              :key="item.code"
+            >
+              <div :class="ns.be('left', 'reviews-head')">
+                <img
+                  :src="
+                    item.code === 'FAVORABLE_COMMENT'
+                      ? GoodReviewsImg
+                      : BadReviewsImg
+                  "
+                  alt=""
+                />
+                <span
+                  >+{{
+                    item.code === "FAVORABLE_COMMENT"
+                      ? detailInfo.likes
+                      : detailInfo.unlike
+                  }}</span
+                >
+              </div>
+              <span>｜</span>
               <span
-                >+{{
-                  item.code === "FAVORABLE_COMMENT"
-                    ? detailInfo.likes
-                    : detailInfo.unlike
+                v-for="(_item, _index) in item.applyEvaluateResponseList"
+                :key="_index"
+                >{{ _item.feedback }} +{{ _item.count
+                }}{{
+                  _index === item.applyEvaluateResponseList.length - 1
+                    ? ""
+                    : "、"
                 }}</span
               >
             </div>
-            <span>｜</span>
-            <span
-              v-for="(_item, _index) in item.applyEvaluateResponseList"
-              :key="_index"
-              >{{ _item.feedback }} +{{ _item.count
-              }}{{
-                _index === item.applyEvaluateResponseList.length - 1 ? "" : "、"
-              }}</span
-            >
-          </div>
-        </template>
-        <template v-else>
-          <span :class="ns.be('left', 'reviews-none')">暂无评价</span>
-        </template>
+          </template>
+          <template v-else>
+            <span :class="ns.be('left', 'reviews-none')">暂无评价</span>
+          </template>
+        </div>
+        <Release :userId="detailInfo.userId" v-if="getToken()" />
+      </DetailInfo>
+      <div>
+        <div
+          :style="{ height: showExtra ? '256px' : '246px' }"
+          :class="ns.b('card')"
+        >
+          <h4>{{ minePublish ? "您的名片信息" : "需求方名片" }}</h4>
+          <template v-if="detailInfo.accountInfo">
+            <BusinessCard
+              :info="detailInfo.accountInfo"
+              :minePublish="minePublish"
+            />
+            <div :class="ns.be('content', 'extra')" v-if="showExtra">
+              <img :src="LamentIcon" alt="" />
+              <p>报名后可查看需求方名片</p>
+            </div>
+          </template>
+        </div>
+        <ApplyData v-if="applyData.length > 0" :applyData="applyData" />
+        <Reviews
+          v-if="detailInfo.isApply && !detailInfo.isEvaluate"
+          @onSubmit="onSubmit"
+        />
       </div>
-    </DetailInfo>
-    <div>
-      <div
-        :style="{ height: showExtra ? '256px' : '246px' }"
-        :class="ns.b('card')"
-      >
-        <h4>{{ minePublish ? "您的名片信息" : "需求方名片" }}</h4>
-        <template v-if="detailInfo.accountInfo">
-          <BusinessCard
-            :info="detailInfo.accountInfo"
-            :minePublish="minePublish"
-          />
-          <div :class="ns.be('content', 'extra')" v-if="showExtra">
-            <img :src="LamentIcon" alt="" />
-            <p>报名后可查看需求方名片</p>
-          </div>
-        </template>
-      </div>
-      <ApplyData v-if="applyData.length > 0" :applyData="applyData" />
-      <Reviews
-        v-if="detailInfo.isApply && !detailInfo.isEvaluate"
-        @onSubmit="onSubmit"
-      />
     </div>
   </div>
   <ApplyDialog
@@ -138,6 +140,7 @@ import ApplyDialog from "./dialog/apply.vue";
 import DeleteDialog from "./dialog/delete.vue";
 import SolveDialog from "./dialog/solve.vue";
 import Reviews from "./components/reviews.vue";
+import Release from "./components/release.vue";
 import { useUserStore } from "@/store/modules/user";
 import { useRoute, useRouter } from "vue-router";
 import GoodReviewsImg from "@/assets/img/common/good-reviews.png";
@@ -201,6 +204,7 @@ onMounted(() => {
   getApplyList();
   getApplyData();
 });
+
 // 提交评价
 const onSubmit = () => {
   ElMessage.success("评价成功");
@@ -293,6 +297,7 @@ const onchangeCurrent = (val: number) => {
 @import "@/style/mixin.scss";
 
 .es-demandMatchingDetail {
+  width: 100%;
   @include flex(flex-start, center, nowrap);
   padding-bottom: 46px;
 }
@@ -329,6 +334,7 @@ const onchangeCurrent = (val: number) => {
     margin-bottom: 8px;
   }
 }
+
 .es-demandMatchingDetail-left__reviews {
   height: 32px;
   margin-bottom: 8px;

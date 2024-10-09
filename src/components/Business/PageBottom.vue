@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <p :class="ns.b('filing')">沪ICP备2022030943号-1</p>
+    <p :class="ns.b('filing')">沪ICP备2024095628号-1</p>
   </div>
 </template>
 

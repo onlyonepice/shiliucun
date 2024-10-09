@@ -110,3 +110,21 @@ export const getApplyMessageApi = () => {
     `/eesa-data-center/need/apply/front/v1.0/getLastTime`,
   );
 };
+
+// 发布评论
+export const publishCommentApi = (data: any) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    "/eesa-data-center/comment/front/v1/send",
+    { data },
+  );
+};
+
+// 查询评论列表
+export const getCommentListApi = (data: any) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    "/eesa-data-center/comment/front/v1/findList",
+    { data },
+  );
+};
