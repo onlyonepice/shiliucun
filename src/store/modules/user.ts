@@ -8,6 +8,7 @@ import {
   getUserDetailInfo,
 } from "@/api/user";
 import { getPublicKeyApi } from "@/api/user";
+import { notReadNumApi } from "@/api/home";
 import { removeToken } from "@/utils/auth";
 import router from "@/router";
 const { VITE_ENV } = import.meta.env;
@@ -32,6 +33,7 @@ export const useUserStore = defineStore({
     comparedList: [], // 产品对比列表
     showConsultationNav: true, // 展示产品二维码
     showNewUserVip: false, // 新用户开通会员
+    hasNotRead: 0, // 未读消息
     businessList: [
       { label: "材料", value: "材料" },
       { label: "电芯", value: "电芯" },
@@ -194,6 +196,13 @@ export const useUserStore = defineStore({
             reject(error);
           });
       });
+    },
+    // 获取未读数量
+    async getNotReadNum() {
+      const { datas, resp_code } = await notReadNumApi();
+      if (resp_code === 0) {
+        this.hasNotRead = datas;
+      }
     },
   },
 });

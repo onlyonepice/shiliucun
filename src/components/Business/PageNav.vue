@@ -81,12 +81,10 @@
           </div>
         </div>
         <p v-else :class="ns.b('login')" @click="onLogin">登录/注册</p>
-        <img
-          v-if="showLogin"
-          :class="ns.b('message')"
-          :src="MessageIcon"
-          @click="onMessage"
-        />
+        <div v-if="showLogin" :class="ns.b('message')">
+          <img :src="MessageIcon" @click="onMessage" />
+          <div v-if="useUserStoreHook().hasNotRead > 0" />
+        </div>
       </div>
     </div>
     <Logout :visible="visible" @onHandleClose="onHandleClose" />
@@ -470,6 +468,17 @@ const onMessage = () => {
     @include widthAndHeight(24px, 24px);
     margin-left: 23px;
     cursor: pointer;
+    @include relative();
+    img {
+      @include widthAndHeight(24px, 24px);
+    }
+    div {
+      @include absolute(1, 0px, 1px, none, none);
+      @include widthAndHeight(10px, 10px);
+      background: #f75964;
+      border: 1px solid #ffffff;
+      border-radius: 100%;
+    }
   }
 }
 .es-pageNav-extraAvatar {

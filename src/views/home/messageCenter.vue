@@ -22,7 +22,7 @@
           <h3>暂无消息</h3>
         </div>
         <div
-          :class="ns.b('list')"
+          :class="[ns.b('list'), 'animate__animated animate__fadeIn']"
           v-for="(item, index) in messageList"
           :key="index"
           @click="setReadMessageApi(item.id)"
@@ -34,7 +34,7 @@
             </h5>
             <p
               v-if="choseTabs === 1"
-              :class="!item.status ? ns.b('notRead') : ''"
+              :class="!item.status && choseTabs === 0 ? ns.b('notRead') : ''"
             >
               {{ item.content }}
             </p>
@@ -68,13 +68,13 @@
             </p>
           </div>
         </div>
+        <Pagination
+          :pageSize="pageInfo.limit"
+          :currentPage="currentPage"
+          :total="total"
+          @onchangeCurrent="onchangeCurrent"
+        />
       </template>
-      <Pagination
-        :pageSize="pageInfo.limit"
-        :currentPage="currentPage"
-        :total="total"
-        @onchangeCurrent="onchangeCurrent"
-      />
     </div>
   </div>
 </template>
@@ -84,6 +84,7 @@ import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import MessageCenterEmptyIcon from "@/assets/img/common/message-center-empty.png";
 import AvatarIcon from "@/assets/img/common/avatar-icon.png";
+import { useUserStore } from "@/store/modules/user";
 import {
   getMessageListApi,
   readMessageApi,
@@ -129,7 +130,7 @@ async function getMessageList() {
   if (resp_code === 0) {
     messageList.value = datas.records;
     total.value = datas.total;
-    currentPage.value = datas.pages;
+    currentPage.value = datas.current;
   }
   isEmpty.value = datas.records.length === 0;
   loading.value = false;
@@ -154,12 +155,14 @@ const setReadMessageApi = async (id: number) => {
   messageList.value.forEach((item: any) => {
     if (item.id === id) {
       item.status = 1;
+      useUserStore().getNotReadNum();
     }
   });
 };
 // 设置全部已读
 const setReadMessage = async () => {
   await readMessageApi();
+  useUserStore().getNotReadNum();
   getNotReadNum();
   getMessageList();
 };

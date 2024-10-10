@@ -52,4 +52,5 @@ export type userType = {
   showConsultationNav: boolean;
   showNewUserVip: boolean;
   businessList: Array<any>;
+  hasNotRead: number;
 };
