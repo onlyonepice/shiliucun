@@ -143,7 +143,7 @@ const onScroll = ({ scrollTop }: any) => {
     opacityBg.value = scrollTop < 200;
   }
 };
-useUserStore().getNotReadNum();
+getToken() && useUserStore().getNotReadNum();
 </script>
 
 <style lang="scss">

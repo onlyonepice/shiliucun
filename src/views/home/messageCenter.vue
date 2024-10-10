@@ -25,21 +25,29 @@
           :class="[ns.b('list'), 'animate__animated animate__fadeIn']"
           v-for="(item, index) in messageList"
           :key="index"
-          @click="item.status === 0 ? setReadMessageApi(item.id) : ''"
+          @click="setReadMessageApi(item)"
         >
           <div :class="ns.be('list', 'top')">
             <img :src="AvatarIcon" alt="" />
-            <h5 :class="!item.status && choseTabs === 0 ? ns.b('notRead') : ''">
+            <h5
+              :class="
+                (item.status && choseTabs === 0) || choseTabs === 1
+                  ? ns.b('notRead')
+                  : ''
+              "
+            >
               {{ item.user.realName }}
             </h5>
-            <p v-if="choseTabs === 1">
+            <p v-if="choseTabs === 1" :class="ns.b('notRead')">
               {{ item.content }}
             </p>
           </div>
           <div
             :class="[
               ns.be('list', 'time'),
-              !item.status && choseTabs === 0 ? ns.b('notRead') : '',
+              (item.status && choseTabs === 0) || choseTabs === 1
+                ? ns.b('notRead')
+                : '',
             ]"
           >
             {{ item.createTime }}
@@ -47,7 +55,9 @@
           <p
             :class="[
               ns.be('list', 'reply'),
-              !item.status && choseTabs === 0 ? ns.b('notRead') : '',
+              (item.status && choseTabs === 0) || choseTabs === 1
+                ? ns.b('notRead')
+                : '',
             ]"
             v-if="choseTabs === 0"
           >
@@ -57,10 +67,22 @@
             :class="[ns.be('list', 'detail')]"
             v-if="item.title && item.description"
           >
-            <h3 :class="!item.status && choseTabs === 0 ? ns.b('notRead') : ''">
+            <h3
+              :class="
+                (item.status && choseTabs === 0) || choseTabs === 1
+                  ? ns.b('notRead')
+                  : ''
+              "
+            >
               {{ item.title }}
             </h3>
-            <p :class="!item.status && choseTabs === 0 ? ns.b('notRead') : ''">
+            <p
+              :class="
+                (item.status && choseTabs === 0) || choseTabs === 1
+                  ? ns.b('notRead')
+                  : ''
+              "
+            >
               {{ item.description }}
             </p>
           </div>
@@ -77,11 +99,13 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref } from "vue";
+import { Ref, ref, onMounted } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import MessageCenterEmptyIcon from "@/assets/img/common/message-center-empty.png";
 import AvatarIcon from "@/assets/img/common/avatar-icon.png";
 import { useUserStore } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+const router = useRouter();
 import {
   getMessageListApi,
   readMessageApi,
@@ -132,7 +156,7 @@ async function getMessageList() {
   isEmpty.value = datas.records.length === 0;
   loading.value = false;
 }
-getMessageList();
+
 const onchangeCurrent = (page: number) => {
   pageInfo.value.page = page;
   getMessageList();
@@ -146,16 +170,25 @@ const getNotReadNum = async () => {
 };
 getNotReadNum();
 // 设置单独已读
-const setReadMessageApi = async (id: number) => {
-  await readMessageByIdApi({ noticeId: [id] });
-  getNotReadNum();
+const setReadMessageApi = async (data: any) => {
+  if (data.status === 0) {
+    await readMessageByIdApi({ noticeId: [data.id] });
+    getNotReadNum();
+  }
   messageList.value.forEach((item: any) => {
-    if (item.id === id) {
+    if (item.id === data.id) {
       item.status = 1;
       useUserStore().getNotReadNum();
     }
   });
+  data.entityType === "NEED_COMMENT" &&
+    router.push(
+      `/demandMatching/detail?id=${data.entityId}&source=messageCenter`,
+    );
 };
+onMounted(() => {
+  getMessageList();
+});
 // 设置全部已读
 const setReadMessage = async () => {
   await readMessageApi();
