@@ -166,11 +166,11 @@ function handleProductCheckIn() {
   height: auto;
 }
 .es-searchProduct-filter-filter__box--img {
-  height: 144px;
+  height: 254px;
   &::after {
     content: "";
     display: inline-block;
-    @include widthAndHeight(100%, 64px);
+    @include widthAndHeight(100%, 144px);
     background: linear-gradient(
       180deg,
       rgba(255, 255, 255, 0) 13%,
@@ -206,20 +206,20 @@ function handleProductCheckIn() {
 }
 .es-searchProduct-filter-filter__img {
   width: 122px !important;
-  height: 64px;
+  height: 122px;
   margin: 0 8px 8px 0;
   border: 1px solid #dbdce2;
   background: #ffffff;
   border-radius: 4px;
   display: flex;
   align-items: center !important;
-  padding: 0 20px;
+  padding: 8px;
   cursor: pointer;
   @include relative();
   flex: 0 0 122px;
   overflow: hidden;
   img {
-    width: 82px;
+    width: 100%;
     object-fit: cover;
   }
   &:nth-of-type(8n) {
