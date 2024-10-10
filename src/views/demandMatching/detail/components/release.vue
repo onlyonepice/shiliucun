@@ -1,7 +1,7 @@
 <template>
   <div :class="[ns.b()]">
     <h5>评论</h5>
-    <span :class="ns.b('comment_desc')">共 158 条评论</span>
+    <span :class="ns.b('comment_desc')">共 {{ total }} 条评论</span>
     <div :class="ns.b('comment_content')">
       <Select
         type="input"
@@ -24,7 +24,6 @@
             entityUserId: userId,
           });
           commentContent = '';
-          delayData();
         "
         type="primary"
         >发布</el-button
@@ -58,7 +57,7 @@
             >
               回复
             </p>
-            <p>删除</p>
+            <p @click="onDeleteComment(item.id)">删除</p>
           </div>
           <template v-if="item.reply">
             <div :class="ns.b('reply')">
@@ -92,7 +91,6 @@
                     });
                     item.reply = false;
                     replyContent = '';
-                    delayData();
                   "
                   >发布</el-button
                 >
@@ -149,7 +147,6 @@
                       });
                       _item.reply = false;
                       replyContent = '';
-                      delayData();
                     "
                     >发布</el-button
                   >
@@ -165,7 +162,11 @@
 
 <script setup lang="ts">
 import { Ref, ref } from "vue";
-import { publishCommentApi, getCommentListApi } from "@/api/demandMatching";
+import {
+  publishCommentApi,
+  getCommentListApi,
+  deleteCommentApi,
+} from "@/api/demandMatching";
 import { useRoute } from "vue-router";
 import AvatarIcon from "@/assets/img/common/avatar-icon.png";
 import useNamespace from "@/utils/nameSpace";
@@ -176,6 +177,7 @@ const commentContent: Ref<string> = ref(""); // 评论内容
 const replyContent: Ref<string> = ref(""); // 回复内容
 const commentList: Ref<any> = ref([]); // 评论列表
 const loading: Ref<boolean> = ref(false); // 加载中
+const total: Ref<number> = ref(0); // 总条数
 defineProps({
   userId: {
     type: Number,
@@ -191,7 +193,19 @@ const onRelease = async (data: any) => {
     entityId: route.query.id,
     entityType: "NEED_COMMENT",
   };
-  await publishCommentApi(Object.assign(_data, data));
+  const { datas, resp_code } = await publishCommentApi(
+    Object.assign(_data, data),
+  );
+  if (resp_code === 0) {
+    datas && getCommentList();
+  }
+};
+// 删除评论
+const onDeleteComment = async (id: number) => {
+  const { datas, resp_code } = await deleteCommentApi(id);
+  if (resp_code === 0) {
+    datas && getCommentList();
+  }
 };
 // 获取评论回复
 const getReply = (_data: any, data: any) => {
@@ -203,11 +217,6 @@ const getReply = (_data: any, data: any) => {
     }
   });
   return ` 回复 ${_text}：`;
-};
-const delayData = () => {
-  setTimeout(() => {
-    getCommentList();
-  }, 700);
 };
 // 获取评论列表
 const getCommentList = async () => {
@@ -221,6 +230,7 @@ const getCommentList = async () => {
   if (resp_code === 0) {
     loading.value = false;
     commentList.value = datas.records;
+    total.value = datas.total;
     commentList.value.forEach((item) => {
       item.reply = false;
       item.subComments.forEach((subItem) => {
@@ -242,6 +252,8 @@ getCommentList();
   }
   &-comment_desc {
     @include font(12px, 400, rgba(0, 0, 0, 0.6), 20px);
+    margin-bottom: 16px;
+    display: inline-block;
   }
   &-comment_content {
     @include relative();

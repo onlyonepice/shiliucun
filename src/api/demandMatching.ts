@@ -128,3 +128,11 @@ export const getCommentListApi = (data: any) => {
     { data },
   );
 };
+
+// 删除评论
+export const deleteCommentApi = (id: number) => {
+  return http.request<{ datas; resp_code }>(
+    "post",
+    `/eesa-data-center/comment/front/v1/deleted?id=${id}`,
+  );
+};
