@@ -25,17 +25,14 @@
           :class="[ns.b('list'), 'animate__animated animate__fadeIn']"
           v-for="(item, index) in messageList"
           :key="index"
-          @click="setReadMessageApi(item.id)"
+          @click="item.status === 0 ? setReadMessageApi(item.id) : ''"
         >
           <div :class="ns.be('list', 'top')">
             <img :src="AvatarIcon" alt="" />
             <h5 :class="!item.status && choseTabs === 0 ? ns.b('notRead') : ''">
               {{ item.user.realName }}
             </h5>
-            <p
-              v-if="choseTabs === 1"
-              :class="!item.status && choseTabs === 0 ? ns.b('notRead') : ''"
-            >
+            <p v-if="choseTabs === 1">
               {{ item.content }}
             </p>
           </div>

@@ -57,7 +57,12 @@
             >
               回复
             </p>
-            <p @click="onDeleteComment(item.id)">删除</p>
+            <p
+              @click="onDeleteComment(item.id)"
+              v-if="item.user.id === useUserStore().userInfo.id"
+            >
+              删除
+            </p>
           </div>
           <template v-if="item.reply">
             <div :class="ns.b('reply')">
@@ -170,6 +175,7 @@ import {
 import { useRoute } from "vue-router";
 import AvatarIcon from "@/assets/img/common/avatar-icon.png";
 import useNamespace from "@/utils/nameSpace";
+import { useUserStore } from "@/store/modules/user";
 import MessageCenterEmpty from "@/assets/img/common/message-center-empty.png";
 const route = useRoute();
 const ns = useNamespace("demandMatchingRelease");
@@ -357,7 +363,7 @@ getCommentList();
     margin: 0 16px 0 0;
   }
   p {
-    @include font(12px, 400, rgba(0, 0, 0, 0.4), 12px);
+    @include font(12px, 400, rgba(0, 0, 0, 0.9), 12px);
   }
 }
 .es-demandMatchingRelease-comment_children__option {

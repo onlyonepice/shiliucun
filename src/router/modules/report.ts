@@ -17,6 +17,7 @@ export default {
       meta: {
         title: "报告详情",
         backgroundColor: "#F2F3F5",
+        keepAlive: false,
       },
     },
     {
@@ -27,6 +28,7 @@ export default {
       },
       meta: {
         title: "白皮书",
+        keepAlive: false,
       },
     },
     {
@@ -37,6 +39,7 @@ export default {
       },
       meta: {
         title: "在线报告",
+        keepAlive: false,
       },
     },
     {
@@ -48,6 +51,7 @@ export default {
       meta: {
         title: "行业洞察",
         backgroundColor: "",
+        keepAlive: false,
       },
     },
     {
@@ -59,6 +63,7 @@ export default {
       meta: {
         title: "专家访谈",
         backgroundColor: "",
+        keepAlive: false,
       },
     },
     {
@@ -71,6 +76,7 @@ export default {
       meta: {
         title: "周月季报",
         backgroundColor: "",
+        keepAlive: false,
       },
     },
   ],
