@@ -163,6 +163,11 @@
       </template>
     </template>
   </div>
+  <DeleteConfirm
+    text="确定删除该评论吗？"
+    :visible="deleteVisible"
+    @onHandleClose="onHandleClose"
+  />
 </template>
 
 <script setup lang="ts">
@@ -184,6 +189,8 @@ const replyContent: Ref<string> = ref(""); // 回复内容
 const commentList: Ref<any> = ref([]); // 评论列表
 const loading: Ref<boolean> = ref(false); // 加载中
 const total: Ref<number> = ref(0); // 总条数
+const deleteVisible: Ref<boolean> = ref(false); // 删除评论弹窗
+const deleteId: Ref<number> = ref(0); // 删除评论id
 defineProps({
   userId: {
     type: Number,
@@ -207,10 +214,16 @@ const onRelease = async (data: any) => {
   }
 };
 // 删除评论
-const onDeleteComment = async (id: number) => {
-  const { datas, resp_code } = await deleteCommentApi(id);
+const onDeleteComment = (id: number) => {
+  deleteVisible.value = true;
+  deleteId.value = id;
+};
+const onHandleClose = async (type: boolean) => {
+  if (!type) return (deleteVisible.value = false);
+  const { datas, resp_code } = await deleteCommentApi(deleteId.value);
   if (resp_code === 0) {
     datas && getCommentList();
+    deleteVisible.value = false;
   }
 };
 // 获取评论回复
