@@ -194,6 +194,12 @@ onMounted(() => {
       path: "/homePersonal?id=3",
     };
   }
+  if (route.query.source === "messageCenter") {
+    breadcrumbList.value[0] = {
+      text: "消息中心",
+      path: `/messageCenter`,
+    };
+  }
   if (route.query.beforeRouter) {
     breadcrumbList.value[0] = {
       text: "需求大厅",
