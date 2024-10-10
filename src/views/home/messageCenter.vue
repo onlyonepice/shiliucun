@@ -8,7 +8,10 @@
           @onHandleClick="onHandleClick"
           :defaultId="choseTabs"
         />
-        <p>全部已读</p>
+        <p @click="setReadMessage()">全部已读</p>
+        <div :class="ns.b('readNumber')" v-if="notReadNum !== 0">
+          {{ notReadNum }}
+        </div>
       </div>
       <template v-if="!loading">
         <div
@@ -22,28 +25,32 @@
           :class="ns.b('list')"
           v-for="(item, index) in messageList"
           :key="index"
+          @click="setReadMessageApi(item.id)"
         >
           <div :class="ns.be('list', 'top')">
             <img :src="AvatarIcon" alt="" />
-            <h5 :class="item.status ? ns.b('notRead') : ''">
+            <h5 :class="!item.status && choseTabs === 0 ? ns.b('notRead') : ''">
               {{ item.user.realName }}
             </h5>
             <p
               v-if="choseTabs === 1"
-              :class="item.status ? ns.b('notRead') : ''"
+              :class="!item.status ? ns.b('notRead') : ''"
             >
               {{ item.content }}
             </p>
           </div>
           <div
-            :class="[ns.be('list', 'time'), item.status ? ns.b('notRead') : '']"
+            :class="[
+              ns.be('list', 'time'),
+              !item.status && choseTabs === 0 ? ns.b('notRead') : '',
+            ]"
           >
             {{ item.createTime }}
           </div>
           <p
             :class="[
               ns.be('list', 'reply'),
-              item.status ? ns.b('notRead') : '',
+              !item.status && choseTabs === 0 ? ns.b('notRead') : '',
             ]"
             v-if="choseTabs === 0"
           >
@@ -53,10 +60,10 @@
             :class="[ns.be('list', 'detail')]"
             v-if="item.title && item.description"
           >
-            <h3 :class="item.status ? ns.b('notRead') : ''">
+            <h3 :class="!item.status && choseTabs === 0 ? ns.b('notRead') : ''">
               {{ item.title }}
             </h3>
-            <p :class="item.status ? ns.b('notRead') : ''">
+            <p :class="!item.status && choseTabs === 0 ? ns.b('notRead') : ''">
               {{ item.description }}
             </p>
           </div>
@@ -77,7 +84,12 @@ import { Ref, ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 import MessageCenterEmptyIcon from "@/assets/img/common/message-center-empty.png";
 import AvatarIcon from "@/assets/img/common/avatar-icon.png";
-import { getMessageListApi } from "@/api/home";
+import {
+  getMessageListApi,
+  readMessageApi,
+  notReadNumApi,
+  readMessageByIdApi,
+} from "@/api/home";
 const ns = useNamespace("messageCenter");
 const loading: Ref<boolean> = ref(false); // 加载中
 const tabsList: Ref<Array<any>> = ref([
@@ -103,7 +115,7 @@ const total: Ref<number> = ref(0); // 总条数
 const currentPage: Ref<number> = ref(1); // 当前页码
 const messageList: Ref<Array<any>> = ref([]); // 消息列表
 const isEmpty: Ref<boolean> = ref(true); // 是否显示空页面
-
+const notReadNum: Ref<number> = ref(0); // 未读数量
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
   getMessageList();
@@ -127,6 +139,30 @@ const onchangeCurrent = (page: number) => {
   pageInfo.value.page = page;
   getMessageList();
 };
+// 获取未读数量
+const getNotReadNum = async () => {
+  const { datas, resp_code } = await notReadNumApi();
+  if (resp_code === 0) {
+    notReadNum.value = datas;
+  }
+};
+getNotReadNum();
+// 设置单独已读
+const setReadMessageApi = async (id: number) => {
+  await readMessageByIdApi({ noticeId: [id] });
+  getNotReadNum();
+  messageList.value.forEach((item: any) => {
+    if (item.id === id) {
+      item.status = 1;
+    }
+  });
+};
+// 设置全部已读
+const setReadMessage = async () => {
+  await readMessageApi();
+  getNotReadNum();
+  getMessageList();
+};
 </script>
 
 <style lang="scss">
@@ -147,10 +183,19 @@ const onchangeCurrent = (page: number) => {
   @include flex(center, space-between, nowrap);
   border-bottom: 2px solid #e6e6e6;
   padding-top: 10px;
+  @include relative();
   p {
     @include font(14px, 400, #244bf1, 22px);
     cursor: pointer;
   }
+}
+.es-messageCenter-readNumber {
+  @include widthAndHeight(24px, 20px);
+  background: #f75964;
+  border-radius: 10px;
+  @include absolute(1, 4px, none, none, 100px);
+  @include font(12px, 600, rgba(255, 255, 255, 0.9), 20px);
+  text-align: center;
 }
 .es-messageCenter-empty {
   margin: 150px auto;
@@ -162,6 +207,7 @@ const onchangeCurrent = (page: number) => {
 }
 .es-messageCenter-list {
   margin-top: 24px;
+  cursor: pointer;
 }
 .es-messageCenter-list__top {
   height: 24px;

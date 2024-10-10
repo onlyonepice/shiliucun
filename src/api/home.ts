@@ -134,3 +134,28 @@ export const getMessageListApi = (data: any) => {
     { data },
   );
 };
+
+// 消息全部已读
+export const readMessageApi = () => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "post",
+    `/eesa-data-center/comment/notice/front/v1/setAllRead`,
+  );
+};
+
+// 消息未读数量
+export const notReadNumApi = () => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "get",
+    `/eesa-data-center/comment/notice/front/v1/unreadCount`,
+  );
+};
+
+// 设置单独已读
+export const readMessageByIdApi = (data: any) => {
+  return http.request<{ resp_code: number; datas: any }>(
+    "post",
+    `/eesa-data-center/comment/notice/front/v1/setRead`,
+    { data },
+  );
+};
