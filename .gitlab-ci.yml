@@ -4,7 +4,7 @@ variables:
   TEST_SERVER: "172.27.98.101"
   TEST_PATH: "test-i-reportV3"
   OSS_PATH: "eesa-data-report"
-  PROD_URL: "https://data-report.eesaenergy.com/"
+  PROD_URL: "https://data-report.handy-es.com/"
   ENV_CACHE: ''
 workflow:
   rules:
