@@ -1,6 +1,6 @@
 <template>
   <Dialog
-    title="编辑信息"
+    :title="source === 'demandMatching' ? '编辑名片' : '编辑信息'"
     :visible="visibleInfo"
     width="560px"
     height="484px"
@@ -70,7 +70,11 @@
             }
           "
         />
-        <div @click="onHandleModifyMobile" class="edit-phone-number_btn">
+        <div
+          v-if="source !== 'demandMatching'"
+          @click="onHandleModifyMobile"
+          class="edit-phone-number_btn"
+        >
           修改
         </div>
       </div>
@@ -185,6 +189,10 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
+  },
+  source: {
+    type: String,
+    default: "",
   },
 });
 const modifyMbForm: Ref<any> = ref({
