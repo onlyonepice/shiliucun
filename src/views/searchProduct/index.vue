@@ -62,6 +62,7 @@
 interface TabsList {
   id: number;
   name: string;
+  code: string;
 }
 import { ref, Ref, watch } from "vue";
 import useNamespace from "@/utils/nameSpace";
@@ -77,12 +78,17 @@ import SearchProductCompared from "./components/compared.vue";
 import SearchProductSorting from "./components/sorting.vue";
 import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash";
+import { useProductStoreHook } from "@/store/modules/product";
 const ns = useNamespace("searchProduct");
 const tabsList: Ref<Array<TabsList>> = ref([
-  { id: 0, name: "工商业一体机", code: "INDUSTRY_ENERGY_STORAGE" },
-  { id: 1, name: "电芯", code: "ELECTRIC_CORE" },
-  { id: 2, name: "储能变流器", code: "ENERGY_STORAGE_INVERTER" },
-  // { id: 4, name: "大型储能柜" },
+  {
+    id: 0,
+    name: "工商业一体机",
+    code: useProductStoreHook().$state.industryCommerce,
+  },
+  { id: 1, name: "电芯", code: useProductStoreHook().$state.batteryCell },
+  { id: 2, name: "储能变流器", code: useProductStoreHook().$state.converter },
+  { id: 3, name: "其他", code: useProductStoreHook().$state.other },
 ]);
 const filterInfo: Ref<any> = ref({
   page: 1,

@@ -97,6 +97,9 @@
               <img :src="NextIconChose" alt="" />
             </div>
             <el-table
+              v-if="
+                route.query.productType !== useProductStoreHook().$state.other
+              "
               :data="tableData"
               style="width: 100%"
               :border="true"
@@ -166,12 +169,19 @@
           <template v-else>
             <DetailCompany :companyInfo="companyInfo" />
           </template>
-          <img
-            v-for="item in productDetail.productIntroductionFile"
-            :key="item"
-            :src="useUserStore().fileUrl + item"
-            :class="ns.b('productIntroductionFile')"
-          />
+          <template
+            v-if="
+              route.query.productType !== useProductStoreHook().$state.other ||
+              choseTabs === 0
+            "
+          >
+            <img
+              v-for="item in productDetail.productIntroductionFile"
+              :key="item"
+              :src="useUserStore().fileUrl + item"
+              :class="ns.b('productIntroductionFile')"
+            />
+          </template>
         </div>
       </div>
       <div
@@ -231,6 +241,7 @@ import { useRoute, useRouter } from "vue-router";
 import detailTable from "./components/detailTable.vue";
 import DetailCompany from "./components/detailCompany.vue";
 import { useUserStoreHook } from "@/store/modules/user";
+import { useProductStoreHook } from "@/store/modules/product";
 import { cloneDeep } from "lodash";
 import { getEnterpriseDetailApi } from "@/api/searchProduct";
 import { ElMessage } from "element-plus";

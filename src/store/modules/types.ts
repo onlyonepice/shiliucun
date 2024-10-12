@@ -54,3 +54,9 @@ export type userType = {
   businessList: Array<any>;
   hasNotRead: number;
 };
+export type productType = {
+  industryCommerce: string;
+  batteryCell: string;
+  converter: string;
+  other: string;
+};

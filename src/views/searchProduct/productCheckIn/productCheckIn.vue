@@ -21,6 +21,22 @@
           <div v-if="index < tabs.length - 1" :class="ns.e('tab-list-line')" />
         </template>
       </div>
+      <div :class="ns.b('settlement')">
+        <h4>请优先完成企业入驻</h4>
+        <el-button type="primary">企业入驻</el-button>
+      </div>
+      <div :class="ns.b('hasSettlement')">
+        <div>
+          <p>企业：</p>
+          <h4>阳光电源股份有限公司</h4>
+        </div>
+        <div>
+          <p>产业链环节：</p>
+          <h4>
+            分布式能源与储能系统；充换电相关设备；光伏风电设备；节能设备；储能逆变器PCS；集中式可再生能源发电系统；车充相关；逆变器并网相关设备；能量管理系统EMS
+          </h4>
+        </div>
+      </div>
       <div :class="ns.b('form')">
         <Step1
           v-show="tabVal === 1"
@@ -295,9 +311,36 @@ onMounted(() => {
     }
 
     .es-productCheckIn-form {
-      margin-top: 64px;
+      margin-top: 32px;
       min-height: 300px;
     }
+  }
+}
+.es-productCheckIn-settlement {
+  @include widthAndHeight(100%, 64px);
+  background: #f2f3f5;
+  border-radius: 4px;
+  margin-top: 32px;
+  padding: 24px 16px 24px 24px;
+  @include flex(center, space-between, nowrap);
+}
+.es-productCheckIn-hasSettlement {
+  @include widthAndHeight(100%, auto);
+  background: #f2f3f5;
+  border-radius: 4px;
+  margin-top: 32px;
+  padding: 16px;
+  div {
+    @include flex(flex-start, flex-start, nowrap);
+  }
+  p {
+    width: 84px;
+    @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+    text-align: right;
+  }
+  h4 {
+    flex: 1;
+    @include font(14px, 400, rgba(0, 0, 0, 0.9), 22px);
   }
 }
 </style>

@@ -16,7 +16,9 @@
           ? sortingList
           : productType === 'ELECTRIC_CORE'
             ? sortingList2
-            : sortingList3"
+            : productType === 'ENERGY_STORAGE_INVERTER'
+              ? sortingList3
+              : sortingList4"
         :key="item.id"
         :class="[
           ns.b('common'),
@@ -125,6 +127,13 @@ const sortingList3: Ref<Array<any>> = ref([
   {
     id: 2,
     text: "额定功率",
+    desc: "inPriceSort",
+  },
+]);
+const sortingList4: Ref<Array<any>> = ref([
+  {
+    id: 1,
+    text: "最新",
     desc: "inPriceSort",
   },
 ]);
