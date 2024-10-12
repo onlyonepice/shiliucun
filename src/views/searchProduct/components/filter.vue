@@ -65,6 +65,9 @@
               @click="showMore = !showMore"
             />
           </template>
+          <template v-if="item.type === 'classification'">
+            <div>123</div>
+          </template>
         </div>
       </template>
     </div>

@@ -110,6 +110,7 @@ const cardType: Ref<string> = ref("card"); // 卡片展示方式
 const filterList: Ref<Array<any>> = ref([
   { id: 1, show: true, type: "txt", title: "冷却方式", data: [] },
   { id: 2, show: true, type: "img", title: "品牌选择", data: [] },
+  { id: 3, show: true, type: "classification", title: "产品分类", data: [] },
 ]);
 const choseTabs: Ref<number> = ref(0); // 选中的tabs
 watch(

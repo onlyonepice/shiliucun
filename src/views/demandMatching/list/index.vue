@@ -121,7 +121,7 @@
                       </p>
                     </div>
                     <h5 style="font-weight: 400; float: right">
-                      发布时间：{{ item.releaseTime }}
+                      {{ item.releaseTime }}
                     </h5>
                   </div>
                   <div class="data-box_item_desc">

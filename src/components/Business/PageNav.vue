@@ -303,7 +303,13 @@ const navList: Ref<Array<NavList>> = ref([
     id: 7,
     text: "开通VIP",
     path: ["/vip"],
-    children: [],
+    children: [
+      {
+        id: 1,
+        text: "会员动态",
+        path: "/memberNews",
+      },
+    ],
   },
 ]);
 const visible: Ref<boolean> = ref(false);
@@ -352,6 +358,10 @@ const onChoseLeave = () => {
 };
 // 跳转首页
 const onToHome = (data: any) => {
+  console.log(data);
+  if (data.path[0] === "/vip") {
+    return onChildrenPath("/vip");
+  }
   if (data.children.length !== 0) {
     return;
   }

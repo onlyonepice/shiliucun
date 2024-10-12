@@ -8,7 +8,7 @@ export const useProductStore = defineStore({
     industryCommerce: "INDUSTRY_ENERGY_STORAGE",
     batteryCell: "ELECTRIC_CORE",
     converter: "ENERGY_STORAGE_INVERTER",
-    other: "OTHER",
+    other: "OTHERS",
   }),
 });
 
