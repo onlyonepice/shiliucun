@@ -110,7 +110,7 @@ watch(
               item.bind.options = res[1].datas;
               break;
             case "energyStorageDuration":
-              item.bind.options = res[2].datas;
+              item.bind.options = res[8].datas;
               break;
             case "applicationScenarios":
               item.bind.options = [
@@ -156,11 +156,8 @@ watch(
               );
               break;
             case 2:
-              requestData.value.energyStorageDuration = get(
-                item.datas.find((item) => item.defaultValue),
-                "paramDesc",
-                "2",
-              );
+              requestData.value.energyStorageDuration =
+                res[8].datas[2].paramName;
               break;
             case 3:
               requestData.value.applicationScenarios = get(

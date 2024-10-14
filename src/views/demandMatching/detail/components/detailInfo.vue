@@ -52,12 +52,7 @@
           >报名列表</el-button
         >
 
-        <el-tooltip
-          class="box-item"
-          effect="dark"
-          content="编辑需求"
-          placement="bottom"
-        >
+        <el-tooltip effect="dark" content="编辑需求" placement="bottom">
           <img
             :src="EditIcon"
             v-if="
@@ -67,12 +62,7 @@
             @click="router.push('/demandMatching/release?id=' + detailInfo.id)"
           />
         </el-tooltip>
-        <el-tooltip
-          class="box-item"
-          effect="dark"
-          content="删除需求"
-          placement="bottom"
-        >
+        <el-tooltip effect="dark" content="删除需求" placement="bottom">
           <img
             :src="DeleteIcon"
             @click="emits('onDelete')"

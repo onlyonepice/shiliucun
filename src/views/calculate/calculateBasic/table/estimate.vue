@@ -46,7 +46,6 @@
               <div>
                 <span>未来一年收益估算（元）</span>
                 <el-tooltip
-                  class="box-item"
                   effect="light"
                   content="指根据过去一年该省份每个月峰谷价差估算的未来收益"
                   placement="top-start"

@@ -148,8 +148,8 @@ export const enterpriseFormOptions = () => {
         placeholder: "请选择",
         options: [],
         cascaderOption: {
-          label: "paramName",
-          value: "paramDesc",
+          label: "paramDesc",
+          value: "paramName",
           emitPath: false,
         },
       },

@@ -45,6 +45,8 @@
         @focus="handleFocusVerifyLogin"
         :show-word-limit="showWordLimit"
         :rows="rows"
+        @blur="handleBlur"
+        @keyup.enter="handleEnter"
       />
       <span v-if="inputText !== ''" class="select__input-desc">{{
         inputText
@@ -118,7 +120,12 @@
 <script lang="ts" setup>
 import { watch, ref } from "vue";
 import SelectKey from "@/assets/img/common/select-key-icon.png";
-const emit = defineEmits(["onChange", "triggerForm"]);
+const emit = defineEmits([
+  "onChange",
+  "triggerForm",
+  "handleBlur",
+  "handleEnter",
+]);
 const props = defineProps({
   // 筛选项宽度
   width: {
@@ -283,6 +290,14 @@ function handleVerifyLogin(data: any) {
   if (data) {
     emit("triggerForm");
   }
+}
+// 输入框失去焦点
+function handleBlur() {
+  emit("handleBlur");
+}
+// 输入框回车事件
+function handleEnter() {
+  emit("handleEnter");
 }
 function handleFocusVerifyLogin() {
   emit("triggerForm");

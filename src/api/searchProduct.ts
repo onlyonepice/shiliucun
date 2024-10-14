@@ -117,3 +117,11 @@ export const getProductTypeApi = (data: any) => {
     { data },
   );
 };
+
+// 查询产品类型
+export const getProductTypeListApi = () => {
+  return http.request<void>(
+    "post",
+    `/eesa-industrial-map/sysDict/front/V1.0/frontSelectTreeByType/mainBusiness`,
+  );
+};
