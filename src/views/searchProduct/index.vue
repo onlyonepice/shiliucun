@@ -123,11 +123,12 @@ watch(
 // 选择标签栏
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
+  filterList.value[0].show = id === 0 || id === 2;
+  filterList.value[1].show = id !== 3;
   (id === 0 || id === 2) && getCoolDown();
   // 筛选想发生改变
   filterInfo.value.coolingMethodIds = [];
   filterInfo.value.enterpriseIds = [];
-  filterList.value[0].show = id !== 1;
   // 清除产品对比
   comparedList.value = [];
   filterInfo.value.page = 1;
@@ -193,6 +194,9 @@ const onCloseCompared = () => {
 };
 // 查产品筛选项
 const getProductFilter = async () => {
+  if (choseTabs.value === 3) {
+    return;
+  }
   const _data = tabsList.value.filter((item) => {
     return item.id === choseTabs.value;
   });

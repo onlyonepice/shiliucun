@@ -13,7 +13,18 @@
       :key="item.id"
     >
       <template v-if="item.show">
-        <h5>{{ item.title }}</h5>
+        <h5
+          :style="{
+            padding:
+              item.title === '产品分类'
+                ? '8px 0'
+                : item.title === '冷却方式'
+                  ? '2px 0'
+                  : '',
+          }"
+        >
+          {{ item.title }}
+        </h5>
         <div
           :class="[
             ns.be('filter', 'box'),
@@ -36,7 +47,7 @@
               {{ _item.label }}
             </p>
           </template>
-          <template v-else-if="item.type === 'img'">
+          <template v-if="item.type === 'img'">
             <div
               v-for="_item in !showMore ? item.data.slice(0, 16) : item.data"
               :key="_item.id"
@@ -66,7 +77,34 @@
             />
           </template>
           <template v-if="item.type === 'classification'">
-            <div>123</div>
+            <div :class="ns.b('productType')">
+              <div
+                v-for="item in productList"
+                :key="item.id"
+                @click="onChoseProduct(item.label)"
+              >
+                <div
+                  :class="[
+                    choseProduct === item.label
+                      ? ns.bm('product', 'active')
+                      : '',
+                    ns.b('product'),
+                  ]"
+                >
+                  {{ item.label }}
+                </div>
+                <div
+                  :class="[
+                    ns.b('detail'),
+                    choseProduct === item.label
+                      ? ns.bm('detail', 'active')
+                      : '',
+                  ]"
+                >
+                  1234
+                </div>
+              </div>
+            </div>
           </template>
         </div>
       </template>
@@ -87,11 +125,13 @@ import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
 import MoreData from "@/assets/img/reportDetail/icon_expand_nor.png";
 import SearchProductIcon from "@/assets/img/common/search-product-icon.png";
-
+import { getProductTypeListApi } from "@/api/searchProduct";
 const ns = useNamespace("searchProduct-filter");
 const emits = defineEmits(["onChoseFilter"]);
 const showMore: Ref<boolean> = ref(false); // 是否展开更多
 const router = ref(useRouter());
+const productList: Ref<any> = ref([]); // 产品分类
+const choseProduct: Ref<string> = ref(""); // 选择的产品分类
 const props = defineProps({
   total: {
     type: Number,
@@ -129,6 +169,18 @@ function handleProductCheckIn() {
   }
   router.value.push("/searchProductProductCheckIn");
 }
+// 获取产品分类
+const getProductTypeList = async () => {
+  const { datas, resp_code }: any = await getProductTypeListApi();
+  if (resp_code === 0) {
+    productList.value = datas;
+  }
+};
+getProductTypeList();
+// 选择产品分类
+const onChoseProduct = (type: string) => {
+  choseProduct.value = type;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -149,7 +201,6 @@ function handleProductCheckIn() {
   border-bottom: 1px solid #e8eaef;
 }
 .es-searchProduct-filter-filter__item {
-  margin-bottom: 16px;
   @include flex(flex-start, flex-start, wrap);
   @include relative();
 
@@ -158,15 +209,14 @@ function handleProductCheckIn() {
     width: 56px;
     line-height: 24px;
   }
-  div {
-    width: 1032px;
-    @include flex(flex-start, flex-start, wrap);
-  }
 }
 
 .es-searchProduct-filter-filter__box {
+  @include widthAndHeight(1032px, auto);
   @include flex(flex-start, flex-start, wrap);
-  height: auto;
+  &:nth-last-child(1) {
+    padding-bottom: 16px;
+  }
 }
 .es-searchProduct-filter-filter__box--img {
   height: 254px;
@@ -180,6 +230,9 @@ function handleProductCheckIn() {
       #ffffff 100%
     );
     @include absolute(1, none, 0, 0, none);
+  }
+  &:nth-last-child(1) {
+    padding-bottom: 16px;
   }
 }
 .es-searchProduct-filter-filter__little {
@@ -236,5 +289,32 @@ function handleProductCheckIn() {
   .es-searchProduct-filter-filter__img-active {
   @include widthAndHeight(16px, 16px);
   @include absolute(1, none, 0, 0, none);
+}
+.es-searchProduct-filter-productType {
+  @include flex(center, flex-start, wrap);
+  @include relative();
+}
+.es-searchProduct-filter-product {
+  padding: 9px 12px;
+  @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+  cursor: pointer;
+  width: auto;
+}
+.es-searchProduct-filter-product--active {
+  background: #eaedfe;
+  border-radius: 4px;
+  border: 1px solid #244bf1;
+}
+.es-searchProduct-filter-detail {
+  @include widthAndHeight(1072px, 0);
+  padding: 16px 77px 16px 18px;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid #dbdce2;
+  @include absolute(1, 50px, none, none, 0);
+  background: #ffffff;
+}
+.es-searchProduct-filter-detail--active {
+  height: auto;
 }
 </style>

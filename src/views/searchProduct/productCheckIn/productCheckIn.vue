@@ -21,20 +21,18 @@
           <div v-if="index < tabs.length - 1" :class="ns.e('tab-list-line')" />
         </template>
       </div>
-      <div :class="ns.b('settlement')">
+      <div :class="ns.b('settlement')" v-if="!companyInfo.id">
         <h4>请优先完成企业入驻</h4>
         <el-button type="primary">企业入驻</el-button>
       </div>
-      <div :class="ns.b('hasSettlement')">
+      <div :class="ns.b('hasSettlement')" v-else>
         <div>
           <p>企业：</p>
-          <h4>阳光电源股份有限公司</h4>
+          <h4>{{ companyInfo.nameCn }}</h4>
         </div>
         <div>
           <p>产业链环节：</p>
-          <h4>
-            分布式能源与储能系统；充换电相关设备；光伏风电设备；节能设备；储能逆变器PCS；集中式可再生能源发电系统；车充相关；逆变器并网相关设备；能量管理系统EMS
-          </h4>
+          <h4>{{ companyInfo.mainBusiness }}</h4>
         </div>
       </div>
       <div :class="ns.b('form')">
@@ -77,7 +75,7 @@
 </template>
 <script setup lang="ts">
 import { fieldAll } from "./data";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, Ref } from "vue";
 import { ElMessage } from "element-plus";
 import Step1 from "./components/step1.vue";
 import Step2 from "./components/step2.vue";
@@ -90,6 +88,7 @@ import {
   getProductDetailsEditApi,
   productCheckInSaveOrUpdateApi,
 } from "@/api/searchProduct";
+import { getCompanyInfoApi } from "@/api/user";
 
 const id = ref(null);
 const loading = ref(false);
@@ -99,6 +98,7 @@ const route = useRoute();
 const router = useRouter();
 const draftData = ref(null);
 const dialogVisible = ref(false);
+const companyInfo: Ref<any> = ref(); // 产业链环节
 const ns = useNamespace("productCheckIn");
 
 const tabs = ref([
@@ -228,7 +228,14 @@ function handleSubmit(formData) {
     loading.value = false;
   }
 }
-
+// 获取企业信息
+async function getCompanyInfo() {
+  const { resp_code, datas } = await getCompanyInfoApi();
+  if (resp_code === 0) {
+    companyInfo.value = datas;
+  }
+}
+getCompanyInfo();
 onMounted(() => {
   if (route.query?.id) {
     getDetails();
