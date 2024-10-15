@@ -94,14 +94,28 @@
                   {{ item.label }}
                 </div>
                 <div
-                  :class="[
-                    ns.b('detail'),
-                    choseProduct === item.label
-                      ? ns.bm('detail', 'active')
-                      : '',
-                  ]"
+                  :class="[ns.b('detail')]"
+                  v-if="choseProduct === item.label"
                 >
-                  1234
+                  <div
+                    :class="ns.b('detail-item')"
+                    v-for="_item in item.children"
+                    :key="_item.id"
+                  >
+                    <h4>{{ _item.label }}</h4>
+                    <img :src="MoreDataRight" alt="" />
+                    <span
+                      v-for="__item in _item.children"
+                      :key="__item.id"
+                      @click.stop="onChoseFilterType(__item.label)"
+                      :class="
+                        confirmType === __item.label
+                          ? ns.bm('detail-item', 'active')
+                          : ''
+                      "
+                      >{{ __item.label }}</span
+                    >
+                  </div>
                 </div>
               </div>
             </div>
@@ -126,12 +140,14 @@ import { useUserStoreHook } from "@/store/modules/user";
 import MoreData from "@/assets/img/reportDetail/icon_expand_nor.png";
 import SearchProductIcon from "@/assets/img/common/search-product-icon.png";
 import { getProductTypeListApi } from "@/api/searchProduct";
+import MoreDataRight from "@/assets/img/home/chose-next-icon.png";
 const ns = useNamespace("searchProduct-filter");
-const emits = defineEmits(["onChoseFilter"]);
+const emits = defineEmits(["onChoseFilter", "onChoseProduct"]);
 const showMore: Ref<boolean> = ref(false); // 是否展开更多
 const router = ref(useRouter());
 const productList: Ref<any> = ref([]); // 产品分类
 const choseProduct: Ref<string> = ref(""); // 选择的产品分类
+const confirmType: Ref<String> = ref(""); // 确认
 const props = defineProps({
   total: {
     type: Number,
@@ -179,7 +195,26 @@ const getProductTypeList = async () => {
 getProductTypeList();
 // 选择产品分类
 const onChoseProduct = (type: string) => {
-  choseProduct.value = type;
+  choseProduct.value = choseProduct.value === type ? "" : type;
+};
+// 确认选择产品分类
+const onChoseFilterType = (type: String) => {
+  confirmType.value = type;
+  choseProduct.value = "";
+  switch (type) {
+    case "工商业一体机":
+      emits("onChoseProduct", 0);
+      break;
+    case "储能变流器":
+      emits("onChoseProduct", 2);
+      break;
+    case "电芯":
+      emits("onChoseProduct", 1);
+      break;
+    default:
+      emits("onChoseProduct", type);
+      break;
+  }
 };
 </script>
 
@@ -299,6 +334,7 @@ const onChoseProduct = (type: string) => {
   @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
   cursor: pointer;
   width: auto;
+  border: 1px solid rgba(0, 0, 0, 0);
 }
 .es-searchProduct-filter-product--active {
   background: #eaedfe;
@@ -306,15 +342,34 @@ const onChoseProduct = (type: string) => {
   border: 1px solid #244bf1;
 }
 .es-searchProduct-filter-detail {
-  @include widthAndHeight(1072px, 0);
+  @include widthAndHeight(1072px, auto);
   padding: 16px 77px 16px 18px;
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   border: 1px solid #dbdce2;
-  @include absolute(1, 50px, none, none, 0);
+  @include absolute(99999, 50px, none, none, 0);
   background: #ffffff;
-}
-.es-searchProduct-filter-detail--active {
-  height: auto;
+  // @include flex(center, flex-start, wrap);
+  .es-searchProduct-filter-detail-item {
+    @include flex(center, flex-start, wrap);
+    margin-bottom: 8px;
+    min-height: 22px;
+    h4 {
+      width: 162px;
+      text-align: right;
+      display: inline-block;
+    }
+    img {
+      @include widthAndHeight(16px, 16px);
+      margin-right: 22px;
+    }
+    span {
+      @include font(14px, 400, rgba(0, 0, 0, 0.6), 22px);
+      cursor: pointer;
+    }
+  }
+  .es-searchProduct-filter-detail-item--active {
+    color: #244bf1 !important;
+  }
 }
 </style>

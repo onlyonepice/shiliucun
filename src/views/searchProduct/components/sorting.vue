@@ -160,7 +160,7 @@ const changeArrangement = (type: string) => {
   border-radius: 4px;
   margin: 24px 0 0 0;
   @include flex(center, space-between, nowrap);
-  @include relative(0);
+  @include relative(-1);
 }
 .es-searchProduct-sorting-left {
   @include flex(center, flex-start, nowrap);

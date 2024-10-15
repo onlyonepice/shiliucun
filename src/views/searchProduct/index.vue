@@ -10,6 +10,7 @@
       :filterList="filterList"
       :filterInfo="filterInfo"
       @onChoseFilter="onChoseFilter"
+      @onChoseProduct="onChoseProduct"
     />
     <!-- 筛选项 -->
     <SearchProductSorting
@@ -110,7 +111,7 @@ const cardType: Ref<string> = ref("card"); // 卡片展示方式
 const filterList: Ref<Array<any>> = ref([
   { id: 1, show: true, type: "txt", title: "冷却方式", data: [] },
   { id: 2, show: true, type: "img", title: "品牌选择", data: [] },
-  { id: 3, show: true, type: "classification", title: "产品分类", data: [] },
+  { id: 3, show: false, type: "classification", title: "产品分类", data: [] },
 ]);
 const choseTabs: Ref<number> = ref(0); // 选中的tabs
 watch(
@@ -120,11 +121,17 @@ watch(
   },
   { deep: true },
 );
+// 选择产品分类
+const onChoseProduct = async (type: number | string) => {
+  typeof type === "number" && (choseTabs.value = type);
+  console.log(choseTabs.value);
+};
 // 选择标签栏
 const onHandleClick = (id: number) => {
   choseTabs.value = id;
   filterList.value[0].show = id === 0 || id === 2;
   filterList.value[1].show = id !== 3;
+  filterList.value[2].show = id === 3;
   (id === 0 || id === 2) && getCoolDown();
   // 筛选想发生改变
   filterInfo.value.coolingMethodIds = [];
@@ -262,6 +269,7 @@ getProductList();
 .es-searchProduct-content {
   width: 100%;
   @include flex(flex-start, flex-start, wrap);
+  @include relative(-1);
 }
 .es-searchProduct-content__list {
   margin-right: 24px;
