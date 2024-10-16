@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div :class="ns.b('right')">
+    <div :class="ns.b('right')" v-if="productType !== 'OTHERS'">
       <img
         :src="
           arrangementType === 'card' ? ArrangementCardShow : ArrangementCard

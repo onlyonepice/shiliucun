@@ -18,12 +18,12 @@
       </h4>
       <div :class="ns.be('content', 'number')">
         <div
-          :class="[score === item ? ns.b('number-active') : '']"
-          v-for="item in 10"
-          :key="item"
-          @click="onChoseScore(item)"
+          :class="[score === item - 1 ? ns.b('number-active') : '']"
+          v-for="item in 11"
+          :key="item - 1"
+          @click="onChoseScore(item - 1)"
         >
-          {{ item }}
+          {{ item - 1 }}
         </div>
       </div>
       <div :class="ns.be('content', 'desc')">
@@ -85,7 +85,7 @@ const props = defineProps({
   apiText: { type: String, default: "" },
   npsConfigCode: { type: String, default: "" },
 });
-const score: Ref<number> = ref(0); // 选中的分数
+const score: Ref<number> = ref(-1); // 选中的分数
 const reasonList: Ref<Array<any>> = ref([]); // 原因列表
 const allReasonList: Ref<Array<any>> = ref([]); // 原因配置列表
 const dictId: Ref<Array<number>> = ref([]); // 选择原因组成的数组

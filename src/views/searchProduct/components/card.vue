@@ -14,6 +14,7 @@
         alt=""
       />
       <EmptyProduct v-else size="120px" />
+      <img :src="NewIcon" v-if="product.isNew" :class="ns.b('new')" />
     </div>
     <p :class="ns.b('price')" v-if="!!product.price">
       参考价<span>{{ product.price + "/kWh起" }}</span>
@@ -96,6 +97,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import ComparedIcon from "@/assets/img/common/compared-icon.png";
+import NewIcon from "@/assets/img/common/new-icon.png";
 import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
 import { useRouter } from "vue-router";
@@ -266,6 +268,10 @@ const onDetail = () => {
   @include flex();
   overflow: hidden;
   margin: 40px auto 0;
+}
+.es-searchProduct-card-new {
+  @include widthAndHeight(40px, 20px);
+  @include absolute(1, 10px, 10px, none, none);
 }
 .es-searchProduct-card-img {
   height: 238px;

@@ -451,6 +451,9 @@ const onDetailReport = (type: String, data: any) => {
     case "洞察":
       window.open(data.link, "externalWindow");
       break;
+    case "动态":
+      window.open(data.link, "externalWindow");
+      break;
     default:
       break;
   }
