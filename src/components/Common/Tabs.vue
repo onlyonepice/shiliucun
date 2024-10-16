@@ -62,6 +62,12 @@ watch(
   },
   { immediate: true },
 );
+watch(
+  () => props.defaultId,
+  (val) => {
+    activeName.value = val;
+  },
+);
 const handleClick = (tab: TabsPaneContext) => {
   activeName.value = tab.props.name;
   emits("onHandleClick", tab.props.name);

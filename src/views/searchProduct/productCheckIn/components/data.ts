@@ -15,6 +15,7 @@ export const step2Field = [
     label: "企业名称",
     prop: "enterpriseName",
     type: "autocomplete",
+    show: true,
     rules: [
       {
         required: true,
@@ -106,6 +107,81 @@ export const step2FieldVariable = [
       {
         required: true,
         message: "请选择企业名称",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    label: "产品发布时间",
+    prop: "releaseTime",
+    type: "month",
+    rules: [
+      {
+        required: true,
+        message: "请选择产品发布时间",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    label: "产品说明书/产品文档",
+    prop: "specificationDocumentFileList",
+    type: "uploadField",
+    accept: ["pdf", "jpg", "jpeg"],
+    limit: 5,
+    btnText: "上传pdf/jpg文件",
+    size: 10,
+    rules: [
+      {
+        required: true,
+        message: "请上传图片",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    label: "产品介绍",
+    prop: "productIntroductionFile",
+    type: "uploadImgs",
+    accept: ["jpg", "jpeg", "png"],
+    limit: 10,
+    size: 10,
+    text: "上传1:1，格式jpg、png且不大于10M的图片，最多10张",
+    rules: [
+      {
+        required: true,
+        message: "请上传产品介绍图",
+        trigger: "change",
+      },
+    ],
+  },
+];
+
+export const step2FieldOthers = [
+  {
+    label: "产品名称",
+    prop: "productName",
+    type: "input",
+    rules: [
+      {
+        required: true,
+        message: "请输入产品名称",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    label: "产品白底图",
+    prop: "images",
+    type: "uploadImgs",
+    accept: ["png", "jpg", "jpeg"],
+    limit: 5,
+    text: "上传1:1，格式jpg、png且不大于10M的图片，最多5张",
+    size: 10,
+    rules: [
+      {
+        required: true,
+        message: "请上传图片",
         trigger: "change",
       },
     ],

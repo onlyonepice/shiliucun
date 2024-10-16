@@ -26,6 +26,7 @@ export default {
           meta: {
             title: "产品入驻",
             backgroundColor: "#F2F3F5",
+            keepAlive: false,
           },
         },
       ],

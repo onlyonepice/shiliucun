@@ -92,7 +92,10 @@
     </div>
     <div
       :class="[ns.b('title')]"
-      v-if="companyInfo.tenterpriseContactsRespList.length !== 0"
+      v-if="
+        companyInfo.tenterpriseContactsRespList &&
+        companyInfo.tenterpriseContactsRespList.length !== 0
+      "
     >
       <h5>联系人</h5>
       <div style="display: flex; margin-top: 8px">

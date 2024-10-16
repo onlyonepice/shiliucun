@@ -493,7 +493,7 @@ const onMessage = () => {
 }
 .es-pageNav-extraAvatar {
   @include widthAndHeight(120px, 0);
-  @include absolute(2, 28px, 100px, none, none);
+  @include absolute(2, 28px, 140px, none, none);
   background-image: url("@/assets/img/common/avatar-extra.png");
   background-size: 100% 220px;
   background-repeat: no-repeat;

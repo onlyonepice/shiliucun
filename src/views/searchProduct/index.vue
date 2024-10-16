@@ -123,8 +123,7 @@ watch(
 );
 // 选择产品分类
 const onChoseProduct = async (type: number | string) => {
-  typeof type === "number" && (choseTabs.value = type);
-  console.log(choseTabs.value);
+  typeof type === "number" && onHandleClick(type);
 };
 // 选择标签栏
 const onHandleClick = (id: number) => {
@@ -269,7 +268,7 @@ getProductList();
 .es-searchProduct-content {
   width: 100%;
   @include flex(flex-start, flex-start, wrap);
-  @include relative(-1);
+  @include relative(1);
 }
 .es-searchProduct-content__list {
   margin-right: 24px;

@@ -77,47 +77,60 @@
             />
           </template>
           <template v-if="item.type === 'classification'">
-            <div :class="ns.b('productType')">
-              <div
-                v-for="item in productList"
-                :key="item.id"
-                @click="onChoseProduct(item.label)"
-              >
+            <div :class="ns.b('productType')" style="position: relative">
+              <template v-if="choseProductLabel === ''">
                 <div
-                  :class="[
-                    choseProduct === item.label
-                      ? ns.bm('product', 'active')
-                      : '',
-                    ns.b('product'),
-                  ]"
-                >
-                  {{ item.label }}
-                </div>
-                <div
-                  :class="[ns.b('detail')]"
-                  v-if="choseProduct === item.label"
+                  v-for="item in productList"
+                  :key="item.id"
+                  @click="onChoseProduct(item.label)"
                 >
                   <div
-                    :class="ns.b('detail-item')"
-                    v-for="_item in item.children"
-                    :key="_item.id"
+                    :class="[
+                      choseProduct === item.label
+                        ? ns.bm('product', 'active')
+                        : '',
+                      ns.b('product'),
+                    ]"
                   >
-                    <h4>{{ _item.label }}</h4>
-                    <img :src="MoreDataRight" alt="" />
-                    <span
-                      v-for="__item in _item.children"
-                      :key="__item.id"
-                      @click.stop="onChoseFilterType(__item.label)"
-                      :class="
-                        confirmType === __item.label
-                          ? ns.bm('detail-item', 'active')
-                          : ''
-                      "
-                      >{{ __item.label }}</span
+                    {{ item.label }}
+                  </div>
+                  <div
+                    :class="[ns.b('detail')]"
+                    v-if="choseProduct === item.label"
+                  >
+                    <div
+                      :class="ns.b('detail-item')"
+                      v-for="_item in item.children"
+                      :key="_item.id"
                     >
+                      <h4>{{ _item.label }}</h4>
+                      <img :src="MoreDataRight" alt="" />
+                      <span
+                        v-for="__item in _item.children"
+                        :key="__item.id"
+                        @click.stop="
+                          onChoseFilterType(
+                            __item.label,
+                            `${item.label} / ${_item.label} / ${__item.label}`,
+                          )
+                        "
+                        :class="
+                          confirmType === __item.label
+                            ? ns.bm('detail-item', 'active')
+                            : ''
+                        "
+                        >{{ __item.label }}</span
+                      >
+                    </div>
                   </div>
                 </div>
-              </div>
+              </template>
+              <template v-else>
+                <div :class="ns.b('confirm-chose')">
+                  <h4>{{ choseProductLabel }}</h4>
+                  <p @click="onResetProduct()">重新选择</p>
+                </div>
+              </template>
             </div>
           </template>
         </div>
@@ -148,6 +161,7 @@ const router = ref(useRouter());
 const productList: Ref<any> = ref([]); // 产品分类
 const choseProduct: Ref<string> = ref(""); // 选择的产品分类
 const confirmType: Ref<String> = ref(""); // 确认
+const choseProductLabel: Ref<string> = ref(""); // 选择的产品分类
 const props = defineProps({
   total: {
     type: Number,
@@ -198,23 +212,30 @@ const onChoseProduct = (type: string) => {
   choseProduct.value = choseProduct.value === type ? "" : type;
 };
 // 确认选择产品分类
-const onChoseFilterType = (type: String) => {
+const onChoseFilterType = (type: string, label: string) => {
   confirmType.value = type;
   choseProduct.value = "";
+  choseProductLabel.value = label;
   switch (type) {
     case "工商业一体机":
-      emits("onChoseProduct", 0);
+      emits("onChoseProduct", 0, label);
       break;
     case "储能变流器":
-      emits("onChoseProduct", 2);
+      emits("onChoseProduct", 2, label);
       break;
     case "电芯":
-      emits("onChoseProduct", 1);
+      emits("onChoseProduct", 1, label);
       break;
     default:
-      emits("onChoseProduct", type);
+      emits("onChoseProduct", type, label);
       break;
   }
+};
+// 重新选择产品
+const onResetProduct = () => {
+  confirmType.value = "";
+  choseProduct.value = "";
+  choseProductLabel.value = "";
 };
 </script>
 
@@ -234,10 +255,11 @@ const onChoseFilterType = (type: String) => {
 .es-searchProduct-filter-filter {
   padding-bottom: 7px;
   border-bottom: 1px solid #e8eaef;
+  @include relative(10);
 }
 .es-searchProduct-filter-filter__item {
   @include flex(flex-start, flex-start, wrap);
-  @include relative();
+  @include relative(2);
 
   h5 {
     margin-right: 16px;
@@ -347,9 +369,8 @@ const onChoseFilterType = (type: String) => {
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   border: 1px solid #dbdce2;
-  @include absolute(99999, 50px, none, none, 0);
+  @include absolute(99999, 100px, none, none, 0);
   background: #ffffff;
-  // @include flex(center, flex-start, wrap);
   .es-searchProduct-filter-detail-item {
     @include flex(center, flex-start, wrap);
     margin-bottom: 8px;
@@ -370,6 +391,15 @@ const onChoseFilterType = (type: String) => {
   }
   .es-searchProduct-filter-detail-item--active {
     color: #244bf1 !important;
+  }
+}
+.es-searchProduct-filter-confirm-chose {
+  @include flex(center, flex-start, nowrap);
+  padding: 8px 0;
+  p {
+    margin-left: 24px;
+    @include font(14px, 400, #244bf1, 22px);
+    cursor: pointer;
   }
 }
 </style>

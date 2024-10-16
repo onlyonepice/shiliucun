@@ -3,7 +3,7 @@
     <el-form ref="formRef" :model="form" label-width="auto">
       <el-form-item
         label="产品分类"
-        prop="productType"
+        prop="productTypeContent"
         :class="ns.b('filter')"
         :rules="[
           { required: true, message: '请选择产品分类', trigger: 'change' },
@@ -14,7 +14,7 @@
           :popper-class="ns.b('filter-cascader')"
           :popper-append-to-body="false"
           @expand-change="onExpandChange"
-          v-model="form.productType"
+          v-model="form.productTypeContent"
         >
           <template #default="{ node, data }">
             <Select
@@ -22,7 +22,7 @@
               type="input"
               style="width: 256px"
               :defaultValue="inputContent"
-              placeholder="请输入产品的产品具体类型,回车确认"
+              placeholder="请输入产品的具体类型，回车确认"
               ref="productTypeRef"
               @onChange="
                 (val) => {
@@ -60,19 +60,23 @@
 <script setup lang="ts">
 import { Ref, ref, watch, nextTick } from "vue";
 import useNamespace from "@/utils/nameSpace";
-import { getProductTypeListApi } from "@/api/searchProduct";
 import LamentIcon from "@/assets/img/common/lament_icon.png";
 const prop = defineProps({
   draftData: {
     type: Object,
     default: null,
   },
+  typeList: {
+    type: Array as () => any[],
+    default: () => [],
+  },
 });
 const formRef = ref();
 const productTypeRef: Ref<any> = ref();
-const typeList = ref([]); // 产品类型列表
+
 const form = ref<any>({
-  productType: "",
+  productTypeContent: [],
+  productClassification: null,
 });
 const inputContent: Ref<String> = ref(""); // 输入框内容
 const ns = useNamespace("step1");
@@ -82,7 +86,10 @@ watch(
   () => prop.draftData,
   () => {
     if (prop.draftData) {
-      form.value.productType = prop.draftData.productType;
+      if (prop.draftData.productTypeContent) {
+        form.value.productTypeContent = prop.draftData.productTypeContent;
+        console.log(prop.typeList);
+      }
       form.value.displayChannels = prop.draftData.displayChannels;
       nextTick(() => {
         form.value.productSubtype = prop.draftData.productSubtype;
@@ -91,25 +98,45 @@ watch(
   },
   {
     immediate: true,
+    deep: true,
   },
 );
 
 function onChangeInput(val: String) {
   inputContent.value = val;
 }
-function onHandleEnter() {
-  const _typeList = typeList.value;
+function onHandleEnter(type: boolean) {
+  const _typeList = prop.typeList;
   const _expandList = expandList.value;
   _typeList[_expandList[0]].children[_expandList[1]].children.push({
     label: inputContent.value,
     tiers: 3,
     disabled: false,
   });
-  inputContent.value = "";
+  // form.value.productClassification =
+  type && (inputContent.value = "");
 }
 function handleNext(formRefName) {
   formRefName.validate((valid) => {
     if (valid) {
+      const _form = form.value;
+      _form.productTypeContent[2] === undefined &&
+        (_form.productTypeContent[2] = inputContent.value);
+      _form.productType =
+        _form.productTypeContent[2] === "储能变流器"
+          ? "ENERGY_STORAGE_INVERTER"
+          : _form.productTypeContent[2] === "工商业一体机"
+            ? "INDUSTRY_ENERGY_STORAGE"
+            : "OTHERS";
+      if (_form.productType === "OTHERS") {
+        prop.typeList.map((item) => {
+          item.children.forEach((child) => {
+            child.label === _form.productTypeContent[1] &&
+              (_form.productClassification = child.id);
+          });
+        });
+        _form.productOthersType = _form.productTypeContent[2];
+      }
       emits("next", form.value);
     } else {
       return;
@@ -117,7 +144,7 @@ function handleNext(formRefName) {
   });
 }
 function onExpandChange(val) {
-  typeList.value.forEach((item, index) => {
+  prop.typeList.forEach((item, index) => {
     if (item.label === val[0]) {
       expandList.value[0] = index;
     }
@@ -129,21 +156,6 @@ function onExpandChange(val) {
       });
   });
 }
-
-// 获取产品类型
-async function getProductTypeList() {
-  const { datas, resp_code }: any = await getProductTypeListApi();
-  if (resp_code === 0) {
-    typeList.value = datas;
-    typeList.value.forEach((item) => {
-      item.children.forEach((_item) => {
-        _item.tiers = 2;
-        _item.children.unshift({ label: "", tiers: 3, disabled: true });
-      });
-    });
-  }
-}
-getProductTypeList();
 </script>
 <style lang="scss">
 @import "@/style/mixin.scss";
@@ -155,7 +167,7 @@ getProductTypeList();
       width: 256px;
     }
     .el-cascader-node {
-      padding: 0 !important;
+      padding: 0 12px !important;
       margin: 0 8px;
       height: 36px;
     }
@@ -167,7 +179,7 @@ getProductTypeList();
       overflow: visible;
     }
     .el-cascader-node__prefix {
-      left: 220px;
+      left: 216px;
     }
   }
 }
@@ -190,6 +202,7 @@ getProductTypeList();
   .el-scrollbar:nth-of-type(3) {
     .el-cascader-node:nth-of-type(1) {
       margin-bottom: 10px;
+      padding: 0 !important;
       .select__input:hover {
         background: #f4f5f7 !important;
       }

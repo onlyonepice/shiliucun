@@ -36,29 +36,29 @@
               >
                 {{ item.label }}{{ item.value }}
               </p>
-              <div
-                :class="[ns.b('info-right-common')]"
-                v-if="productDetail.specificationDocumentFile"
-              >
-                产品说明书/产品文档：
-                <div>
-                  <div
-                    v-for="item in productDetail.specificationDocumentFile"
-                    :key="item"
+            </template>
+            <div
+              :class="[ns.b('info-right-common')]"
+              v-if="productDetail.specificationDocumentFile"
+            >
+              产品说明书/产品文档：
+              <div>
+                <div
+                  v-for="item in productDetail.specificationDocumentFile"
+                  :key="item"
+                >
+                  {{ item.name }}
+                  <el-link
+                    type="primary"
+                    :href="useUserStoreHook().$state.fileUrl + item.path"
+                    :download="item.name"
+                    :underline="false"
+                    style="margin-left: 8px; color: #244bf1"
+                    >下载</el-link
                   >
-                    {{ item.name }}
-                    <el-link
-                      type="primary"
-                      :href="useUserStoreHook().$state.fileUrl + item.path"
-                      :download="item.name"
-                      :underline="false"
-                      style="margin-left: 8px; color: #244bf1"
-                      >下载</el-link
-                    >
-                  </div>
                 </div>
               </div>
-            </template>
+            </div>
             <div :class="[ns.b('info-right-connect')]">
               <el-button
                 type="primary"
@@ -80,7 +80,14 @@
             @onHandleClick="onHandleClick"
             :defaultId="choseTabs"
           />
-          <div v-if="choseTabs === 0" style="position: relative">
+          <div
+            v-if="
+              choseTabs === 0 &&
+              tableData[0].info &&
+              route.query.productType !== 'OTHERS'
+            "
+            style="position: relative"
+          >
             <div
               class="swiperINDUSTRY swiperINDUSTRY-prev"
               v-show="tableData[0].info.length > 6 && swiperCurrent !== 0"
@@ -166,7 +173,7 @@
               </el-table-column>
             </el-table>
           </div>
-          <template v-else>
+          <template v-if="choseTabs === 1">
             <DetailCompany :companyInfo="companyInfo" />
           </template>
           <template
@@ -257,10 +264,7 @@ const breadcrumbList: Ref<Array<any>> = ref([
   { text: "", path: "" },
 ]);
 const choseTabs: Ref<number> = ref(0); // 默认选中tab
-const tabsList: Ref<Array<any>> = ref([
-  { id: 0, name: "产品参数" },
-  { id: 1, name: "企业信息" },
-]);
+
 const tabNameList = ref([
   "产品型号",
   "电池参数",
@@ -312,6 +316,13 @@ const tableData: Ref<any> = ref([]);
 const route = useRoute();
 const productDetail: Ref<any> = ref({}); // 产品详情
 const productDetailList: Ref<any> = ref({});
+const tabsList: Ref<Array<any>> = ref([
+  {
+    id: 0,
+    name: route.query.productType === "OTHERS" ? "产品介绍" : "产品参数",
+  },
+  { id: 1, name: "企业信息" },
+]);
 const productDetailInfo = computed(() => {
   const _productType = route.query.productType;
   const _data = [];
@@ -427,7 +438,13 @@ const getCompanyInfo = async (id: string) => {
   });
   if (resp_code === 0) {
     companyInfo.value = datas;
-    datas === null && (tabsList.value = [{ id: 0, name: "产品参数" }]);
+    datas === null &&
+      (tabsList.value = [
+        {
+          id: 0,
+          name: route.query.productType === "OTHERS" ? "产品介绍" : "产品参数",
+        },
+      ]);
   }
 };
 const swiperCurrent = ref(0); // swiper的当前页

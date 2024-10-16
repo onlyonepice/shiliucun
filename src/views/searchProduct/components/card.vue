@@ -25,7 +25,7 @@
       <el-button type="primary" @click.stop="onOpenWindow(product.enterpriseId)"
         >联系厂商</el-button
       >
-      <el-button @click.stop="onCompared()">
+      <el-button @click.stop="onCompared()" v-if="productType !== 'OTHERS'">
         <img :src="ComparedIcon" alt="" />
         <span>{{ !getType ? "产品对比" : "取消对比" }}</span>
       </el-button>
@@ -62,7 +62,7 @@
         </h4>
         <div
           :class="['es-searchProduct-card-price', ns.be('list-right', 'price')]"
-          v-if="!!product.price"
+          v-if="!!product.price || productType !== 'OTHERS'"
         >
           参考价<span>{{ product.price }}/kWh起</span>
         </div>

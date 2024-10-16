@@ -112,9 +112,18 @@
       </el-form-item>
       <el-form-item label=" ">
         <div :class="ns.e('footer-btns')">
-          <el-button @click="handleBack">上一步</el-button>
-          <el-button @click="handleNext(formRef)" type="primary">
+          <el-button @click="handleBack" v-if="!route.query.id"
+            >上一步</el-button
+          >
+          <el-button
+            @click="handleNext(formRef)"
+            type="primary"
+            v-if="productType !== 'OTHERS'"
+          >
             下一步
+          </el-button>
+          <el-button @click="handleNext(formRef)" type="primary" v-else>
+            提交
           </el-button>
           <el-button @click="handleSaveDraft">保存草稿</el-button>
         </div>
@@ -130,7 +139,7 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { ref, watch, reactive } from "vue";
-import { step2Field, step2FieldVariable } from "./data";
+import { step2Field, step2FieldVariable, step2FieldOthers } from "./data";
 import { ElMessage } from "element-plus";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
@@ -138,6 +147,8 @@ import { getEnterpriseListApi } from "@/api/searchProduct";
 const { VITE_GLOB_API_URL } = import.meta.env;
 import useNamespace from "@/utils/nameSpace";
 import type { FormRules } from "element-plus";
+import { useRoute } from "vue-router";
+const route = useRoute();
 const checkEnterprise = (rule: any, value: any, callback: any) => {
   if (!value) {
     return callback(new Error("请选择企业"));
@@ -185,13 +196,15 @@ const form = ref<any>({
   enterpriseName: null,
 });
 
-const emits = defineEmits(["next", "back", "saveDraft"]);
+const emits = defineEmits(["next", "back", "saveDraft", "submit"]);
 watch(
   () => prop.draftData,
   () => {
     if (prop.draftData && formField.value !== null) {
       if (prop.productType === "INDUSTRY_ENERGY_STORAGE") {
         formField.value = step2Field;
+      } else if (prop.productType === "OTHERS") {
+        formField.value = step2FieldOthers;
       } else {
         formField.value = step2FieldVariable;
       }
@@ -215,6 +228,8 @@ watch(
     console.log(val);
     if (val === "INDUSTRY_ENERGY_STORAGE") {
       formField.value = step2Field;
+    } else if (val === "OTHERS") {
+      formField.value = step2FieldOthers;
     } else {
       formField.value = step2FieldVariable;
     }
@@ -288,7 +303,7 @@ function handleNext(formRefName) {
   formRefName.validate((valid) => {
     if (valid) {
       optimizeData();
-      emits("next", form.value);
+      emits(prop.productType === "OTHERS" ? "submit" : "next", form.value);
     } else {
       return;
     }

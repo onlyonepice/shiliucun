@@ -15,7 +15,7 @@
         <el-table-column
           label="产品白底图"
           width="110px"
-          v-if="choseTabs === 0"
+          v-if="choseTabs !== 1"
         >
           <template #default="scope">
             <div
@@ -126,7 +126,13 @@
               <div :class="ns.b('product-info-subtitle')">
                 {{ detailsData.enterprise }}
               </div>
-              <div :class="ns.b('product-info-file')">
+              <div
+                :class="ns.b('product-info-file')"
+                v-if="
+                  detailsData.specificationDocumentFile &&
+                  detailsData.specificationDocumentFile.length !== 0
+                "
+              >
                 <div :class="ns.b('product-info-file-left')">
                   产品说明书/产品文档：
                 </div>
@@ -155,6 +161,7 @@
           :data="tableField"
           style="max-width: 810px; width: 100%"
           :productType="tabsList[choseTabs].code"
+          v-if="choseTabs !== 2"
         >
           <el-table-column label="" fixed="left" prop="label" width="160px" />
           <el-table-column
@@ -255,6 +262,7 @@ import {
 const tabsList: Ref<Array<any>> = ref([
   { id: 0, name: "工商业一体机", code: "INDUSTRY_ENERGY_STORAGE" },
   { id: 1, name: "储能变流器", code: "ENERGY_STORAGE_INVERTER" },
+  { id: 2, name: "其他", code: "OTHERS" },
 ]);
 const choseTabs: Ref<number> = ref(0); // 选中的tab
 const total = ref(0);

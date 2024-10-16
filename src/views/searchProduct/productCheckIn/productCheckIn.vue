@@ -4,24 +4,33 @@
       <Loading v-if="loading" />
       <div :class="ns.e('tab-list')">
         <template v-for="(item, index) in tabs" :key="item.value">
-          <div :class="ns.e('tab-item')">
-            <div
-              :class="[
-                ns.e('tab-item-line'),
-                item.value === tabVal ? ns.e('tab-item-line-active') : '',
-              ]"
-            >
-              <p v-if="tabVal <= item.value">
-                {{ item.value }}
-              </p>
-              <img v-else src="@/assets/img/searchProduct/success.png" alt="" />
+          <template v-if="item.show">
+            <div :class="ns.e('tab-item')">
+              <div
+                :class="[
+                  ns.e('tab-item-line'),
+                  item.value === tabVal ? ns.e('tab-item-line-active') : '',
+                ]"
+              >
+                <p v-if="tabVal <= item.value">
+                  {{ item.value }}
+                </p>
+                <img
+                  v-else
+                  src="@/assets/img/searchProduct/success.png"
+                  alt=""
+                />
+              </div>
+              <span>{{ item.title }}</span>
             </div>
-            <span>{{ item.title }}</span>
-          </div>
-          <div v-if="index < tabs.length - 1" :class="ns.e('tab-list-line')" />
+            <div
+              v-if="index < tabs.length - 1 && tabs[index + 1].show"
+              :class="ns.e('tab-list-line')"
+            />
+          </template>
         </template>
       </div>
-      <div :class="ns.b('settlement')" v-if="!companyInfo.id">
+      <div :class="ns.b('settlement')" v-if="!companyInfo || !companyInfo.id">
         <h4>请优先完成企业入驻</h4>
         <el-button type="primary">企业入驻</el-button>
       </div>
@@ -30,15 +39,30 @@
           <p>企业：</p>
           <h4>{{ companyInfo.nameCn }}</h4>
         </div>
-        <div>
-          <p>产业链环节：</p>
-          <h4>{{ companyInfo.mainBusiness }}</h4>
-        </div>
+        <template
+          v-if="
+            tabVal === 2 &&
+            form.productType === 'OTHERS' &&
+            form.productTypeContent
+          "
+        >
+          <div>
+            <p>产品分类：</p>
+            <h4>{{ form.productTypeContent.join(" / ") }}</h4>
+          </div>
+        </template>
+        <template v-else>
+          <div>
+            <p>产业链环节：</p>
+            <h4>{{ companyInfo.mainBusiness }}</h4>
+          </div>
+        </template>
       </div>
       <div :class="ns.b('form')">
         <Step1
           v-show="tabVal === 1"
           :draftData="draftData"
+          :typeList="typeList"
           @next="handleNext"
         />
         <Step2
@@ -48,8 +72,9 @@
           @saveDraft="saveDraft"
           @next="handleNext"
           @back="handleBack"
+          @submit="step2Submit"
         />
-        <template v-if="form.productType">
+        <template v-if="form.productType && form.productType !== 'OTHERS'">
           <Step3
             :data="form"
             :productType="form.productType"
@@ -87,6 +112,7 @@ import { useRoute, useRouter } from "vue-router";
 import {
   getProductDetailsEditApi,
   productCheckInSaveOrUpdateApi,
+  getProductTypeListApi,
 } from "@/api/searchProduct";
 import { getCompanyInfoApi } from "@/api/user";
 
@@ -99,17 +125,23 @@ const router = useRouter();
 const draftData = ref(null);
 const dialogVisible = ref(false);
 const companyInfo: Ref<any> = ref(); // 产业链环节
+const typeList = ref([]); // 产品类型列表
 const ns = useNamespace("productCheckIn");
 
 const tabs = ref([
-  { title: "选择产品分类", value: 1 },
-  { title: "填写产品信息", value: 2 },
-  { title: "填写产品参数", value: 3 },
+  { title: "选择产品分类", value: 1, show: true },
+  { title: "填写产品信息", value: 2, show: true },
+  { title: "填写产品参数", value: 3, show: true },
 ]);
 
 function handleNext(data) {
   form.value = { ...form.value, ...data };
+  tabs.value[2].show = form.value.productType !== "OTHERS";
   tabVal.value += 1;
+}
+function step2Submit(data: any) {
+  form.value = { ...form.value, ...data };
+  handleSubmit();
 }
 
 function handleBack() {
@@ -131,6 +163,11 @@ async function getDetails() {
       form.value = datas;
       form.value.productType = productType;
       loading.value = false;
+      route.query.id && getProductTypeList();
+      if (productType === "OTHERS") {
+        tabs.value[2].show = false;
+        return (tabVal.value = 2);
+      }
       const step2Status = step2Field.every((item) => {
         return datas[item.prop];
       });
@@ -169,6 +206,10 @@ function saveDraft(formData) {
     } else {
       data.energyStorageInverterModels = data.models;
     }
+    if (form.value.productType === "OTHERS") {
+      data.enterpriseName = companyInfo.value.nameCn;
+      data.enterpriseId = companyInfo.value.id;
+    }
     delete data.models;
     productCheckInSaveOrUpdateApi(data)
       .then(({ resp_code, datas }) => {
@@ -185,7 +226,7 @@ function saveDraft(formData) {
   }
 }
 // 提交
-function handleSubmit(formData) {
+function handleSubmit(formData = {}) {
   try {
     const data = {
       ...fieldAll,
@@ -196,11 +237,16 @@ function handleSubmit(formData) {
     };
     if (form.value.productType === "INDUSTRY_ENERGY_STORAGE") {
       data.industrialEnergyStorageModels = data.models;
-    } else {
+    }
+    if (form.value.productType === "ENERGY_STORAGE_INVERTER") {
       data.energyStorageInverterModels = data.models;
       data.energyStorageInverterModels.map((item) => {
         item.dcVoltageRange = [item.dcVoltageRangeMin, item.dcVoltageRangeMaX];
       });
+    }
+    if (form.value.productType === "OTHERS") {
+      data.enterpriseName = companyInfo.value.nameCn;
+      data.enterpriseId = companyInfo.value.id;
     }
     delete data.models;
     loading.value = true;
@@ -240,8 +286,41 @@ onMounted(() => {
   if (route.query?.id) {
     getDetails();
     id.value = route.query.id;
+  } else {
+    getProductTypeList();
   }
 });
+
+// 获取产品类型
+async function getProductTypeList() {
+  const { datas, resp_code }: any = await getProductTypeListApi();
+  if (resp_code === 0) {
+    typeList.value = datas;
+    typeList.value.forEach((item) => {
+      item.children.forEach((_item) => {
+        _item.tiers = 2;
+        _item.children.unshift({ label: "", tiers: 3, disabled: true });
+        // 拼接用户自己输入产品类型，用于渲染第一步数据
+        if (
+          route.query.id &&
+          _item.id === draftData.value.productClassification
+        ) {
+          draftData.value.productTypeContent = [
+            item.label,
+            _item.label,
+            draftData.value.productOthersType,
+          ];
+          _item.children.push({
+            label: draftData.value.productOthersType,
+            value: draftData.value.productOthersType,
+            tiers: 3,
+            disabled: false,
+          });
+        }
+      });
+    });
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";

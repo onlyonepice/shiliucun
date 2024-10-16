@@ -37,3 +37,11 @@ export function getVipConfigListApi() {
     "/api-user/system/openApi/front/v1.0/getPermissionChart",
   );
 }
+// 获取会员动态数据
+export const getMemberNews = (params: { limit: number; page: number }) => {
+  return http.request<{ datas; resp_code }>(
+    "get",
+    "/eesa-report/alliance/memberNews/openApi/v1.1/getReMemberNews",
+    { params },
+  );
+};

@@ -2,7 +2,7 @@
   <div :class="[ns.b(), 'es-commonPage']">
     <div :class="ns.b('main')">
       <template v-if="!loading">
-        <div :class="ns.bm('main', 'title')">行业洞察</div>
+        <div :class="ns.bm('main', 'title')">会员动态</div>
         <div :class="ns.b('list')">
           <IndustryInsightList
             v-for="(item, index) in memberNewsList"
@@ -45,7 +45,7 @@ import { windowScrollStore } from "@/store/modules/windowScroll";
 import Skeleton from "./components/skeleton.vue";
 const windowScroll = windowScrollStore();
 windowScroll.SET_SCROLL_TOP(0);
-import { getReNewsInformations } from "@/api/report";
+import { getMemberNews } from "@/api/vip";
 import { onMounted, ref, Ref } from "vue";
 import useNamespace from "@/utils/nameSpace";
 const ns = useNamespace("memberNews");
@@ -65,7 +65,7 @@ const loading: Ref<boolean> = ref(false);
 // 获取行业洞察列表数据
 const getReNewsInfoList = async () => {
   loading.value = true;
-  const res = await getReNewsInformations(industryQueryData.value);
+  const res = await getMemberNews(industryQueryData.value);
   if (res.resp_code === 0) {
     memberNewsList.value = res.datas.records;
     industryTotal.value = res.datas.total;
