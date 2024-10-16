@@ -161,7 +161,7 @@ onMounted(async () => {
 <style lang="scss">
 @import "@/style/mixin.scss";
 .es-npsMark {
-  @include fixed(1, none, 112px, 40px, none);
+  @include fixed(200, none, 112px, 40px, none);
   background: #f2f3f5;
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 8px;

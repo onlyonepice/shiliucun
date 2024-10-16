@@ -56,7 +56,7 @@
       :currentPage="current"
     />
   </div>
-  <NpsMark module="查产品" title="「查产品」" npsConfigCode="Company" />
+  <NpsMark module="查产品" title="「查产品」" npsConfigCode="Product" />
 </template>
 
 <script lang="ts" setup>
