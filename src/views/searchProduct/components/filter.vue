@@ -109,7 +109,7 @@
                       @click.stop="
                         onChoseFilterType(
                           __item.label,
-                          `${item.label} / ${_item.label} / ${__item.label}`,
+                          `${choseProduct} / ${_item.label} / ${__item.label}`,
                         )
                       "
                       :class="
