@@ -282,7 +282,7 @@ async function getCompanyInfo() {
   const { resp_code, datas } = await getCompanyInfoApi();
   if (resp_code === 0) {
     companyInfo.value = datas;
-    !route.query.id && getProductTypeList();
+    getProductTypeList();
   }
 }
 
@@ -301,7 +301,7 @@ function onCompanySettlement() {
 
 // 获取产品类型
 async function getProductTypeList() {
-  if (companyInfo.value.id) {
+  if (companyInfo.value.id === null) {
     return;
   }
   const { datas, resp_code }: any = await getProductTypeListApi({
