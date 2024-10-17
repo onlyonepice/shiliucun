@@ -15,6 +15,7 @@
           :popper-append-to-body="false"
           @expand-change="onExpandChange"
           v-model="form.productTypeContent"
+          :disabled="disabled"
         >
           <template #default="{ node, data }">
             <Select
@@ -45,7 +46,13 @@
               class="box-item-empty"
             />
             <span>{{ data.label }}</span>
-            <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+            <span v-if="!node.isLeaf">
+              ({{
+                data.tiers === 2
+                  ? data.children.length - 1
+                  : data.children.length
+              }})
+            </span>
           </template>
         </el-cascader>
       </el-form-item>
@@ -69,6 +76,10 @@ const prop = defineProps({
   typeList: {
     type: Array as () => any[],
     default: () => [],
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 });
 const formRef = ref();

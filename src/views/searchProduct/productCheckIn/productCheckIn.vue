@@ -32,7 +32,9 @@
       </div>
       <div :class="ns.b('settlement')" v-if="!companyInfo || !companyInfo.id">
         <h4>请优先完成企业入驻</h4>
-        <el-button type="primary">企业入驻</el-button>
+        <el-button type="primary" @click="onCompanySettlement()"
+          >企业入驻</el-button
+        >
       </div>
       <div :class="ns.b('hasSettlement')" v-else>
         <div>
@@ -63,6 +65,7 @@
           v-show="tabVal === 1"
           :draftData="draftData"
           :typeList="typeList"
+          :disabled="!companyInfo || !companyInfo.id"
           @next="handleNext"
         />
         <Step2
@@ -115,7 +118,7 @@ import {
   getProductTypeListApi,
 } from "@/api/searchProduct";
 import { getCompanyInfoApi } from "@/api/user";
-
+const { VITE_INDUSTRIALMAP_URL } = import.meta.env;
 const id = ref(null);
 const loading = ref(false);
 const form = ref<any>({});
@@ -290,6 +293,11 @@ onMounted(() => {
     getProductTypeList();
   }
 });
+
+// 企业入驻
+function onCompanySettlement() {
+  window.open(`${VITE_INDUSTRIALMAP_URL}/home`);
+}
 
 // 获取产品类型
 async function getProductTypeList() {
