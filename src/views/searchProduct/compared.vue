@@ -133,7 +133,7 @@ const tabNameList = ref([
   "系统综合效率/%",
   "年衰减率/%",
   "冷却方式",
-  "尺寸/m'm",
+  "尺寸/mm'mm",
   "产品单价（元/kWh）",
 ]);
 const tabNameList2 = ref([

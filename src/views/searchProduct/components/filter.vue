@@ -152,7 +152,7 @@ import useNamespace from "@/utils/nameSpace";
 import { useUserStoreHook } from "@/store/modules/user";
 import MoreData from "@/assets/img/reportDetail/icon_expand_nor.png";
 import SearchProductIcon from "@/assets/img/common/search-product-icon.png";
-import { getProductTypeListApi } from "@/api/searchProduct";
+import { getProductCategoryApi } from "@/api/searchProduct";
 import MoreDataRight from "@/assets/img/home/chose-next-icon.png";
 const ns = useNamespace("searchProduct-filter");
 const emits = defineEmits(["onChoseFilter", "onChoseProduct"]);
@@ -201,7 +201,7 @@ function handleProductCheckIn() {
 }
 // 获取产品分类
 const getProductTypeList = async () => {
-  const { datas, resp_code }: any = await getProductTypeListApi();
+  const { datas, resp_code }: any = await getProductCategoryApi();
   if (resp_code === 0) {
     productList.value = datas;
   }

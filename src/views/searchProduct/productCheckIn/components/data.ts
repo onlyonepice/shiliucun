@@ -369,7 +369,7 @@ export const step3Field = [
     options: [],
   },
   {
-    label: "尺寸/m*m*m",
+    label: "尺寸/mm*mm*mm",
     prop: "size",
     showProp: "size",
     type: "input",

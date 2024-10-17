@@ -125,3 +125,11 @@ export const getProductTypeListApi = () => {
     `/eesa-industrial-map/sysDict/front/V1.0/frontSelectTreeByType/mainBusiness`,
   );
 };
+
+// 查询产品分类筛选
+export const getProductCategoryApi = () => {
+  return http.request<void>(
+    "get",
+    "/eesa-data-center/product/others/front/v1.0/findProductClassification",
+  );
+};

@@ -95,7 +95,7 @@
         showData.coolingMethodName ? showData.coolingMethodName.join(",") : "-"
       }}
     </div>
-    <div v-if="index === 14" :class="ns.b('common')" name="尺寸/m*m*m">
+    <div v-if="index === 14" :class="ns.b('common')" name="尺寸/mm*mm*mm">
       {{ showData.size ? showData.size : "-" }}
     </div>
     <div v-if="index === 15" :class="ns.b('common')" name="产品单价/元/kWh">
