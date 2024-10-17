@@ -353,7 +353,12 @@
       />
     </template>
   </Dialog>
-  <NpsMark module="需求对接" title="「需求对接」" npsConfigCode="NEED_APPLY" />
+  <NpsMark
+    module="需求对接"
+    title="「需求对接」"
+    npsConfigCode="NEED_APPLY"
+    apiText="npsFeedback"
+  />
 </template>
 
 <script setup lang="ts">
