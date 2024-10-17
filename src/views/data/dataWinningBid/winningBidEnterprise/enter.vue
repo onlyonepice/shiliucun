@@ -157,7 +157,7 @@ watch(
               break;
             case 2:
               requestData.value.energyStorageDuration =
-                res[8].datas[2].paramName;
+                res[8].datas[0].paramName;
               break;
             case 3:
               requestData.value.applicationScenarios = get(
