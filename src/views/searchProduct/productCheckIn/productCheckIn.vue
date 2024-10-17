@@ -166,7 +166,9 @@ async function getDetails() {
       form.value = datas;
       form.value.productType = productType;
       loading.value = false;
-      route.query.id && getProductTypeList();
+      setTimeout(() => {
+        getProductTypeList();
+      }, 2000);
       if (productType === "OTHERS") {
         tabs.value[2].show = false;
         return (tabVal.value = 2);
@@ -282,15 +284,15 @@ async function getCompanyInfo() {
   const { resp_code, datas } = await getCompanyInfoApi();
   if (resp_code === 0) {
     companyInfo.value = datas;
+    !route.query.id && getProductTypeList();
   }
 }
-getCompanyInfo();
+
 onMounted(() => {
+  getCompanyInfo();
   if (route.query?.id) {
     getDetails();
     id.value = route.query.id;
-  } else {
-    getProductTypeList();
   }
 });
 
@@ -301,7 +303,10 @@ function onCompanySettlement() {
 
 // 获取产品类型
 async function getProductTypeList() {
-  const { datas, resp_code }: any = await getProductTypeListApi();
+  const { datas, resp_code }: any = await getProductTypeListApi({
+    type: "mainBusiness",
+    enterpriseId: companyInfo.value.id,
+  });
   if (resp_code === 0) {
     typeList.value = datas;
     typeList.value.forEach((item) => {

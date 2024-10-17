@@ -47,7 +47,16 @@
         :rows="rows"
         @blur="handleBlur"
         @keyup.enter="handleEnter"
-      />
+      >
+        <template #suffix v-if="inputConfirmIcon">
+          <img
+            :src="InputConfirmIcon"
+            class="select__input-confirm-icon"
+            @click="handleEnter"
+            v-if="!!value"
+          />
+        </template>
+      </el-input>
       <span v-if="inputText !== ''" class="select__input-desc">{{
         inputText
       }}</span>
@@ -120,6 +129,7 @@
 <script lang="ts" setup>
 import { watch, ref } from "vue";
 import SelectKey from "@/assets/img/common/select-key-icon.png";
+import InputConfirmIcon from "@/assets/img/common/input-confirm-icon.png";
 const emit = defineEmits([
   "onChange",
   "triggerForm",
@@ -169,6 +179,10 @@ const props = defineProps({
   inputText: {
     type: String,
     default: "",
+  },
+  inputConfirmIcon: {
+    type: Boolean,
+    default: false,
   },
   // 筛选项还是输入框
   type: {
@@ -348,7 +362,10 @@ defineExpose({
     background-color: #e5e6ec;
   }
 }
-
+.select__input-confirm-icon {
+  @include widthAndHeight(20px, 20px);
+  cursor: pointer;
+}
 .select__input-desc {
   @include widthAndHeight(auto, 32px);
   @include absolute(1, 0, 0, none, none);

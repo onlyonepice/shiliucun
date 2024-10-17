@@ -25,6 +25,7 @@
               :defaultValue="inputContent"
               placeholder="请输入产品的具体类型，回车确认"
               ref="productTypeRef"
+              :inputConfirmIcon="true"
               @onChange="
                 (val) => {
                   return onChangeInput(val);
@@ -124,7 +125,6 @@ function onHandleEnter(type: boolean) {
     tiers: 3,
     disabled: false,
   });
-  // form.value.productClassification =
   type && (inputContent.value = "");
 }
 function handleNext(formRefName) {

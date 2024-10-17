@@ -82,7 +82,7 @@
                 <div
                   v-for="item in productList"
                   :key="item.id"
-                  @click="onChoseProduct(item.label)"
+                  @click="onChoseProduct(item.label, item.children)"
                 >
                   <div
                     :class="[
@@ -94,34 +94,31 @@
                   >
                     {{ item.label }}
                   </div>
+                </div>
+                <div :class="[ns.b('detail')]" v-if="choseProduct !== ''">
                   <div
-                    :class="[ns.b('detail')]"
-                    v-if="choseProduct === item.label"
+                    :class="ns.b('detail-item')"
+                    v-for="_item in choseProductList"
+                    :key="_item.id"
                   >
-                    <div
-                      :class="ns.b('detail-item')"
-                      v-for="_item in item.children"
-                      :key="_item.id"
+                    <h4>{{ _item.label }}</h4>
+                    <img :src="MoreDataRight" alt="" />
+                    <span
+                      v-for="__item in _item.children"
+                      :key="__item.id"
+                      @click.stop="
+                        onChoseFilterType(
+                          __item.label,
+                          `${item.label} / ${_item.label} / ${__item.label}`,
+                        )
+                      "
+                      :class="
+                        confirmType === __item.label
+                          ? ns.bm('detail-item', 'active')
+                          : ''
+                      "
+                      >{{ __item.label }}</span
                     >
-                      <h4>{{ _item.label }}</h4>
-                      <img :src="MoreDataRight" alt="" />
-                      <span
-                        v-for="__item in _item.children"
-                        :key="__item.id"
-                        @click.stop="
-                          onChoseFilterType(
-                            __item.label,
-                            `${item.label} / ${_item.label} / ${__item.label}`,
-                          )
-                        "
-                        :class="
-                          confirmType === __item.label
-                            ? ns.bm('detail-item', 'active')
-                            : ''
-                        "
-                        >{{ __item.label }}</span
-                      >
-                    </div>
                   </div>
                 </div>
               </template>
@@ -162,6 +159,7 @@ const productList: Ref<any> = ref([]); // 产品分类
 const choseProduct: Ref<string> = ref(""); // 选择的产品分类
 const confirmType: Ref<String> = ref(""); // 确认
 const choseProductLabel: Ref<string> = ref(""); // 选择的产品分类
+const choseProductList: Ref<any> = ref([]); // 筛选列表
 const props = defineProps({
   total: {
     type: Number,
@@ -208,8 +206,9 @@ const getProductTypeList = async () => {
 };
 getProductTypeList();
 // 选择产品分类
-const onChoseProduct = (type: string) => {
+const onChoseProduct = (type: string, list: any = null) => {
   choseProduct.value = choseProduct.value === type ? "" : type;
+  list !== null && (choseProductList.value = list);
 };
 // 确认选择产品分类
 const onChoseFilterType = (type: string, label: string) => {
@@ -349,7 +348,9 @@ const onResetProduct = () => {
 }
 .es-searchProduct-filter-productType {
   @include flex(center, flex-start, wrap);
-  @include relative();
+  & > div {
+    margin-bottom: 8px;
+  }
 }
 .es-searchProduct-filter-product {
   padding: 9px 12px;
@@ -369,7 +370,7 @@ const onResetProduct = () => {
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   border: 1px solid #dbdce2;
-  @include absolute(99999, 100px, none, none, 0);
+  // @include absolute(99999, , none, none, 0);
   background: #ffffff;
   .es-searchProduct-filter-detail-item {
     @include flex(center, flex-start, wrap);
