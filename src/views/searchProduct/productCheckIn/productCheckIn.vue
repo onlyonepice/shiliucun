@@ -166,9 +166,7 @@ async function getDetails() {
       form.value = datas;
       form.value.productType = productType;
       loading.value = false;
-      setTimeout(() => {
-        getProductTypeList();
-      }, 2000);
+      getProductTypeList();
       if (productType === "OTHERS") {
         tabs.value[2].show = false;
         return (tabVal.value = 2);
@@ -303,6 +301,9 @@ function onCompanySettlement() {
 
 // 获取产品类型
 async function getProductTypeList() {
+  if (companyInfo.value.id) {
+    return;
+  }
   const { datas, resp_code }: any = await getProductTypeListApi({
     type: "mainBusiness",
     enterpriseId: companyInfo.value.id,
