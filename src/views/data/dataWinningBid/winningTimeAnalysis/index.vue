@@ -73,7 +73,7 @@ const props = defineProps({
 });
 const EChartOptions: Ref<any> = ref({
   ...pieEChartsOption(),
-  color: ["#244BF1", "#466FFD", "#7493FE", "#CED9FF"],
+  color: ["#244BF1", "#466FFD", "#7493FE", "#CED9FF", "#DCE2FD"],
   series: {
     type: "pie",
     startAngle: 0,
