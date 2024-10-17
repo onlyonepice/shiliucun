@@ -304,10 +304,7 @@ async function getProductTypeList() {
   if (companyInfo.value.id === null) {
     return;
   }
-  const { datas, resp_code }: any = await getProductTypeListApi({
-    type: "mainBusiness",
-    enterpriseId: companyInfo.value.id,
-  });
+  const { datas, resp_code }: any = await getProductTypeListApi();
   if (resp_code === 0) {
     typeList.value = datas;
     typeList.value.forEach((item) => {
