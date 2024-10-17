@@ -75,7 +75,7 @@ export const step2Field = [
     accept: ["jpg", "jpeg", "png"],
     limit: 10,
     size: 10,
-    text: "上传1:1，格式jpg、png且不大于10M的图片，最多10张",
+    text: "格式jpg、png且不大于10M的图片，最多10张",
     rules: [
       {
         required: true,
@@ -146,7 +146,7 @@ export const step2FieldVariable = [
     accept: ["jpg", "jpeg", "png"],
     limit: 10,
     size: 10,
-    text: "上传1:1，格式jpg、png且不大于10M的图片，最多10张",
+    text: "格式jpg、png且不大于10M的图片，最多10张",
     rules: [
       {
         required: true,
@@ -221,7 +221,7 @@ export const step2FieldOthers = [
     accept: ["jpg", "jpeg", "png"],
     limit: 10,
     size: 10,
-    text: "上传1:1，格式jpg、png且不大于10M的图片，最多10张",
+    text: "格式jpg、png且不大于10M的图片，最多10张",
     rules: [
       {
         required: true,
