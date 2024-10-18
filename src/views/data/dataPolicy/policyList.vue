@@ -281,7 +281,7 @@ function brightenKeyword(val) {
   if (val) {
     res = val.replace(
       Reg,
-      `<span style="color: red;">${filterParams.value.keyword}</span>`,
+      `<span style="color: red;background: #FDD5D8;">${filterParams.value.keyword}</span>`,
     );
     return res;
   }

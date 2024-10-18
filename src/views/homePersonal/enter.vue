@@ -52,6 +52,7 @@
           <MyUploadsBox v-if="choseTab === 6" />
           <MyProjectBox v-if="choseTab === 9" />
           <passwordComponent v-if="choseTab === 7" />
+          <SuggestionBox v-if="choseTab === 10" />
         </div>
       </div>
     </div>
@@ -80,6 +81,8 @@ import MyUploads from "@/assets/img/homePersonal/myUploads.png";
 import MyUploadsChose from "@/assets/img/homePersonal/myUploads-chose.png";
 import MyProject from "@/assets/img/homePersonal/myProject.png";
 import MyProjectChose from "@/assets/img/homePersonal/myProject-chose.png";
+import SuggestionChose from "@/assets/img/homePersonal/suggestion-chose.png";
+import Suggestion from "@/assets/img/homePersonal/suggestion.png";
 import LogoutImg from "@/assets/img/homePersonal/logout.png";
 import MapIcon from "@/assets/img/common/map-logo.png";
 import ClassRoomIcon from "@/assets/img/common/classroom-logo.png";
@@ -92,6 +95,7 @@ import orderComponent from "./components/order.vue";
 import passwordComponent from "./components/password.vue";
 import MyUploadsBox from "./components/myUploads.vue";
 import MyProjectBox from "./components/myProject.vue";
+import SuggestionBox from "./components/suggestionBox.vue";
 const ns = useNamespace("homePersonal");
 const { VITE_INDUSTRIALMAP_URL, VITE_CLASSROOM_URL } = import.meta.env;
 const route = useRoute();
@@ -124,6 +128,7 @@ const tabList: Ref<Array<any>> = ref([
   { id: 3, text: "我的需求", iconChose: NeedChose, icon: Need },
   { id: 4, text: "我的收藏", iconChose: CollectionChose, icon: Collection },
   { id: 5, text: "我的订单", iconChose: OrderChose, icon: Order },
+  { id: 10, text: "意见信箱", iconChose: SuggestionChose, icon: Suggestion },
   { id: 7, text: "修改密码", iconChose: PasswordChose, icon: Password },
   { id: 8, text: "退出登录", icon: LogoutImg },
 ]);
