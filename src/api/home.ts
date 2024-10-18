@@ -159,3 +159,17 @@ export const readMessageByIdApi = (data: any) => {
     { data },
   );
 };
+
+// 远程搜索接口
+export const remoteSearchApi = (_data: any) => {
+  const _params = {};
+  Object.assign(
+    _params,
+    _data.apiType === "get" ? { params: _data.data } : { data: _data.data },
+  );
+  return http.request<{ resp_code: number; datas: any }>(
+    _data.apiType,
+    _data.apiUrl,
+    _params,
+  );
+};

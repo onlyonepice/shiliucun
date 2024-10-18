@@ -247,8 +247,14 @@
         <div :class="ns.be('content', 'infoDialog')">
           <span required>企业名称</span>
           <Select
-            type="input"
+            type="autocomplete"
             :defaultValue="modifyInfoFreeze.company"
+            :remoteSearch="{
+              apiType: 'get',
+              apiUrl:
+                '/eesa-industrial-map/tEnterprise/front/v1.0/fuzzyMatching',
+            }"
+            valueKey="name"
             @onChange="
               (val) => {
                 return onChangeInfo(val, 'company');

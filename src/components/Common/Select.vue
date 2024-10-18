@@ -76,6 +76,18 @@
         inputText
       }}</span>
     </div>
+    <div
+      v-if="props.type === 'autocomplete'"
+      class="select__input select__content"
+    >
+      <el-autocomplete
+        v-model.trim="value"
+        :fetch-suggestions="querySearchAsync"
+        :placeholder="placeholder !== '' ? placeholder : '请输入'"
+        :value-key="valueKey"
+        @select="handleChange"
+      />
+    </div>
     <div v-if="props.type === 'cascader'" class="select__input select__content">
       <el-cascader
         v-model="value"
@@ -130,6 +142,7 @@
 import { watch, ref } from "vue";
 import SelectKey from "@/assets/img/common/select-key-icon.png";
 import InputConfirmIcon from "@/assets/img/common/input-confirm-icon.png";
+import { remoteSearchApi } from "@/api/home";
 const emit = defineEmits([
   "onChange",
   "triggerForm",
@@ -281,6 +294,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  remoteSearch: {
+    type: Object,
+    default: () => {},
+  },
 });
 const value: any = ref("" || []); // 选中值
 const selectDom = ref(); // 获取select组件
@@ -297,6 +314,26 @@ function handleChange(data) {
   emit("onChange", data);
   model.value = data;
 }
+// 远程搜索接口
+const querySearchAsync = async (
+  queryString: string,
+  cb: (arg: any) => void,
+) => {
+  try {
+    const { datas, resp_code } = await remoteSearchApi({
+      apiType: props.remoteSearch.apiType,
+      apiUrl: props.remoteSearch.apiUrl,
+      data: {
+        matchingContent: queryString,
+      },
+    });
+    if (resp_code === 0) {
+      cb(datas);
+    }
+  } catch (error) {
+    cb([]);
+  }
+};
 function handleDateChange(data) {
   emit("onChange", data);
 }
@@ -427,6 +464,11 @@ defineExpose({
   .el-slider__bar {
     height: 1px;
     background: #dbdce2;
+  }
+}
+.select__input {
+  .el-autocomplete {
+    width: 100%;
   }
 }
 </style>
