@@ -21,21 +21,33 @@ import weChat from "@/assets/img/consultationNav/weChat.png";
 import miniAppHover from "@/assets/img/consultationNav/miniApp-hover.png";
 import weChatHover from "@/assets/img/consultationNav/weChat-hover.png";
 import customerServiceHover from "@/assets/img/consultationNav/customerService-hover.png";
+import CommunicationGroup from "@/assets/img/consultationNav/communication-group.png";
+import Exhibition from "@/assets/img/consultationNav/exhibition.png";
 const ns = useNamespace("consultation-nav");
 const showConsultation: Ref<boolean> = ref(false);
 const navList = ref([
   {
-    name: "掌上\n储能",
+    name: "手机版",
     icon: miniApp,
     iconHover: miniAppHover,
   },
   {
-    name: "储能云",
+    name: "公众号",
     icon: weChat,
     iconHover: weChatHover,
   },
   {
-    name: "客服\n咨询",
+    name: "交流群",
+    icon: CommunicationGroup,
+    iconHover: miniAppHover,
+  },
+  {
+    name: "EESA\n储能展",
+    icon: Exhibition,
+    iconHover: weChatHover,
+  },
+  {
+    name: "客服咨询",
     icon: customerService,
     iconHover: customerServiceHover,
   },
@@ -92,6 +104,7 @@ watch(
       position: relative;
       .es-consultation-nav-item__text {
         white-space: pre-line;
+        @include font(10px, 400, rgba(0, 0, 0, 0.9), 16px);
       }
       .es-consultation-nav-item__hover {
         animation-duration: 0.3s;
