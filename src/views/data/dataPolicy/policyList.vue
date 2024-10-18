@@ -91,7 +91,10 @@
                         class="policy_item_value"
                         @click="handleItemClick(index, rowIndex)"
                       >
-                        <p class="policy-name">{{ row.policyName }}</p>
+                        <p
+                          class="policy-name"
+                          v-html="brightenKeyword(row.policyName)"
+                        />
                         <div class="tag-box">
                           <p class="tag" v-for="tag in row.typeName" :key="tag">
                             {{ tag }}
@@ -159,9 +162,12 @@
                                 <p class="detail_content_item_value_item_label">
                                   摘要内容
                                 </p>
-                                <p class="detail_content_item_value_item_value">
-                                  {{ row.detailData?.summary }}
-                                </p>
+                                <p
+                                  class="detail_content_item_value_item_value"
+                                  v-html="
+                                    brightenKeyword(row.detailData?.summary)
+                                  "
+                                />
                               </div>
                             </div>
                           </div>
@@ -269,7 +275,17 @@ function handleMonthClick(row) {
 function getRegion(regionName) {
   return !regionName ? "" : regionName;
 }
-
+function brightenKeyword(val) {
+  const Reg = new RegExp(filterParams.value.keyword, "i");
+  let res = "";
+  if (val) {
+    res = val.replace(
+      Reg,
+      `<span style="color: red;">${filterParams.value.keyword}</span>`,
+    );
+    return res;
+  }
+}
 function handleHiddenDetailClick(index, rowIndex) {
   pageData.value[index].data[rowIndex].className = "hide";
   setTimeout(() => {
