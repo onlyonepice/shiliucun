@@ -28,6 +28,22 @@
         <p v-if="item.value === currentPage" class="tab-list_item_line" />
       </div>
     </div>
+    <div :class="ns.b('type-list')">
+      <Search
+        width="368px"
+        height="32px"
+        searchTitle=""
+        :borderRadius="4"
+        @onSearch="onSearch"
+        v-model="filterParams.title"
+      />
+      <el-button
+        @click="handleReleaseClick"
+        class="release-demand"
+        type="primary"
+        >发布需求</el-button
+      >
+    </div>
     <div v-show="currentPage === 'demand'">
       <template v-if="!loadingList">
         <div class="type-demand">
@@ -50,32 +66,30 @@
                 @click="onChangeType(_item.code, item.type)"
               >
                 {{ _item.label }}
+              </div>
+            </div>
+          </div>
+
+          <div :class="ns.b('data-box')">
+            <div :class="ns.b('sort-list')">
+              <div
+                v-for="item in sortList"
+                :key="item.id"
+                :class="
+                  filterParams.sortType === item.code
+                    ? ns.bm('sort-list', 'active')
+                    : ''
+                "
+                @click="onChangeType(item.code, 'sortType')"
+              >
+                {{ item.label }}
                 <img
-                  v-if="_item.code === 'SORT_BY_TIME'"
+                  v-if="item.code === 'SORT_BY_TIME'"
                   :src="NewIcon"
                   alt=""
                 />
               </div>
             </div>
-          </div>
-          <div :class="ns.b('type-list')">
-            <div :class="ns.b('type-search')">
-              <Search
-                width="368px"
-                height="32px"
-                searchTitle=""
-                @onSearch="onSearch"
-                v-model="filterParams.title"
-              />
-            </div>
-            <el-button
-              @click="handleReleaseClick"
-              class="release-demand"
-              type="primary"
-              >发布需求</el-button
-            >
-          </div>
-          <div :class="ns.b('data-box')">
             <DemandMatchingSkeletonList v-if="skeletonListLoading" />
             <template v-else>
               <template v-if="demandList.length > 0">
@@ -420,7 +434,6 @@ const filterList: Ref<Array<any>> = ref([
       { code: "海外", label: "海外" },
     ],
   },
-  { id: 2, type: "sortType", name: "排序", option: [] },
   { id: 3, type: "type", name: "需求类型", option: [] },
 ]);
 const filterParams = ref({
@@ -434,6 +447,7 @@ const total = ref(0);
 const demandList = ref([{}]);
 const currentPage = ref("demand");
 const currentManageTab = ref("release");
+const sortList: Ref<Array<any>> = ref([]); // 排序筛选项
 const manageTabArr = ref([
   {
     title: "我发布的",
@@ -530,7 +544,7 @@ const getTypeNotNull = async () => {
       label: "全部",
       code: "",
     });
-    filterList.value[2].option = data.datas;
+    filterList.value[1].option = data.datas;
     filterParams.value.type = data.datas[0].code;
   }
 };
@@ -607,7 +621,7 @@ const getSortTypeList = async () => {
     type: "NEED_HOMEPAGE_SORT",
   });
   if (resp_code === 0 && datas.length) {
-    filterList.value[1].option = datas[0].subset;
+    sortList.value = datas[0].subset;
     filterParams.value.sortType = datas[0].subset[0].code;
     getNeed();
   }
@@ -736,12 +750,9 @@ onMounted(() => {
   border: 1px solid #244bf1;
   color: #244bf1;
 }
-.es-demand-list-type-search {
-  @include widthAndHeight(368px, 32px);
-}
 .es-demand-list-type-list {
   width: 100%;
-  margin-top: 24px;
+  margin: 24px 0 16px;
   position: relative;
   @include flex(center, space-between, nowrap);
 }
@@ -822,6 +833,32 @@ onMounted(() => {
     color: rgba(0, 0, 0, 0.6);
     line-height: 22px;
     padding-bottom: 64px;
+  }
+}
+.es-demand-list-sort-list {
+  padding: 2px;
+  background: #e8eaef;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  display: inline-flex;
+  div {
+    padding: 2px 8px;
+    @include font(12px, 400, rgba(0, 0, 0, 0.6), 20px);
+    margin-right: 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    @include flex(center, center, nowrap);
+    &:nth-last-child(1) {
+      margin-right: 0;
+    }
+  }
+  img {
+    @include widthAndHeight(32px, 16px);
+    margin-left: 2px;
+  }
+  &--active {
+    background: #ffffff;
+    color: #244bf1 !important;
   }
 }
 </style>

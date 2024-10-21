@@ -1,11 +1,12 @@
 <template>
   <div class="el-search-box" :style="{ width: width, height: height }">
-    <div class="homeTopSearch">
+    <div class="homeTopSearch" :borderRadius="borderRadius">
       <el-input
         autocomplete="off"
         v-model="value"
         placeholder="请输入关键字…"
         @keyup.enter="onSearch"
+        :class="ns.b('borderRadius')"
       />
       <img
         @click="handleClearTap"
@@ -26,6 +27,8 @@
 import { ref, watch } from "vue";
 import searchIcon from "@/assets/img/common/search-icon.png";
 import icon_clear from "@/assets/img/common/cancel-icon.png";
+import useNamespace from "@/utils/nameSpace";
+const ns = useNamespace("componentsSearch");
 const value: any = ref(""); // 选中值
 const model = defineModel();
 const emit = defineEmits(["onSearch"]);
@@ -38,6 +41,10 @@ defineProps({
   height: {
     type: String,
     default: "40px",
+  },
+  borderRadius: {
+    type: Number,
+    default: 24,
   },
   placeholder: {
     type: String,
@@ -112,7 +119,6 @@ defineExpose({ value });
     .el-input {
       height: 100%;
       .el-input__wrapper {
-        border-radius: 24px;
         border: 1px solid #dbdce2;
         background-color: white;
         .el-input__inner {
@@ -121,6 +127,19 @@ defineExpose({ value });
         }
       }
     }
+  }
+}
+.homeTopSearch[borderradius="24"] {
+  .el-input__wrapper {
+    border-radius: 24px;
+  }
+}
+.homeTopSearch[borderradius="4"] {
+  .el-input__wrapper {
+    border-radius: 4px;
+  }
+  .homeTopSearchIcon {
+    border-radius: 0 4px 4px 0;
   }
 }
 </style>

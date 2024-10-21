@@ -13,16 +13,6 @@
               :style="topItem"
             />
           </div>
-          <div :class="ns.b('item')" style="margin-bottom: 16px">
-            <el-skeleton-item
-              style="width: 40px; height: 24px; margin: 0 24px 0 40px"
-            />
-            <el-skeleton-item
-              v-for="_item in 2"
-              :key="_item"
-              :style="topItem"
-            />
-          </div>
           <div :class="ns.b('item')">
             <el-skeleton-item
               style="width: 80px; height: 24px; margin-right: 24px"
