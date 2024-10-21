@@ -50,8 +50,8 @@ const router = useRouter();
 const ns = useNamespace("hotSpots");
 const breadcrumbList: Ref<Array<any>> = ref([
   {
-    text: "首页",
-    path: "/home",
+    text: "今日储能",
+    path: "/todayEnergy",
   },
   {
     text: "热点",

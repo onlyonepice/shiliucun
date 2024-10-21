@@ -141,7 +141,7 @@
               <p
                 v-for="_item in item.data"
                 :key="_item.id"
-                @click="onDetailReport(item.tag, _item)"
+                @click="onDetailReport()"
               >
                 {{ item.tag === "供需" ? _item.typeName + " | " : ""
                 }}{{ _item.title }}
@@ -430,33 +430,8 @@ const onSearch = () => {
   });
 };
 // 查看热点详情
-const onDetailReport = (type: String, data: any) => {
-  switch (type) {
-    case "热点":
-      router.push(`/hotSpots?id=${data.id}`);
-      break;
-    case "供需":
-      router.push(`/demandMatching/detail?id=${data.id}`);
-      break;
-    case "招标":
-      router.push(
-        `/dataTender?id=${data.id}&title=${encodeURIComponent(data.title)}`,
-      );
-      break;
-    case "政策":
-      router.push(
-        `/policy?id=${data.id}&title=${encodeURIComponent(data.title)}`,
-      );
-      break;
-    case "洞察":
-      window.open(data.link, "externalWindow");
-      break;
-    case "动态":
-      window.open(data.link, "externalWindow");
-      break;
-    default:
-      break;
-  }
+const onDetailReport = () => {
+  router.push(`/todayEnergy`);
 };
 const todayEnergyData: Ref<Array<any>> = ref([]);
 // 获取今日储能数据

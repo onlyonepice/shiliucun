@@ -56,5 +56,17 @@ export default {
         keepAlive: false,
       },
     },
+    {
+      path: "/todayEnergy",
+      name: "TodayEnergy",
+      components: {
+        default: () => import("@/views/home/todayEnergy.vue"),
+      },
+      meta: {
+        title: "今日储能",
+        backgroundColor: "#F2F3F5",
+        keepAlive: false,
+      },
+    },
   ],
 };
