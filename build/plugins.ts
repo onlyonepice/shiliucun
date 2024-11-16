@@ -1,4 +1,3 @@
-import { cdn } from "./cdn";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import removeConsole from "vite-plugin-remove-console";
@@ -26,7 +25,7 @@ export function getPluginsList(
     eslintPlugin({
       include: ["src/**/*.ts", "src/**/*.vue", "src/*.ts", "src/*.vue"],
     }),
-    VITE_CDN ? cdn : null,
+    VITE_CDN ? null : null,
     configCompressPlugin(VITE_COMPRESSION),
   ];
 }

@@ -26,7 +26,7 @@ const __APP_INFO__ = {
 };
 
 export default ({ mode }) => {
-  const { VITE_ENV, VITE_CDN, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } =
+  const { VITE_ENV, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } =
     warpperEnv(loadEnv(mode, root));
   return {
     base: VITE_PUBLIC_PATH,
@@ -56,7 +56,7 @@ export default ({ mode }) => {
       proxy: {},
     },
     plugins: [
-      getPluginsList(VITE_CDN, VITE_COMPRESSION),
+      getPluginsList(false, VITE_COMPRESSION),
       // 分析打包结果
       visualizer({
         gzipSize: true,

@@ -7,77 +7,12 @@
   <meta name="renderer" content="webkit" />
   <meta name="viewport"
     content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0" />
-  <title>掌上储能网页版</title>
+  <title>shiliucun</title>
   <link rel="icon" href="/logo.ico" />
-  <script>
-    console.log("当前环境：", window.location.href);
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = window.location.href.indexOf("test") !== 0 ? "https://hm.baidu.com/hm.js?d635ba8e4795c232b0516191708d5972" : "https://hm.baidu.com/hm.js?1334de19664027739970f62f9bac088b";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 </head>
 
 <body>
   <div id="app">
-    <div class="global-loading-container">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-    </div>
-    <style>
-      .global-loading-container {
-        --uib-size: 35px;
-        --uib-color: #244BF1;
-        --uib-speed: 1s;
-        --uib-stroke: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: var(--uib-size);
-        height: calc(var(--uib-size) * 0.9);
-      }
-
-      .global-loading-container .bar {
-        width: var(--uib-stroke);
-        height: 100%;
-        background-color: var(--uib-color);
-        transition: background-color 0.3s ease;
-      }
-
-      .global-loading-container .bar:nth-child(1) {
-        animation: globalLoadingContainer var(--uib-speed) ease-in-out calc(var(--uib-speed) * -0.45) infinite;
-      }
-
-      .global-loading-container .bar:nth-child(2) {
-        animation: globalLoadingContainer var(--uib-speed) ease-in-out calc(var(--uib-speed) * -0.3) infinite;
-      }
-
-      .global-loading-container .bar:nth-child(3) {
-        animation: globalLoadingContainer var(--uib-speed) ease-in-out calc(var(--uib-speed) * -0.15) infinite;
-      }
-
-      .global-loading-container .bar:nth-child(4) {
-        animation: globalLoadingContainer var(--uib-speed) ease-in-out infinite;
-      }
-
-      @keyframes globalLoadingContainer {
-
-        0%,
-        100% {
-          transform: scaleY(0.3);
-        }
-
-        50% {
-          transform: scaleY(1);
-        }
-      }
-    </style>
-
     <style>
       html,
       body,
