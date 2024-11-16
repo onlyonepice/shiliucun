@@ -1,6 +1,4 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import { useUserStoreHook } from "@/store/modules/user";
-import { getToken } from "@/utils/auth";
 /** 自动导入全部静态路由，无需再手动引入！匹配 src/router/modules 目录（任何嵌套级别）中具有 .ts 扩展名的所有文件，除了 remaining.ts 文件
  */
 const modules: Record<string, any> = import.meta.glob(
@@ -39,26 +37,12 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const publicKey = window.localStorage.getItem("publicKey");
-  if (publicKey === "null" || !publicKey) {
-    await useUserStoreHook().getPublicKey();
-  } else {
-    await useUserStoreHook().setPublicKey();
-  }
   if (typeof to.meta?.title === "string") {
     document.title = to.meta?.title;
   }
   // 如果跳转的是 home或者重定向到首页直接放行，不然会路由跳转死循环
   if (to.path === "/") {
     next();
-  }
-  if (getToken()) {
-    await useUserStoreHook().handleGetUserInfo();
-    await useUserStoreHook().handleGetAccountInfo();
-  } else {
-    if (to.path === "/homePersonal") {
-      next("/home");
-    }
   }
   next();
 });
