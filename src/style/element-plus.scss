@@ -2,20 +2,21 @@
 
 body {
   .el-button {
-    background-color: #f3f4f7;
-    color: rgba(0, 0, 0, 0.9);
+    background-color: #f00a38;
+    color: #b6b3b3;
     border: none;
-    min-width: 80px;
+    @include flex(center, flex-start, nowrap);
+    padding: .41667vw;
 
     &:focus,
     &:hover {
-      background-color: #e7e8ef;
-      color: rgba(0, 0, 0, 0.9);
+      background-color: #ff5274;
+      color: #fff;
     }
 
     &:active {
-      background: #dbdce2;
-      color: rgba(0, 0, 0, 0.9);
+      background: #c9062d;
+      color: #fff;
     }
   }
 

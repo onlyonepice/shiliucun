@@ -1,5 +1,8 @@
 <template>
-  <div>123</div>
+  <PageHead />
+  <div class="page-content">
+    <PageAside />
+  </div>
 </template>
 <script lang="ts" setup>
 console.log("12313");
@@ -15,9 +18,14 @@ console.log("12313");
     "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-variant: tabular-nums;
-  background-color: #171616;
+  background-color: #050505;
   font-feature-settings: "tnum", "tnum";
   min-height: 100vh;
   min-width: 100vw;
+  background-size: cover;
+  background-attachment: fixed;
+}
+.page-content {
+  padding: 0.625vw;
 }
 </style>
