@@ -11,7 +11,6 @@ import {
   defaultProjectConfig,
 } from "./types.d";
 import { toType } from "../index";
-import { encrypt } from "@EESA/components/src/librarys/jsencrypt";
 import { ElMessage } from "element-plus";
 import { getToken } from "@/utils/auth";
 import { stringify } from "qs";
@@ -112,8 +111,6 @@ class PureHttp {
           config.url.indexOf("http") === -1
             ? `${VITE_GLOB_API_URL}${config.url}`
             : config.url;
-        // 接口加密
-        config.headers["sign"] = encrypt(config);
 
         return config;
       },
