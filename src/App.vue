@@ -2,6 +2,9 @@
   <PageHead />
   <div class="page-content">
     <PageAside />
+    <div class="main-content">
+      <router-view />
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -27,5 +30,10 @@ console.log("12313");
 }
 .page-content {
   padding: 0.625vw;
+  @include flex(center, space-between, nowrap);
+  .main-content {
+    height: calc(100vh - 6.25vw);
+    width: 100%;
+  }
 }
 </style>

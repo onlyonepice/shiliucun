@@ -6,7 +6,7 @@ body {
     color: #b6b3b3;
     border: none;
     @include flex(center, flex-start, nowrap);
-    padding: .41667vw;
+    padding: 0.41667vw;
 
     &:focus,
     &:hover {
