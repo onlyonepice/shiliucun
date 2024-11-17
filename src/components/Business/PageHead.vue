@@ -2,7 +2,9 @@
   <div class="pageHead">
     <div class="pageHead-content">
       <img :src="Logo" alt="" />
-      <div>123</div>
+      <div>
+        <el-button>立即游玩</el-button>
+      </div>
     </div>
   </div>
 </template>

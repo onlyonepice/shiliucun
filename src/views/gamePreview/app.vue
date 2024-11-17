@@ -19,6 +19,7 @@
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
+console.log("gamePreview");
 const onSwiper = (swiper) => {
   console.log(swiper);
 };

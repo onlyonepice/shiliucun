@@ -2,9 +2,9 @@
   <PageHead />
   <div class="page-content">
     <PageAside />
-    <div class="main-content">
+    <el-scrollbar class="main-content">
       <router-view />
-    </div>
+    </el-scrollbar>
   </div>
 </template>
 <script lang="ts" setup>

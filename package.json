@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "1.1.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vite --force",
@@ -8,24 +8,11 @@
     "build:test": "vite build --mode test",
     "build:prod": "vite build --mode prod",
     "build": "vite build",
-    "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock,build}/**/*.{vue,js,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
     "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:styleLint",
     "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
-    "lint:styleLint": "stylelint --cache --fix \"**/*.{vue,css,scss,postcss,less}\"",
-    "husky": "./.husky/pre-commit",
-    "prepare": "husky",
     "preinstall": "npx only-allow pnpm"
   },
-  "keywords": [
-    "IReport",
-    "element-plus",
-    "typescript",
-    "pinia",
-    "vue3",
-    "vite",
-    "esm"
-  ],
   "dependencies": {
     "@sentry/vue": "^8.26.0",
     "@types/echarts": "^4.9.22",
@@ -97,21 +84,6 @@
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-remove-console": "^1.3.0",
     "vite-plugin-router-warn": "^1.0.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended",
-      "@vue/typescript/recommended"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2020
-    },
-    "rules": {}
   },
   "browserslist": [
     "> 1%",
