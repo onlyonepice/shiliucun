@@ -2,14 +2,12 @@
   <PageHead />
   <div class="page-content">
     <PageAside />
-    <el-scrollbar class="main-content">
+    <div class="main-content">
       <router-view />
-    </el-scrollbar>
+    </div>
   </div>
 </template>
-<script lang="ts" setup>
-console.log("12313");
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss">
 @import "@/style/mixin.scss";
@@ -31,9 +29,10 @@ console.log("12313");
 .page-content {
   padding: 0.625vw;
   @include flex(center, space-between, nowrap);
-  .main-content {
-    height: calc(100vh - 6.25vw);
-    width: 100%;
-  }
+}
+.main-content {
+  height: calc(100vh - 6.25vw);
+  width: 100%;
+  overflow-y: scroll;
 }
 </style>
