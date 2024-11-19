@@ -8,13 +8,16 @@ export const useUserStore = defineStore({
   id: "userStore",
   state: () => ({
     token: "", // 用户token 用于判断用户登录还是退出 通过watch监听
-    openLoginVisible: false,
+    openLoginVisible: false, // 打开登录弹窗
+    openLoginType: "login", // 登录弹窗类型 login/register
   }),
   getters: {},
   actions: {
     // 打开登录弹窗
-    openLogin(type: Boolean) {
+    openLogin(type: Boolean, dialogType = "login") {
       this.openLoginVisible = type;
+      this.openLoginType = dialogType;
+      console.log(this.openLoginType);
     },
     /** 前端登出（不调用接口） */
     logOut() {

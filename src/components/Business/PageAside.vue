@@ -18,11 +18,11 @@
     <div class="pageAside-bottom">
       <div class="menusTitle___19IQ3">账户</div>
       <template v-if="!hasToken">
-        <div class="menusItemLeft___Si0Uw">
+        <div class="menusItemLeft___Si0Uw" @click="openDialog('login')">
           <img :src="GamePreview" alt="" />
           <p>登录</p>
         </div>
-        <el-button class="btn-no-account"
+        <el-button class="btn-no-account" @click="openDialog('register')"
           ><img
             :src="RegisterIcon"
             style="width: 1.25vw; height: 1.25vw; margin-right: 0.25vw"
@@ -34,6 +34,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
+import { useUserStoreHook } from "@/store/modules/user";
 import GamePreview from "@/assets/img/game-preview.png";
 import ChargeCenter from "@/assets/img/charge-center.png";
 import RegisterIcon from "@/assets/img/register-icon.png";
@@ -53,6 +54,9 @@ const menuList = ref([
   },
 ]);
 const choseMenu = ref(0);
+const openDialog = (type: string) => {
+  useUserStoreHook().openLogin(true, type);
+};
 </script>
 
 <style lang="scss">

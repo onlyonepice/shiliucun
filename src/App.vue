@@ -6,8 +6,19 @@
       <router-view />
     </div>
   </div>
+  <Login v-if="openLoginVisible" />
 </template>
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { ref, watch } from "vue";
+import { useUserStoreHook } from "@/store/modules/user";
+const openLoginVisible = ref(useUserStoreHook().$state.openLoginVisible);
+watch(
+  () => useUserStoreHook().$state.openLoginVisible,
+  (newVal) => {
+    openLoginVisible.value = newVal;
+  },
+);
+</script>
 
 <style lang="scss">
 @import "@/style/mixin.scss";
