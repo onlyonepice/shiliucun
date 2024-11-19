@@ -24,7 +24,6 @@ const openLoginType = ref(""); // 登录方式
 watch(
   () => useUserStoreHook().$state.openLoginType,
   (newVal) => {
-    console.log(newVal);
     openLoginType.value = newVal;
   },
   {

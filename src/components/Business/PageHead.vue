@@ -10,7 +10,6 @@
 </template>
 <script lang="ts" setup>
 import Logo from "@/assets/img/logo.png";
-console.log("12313");
 </script>
 
 <style lang="scss">
