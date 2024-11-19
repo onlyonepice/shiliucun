@@ -20,6 +20,16 @@ export default {
       },
     },
     {
+      path: "/recharge",
+      name: "Recharge",
+      components: {
+        default: () => import("@/views/recharge/app.vue"),
+      },
+      meta: {
+        title: "充值中心",
+      },
+    },
+    {
       path: "/gameDetail",
       name: "GameDetail",
       components: {
