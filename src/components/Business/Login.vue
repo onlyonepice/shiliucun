@@ -63,7 +63,7 @@
 import { ref, watch, Ref } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
-import { loginApi } from "@/api/index"
+import { loginApi } from "@/api/index";
 const dialogVisible = ref(true);
 const openLoginType = ref(""); // 登录方式
 const form: Ref<any> = ref({});
@@ -80,9 +80,9 @@ watch(
 );
 // 登陆/注册
 const onLogin = async () => {
-  if( useUserStoreHook().$state.openLoginType !== 'login' ) {
+  if (useUserStoreHook().$state.openLoginType !== "login") {
     return onRegister();
-  };
+  }
   if (openLoginType.value === "login") {
     // 登录
     const res = await loginApi(form.value);

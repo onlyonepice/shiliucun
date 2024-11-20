@@ -132,26 +132,13 @@ class PureHttp {
         if (code !== 0) {
           switch (code) {
             // 无登录
-            case 1001:
-              ElMessage.error(data?.resp_msg);
-              onErrorHandling();
-              break;
-            // token过期
-            case 1002:
-              onErrorHandling();
-              break;
-            // 请求接口频繁调用
-            case 1003:
-              ElMessage.error(data?.resp_msg || "Error");
-              break;
-            // 小程序登录报错兼容
-            case 2044:
-              break;
-            case 10027:
+            case 400:
+              console.log("未登录");
+              ElMessage.error(data?.msg);
               break;
             default:
-              if (config.params && config.params.hideError) return data;
-              ElMessage.error(data?.resp_msg || "Error");
+              // if (config.params && config.params.hideError) return data;
+              // ElMessage.error(data?.resp_msg || "Error");
               break;
           }
         }
