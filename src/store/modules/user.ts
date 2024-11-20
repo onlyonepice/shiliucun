@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { store } from "@/store";
-import { getBidFinderApi } from "@/api/index";
+import { postUserInfoApi } from "@/api/index";
 import { removeToken } from "@/utils/auth";
 import router from "@/router";
 
@@ -28,7 +28,7 @@ export const useUserStore = defineStore({
     /** 获取用户信息 */
     async handleGetUserInfo() {
       return new Promise<void>((resolve, reject) => {
-        getBidFinderApi()
+        postUserInfoApi()
           .then((response) => {
             const data = response["datas"];
             this.userInfo = data;

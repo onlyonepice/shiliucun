@@ -91,20 +91,10 @@ class PureHttp {
 
         // 导出报告耗时较长，需要设置超时时间 5分钟
         exportList.includes(config.url) && (config.timeout = 1000 * 60 * 5);
-        // 添加平台标识
-        config.headers["tenant"] = defaultProjectConfig.clientId;
         // 添加token
         const token = getToken();
         if (token && !whiteUrlList.includes(config.url)) {
           config.headers["Authorization"] = "Bearer " + token;
-        } else {
-          config.headers["Authorization"] =
-            "Basic " +
-            window.btoa(
-              defaultProjectConfig.clientId +
-                ":" +
-                defaultProjectConfig.clientSecret,
-            );
         }
         // 定义请求链接
         config.url =

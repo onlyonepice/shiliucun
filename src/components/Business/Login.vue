@@ -52,7 +52,7 @@
     </template>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="dialogVisible = false" class="btn-foot">{{
+        <el-button @click="onLogin" class="btn-foot">{{
           openLoginType === "login" ? "登入" : "注册"
         }}</el-button>
       </div>
@@ -63,6 +63,7 @@
 import { ref, watch, Ref } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
+import { loginApi } from "@/api/index"
 const dialogVisible = ref(true);
 const openLoginType = ref(""); // 登录方式
 const form: Ref<any> = ref({});
@@ -77,6 +78,23 @@ watch(
     immediate: true,
   },
 );
+// 登陆/注册
+const onLogin = async () => {
+  if( useUserStoreHook().$state.openLoginType !== 'login' ) {
+    return onRegister();
+  };
+  if (openLoginType.value === "login") {
+    // 登录
+    const res = await loginApi(form.value);
+  }
+};
+const onRegister = async () => {
+  if (openLoginType.value === "login") {
+    // 登录
+    const res = await loginApi(form.value);
+  }
+};
+
 const handleClose = () => {
   useUserStoreHook().openLogin(false, useUserStoreHook().$state.openLoginType);
 };
