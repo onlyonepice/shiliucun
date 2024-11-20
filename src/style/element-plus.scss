@@ -50,4 +50,15 @@ body {
     color: #b6b3b3;
     font-size: 1.25vw;
   }
+  .el-input__wrapper {
+    background-color: #222121;
+    box-shadow: none;
+    font-size: 0.83333vw;
+    &:hover {
+      box-shadow: none;
+    }
+  }
+  .el-input__wrapper.is-focus {
+    box-shadow: none;
+  }
 }
