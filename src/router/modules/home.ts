@@ -19,15 +19,15 @@ export default {
         title: "游戏一览",
       },
     },
-    {
-      path: "/gameDetail",
-      name: "GameDetail",
-      components: {
-        default: () => import("@/views/gameDetail/app.vue"),
-      },
-      meta: {
-        title: "游戏详情",
-      },
-    },
+    // {
+    //   path: "/gameDetail",
+    //   name: "GameDetail",
+    //   components: {
+    //     default: () => import("@/views/gameDetail/app.vue"),
+    //   },
+    //   meta: {
+    //     title: "游戏详情",
+    //   },
+    // },
   ],
 };

@@ -3,7 +3,6 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import removeConsole from "vite-plugin-remove-console";
 import removeNoMatch from "vite-plugin-router-warn";
 import { configCompressPlugin } from "./compress";
-import eslintPlugin from "vite-plugin-eslint";
 import type { PluginOption } from "vite";
 
 export function getPluginsList(
@@ -22,9 +21,6 @@ export function getPluginsList(
      * vite-plugin-router-warn只在开发环境下启用，只处理vue-router文件并且只在服务启动或重启时运行一次，性能消耗可忽略不计
      */
     removeNoMatch(),
-    eslintPlugin({
-      include: ["src/**/*.ts", "src/**/*.vue", "src/*.ts", "src/*.vue"],
-    }),
     VITE_CDN ? null : null,
     configCompressPlugin(VITE_COMPRESSION),
   ];
