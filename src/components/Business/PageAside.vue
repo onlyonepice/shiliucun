@@ -55,12 +55,18 @@ const menuList = ref([
     title: "充值中心",
     link: "/recharge",
   },
+  {
+    id: 2,
+    icon: GamePreview,
+    title: "H5游戏",
+    link: "/gameDetail",
+  },
 ]);
 const choseMenu = ref(0);
 watch(
   () => choseMenu.value,
   (val) => {
-    router.push(menuList.value[val].link);
+    router.push(menuList.value[val]?.link);
   },
 );
 watch(

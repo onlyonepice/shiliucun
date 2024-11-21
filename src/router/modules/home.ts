@@ -39,5 +39,15 @@ export default {
         title: "游戏详情",
       },
     },
+    {
+      path: "/gameItem",
+      name: "GameItem",
+      components: {
+        default: () => import("@/views/gameItem/app.vue"),
+      },
+      meta: {
+        title: "游戏详情1",
+      },
+    },
   ],
 };
