@@ -91,20 +91,10 @@ class PureHttp {
 
         // 导出报告耗时较长，需要设置超时时间 5分钟
         exportList.includes(config.url) && (config.timeout = 1000 * 60 * 5);
-        // 添加平台标识
-        config.headers["tenant"] = defaultProjectConfig.clientId;
         // 添加token
         const token = getToken();
         if (token && !whiteUrlList.includes(config.url)) {
           config.headers["Authorization"] = "Bearer " + token;
-        } else {
-          config.headers["Authorization"] =
-            "Basic " +
-            window.btoa(
-              defaultProjectConfig.clientId +
-                ":" +
-                defaultProjectConfig.clientSecret,
-            );
         }
         // 定义请求链接
         config.url =
@@ -142,26 +132,13 @@ class PureHttp {
         if (code !== 0) {
           switch (code) {
             // 无登录
-            case 1001:
-              ElMessage.error(data?.resp_msg);
-              onErrorHandling();
-              break;
-            // token过期
-            case 1002:
-              onErrorHandling();
-              break;
-            // 请求接口频繁调用
-            case 1003:
-              ElMessage.error(data?.resp_msg || "Error");
-              break;
-            // 小程序登录报错兼容
-            case 2044:
-              break;
-            case 10027:
+            case 400:
+              console.log("未登录");
+              ElMessage.error(data?.msg);
               break;
             default:
-              if (config.params && config.params.hideError) return data;
-              ElMessage.error(data?.resp_msg || "Error");
+              // if (config.params && config.params.hideError) return data;
+              // ElMessage.error(data?.resp_msg || "Error");
               break;
           }
         }

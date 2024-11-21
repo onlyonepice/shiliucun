@@ -3,9 +3,10 @@
     <Swiper
       :slides-per-view="1"
       @swiper="onSwiper"
-      :autoplay="{ delay: 1000 }"
-      pagination
+      :autoplay="autoplay"
       @slideChange="onSlideChange"
+      :modules="modules"
+      :loop="true"
     >
       <SwiperSlide>Slide 1</SwiperSlide>
       <SwiperSlide>Slide 2</SwiperSlide>
@@ -26,6 +27,13 @@ import { ref } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
+import { Autoplay } from "swiper/modules";
+const modules = [Autoplay];
+const autoplay: any = ref({
+  delay: 3000,
+  pauseOnMouseEnter: false,
+  disableOnInteraction: false,
+});
 const list = ref([
   {
     id: 0,

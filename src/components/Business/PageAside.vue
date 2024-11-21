@@ -33,11 +33,14 @@
   </aside>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import GamePreview from "@/assets/img/game-preview.png";
 import ChargeCenter from "@/assets/img/charge-center.png";
 import RegisterIcon from "@/assets/img/register-icon.png";
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
+const route = useRoute();
 const hasToken = ref(false);
 const menuList = ref([
   {
@@ -50,10 +53,23 @@ const menuList = ref([
     id: 1,
     icon: ChargeCenter,
     title: "充值中心",
-    link: "/chargeCenter",
+    link: "/recharge",
   },
 ]);
 const choseMenu = ref(0);
+watch(
+  () => choseMenu.value,
+  (val) => {
+    router.push(menuList.value[val].link);
+  },
+);
+watch(
+  () => route.path,
+  (val) => {
+    choseMenu.value = menuList.value.findIndex((item) => item.link === val);
+  },
+  { immediate: true },
+);
 const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
 };

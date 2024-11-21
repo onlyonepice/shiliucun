@@ -40,7 +40,7 @@ body {
   }
   .el-dialog {
     padding: 1.25vw;
-    font-size: .72917vw;
+    font-size: 0.72917vw;
     line-height: 1.5715;
     word-wrap: break-word;
     border-radius: 1.04167vw;
@@ -49,5 +49,16 @@ body {
   .el-dialog__title {
     color: #b6b3b3;
     font-size: 1.25vw;
+  }
+  .el-input__wrapper {
+    background-color: #222121;
+    box-shadow: none;
+    font-size: 0.83333vw;
+    &:hover {
+      box-shadow: none;
+    }
+  }
+  .el-input__wrapper.is-focus {
+    box-shadow: none;
   }
 }
