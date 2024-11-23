@@ -30,13 +30,13 @@ export default {
       },
     },
     {
-      path: "/gameDetail",
-      name: "GameDetail",
+      path: "/gameItem",
+      name: "GameItem",
       components: {
-        default: () => import("@/views/gameCenter/app.vue"),
+        default: () => import("@/views/gameItem/app.vue"),
       },
       meta: {
-        title: "游戏详情",
+        title: "游戏详情1",
       },
     },
   ],
