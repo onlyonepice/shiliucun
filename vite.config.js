@@ -35,15 +35,15 @@ export default ({ mode }) => {
     resolve: {
       alias,
     },
-    proxy: {
-      "/api": {
-        target: "http://192.168.11.169:8080",
-        changeOrigin: true, // 设置这个参数可以避免跨域
-        pathRewrite: {
-          "^/api": "/"
-        }
-      }
-    },
+    // proxy: {
+    //   "/api": {
+    //     target: "http://43.199.96.129",
+    //     changeOrigin: true, // 设置这个参数可以避免跨域
+    //     pathRewrite: {
+    //       "^/api": "/"
+    //     }
+    //   }
+    // },
     // 服务端渲染
     server: {
       hmr: true,
