@@ -1,5 +1,5 @@
 <template>
-  <div class="recharge">
+  <div class="recharge animate__animated animate__fadeIn">
     <div class="pageAside-coin" @click="drawer = true; getHistoryList()">
       <div>
         <p class="coin-text">{{ useUserStoreHook().$state.userInfo.coin }}币</p>
@@ -21,7 +21,7 @@
         class="recharge-list__item"
         @click="rechargeVisible = true;rechargeId = index; chosePayType = item.channel[0]"
       >
-        <img :src="item.img_url" alt="" />
+        <img :src="item.img_url" alt="" class="animate__animated animate__fadeIn" />
         <p>{{ item.num }}M币</p>
         <el-button style="width: 100%; text-align: center"
           >¥{{ item.price }}</el-button

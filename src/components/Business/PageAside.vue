@@ -49,7 +49,7 @@
         >
       </template>
       <template v-else>
-        <div class="menusItemLeft___Si0Uw" @click="openDialog('login')">
+        <div class="menusItemLeft___Si0Uw" @click="onLogout()">
           <img :src="LogoutIcon" alt="" />
           <p>登出</p>
         </div>
@@ -100,6 +100,7 @@ watch(
 watch(
   () => useUserStoreHook().$state.token,
   (val) => {
+    console.log("=====",val);
     hasToken.value = val !== "";
   },
   { immediate: true }
@@ -113,6 +114,9 @@ watch(
 );
 const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
+};
+const onLogout = () => {
+  useUserStoreHook().logOut();
 };
 </script>
 
