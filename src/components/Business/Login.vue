@@ -19,7 +19,10 @@
         type="password"
         :show-password="!showPassword"
       />
-      <p class="passwordTips___uSglk" @click="onForget()">忘记密码？</p>
+      <div class="passwordTips">
+        <p class="passwordTips___uSglk" @click="onForget()">忘记密码？/注册账号</p>
+        <!-- <p class="passwordTips___uSglk" @click="onForget()">注册账号</p> -->
+      </div>
     </template>
     <template v-else>
       <el-input
@@ -163,6 +166,9 @@ const onSendCode = async () => {
     width: 100%;
     @include flex(center, center, nowrap);
   }
+}
+.passwordTips {
+  @include flex(center, space-between, nowrap);
 }
 .passwordTips___uSglk {
   font-size: 0.72917vw;

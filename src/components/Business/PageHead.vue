@@ -2,7 +2,7 @@
   <div class="pageHead">
     <div class="pageHead-content">
       <img :src="Logo" alt="" />
-      <div>
+      <div v-if="useUserStoreHook().$state.token === ''">
         <el-button @click="openDialog" class="btn-play">立即游玩</el-button>
       </div>
     </div>
