@@ -23,7 +23,7 @@ watch(
   () => getToken(),
   (newVal) => {
     if( newVal !== "" ) {
-      useUserStoreHook().$state.token = newVal;
+      useUserStoreHook().$state.token = newVal === null ? "" : newVal;
     }
   },
   { immediate: true }
