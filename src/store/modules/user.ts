@@ -9,6 +9,7 @@ export const useUserStore = defineStore({
   state: () => ({
     token: "", // 用户token 用于判断用户登录还是退出 通过watch监听
     openLoginVisible: false, // 打开登录弹窗
+    openPayGameVisible: false, // 打开登录弹窗
     openLoginType: "login", // 登录弹窗类型 login/register
     userInfo: {
       avatar_url: "",
@@ -24,6 +25,9 @@ export const useUserStore = defineStore({
     openLogin(type: Boolean, dialogType = "login") {
       this.openLoginVisible = type;
       this.openLoginType = dialogType;
+    },
+    openPayGame(type: Boolean) {
+      this.openPayGameVisible = true;
     },
     /** 前端登出（不调用接口） */
     logOut() {

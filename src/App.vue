@@ -7,16 +7,25 @@
     </div>
   </div>
   <Login v-if="openLoginVisible" />
+  <PayGame v-if="openPayGameVisible" />
 </template>
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
+
 const openLoginVisible = ref(useUserStoreHook().$state.openLoginVisible);
+const openPayGameVisible = ref(useUserStoreHook().$state.openPayGameVisible);
 watch(
   () => useUserStoreHook().$state.openLoginVisible,
   (newVal) => {
     openLoginVisible.value = newVal;
+  },
+);
+watch(
+  () => useUserStoreHook().$state.openPayGameVisible,
+  (newVal) => {
+    openPayGameVisible.value = newVal;
   },
 );
 watch(

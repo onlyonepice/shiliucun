@@ -3,7 +3,9 @@ import { responseType } from "@/utils/type";
 const url = {
   getBanner: 'http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/index/banner',
   getGameList: 'http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/index/gameList',
-  gameInfo: 'http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/index/gameInfo'
+  gameInfo: 'http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/index/gameInfo',
+  payGame: 'http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/pay/game',
+  getUserInfo: 'http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/user/info'
 }
 
 // 登录
@@ -42,7 +44,7 @@ export const createPayApi = (data: any) => {
 };
 // 轮询订单状态
 export const getRechargeListApi = (data: any) => {
-  return http.request<responseType>("post", "/web/api/pay/status", {data});
+  return http.request<responseType>("post", "/web/api/pay/status", { data });
 }
 // M币记录
 export const getRechargeRecordApi = () => {
@@ -63,4 +65,12 @@ export const getGameList = (data: any) => {
 // 获取游戏详情
 export const gameInfo = (data: any) => {
   return http.request<responseType>("post", url.gameInfo, { data });
+};
+// 购买游戏
+export const payGame = (data: any) => {
+  return http.request<responseType>("post", url.payGame, { data });
+};
+// 用户信息
+export const getUserInfo = () => {
+  return http.request<responseType>("post", url.getUserInfo);
 };

@@ -66,10 +66,11 @@
   import { getToken } from "@/utils/auth";
   import { useUserStoreHook } from "@/store/modules/user";
   import { onMounted, ref,onUnmounted } from "vue";
-  import {  useRoute } from "vue-router";
+  import {  useRoute ,useRouter} from "vue-router";
   import { gameInfo } from "@/api/index";
 
   const route = useRoute();
+  const router = useRouter();
   const game_id = route.query.game_id;
   const info = ref<any>({route:'',game_id:''})
   const show = ref<any>(false)
@@ -80,7 +81,15 @@
     useUserStoreHook().openLogin(true, type);
   }
   const handleMessage = (event: MessageEvent) => {
-    console.log('Received message from iframe:', event.data);
+    console.log('Received message from iframe:=========>', event.data);
+    const data = JSON.parse(event?.data)
+    if(data.action=="agree"){
+      return useUserStoreHook().openPayGame(true)
+       router.push('/recharge')
+    }
+    if(data.action=="disagree"){
+      return router.push('/home')
+    }
 
     try {
       let iframeRef = document.getElementById('gameIframe') as HTMLIFrameElement
@@ -97,9 +106,9 @@
     }
   };
   const play =(flag)=>{
-    if(!token){
-      return openDialog()
-    }
+    // if(!token){
+    //   return openDialog()
+    // }
     show.value = false
     setTimeout(()=>{
       iframe_url.value = flag?info.value?.route:info.value?.demo_route
@@ -132,6 +141,8 @@
       info.value = res.data.info
     })
     window.addEventListener('message', handleMessage);
+    // window.addEventListener('agree', handleMessage);
+    // window.addEventListener('disagree', handleMessage);
   })
   onUnmounted(() => {
       console.log('页面即将销毁');
