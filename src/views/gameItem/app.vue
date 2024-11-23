@@ -3,9 +3,9 @@
     <div class="content">
       <div class="left_block">
         <div class="game_iframe">
-          <iframe v-if="show" id="gameIframe" frameborder="0" style="border-radius: 20px; height: 34.94792vw;width:100%" @onload="getHight"  scrolling="auto" :src="info?.route"></iframe>
-          <img v-show="!showUrl?.includes('.mp4')&&!show" class="game_iframe" :src="showUrl"/>
-          <video controls v-show="showUrl?.includes('.mp4')&&!show" class="game_iframe" :src="showUrl"></video>
+          <iframe v-if="show" id="gameIframe" frameborder="0" style="border-radius: 20px; height: 34.94792vw;width:100%" @onload="getHight"  scrolling="auto" :src="iframe_url"></iframe>
+          <img v-show="showUrl&&!showUrl?.includes('.mp4')&&!show" class="game_iframe" :src="showUrl"/>
+          <video autoplay controls  v-show="showUrl&&showUrl?.includes('.mp4')&&!show" class="game_iframe" :src="showUrl"></video>
         </div>
       <div class="card_block">
         <div class="item_block">
@@ -21,7 +21,7 @@
       <div class="right_block">
         <div class="detail_block">
             <div class="title">{{ info.name }}</div>
-            <img  :src="info.icon"/>
+            <img v-if="info.icon" :src="info.icon"/>
             <div class="action">
                 <div class="icon">
                     <img class="tips_icon" :src="heart">
@@ -36,7 +36,9 @@
                     <div>分享</div>
                 </div>
             </div>
-            <el-button @click="play" class="btn-play" >立即免费玩</el-button>
+            <div><el-button @click="play(true)" class="btn-play" >立即玩</el-button></div>
+            <div> <el-button v-if="route?.query?.lock==0" @click="play" class="btn-play" >试玩</el-button></div>
+           
         </div> 
         <div class="introduction">
             <div class="title">游戏介绍</div>
@@ -66,16 +68,21 @@
   import {  useRoute } from "vue-router";
   import { gameInfo } from "@/api/index";
 
-  const route = useRoute();
+  const route:any = useRoute();
   const game_id = route.query.game_id;
   const info = ref<any>({route:''})
   const show = ref<any>(false)
+  const iframe_url = ref<any>('')
   const showUrl = ref<any>('')
   const openDialog = (type: string) => {
     useUserStoreHook().openLogin(true, type);
   }
-  const play =()=>{
-    show.value = true
+  const play =(flag)=>{
+    show.value = false
+    setTimeout(()=>{
+      iframe_url.value = flag?info.value?.route:info.value?.demo_route
+      show.value = true
+    },10)
   }
   const showBlock = (item:any)=>{
     show.value = false
@@ -90,8 +97,9 @@
   
   onMounted(()=>{
     gameInfo({game_id}).then((res)=>{
-      console.log('res=====>',res)
+      showUrl.value=res.data.info.intro_img_list[0]
       info.value = res.data.info
+
     })
   })
   </script>

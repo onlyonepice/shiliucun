@@ -11,8 +11,8 @@
         <div clas=text>【全球首款】真人性愛模擬器</div>
       </div>
       <div class="item_block">
-        <div class="item" v-for="item in gameList" :key="item" @click="goto(item.game_id)">
-          <img class="card_img" :src="item.icon"/>
+        <div class="item" v-for="item in gameList" :key="item" @click="goto(item.game_id,item.lock)">
+          <img v-if="item.icon" class="card_img" :src="item.icon"/>
           <div class="bottom" > 
              <div class="tips">
                 {{item.name}}
@@ -22,7 +22,6 @@
               </div>
               <div class="price">
                 {{item.price?item.price+'¥':'免费'}}
-                
               </div>
           </div>
         </div>
@@ -37,14 +36,12 @@ import { useRouter } from 'vue-router';
 import { getBanner ,getGameList} from "@/api/index"
 import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/defaults";
 const router = useRouter();
-const goto = (game_id)=>{
-  router.push({path:"/gameItem",query:{game_id}})
+const goto = (game_id,lock)=>{
+  router.push({path:"/gameItem",query:{game_id,lock}})
 }
 const fileList = ref<any>([1,2,3,4,5,])
 const gameList = ref<any>([1,2,3,4,5,])
-const goGame = ()=>{
-  
-}
+
 onMounted(()=>{
   getBanner().then((res)=>{
     console.log(res)
