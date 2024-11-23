@@ -63,27 +63,58 @@
   import star from "@/assets/img/star.svg";
   import heart from "@/assets/img/heart.svg";
   import copy from "@/assets/img/copy.png";
+  import { getToken } from "@/utils/auth";
   import { useUserStoreHook } from "@/store/modules/user";
-  import { onMounted, ref } from "vue";
+  import { onMounted, ref,onUnmounted } from "vue";
   import {  useRoute } from "vue-router";
   import { gameInfo } from "@/api/index";
 
-  const route:any = useRoute();
+  const route = useRoute();
   const game_id = route.query.game_id;
-  const info = ref<any>({route:''})
+  const info = ref<any>({route:'',game_id:''})
   const show = ref<any>(false)
   const iframe_url = ref<any>('')
   const showUrl = ref<any>('')
+  const token = getToken()
   const openDialog = (type: string) => {
     useUserStoreHook().openLogin(true, type);
   }
+  const handleMessage = (event: MessageEvent) => {
+    console.log('Received message from iframe:', event.data);
+
+    try {
+      let iframeRef = document.getElementById('gameIframe') as HTMLIFrameElement
+      let params = {
+      token:token|| 123,
+        game_id:info.value.game_id
+      }
+      iframeRef.contentWindow?.postMessage(
+            JSON.stringify(params),
+            '*', // 支持跨域
+          );
+    } catch (error) {
+      console.error('Error parsing iframe message:', error);
+    }
+  };
   const play =(flag)=>{
+    if(!token){
+      return openDialog()
+    }
     show.value = false
     setTimeout(()=>{
       iframe_url.value = flag?info.value?.route:info.value?.demo_route
       show.value = true
+      let authIframe = document.getElementById('gameIframe') as HTMLIFrameElement
+      if(flag){
+        authIframe.addEventListener('message', function (e) {
+        authIframe.contentWindow.postMessage(JSON.stringify(params), '*')
+      })
+      }
     },10)
+
   }
+
+
   const showBlock = (item:any)=>{
     show.value = false
     showUrl.value = item
@@ -99,9 +130,13 @@
     gameInfo({game_id}).then((res)=>{
       showUrl.value=res.data.info.intro_img_list[0]
       info.value = res.data.info
-
     })
+    window.addEventListener('message', handleMessage);
   })
+  onUnmounted(() => {
+      console.log('页面即将销毁');
+      window.removeEventListener('message', handleMessage);
+    });
   </script>
   
   <style lang="scss" scoped>
@@ -250,7 +285,8 @@
   }
   .game_iframe{
     width:calc(100% - 20px);
-    height: 34.94792vw;width:100%
+    height: 34.94792vw;width:100%;
+    border-radius: 20px;
   }
   .content{
     width:100%;
