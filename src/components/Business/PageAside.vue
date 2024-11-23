@@ -78,7 +78,7 @@ import LogoutIcon from "@/assets/img/logout-icon.png";
 import { useRouter, useRoute } from "vue-router";
 import MoneyCoin from "@/assets/img/money-coin.png";
 import MoreIcon from "@/assets/img/more-icon.png";
-import { CopyDocument } from "@element-plus/icons-vue";
+// import { CopyDocument } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 const router = useRouter();
 const route = useRoute();

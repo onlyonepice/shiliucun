@@ -11,6 +11,7 @@ export const useUserStore = defineStore({
     openLoginVisible: false, // 打开登录弹窗
     openPayGameVisible: false, // 打开登录弹窗
     openLoginType: "login", // 登录弹窗类型 login/register
+    currentGame: {},
     configInfo: {}, // 配置信息
     userInfo: {
       avatar_url: "",
@@ -27,8 +28,9 @@ export const useUserStore = defineStore({
       this.openLoginVisible = type;
       this.openLoginType = dialogType;
     },
-    openPayGame(type: Boolean) {
-      this.openPayGameVisible = true;
+    openPayGame(type: Boolean, gameInfo) {
+      this.openPayGameVisible = type;
+      this.currentGame = gameInfo
     },
     /** 前端登出（不调用接口） */
     logOut() {

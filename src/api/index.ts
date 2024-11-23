@@ -1,12 +1,11 @@
 import { http } from "@/utils/http";
 import { responseType } from "@/utils/type";
 const url = {
-  getBanner:
-    "http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/index/banner",
-  getGameList:
-    "http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/index/gameList",
-  gameInfo:
-    "http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/index/gameInfo",
+  getBanner: '/web/api/index/banner',
+  getGameList: '/web/api/index/gameList',
+  gameInfo: '/web/api/index/gameInfo',
+  payGame: '/web/api/pay/game',
+  getUserInfo: '/web/api/user/info'
 };
 
 // 登录
