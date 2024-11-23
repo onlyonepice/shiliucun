@@ -1,6 +1,12 @@
 <template>
   <div class="recharge animate__animated animate__fadeIn">
-    <div class="pageAside-coin" @click="drawer = true; getHistoryList()">
+    <div
+      class="pageAside-coin"
+      @click="
+        drawer = true;
+        getHistoryList();
+      "
+    >
       <div>
         <p class="coin-text">{{ useUserStoreHook().$state.userInfo.coin }}币</p>
         <div class="coin-icon">
@@ -8,7 +14,7 @@
           <span>Mode Coin</span>
         </div>
       </div>
-      <img class="more-icon" :src="MoreIcon" alt="">
+      <img class="more-icon" :src="MoreIcon" alt="" />
     </div>
     <div class="recharge-desc">
       <img src="@/assets/img/tips-icon.png" alt="" />
@@ -19,9 +25,17 @@
         v-for="(item, index) in rechargeList"
         :key="index"
         class="recharge-list__item"
-        @click="rechargeVisible = true;rechargeId = index; chosePayType = item.channel[0]"
+        @click="
+          rechargeVisible = true;
+          rechargeId = index;
+          chosePayType = item.channel[0];
+        "
       >
-        <img :src="item.img_url" alt="" class="animate__animated animate__fadeIn" />
+        <img
+          :src="item.img_url"
+          alt=""
+          class="animate__animated animate__fadeIn"
+        />
         <p>{{ item.num }}M币</p>
         <el-button style="width: 100%; text-align: center"
           >¥{{ item.price }}</el-button
@@ -35,29 +49,40 @@
     title="交易概览"
     class="recharge-dialog"
   >
-  <template v-if="!payLoading">
-    <div class="recharge-header">
-    <span>项目</span>
-    <span>{{ rechargeList[rechargeId].num }}M 币</span>
-  </div>
-  <div class="recharge-header">
-    <span>价格</span>
-    <span>¥{{ rechargeList[rechargeId].price }}</span>
-  </div>
-  <div class="recharge-title">择支付方式</div>
-  <div class="recharge-img">
-    <div v-for="(item, index) in rechargeList[rechargeId].channelList" :key="index" :class="chosePayType === item.code ? 'recharge-img-chose' : ''" @click="chosePayType = item.code">
-      <img :src="item.url" alt="">
-    </div>
-  </div>
-  </template>
-  <template v-else>
-    <div v-loading="payLoading" class="payLoading" element-loading-text="Loading..." />
-  </template>
-  <template #footer>
+    <template v-if="!payLoading">
+      <div class="recharge-header">
+        <span>项目</span>
+        <span>{{ rechargeList[rechargeId].num }}M 币</span>
+      </div>
+      <div class="recharge-header">
+        <span>价格</span>
+        <span>¥{{ rechargeList[rechargeId].price }}</span>
+      </div>
+      <div class="recharge-title">择支付方式</div>
+      <div class="recharge-img">
+        <div
+          v-for="(item, index) in rechargeList[rechargeId].channelList"
+          :key="index"
+          :class="chosePayType === item.code ? 'recharge-img-chose' : ''"
+          @click="chosePayType = item.code"
+        >
+          <img :src="item.url" alt="" />
+        </div>
+      </div>
+    </template>
+    <template v-else>
+      <div
+        v-loading="payLoading"
+        class="payLoading"
+        element-loading-text="Loading..."
+      />
+    </template>
+    <template #footer>
       <div class="dialog-footer">
         <template v-if="!payLoading">
-          <el-button @click="handleClose(true)" class="btn-foot-1">确认支付</el-button>
+          <el-button @click="handleClose(true)" class="btn-foot-1"
+            >确认支付</el-button
+          >
           <div @click="handleClose(false)" class="btn-foot-2">取消</div>
         </template>
         <template v-else>
@@ -72,24 +97,43 @@
     direction="rtl"
     :before-close="drawerClose"
   >
-  <div class="tab___2eg2T">
-    <div @click="historyType !== 1 && (historyType = 1)" :class="historyType === 1 ? 'tab-chose' : ''">M币记录</div>
-    <div @click="historyType !== 2 && (historyType = 2)" :class="historyType === 2 ? 'tab-chose' : ''">充值记录</div>
-  </div>
-  <div class="history-list" v-for="(item, index) in historyList"  :key="index">
-    <p>{{ item.message || item.coin + " M币" }}</p>
-    <p>日期 {{ item.created_at }}</p>
-    <p>{{ historyType === 2 ? "¥" : "" }}{{ item.num || item.orderAmt }}{{ historyType === 1 ? " M币" : "" }}</p>
-  </div>
+    <div class="tab___2eg2T">
+      <div
+        @click="historyType !== 1 && (historyType = 1)"
+        :class="historyType === 1 ? 'tab-chose' : ''"
+      >
+        M币记录
+      </div>
+      <div
+        @click="historyType !== 2 && (historyType = 2)"
+        :class="historyType === 2 ? 'tab-chose' : ''"
+      >
+        充值记录
+      </div>
+    </div>
+    <div class="history-list" v-for="(item, index) in historyList" :key="index">
+      <p>{{ item.message || item.coin + " M币" }}</p>
+      <p>日期 {{ item.created_at }}</p>
+      <p>
+        {{ historyType === 2 ? "¥" : "" }}{{ item.num || item.orderAmt
+        }}{{ historyType === 1 ? " M币" : "" }}
+      </p>
+    </div>
   </el-drawer>
 </template>
 
 <script lang="ts" setup>
 import { ref, watch } from "vue";
-import { getPayListApi, createPayApi, getRechargeListApi, getRechargeRecordApi, getPayRecordApi } from "@/api/index";
+import {
+  getPayListApi,
+  createPayApi,
+  getRechargeListApi,
+  getRechargeRecordApi,
+  getPayRecordApi,
+} from "@/api/index";
 import AliPay from "@/assets/img/ali-pay.png";
 import WeChatPay from "@/assets/img/wechat-pay.png";
-import UsdtPay from '@/assets/img/usdt-pay.jpg';
+import UsdtPay from "@/assets/img/usdt-pay.jpg";
 import MoneyCoin from "@/assets/img/money-coin.png";
 import MoreIcon from "@/assets/img/more-icon.png";
 import { useUserStoreHook } from "@/store/modules/user";
@@ -106,19 +150,19 @@ const rechargeImgList = ref([
     id: 0,
     url: WeChatPay,
     show: false,
-    code: 'wx',
+    code: "wx",
   },
   {
     id: 1,
     url: AliPay,
     show: false,
-    code: 'zfb',
+    code: "zfb",
   },
   {
     id: 2,
     url: UsdtPay,
     show: false,
-    code: 'usdt',
+    code: "usdt",
   },
 ]);
 watch(
@@ -126,16 +170,17 @@ watch(
   (val) => {
     getHistoryList();
   },
-)
+);
 // 获取支付列表
 const getPayList = () => {
   getPayListApi().then((res: any) => {
     rechargeList.value = res.data.list;
     rechargeList.value.map((item) => {
       item.channelList = [];
-      rechargeImgList.value.map(_item=>{
-        item.channel.includes(_item.code) && (item.channelList = [...item.channelList, _item])
-      })
+      rechargeImgList.value.map((_item) => {
+        item.channel.includes(_item.code) &&
+          (item.channelList = [...item.channelList, _item]);
+      });
     });
   });
 };
@@ -147,42 +192,48 @@ const drawerClose = () => {
 // guide 弹窗关闭
 const handleClose = (type: Boolean) => {
   console.log(type);
-  if( !type ){
+  if (!type) {
     chosePayType.value = "";
     rechargeId.value = -1;
     payLoading.value = false;
-    return rechargeVisible.value = false;
-  }else {
+    return (rechargeVisible.value = false);
+  } else {
     payLoading.value = true;
     createPay();
   }
 };
 // M币记录/充值记录
-const getHistoryList = async() => {
+const getHistoryList = async () => {
   historyList.value = [];
-  const { data, code }:any = historyType.value === 1 ? await getRechargeRecordApi() : await getPayRecordApi();
-  if( code === 200 ) {
+  const { data, code }: any =
+    historyType.value === 1
+      ? await getRechargeRecordApi()
+      : await getPayRecordApi();
+  if (code === 200) {
     historyList.value = data.list;
   }
-}
+};
 const timer = ref(null);
 // 创建支付订单
-const createPay = async() => {
-  const { data, code }: any = await createPayApi({wd_id: rechargeList.value[rechargeId.value].id, channel: chosePayType.value})
+const createPay = async () => {
+  const { data, code }: any = await createPayApi({
+    wd_id: rechargeList.value[rechargeId.value].id,
+    channel: chosePayType.value,
+  });
   console.log(data, code);
-  if(code === 200){
+  if (code === 200) {
     // 轮训支付结果
     timer.value = setInterval(() => {
       checkPayStatus(data.order_id);
       window.open(data.payurl, "externalWindow");
-    }, 1000)
+    }, 1000);
   }
-}
+};
 // 轮训支付结果
-const checkPayStatus = async(orderId: String) => {
-  const { data, code }: any = await getRechargeListApi({orderId})
-  if(code === 200){
-    if(data.status === 1){
+const checkPayStatus = async (orderId: String) => {
+  const { data, code }: any = await getRechargeListApi({ orderId });
+  if (code === 200) {
+    if (data.status === 1) {
       // 支付成功
       payLoading.value = false;
       rechargeVisible.value = false;
@@ -190,7 +241,7 @@ const checkPayStatus = async(orderId: String) => {
       clearInterval(timer.value);
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -281,12 +332,12 @@ const checkPayStatus = async(orderId: String) => {
 .recharge-img {
   @include flex(center, flex-start, wrap);
   div {
-    width: calc(50% - .41667vw);
+    width: calc(50% - 0.41667vw);
     cursor: pointer;
     @include flex(center, center, wrap);
     padding: 0.083333vw;
     margin-bottom: 0.8vw;
-    border: 1px solid rgba(0,0,0,0);
+    border: 1px solid rgba(0, 0, 0, 0);
     &:nth-of-type(2n-1) {
       margin-right: 0.8vw;
     }
@@ -302,7 +353,7 @@ const checkPayStatus = async(orderId: String) => {
   width: 100%;
   height: 10vw;
   .el-loading-mask {
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
   }
 }
 .el-drawer {
@@ -318,9 +369,9 @@ const checkPayStatus = async(orderId: String) => {
   @include flex(center, space-between, row);
   div {
     background-color: #222121;
-    padding: .3125vw .625vw;
-    @include font(.625vw, 400, #fff, 1.04167vw);
-    border-radius: .20833vw;
+    padding: 0.3125vw 0.625vw;
+    @include font(0.625vw, 400, #fff, 1.04167vw);
+    border-radius: 0.20833vw;
     width: 48%;
     text-align: center;
     border: 1px solid #3b3939;
@@ -331,20 +382,20 @@ const checkPayStatus = async(orderId: String) => {
   }
 }
 .history-list {
-  padding: .83333vw;
-  border-radius: .625vw;
+  padding: 0.83333vw;
+  border-radius: 0.625vw;
   border: 1px solid #3b3939;
   background-color: #222121;
   margin-top: 0.45vw;
   p:nth-of-type(1) {
-    @include font(.72917vw, 400, #b6b3b3, .83333vw);
+    @include font(0.72917vw, 400, #b6b3b3, 0.83333vw);
   }
   p:nth-of-type(2) {
-    @include font(.625vw, 400, #6f6d6d, 1.04167vw);
+    @include font(0.625vw, 400, #6f6d6d, 1.04167vw);
     margin-top: 0.25vw;
   }
   p:nth-of-type(3) {
-    @include font(.72917vw, 400, #b6b3b3, 1.04167vw);
+    @include font(0.72917vw, 400, #b6b3b3, 1.04167vw);
   }
 }
 </style>

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { store } from "@/store";
-import { postUserInfoApi } from "@/api/index";
+import { postUserInfoApi, getBaseConfigApi } from "@/api/index";
 import { removeToken } from "@/utils/auth";
 import router from "@/router";
 
@@ -11,6 +11,7 @@ export const useUserStore = defineStore({
     openLoginVisible: false, // 打开登录弹窗
     openPayGameVisible: false, // 打开登录弹窗
     openLoginType: "login", // 登录弹窗类型 login/register
+    configInfo: {}, // 配置信息
     userInfo: {
       avatar_url: "",
       email: "",
@@ -34,6 +35,14 @@ export const useUserStore = defineStore({
       this.token = "";
       removeToken();
       router.push("/home");
+    },
+    /** 基础配置 */
+    async handleConfig() {
+      return new Promise<void>((resolve, reject) => {
+        getBaseConfigApi().then((response) => {
+          this.configInfo = response["data"];
+        });
+      });
     },
     /** 获取用户信息 */
     async handleGetUserInfo() {

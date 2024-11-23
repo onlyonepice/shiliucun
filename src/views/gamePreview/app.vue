@@ -9,7 +9,7 @@
       :loop="true"
     >
       <SwiperSlide v-for="(item, index) in bannerList" :key="index">
-        <img :src="item.banner" class="banner-list" alt="">
+        <img :src="item.banner" class="banner-list" alt="" />
       </SwiperSlide>
     </Swiper>
     <div class="gamesBox___jKqpI">
@@ -76,11 +76,11 @@ const onSlideChange = () => {
 // 轮播图
 const getHomeBanner = async () => {
   try {
-    const { code, data }:any = await getHomeBannerApi();
-    if( code === 200 ) {
+    const { code, data }: any = await getHomeBannerApi();
+    if (code === 200) {
       bannerList.value = data.list;
     }
-  } catch (error){}
+  } catch (error) {}
 };
 getHomeBanner();
 </script>

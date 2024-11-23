@@ -3,21 +3,27 @@
     <div class="pageAside-top">
       <template v-if="hasToken">
         <div class="userInfo___1qh4o">
-          <img :src="useUserStoreHook().$state.userInfo.avatar_url" alt="">
+          <img :src="useUserStoreHook().$state.userInfo.avatar_url" alt="" />
           <div>
-            <p class="userInfo___1qh4o-id">{{ useUserStoreHook().$state.userInfo.nickname }}</p>
-            <p class="userInfo___1qh4o-name">UID {{ useUserStoreHook().$state.userInfo.uid }}</p>
+            <p class="userInfo___1qh4o-id">
+              {{ useUserStoreHook().$state.userInfo.nickname }}
+            </p>
+            <p class="userInfo___1qh4o-name">
+              UID {{ useUserStoreHook().$state.userInfo.uid }}
+            </p>
           </div>
         </div>
         <div class="pageAside-coin" @click="choseMenu = 1">
           <div>
-            <p class="coin-text">{{ useUserStoreHook().$state.userInfo.coin }}币</p>
+            <p class="coin-text">
+              {{ useUserStoreHook().$state.userInfo.coin }}币
+            </p>
             <div class="coin-icon">
               <img :src="MoneyCoin" alt="" />
               <span>Mode Coin</span>
             </div>
           </div>
-          <img class="more-icon" :src="MoreIcon" alt="">
+          <img class="more-icon" :src="MoreIcon" alt="" />
         </div>
       </template>
       <div class="menusTitle___19IQ3">MENU</div>
@@ -28,7 +34,7 @@
           'menusItemLeft___Si0Uw',
           choseMenu === item.id ? 'pageAside-active' : '',
         ]"
-        @click="choseMenu = item.id"
+        @click="onChoseMenu(item.id)"
       >
         <img :src="item.icon" alt="" />
         <p>{{ item.title }}</p>
@@ -54,6 +60,11 @@
           <p>登出</p>
         </div>
       </template>
+      <div class="menusTitle___19IQ3" style="margin-top: 1.25vw">联系我们</div>
+      <el-button class="btn-no-account btn-no-account-email" @click="onEmail()">
+        <p>{{ useUserStoreHook().$state.configInfo.email }}</p>
+        <el-icon><CopyDocument /></el-icon>
+      </el-button>
     </div>
   </aside>
 </template>
@@ -67,6 +78,8 @@ import LogoutIcon from "@/assets/img/logout-icon.png";
 import { useRouter, useRoute } from "vue-router";
 import MoneyCoin from "@/assets/img/money-coin.png";
 import MoreIcon from "@/assets/img/more-icon.png";
+import { CopyDocument } from "@element-plus/icons-vue";
+import { ElMessage } from "element-plus";
 const router = useRouter();
 const route = useRoute();
 const hasToken = ref(false);
@@ -75,7 +88,7 @@ const menuList = ref([
     id: 0,
     icon: GamePreview,
     title: "游戏一览",
-    link: "/gamePreview",
+    link: "/home",
   },
   {
     id: 1,
@@ -100,10 +113,9 @@ watch(
 watch(
   () => useUserStoreHook().$state.token,
   (val) => {
-    console.log("=====",val);
     hasToken.value = val !== "";
   },
-  { immediate: true }
+  { immediate: true },
 );
 watch(
   () => route.path,
@@ -115,8 +127,25 @@ watch(
 const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
 };
+const onEmail = () => {
+  var textarea: any = document.createElement("textarea");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = 0;
+  textarea.value = useUserStoreHook().$state.configInfo.email;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+  ElMessage.success("复制邮箱成功");
+}
 const onLogout = () => {
   useUserStoreHook().logOut();
+};
+const onChoseMenu = (id: number) => {
+  if (!hasToken.value) {
+    return openDialog("login");
+  }
+  choseMenu.value = id;
 };
 </script>
 
@@ -221,5 +250,12 @@ const onLogout = () => {
 }
 .more-icon {
   @include widthAndHeight(1.25vw, 1.25vw);
+}
+.btn-no-account-email {
+  background-color: rgba(0,0,0,0) !important;
+  span {
+    width: 100%;
+    @include flex(center, space-between, nowrap);
+  }
 }
 </style>

@@ -2,8 +2,12 @@
   <div class="pageHead">
     <div class="pageHead-content">
       <img :src="Logo" alt="" />
-      <div v-if="useUserStoreHook().$state.token === ''">
-        <el-button @click="openDialog" class="btn-play">立即游玩</el-button>
+      <div
+        v-if="useUserStoreHook().$state.token === ''"
+        class="pageHead-content-right"
+      >
+        <!-- <el-button @click="openDialog" class="btn-play">立即游玩</el-button> -->
+        <el-button class="btn-share" @click="onShare()">分享链接</el-button>
       </div>
     </div>
   </div>
@@ -11,8 +15,17 @@
 <script lang="ts" setup>
 import Logo from "@/assets/img/logo.png";
 import { useUserStoreHook } from "@/store/modules/user";
-const openDialog = () => {
-  useUserStoreHook().openLogin(true, "login");
+import { ElMessage } from "element-plus";
+const onShare = () => {
+  var textarea: any = document.createElement("textarea");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = 0;
+  textarea.value = useUserStoreHook().$state.configInfo.share_url;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+  ElMessage.success("复制成功");
 };
 </script>
 
@@ -38,5 +51,18 @@ const openDialog = () => {
   font-size: 0.72917vw;
   line-height: 1.04167vw;
   padding: 1.04167vw !important;
+}
+.btn-share {
+  height: 2.08333vw;
+  font-size: 0.72917vw;
+  line-height: 1.04167vw;
+  padding: 1.04167vw !important;
+}
+.pageHead-content-right {
+  @include flex(center, center, row);
+  .btn-login {
+    width: 4.16667vw;
+    height: 2.08333vw;
+  }
 }
 </style>

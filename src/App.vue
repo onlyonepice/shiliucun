@@ -31,12 +31,13 @@ watch(
 watch(
   () => getToken(),
   (newVal) => {
-    if( newVal !== "" ) {
+    if (newVal !== "") {
       useUserStoreHook().$state.token = newVal === null ? "" : newVal;
     }
   },
-  { immediate: true }
-)
+  { immediate: true },
+);
+useUserStoreHook().handleConfig();
 </script>
 
 <style lang="scss">

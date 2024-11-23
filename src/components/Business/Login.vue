@@ -20,7 +20,9 @@
         :show-password="!showPassword"
       />
       <div class="passwordTips">
-        <p class="passwordTips___uSglk" @click="onForget()">忘记密码？/注册账号</p>
+        <p class="passwordTips___uSglk" @click="onForget()">
+          忘记密码？/注册账号
+        </p>
         <!-- <p class="passwordTips___uSglk" @click="onForget()">注册账号</p> -->
       </div>
     </template>
@@ -51,6 +53,11 @@
         placeholder="请输入密码"
         type="password"
         :show-password="!showPassword"
+      />
+      <el-input
+        v-model="form.invite_code"
+        style="width: 100%; margin-bottom: 1.25vw"
+        placeholder="请输入邀请码（选填）"
       />
     </template>
     <template #footer>
