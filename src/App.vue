@@ -11,6 +11,7 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
+import { getToken } from "@/utils/auth";
 const openLoginVisible = ref(useUserStoreHook().$state.openLoginVisible);
 watch(
   () => useUserStoreHook().$state.openLoginVisible,
@@ -18,6 +19,15 @@ watch(
     openLoginVisible.value = newVal;
   },
 );
+watch(
+  () => getToken(),
+  (newVal) => {
+    if( newVal !== "" ) {
+      useUserStoreHook().$state.token = newVal;
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss">

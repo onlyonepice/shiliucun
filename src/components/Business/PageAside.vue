@@ -1,6 +1,25 @@
 <template>
   <aside class="pageAside">
     <div class="pageAside-top">
+      <template v-if="hasToken">
+        <div class="userInfo___1qh4o">
+          <img :src="useUserStoreHook().$state.userInfo.avatar_url" alt="">
+          <div>
+            <p class="userInfo___1qh4o-id">{{ useUserStoreHook().$state.userInfo.nickname }}</p>
+            <p class="userInfo___1qh4o-name">UID {{ useUserStoreHook().$state.userInfo.uid }}</p>
+          </div>
+        </div>
+        <div class="pageAside-coin" @click="choseMenu = 1">
+          <div>
+            <p class="coin-text">{{ useUserStoreHook().$state.userInfo.coin }}币</p>
+            <div class="coin-icon">
+              <img :src="MoneyCoin" alt="" />
+              <span>Mode Coin</span>
+            </div>
+          </div>
+          <img class="more-icon" :src="MoreIcon" alt="">
+        </div>
+      </template>
       <div class="menusTitle___19IQ3">MENU</div>
       <div
         v-for="item in menuList"
@@ -29,6 +48,12 @@
           />建立免费账号</el-button
         >
       </template>
+      <template v-else>
+        <div class="menusItemLeft___Si0Uw" @click="openDialog('login')">
+          <img :src="LogoutIcon" alt="" />
+          <p>登出</p>
+        </div>
+      </template>
     </div>
   </aside>
 </template>
@@ -38,7 +63,10 @@ import { useUserStoreHook } from "@/store/modules/user";
 import GamePreview from "@/assets/img/game-preview.png";
 import ChargeCenter from "@/assets/img/charge-center.png";
 import RegisterIcon from "@/assets/img/register-icon.png";
+import LogoutIcon from "@/assets/img/logout-icon.png";
 import { useRouter, useRoute } from "vue-router";
+import MoneyCoin from "@/assets/img/money-coin.png";
+import MoreIcon from "@/assets/img/more-icon.png";
 const router = useRouter();
 const route = useRoute();
 const hasToken = ref(false);
@@ -62,6 +90,13 @@ watch(
   (val) => {
     router.push(menuList.value[val].link);
   },
+);
+watch(
+  () => useUserStoreHook().$state.token,
+  (val) => {
+    hasToken.value = val !== "";
+  },
+  { immediate: true }
 );
 watch(
   () => route.path,
@@ -126,5 +161,55 @@ const openDialog = (type: string) => {
   @include widthAndHeight(100%, 2.08333vw);
   @include font(0.72917vw, 400, #b6b3b3, 1.04167vw);
   text-align: left;
+}
+.userInfo___1qh4o {
+  @include flex(center, space-between, nowrap);
+  margin-bottom: 0.83333vw;
+  img {
+    width: 2.5vw;
+    height: 2.5vw;
+    border: 0cap solid #fff;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: 0;
+    margin-right: 0.83333vw;
+  }
+  div {
+    flex: 1;
+  }
+  .userInfo___1qh4o-id {
+    color: #f0eded;
+    font-size: 0.83333vw;
+    line-height: 1.04167vw;
+    margin-bottom: 0.20833vw;
+  }
+  .userInfo___1qh4o-name {
+    @include font(0.625vw, 400, #6f6d6d, 1.04167vw);
+  }
+}
+.pageAside-coin {
+  padding: 0.41667vw 0.41667vw 0.41667vw 0.83333vw;
+  cursor: pointer;
+  @include flex(center, space-between, nowrap);
+  background-color: #222121;
+  border: 0.5px solid #3b3939;
+  margin-bottom: 0.41667vw;
+  .coin-text {
+    @include font(0.83333vw, 400, #f00a38, 1.04167vw);
+    margin-bottom: 0.04167vw;
+  }
+  .coin-icon {
+    @include flex(center, center, nowrap);
+    img {
+      @include widthAndHeight(1.04167vw, 1.04167vw);
+      margin-right: 0.20833vw;
+    }
+    span {
+      @include font(0.625vw, 400, #6f6d6d, 1.04167vw);
+    }
+  }
+}
+.more-icon {
+  @include widthAndHeight(1.25vw, 1.25vw);
 }
 </style>

@@ -19,7 +19,7 @@
         type="password"
         :show-password="!showPassword"
       />
-      <p class="passwordTips___uSglk">忘记密码？</p>
+      <p class="passwordTips___uSglk" @click="onForget()">忘记密码？</p>
     </template>
     <template v-else>
       <el-input
@@ -43,7 +43,7 @@
         :show-password="!showPassword"
       />
       <el-input
-        v-model="form.password"
+        v-model="form.password2"
         style="width: 100%; margin-bottom: 1.25vw"
         placeholder="请输入密码"
         type="password"
@@ -53,7 +53,11 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="onLogin" class="btn-foot">{{
-          openLoginType === "login" ? "登入" : "注册"
+          resetPassword
+            ? "重置密码"
+            : openLoginType === "login"
+              ? "登入"
+              : "注册"
         }}</el-button>
       </div>
     </template>
@@ -63,12 +67,14 @@
 import { ref, watch, Ref } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
-import { loginApi } from "@/api/index";
+import { loginApi, sendVerificationCodeApi } from "@/api/index";
+import { setToken } from "@/utils/auth";
 const dialogVisible = ref(true);
 const openLoginType = ref(""); // 登录方式
 const form: Ref<any> = ref({});
 const showPassword: Ref<boolean> = ref(false); // 密码是否可见
 const btnDesc: Ref<string> = ref("获取验证码"); // 倒计时文案
+const resetPassword: Ref<boolean> = ref(false); // 重置密码
 watch(
   () => useUserStoreHook().$state.openLoginType,
   (newVal) => {
@@ -80,19 +86,37 @@ watch(
 );
 // 登陆/注册
 const onLogin = async () => {
-  if (useUserStoreHook().$state.openLoginType !== "login") {
-    return onRegister();
+  const _form = form.value;
+  if (useUserStoreHook().$state.openLoginType === "login") {
+    if (_form.email === "" || _form.password === "") {
+      return ElMessage.error("请输入账号和密码");
+    }
+  } else {
+    if (
+      _form.email === "" ||
+      _form.password === "" ||
+      _form.password2 === "" ||
+      _form.code === ""
+    ) {
+      return ElMessage.error("请晚上注册信息");
+    }
+    if (_form.password !== _form.password2) {
+      return ElMessage.error("两次密码不一致");
+    }
   }
-  if (openLoginType.value === "login") {
-    // 登录
-    const res = await loginApi(form.value);
+  const { code, data }: any = await loginApi(form.value);
+  if (code === 200) {
+    useUserStoreHook().$state.token = data.token;
+    setToken(data);
+    useUserStoreHook().handleGetUserInfo();
   }
+  useUserStoreHook().openLogin(false);
 };
-const onRegister = async () => {
-  if (openLoginType.value === "login") {
-    // 登录
-    const res = await loginApi(form.value);
-  }
+// 忘记密码
+const onForget = () => {
+  resetPassword.value = true;
+  // 忘记密码
+  useUserStoreHook().$state.openLoginType = "register";
 };
 
 const handleClose = () => {
@@ -121,7 +145,7 @@ const onSendCode = async () => {
     if (form.value.email === "") {
       return ElMessage.error("请输入邮箱");
     }
-    // await sendCode({ mobile: loginForm.value.mobile });
+    await sendVerificationCodeApi({ email: form.value.email });
     ElMessage.success("发送成功");
     countDown();
   } catch (error) {
@@ -144,6 +168,7 @@ const onSendCode = async () => {
   font-size: 0.72917vw;
   font-weight: 500;
   color: #b6b3b3;
+  cursor: pointer;
 }
 .registerCode {
   @include flex(center, space-between, nowrap);

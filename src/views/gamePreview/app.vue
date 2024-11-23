@@ -8,9 +8,9 @@
       :modules="modules"
       :loop="true"
     >
-      <SwiperSlide>Slide 1</SwiperSlide>
-      <SwiperSlide>Slide 2</SwiperSlide>
-      <SwiperSlide>Slide 3</SwiperSlide>
+      <SwiperSlide v-for="(item, index) in bannerList" :key="index">
+        <img :src="item.banner" class="banner-list" alt="">
+      </SwiperSlide>
     </Swiper>
     <div class="gamesBox___jKqpI">
       <div v-for="(item, index) in list" :key="index" class="gamesBox___item">
@@ -28,12 +28,14 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay } from "swiper/modules";
+import { getHomeBannerApi } from "@/api";
 const modules = [Autoplay];
 const autoplay: any = ref({
   delay: 3000,
   pauseOnMouseEnter: false,
   disableOnInteraction: false,
 });
+const bannerList: any = ref([]);
 const list = ref([
   {
     id: 0,
@@ -70,6 +72,17 @@ const onSwiper = (swiper) => {
 const onSlideChange = () => {
   console.log("slide change");
 };
+
+// 轮播图
+const getHomeBanner = async () => {
+  try {
+    const { code, data }:any = await getHomeBannerApi();
+    if( code === 200 ) {
+      bannerList.value = data.list;
+    }
+  } catch (error){}
+};
+getHomeBanner();
 </script>
 
 <style lang="scss" scoped>
@@ -107,6 +120,11 @@ const onSlideChange = () => {
 .gamesBox___price {
   @include font(1.04167vw, 400, #f00a38, 1.04167vw);
   margin-top: 4.20833vw;
+}
+.banner-list {
+  @include widthAndHeight(100%, 100%);
+  cursor: pointer;
+  object-fit: cover;
 }
 </style>
 
