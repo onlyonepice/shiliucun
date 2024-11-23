@@ -3,25 +3,29 @@
     <div class="content">
       <div class="left_block">
         <div class="game_iframe">
-        <iframe id="gameIframe" frameborder="0" style="border-radius: 20px; height: 34.94792vw;width:100%" @onload="getHight"  scrolling="auto" src="https://www.baidu.com/"></iframe>
-      </div>
+          <iframe v-if="show" id="gameIframe" frameborder="0" style="border-radius: 20px; height: 34.94792vw;width:100%" @onload="getHight"  scrolling="auto" :src="info?.route"></iframe>
+          <img v-show="!showUrl?.includes('.mp4')&&!show" class="game_iframe" :src="showUrl"/>
+          <video controls v-show="showUrl?.includes('.mp4')&&!show" class="game_iframe" :src="showUrl"></video>
+        </div>
       <div class="card_block">
-        
         <div class="item_block">
-          <div  v-for="item in fileList" :key="item" >
-            <img class="card_img" :src="test"/>
+          <div v-for="item in info?.intro_img_list" :key="item" @click="showBlock(item)" >
+            <img class="card_img" v-if="!item?.includes('.mp4')" :src="item"/>
+            <video controls v-if="item?.includes('.mp4')" class="card_img" >
+              <source :src="item" type="video/mp4" />
+            </video>
           </div>
         </div>
       </div>
       </div>
       <div class="right_block">
         <div class="detail_block">
-            <div class="title">涩点点《超色气女仆 永井すみれ》网页游玩</div>
-            <img :src="test"/>
+            <div class="title">{{ info.name }}</div>
+            <img  :src="info.icon"/>
             <div class="action">
                 <div class="icon">
                     <img class="tips_icon" :src="heart">
-                    <div>3</div>
+                    <div>{{info?.hot_num}}</div>
                 </div>
                 <div class="icon">
                     <img class="tips_icon" :src="star">
@@ -32,7 +36,7 @@
                     <div>分享</div>
                 </div>
             </div>
-            <el-button @click="openDialog('register')" class="btn-play">立即免费玩</el-button>
+            <el-button @click="play" class="btn-play" >立即免费玩</el-button>
         </div> 
         <div class="introduction">
             <div class="title">游戏介绍</div>
@@ -45,39 +49,7 @@
                   </div>
               </div>
               <div class="intro_content">
-                溫熱的泡沫逐漸滑落，露出她誘人的曲線。當她靠近時，空氣中瀰漫著緊張與欲望，「主人，您需要好好放鬆吧？」每個字都充滿挑逗，直擊你的心靈。 她跨坐在你身上，指尖在你的肌膚上遊走，帶來如電流般的悸動。每一滴水流的滑落，都撩動你內心的渴望。「這樣舒服嗎，主人？」她的低語令你迷失在這場遊戲中。 隨著她股間逐漸向下，你感受到她的體溫與形狀。「主人，我會讓您滿意的。」語音剛落，下面傳來的包覆感讓你徹底陷入誘惑的漩渦，無法自拔。
-
-
-
-
-
-                遊戲提示： 
-
-                1.目前不支持Iphone10以下或iOS17以下的軟體版本。
-
-                2.網頁版目前無法支持隨電腦螢幕調整尺寸，建議使用手機進行遊玩體驗。
-
-                3.支付部分目前不支持IPhone 10或iOS 17以下的軟體版本；若其他機型，無法顯示支付方式，可以進入「設定」>「App」>「Safari」· 開啟或關閉「阻擋彈出式視窗」，即可支付。
-
-                4.iphone目前支持safari瀏覽器，Chrome的部分將排入下次更版優化。
-                遊戲提示： 
-
-                1.目前不支持Iphone10以下或iOS17以下的軟體版本。
-
-                2.網頁版目前無法支持隨電腦螢幕調整尺寸，建議使用手機進行遊玩體驗。
-
-                3.支付部分目前不支持IPhone 10或iOS 17以下的軟體版本；若其他機型，無法顯示支付方式，可以進入「設定」>「App」>「Safari」· 開啟或關閉「阻擋彈出式視窗」，即可支付。
-
-                4.iphone目前支持safari瀏覽器，Chrome的部分將排入下次更版優化。
-                遊戲提示： 
-
-                1.目前不支持Iphone10以下或iOS17以下的軟體版本。
-
-                2.網頁版目前無法支持隨電腦螢幕調整尺寸，建議使用手機進行遊玩體驗。
-
-                3.支付部分目前不支持IPhone 10或iOS 17以下的軟體版本；若其他機型，無法顯示支付方式，可以進入「設定」>「App」>「Safari」· 開啟或關閉「阻擋彈出式視窗」，即可支付。
-
-                4.iphone目前支持safari瀏覽器，Chrome的部分將排入下次更版優化。
+               {{info.intro}}
               </div>
             </div>
         </div>
@@ -89,20 +61,39 @@
   import star from "@/assets/img/star.svg";
   import heart from "@/assets/img/heart.svg";
   import copy from "@/assets/img/copy.png";
-  import test from "@/assets/img/test.jpg";
   import { useUserStoreHook } from "@/store/modules/user";
-  import { ref } from "vue";
+  import { onMounted, ref } from "vue";
+  import {  useRoute } from "vue-router";
+  import { gameInfo } from "@/api/index";
+
+  const route = useRoute();
+  const game_id = route.query.game_id;
+  const info = ref<any>({route:''})
+  const show = ref<any>(false)
+  const showUrl = ref<any>('')
   const openDialog = (type: string) => {
     useUserStoreHook().openLogin(true, type);
-  };
-  const fileList = ref([1,2,3,4,5,6,7,8])
-  
+  }
+  const play =()=>{
+    show.value = true
+  }
+  const showBlock = (item:any)=>{
+    show.value = false
+    showUrl.value = item
+  }
   const getHight = ()=>{
     let iframes = window.parent.document.getElementsByTagName('gameIframe');
     for (var i = 0, j = iframes.length; i < j; ++i) {
       iframes[i].setAttribute('height', iframes[i].contentWindow.document.body.scrollHeight)
       }
     }
+  
+  onMounted(()=>{
+    gameInfo({game_id}).then((res)=>{
+      console.log('res=====>',res)
+      info.value = res.data.info
+    })
+  })
   </script>
   
   <style lang="scss" scoped>
@@ -222,8 +213,8 @@
     }
     .icon{
         flex: 1 1;
-    display: flex
-;
+        display: flex
+    ;
     align-items: center;
     justify-content: center;
     padding: .3125vw;
@@ -251,6 +242,7 @@
   }
   .game_iframe{
     width:calc(100% - 20px);
+    height: 34.94792vw;width:100%
   }
   .content{
     width:100%;

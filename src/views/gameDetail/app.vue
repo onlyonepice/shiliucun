@@ -31,14 +31,19 @@
   </template>
   
   <script lang="ts" setup>
-  import { ref } from "vue";
+  import { onMounted, ref } from "vue";
   import { useRouter } from 'vue-router';
   import test from "@/assets/img/test.jpg";
+  import { getDetail } from "@/api/index"
   const router = useRouter();
   const goto = ()=>{
     router.push({path:"/gameItem"})
   }
   const fileList = ref([1,2,3,4,5,6,7,8])
+
+  onMounted(()=>{
+    getDetail()
+  })
   </script>
   
   <style lang="scss" scoped>
