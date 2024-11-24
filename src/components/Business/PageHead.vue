@@ -2,10 +2,7 @@
   <div class="pageHead">
     <div class="pageHead-content">
       <img :src="Logo" alt="" />
-      <div
-        v-if="useUserStoreHook().$state.token === ''"
-        class="pageHead-content-right"
-      >
+      <div class="pageHead-content-right">
         <!-- <el-button @click="openDialog" class="btn-play">立即游玩</el-button> -->
         <el-button class="btn-share" @click="onShare()">分享链接</el-button>
       </div>

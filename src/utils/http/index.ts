@@ -96,6 +96,8 @@ class PureHttp {
         if (token && !whiteUrlList.includes(config.url)) {
           config.headers["Authorization"] = "Bearer " + token;
         }
+        config.headers.platform = "3";
+        config.headers.Pase_method = window.location.href.includes("https") ? "https" : "http";
         // 定义请求链接
         config.url =
           config.url.indexOf("http") === -1

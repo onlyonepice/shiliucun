@@ -8,6 +8,7 @@
   </div>
   <Login v-if="openLoginVisible" />
   <PayGame v-if="openPayGameVisible" />
+  <Announcement v-if="useUserStoreHook().$state.openAnnouncement" />
 </template>
 <script lang="ts" setup>
 import { ref, watch } from "vue";
@@ -38,6 +39,7 @@ watch(
   { immediate: true },
 );
 useUserStoreHook().handleConfig();
+useUserStoreHook().announcementDialog(true);
 </script>
 
 <style lang="scss">

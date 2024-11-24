@@ -80,3 +80,8 @@ export const getUserInfo = () => {
 export const getBaseConfigApi = () => {
   return http.request<responseType>("post", "/web/api/config/base");
 };
+
+// 公告配置
+export const getNoticeConfigApi = () => {
+  return http.request<responseType>("post", "/web/api/config/notice");
+};

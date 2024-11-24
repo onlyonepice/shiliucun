@@ -36,7 +36,8 @@
         ]"
         @click="onChoseMenu(item.id)"
       >
-        <img :src="item.icon" alt="" />
+        <img v-if="item.iconType !== 'text'" :src="item.icon" alt="" />
+        <el-icon v-else style="color: rgba(255,255,255,.6);margin-right: 0.25vw;"><User /></el-icon>
         <p>{{ item.title }}</p>
       </div>
     </div>
@@ -74,12 +75,13 @@ import { useUserStoreHook } from "@/store/modules/user";
 import GamePreview from "@/assets/img/game-preview.png";
 import ChargeCenter from "@/assets/img/charge-center.png";
 import RegisterIcon from "@/assets/img/register-icon.png";
+import AnnouncementIcon from "@/assets/img/announcement-icon.png";
 import LogoutIcon from "@/assets/img/logout-icon.png";
 import { useRouter, useRoute } from "vue-router";
 import MoneyCoin from "@/assets/img/money-coin.png";
 import MoreIcon from "@/assets/img/more-icon.png";
-// import { CopyDocument } from "@element-plus/icons-vue";
-import { ElMessage } from "element-plus";
+import { CopyDocument, User } from "@element-plus/icons-vue";
+import { ElMessage, } from "element-plus";
 const router = useRouter();
 const route = useRoute();
 const hasToken = ref(false);
@@ -98,9 +100,16 @@ const menuList = ref([
   },
   {
     id: 2,
-    icon: GamePreview,
-    title: "H5游戏",
-    link: "/gameDetail",
+    iconType: "text",
+    icon: "<el-icon><User /></el-icon>",
+    title: "账户信息",
+    link: "/account",
+  },
+  {
+    id: 3,
+    icon: AnnouncementIcon,
+    title: "公告中心",
+    link: "/announcement",
   },
 ]);
 const choseMenu = ref(0);

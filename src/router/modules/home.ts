@@ -10,13 +10,13 @@ export default {
   },
   children: [
     {
-      path: "/gamePreview",
-      name: "GamePreview",
+      path: "/announcement",
+      name: "Announcement",
       components: {
-        default: () => import("@/views/gamePreview/app.vue"),
+        default: () => import("@/views/announcement/app.vue"),
       },
       meta: {
-        title: "游戏一览",
+        title: "公告中心",
       },
     },
     {
@@ -27,6 +27,16 @@ export default {
       },
       meta: {
         title: "充值中心",
+      },
+    },
+    {
+      path: "/account",
+      name: "Account",
+      components: {
+        default: () => import("@/views/account/app.vue"),
+      },
+      meta: {
+        title: "账户信息",
       },
     },
     {
