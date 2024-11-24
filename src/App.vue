@@ -8,6 +8,7 @@
   </div>
   <Login v-if="openLoginVisible" />
   <PayGame v-if="openPayGameVisible" />
+  <DownloadApp v-if="openDownloadVisible" />
   <Announcement v-if="useUserStoreHook().$state.openAnnouncement" />
 </template>
 <script lang="ts" setup>
@@ -17,6 +18,7 @@ import { getToken } from "@/utils/auth";
 
 const openLoginVisible = ref(useUserStoreHook().$state.openLoginVisible);
 const openPayGameVisible = ref(useUserStoreHook().$state.openPayGameVisible);
+const openDownloadVisible = ref(useUserStoreHook().$state.openDownloadVisible);
 watch(
   () => useUserStoreHook().$state.openLoginVisible,
   (newVal) => {
@@ -27,6 +29,12 @@ watch(
   () => useUserStoreHook().$state.openPayGameVisible,
   (newVal) => {
     openPayGameVisible.value = newVal;
+  },
+);
+watch(
+  () => useUserStoreHook().$state.openDownloadVisible,
+  (newVal) => {
+    openDownloadVisible.value = newVal;
   },
 );
 watch(

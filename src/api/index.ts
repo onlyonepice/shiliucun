@@ -5,7 +5,8 @@ const url = {
   getGameList: '/web/api/index/gameList',
   gameInfo: '/web/api/index/gameInfo',
   payGame: '/web/api/pay/game',
-  getUserInfo: '/web/api/user/info'
+  getUserInfo: '/web/api/user/info',
+  getBase: '/web/api/config/base'
 };
 
 // 登录
@@ -78,7 +79,7 @@ export const getUserInfo = () => {
 };
 // 获取基础配置
 export const getBaseConfigApi = () => {
-  return http.request<responseType>("post", "/web/api/config/base");
+  return http.request<responseType>("post", url.getBase);
 };
 
 // 公告配置

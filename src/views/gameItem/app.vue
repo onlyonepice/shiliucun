@@ -5,7 +5,7 @@
       <div class="game_iframe">
         <iframe v-if="show" id="gameIframe" frameborder="0" style="border-radius: 20px; height: 34.94792vw;width:100%" @onload="getHight"  scrolling="auto" :src="iframe_url"></iframe>
         <img v-show="showUrl&&!showUrl?.includes('.mp4')&&!show" class="game_iframe" :src="showUrl"/>
-        <video autoplay controls  v-show="showUrl&&showUrl?.includes('.mp4')&&!show" class="game_iframe" :src="showUrl"></video>
+        <video controls  v-show="showUrl&&showUrl?.includes('.mp4')&&!show" class="game_iframe" :src="showUrl"></video>
       </div>
     <div class="card_block">
       <div class="item_block">
@@ -36,8 +36,9 @@
                   <div>分享</div>
               </div>
           </div>
+          <div class="pay_success" v-if="info.lock==1"><img class="tips_icon"  :src="success_icon"/>您已购买此游戏</div>
           <div><el-button @click="play(true)" class="btn-play" >立即玩</el-button></div>
-          <div> <el-button v-if="route?.query?.lock==0" @click="play" class="btn-play" >试玩</el-button></div>
+          <div> <el-button v-if="info.lock==0" @click="play" class="btn-play" >试玩</el-button></div>
          
       </div> 
       <div class="introduction">
@@ -63,6 +64,7 @@
 import star from "@/assets/img/star.svg";
 import heart from "@/assets/img/heart.svg";
 import copy from "@/assets/img/copy.png";
+import success_icon from "@/assets/img/success-filling.png";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 import { onMounted, ref,onUnmounted } from "vue";
@@ -81,7 +83,6 @@ const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
 }
 const handleMessage = (event: MessageEvent) => {
-  console.log('Received message from iframe:=========>', event.data);
   const data = JSON.parse(event?.data)
   if(data.action=="agree"){
     return useUserStoreHook().openPayGame(true,info.value)
@@ -113,14 +114,7 @@ const play =(flag)=>{
   setTimeout(()=>{
     iframe_url.value = flag?info.value?.route:info.value?.demo_route
     show.value = true
-    let authIframe = document.getElementById('gameIframe') as HTMLIFrameElement
-    if(flag){
-      authIframe.addEventListener('message', function (e) {
-      authIframe.contentWindow.postMessage(JSON.stringify(params), '*')
-    })
-    }
   },10)
-
 }
 
 
@@ -143,6 +137,8 @@ onMounted(()=>{
   window.addEventListener('message', handleMessage);
   // window.addEventListener('agree', handleMessage);
   // window.addEventListener('disagree', handleMessage);
+
+document.getElementById('myframe').contentWindow.location.reload();
 })
 onUnmounted(() => {
     console.log('页面即将销毁');
@@ -152,7 +148,24 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-
+.success_icon{
+    width: 16.25vw;
+    height: 9.16667vw;
+    object-fit: cover;
+    border-radius: .625vw;
+    border-radius: var(--md, .625vw);
+}
+.pay_success{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .625vw;
+    font-weight: 500;
+    color: #5bd493;
+    grid-gap: .20833vw;
+    gap: .20833vw;
+    margin:10px;
+}
 .introduction {
   padding: .625vw 1.25vw;
   padding: var(--xs, .625vw) var(--lg, 1.25vw);

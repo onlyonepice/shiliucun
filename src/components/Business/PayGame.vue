@@ -33,13 +33,13 @@
         <el-button v-if="buyType" @click="goChange" class="btn-foot">{{ buyType == '1'?'余额不足去充值':'立即购买'}} </el-button>
       </div>
       <div>
-        <el-button @click="cannel" class="btn-foot cannel">取消</el-button>
+        <el-button @click="handleClose" class="btn-foot cannel">取消</el-button>
       </div>
     </div>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ref, watch, Ref, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getUserInfo,payGame } from "@/api/index";
 import { ElMessage } from "element-plus";
@@ -70,9 +70,7 @@ const goChange = () => {
         })
     }
 };
-const cannel = () => {
- 
-};
+
 onMounted(() => {
   getUserInfo().then((res) => {
     currentUser.value = res.data?.user

@@ -4,6 +4,7 @@
       <img :src="Logo" alt="" />
       <div class="pageHead-content-right">
         <!-- <el-button @click="openDialog" class="btn-play">立即游玩</el-button> -->
+        <el-button class="btn-share" @click="download()">下载APP</el-button>
         <el-button class="btn-share" @click="onShare()">分享链接</el-button>
       </div>
     </div>
@@ -13,6 +14,9 @@
 import Logo from "@/assets/img/logo.png";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
+const download = ()=>{
+  useUserStoreHook().openDownload(true);
+}
 const onShare = () => {
   var textarea: any = document.createElement("textarea");
   textarea.style.position = "fixed";
