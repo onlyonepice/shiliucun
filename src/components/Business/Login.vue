@@ -31,8 +31,9 @@
         v-model="form.email"
         style="width: 100%; margin-bottom: 1.25vw"
         placeholder="请输入邮箱地址"
+        :disabled="openLoginType === 'editPassword'"
       />
-      <div class="registerCode">
+      <div class="registerCode" v-if="openLoginType !== 'editPassword'">
         <el-input
           v-model="form.code"
           style="width: 64%"
@@ -45,6 +46,7 @@
         style="width: 100%; margin-bottom: 1.25vw"
         placeholder="请输入密码"
         type="password"
+        :minlength="6"
         :show-password="!showPassword"
       />
       <el-input
@@ -52,9 +54,11 @@
         style="width: 100%; margin-bottom: 1.25vw"
         placeholder="请输入密码"
         type="password"
+        :minlength="6"
         :show-password="!showPassword"
       />
       <el-input
+        v-if="openLoginType !== 'editPassword'"
         v-model="form.invite_code"
         style="width: 100%; margin-bottom: 1.25vw"
         placeholder="请输入邀请码（选填）"
@@ -67,6 +71,8 @@
             ? "重置密码"
             : openLoginType === "login"
               ? "登入"
+            : openLoginType === "editPassword"
+              ? "保存"
               : "注册"
         }}</el-button>
       </div>
@@ -77,7 +83,7 @@
 import { ref, watch, Ref } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
-import { loginApi, sendVerificationCodeApi } from "@/api/index";
+import { loginApi, sendVerificationCodeApi, editUserInfoApi } from "@/api/index";
 import { setToken } from "@/utils/auth";
 const dialogVisible = ref(true);
 const openLoginType = ref(""); // 登录方式
@@ -89,6 +95,7 @@ watch(
   () => useUserStoreHook().$state.openLoginType,
   (newVal) => {
     openLoginType.value = newVal;
+    newVal === 'editPassword' && (form.value.email = useUserStoreHook().$state.userInfo.email);
   },
   {
     immediate: true,
@@ -113,6 +120,13 @@ const onLogin = async () => {
     if (_form.password !== _form.password2) {
       return ElMessage.error("两次密码不一致");
     }
+  }
+  if (_form.password.length < 6) {
+      return ElMessage.error("密码长度最短6位");
+    }
+  if( openLoginType.value === "editPassword" ) {
+    await editUserInfoApi({ password: _form.password });
+    return useUserStoreHook().openLogin(false);
   }
   const { code, data }: any = await loginApi(form.value);
   if (code === 200) {
@@ -201,5 +215,9 @@ const onSendCode = async () => {
       background-color: #222121;
     }
   }
+}
+.el-input.is-disabled .el-input__wrapper {
+  background-color: #222121;
+  box-shadow: none;
 }
 </style>

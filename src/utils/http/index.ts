@@ -131,7 +131,7 @@ class PureHttp {
           PureHttp.initConfig.beforeResponseCallback(response);
           return data;
         }
-        if (code !== 0) {
+        if (code !== 200) {
           switch (code) {
             // 无登录
             case 400:
@@ -139,8 +139,8 @@ class PureHttp {
               ElMessage.error(data?.msg);
               break;
             default:
-              // if (config.params && config.params.hideError) return data;
-              // ElMessage.error(data?.resp_msg || "Error");
+              if (config.params && config.params.hideError) return data;
+              ElMessage.error(data?.msg || "Error");
               break;
           }
         }
