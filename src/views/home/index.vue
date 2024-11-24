@@ -6,7 +6,7 @@
         v-for="item in fileList"
         :key="item"
       >
-        <el-image style="width: 100%" :src="item.banner" fit="contain" @click="goto(item.game_id, item.lock)" />
+        <el-image style="width: 100%" :src="item.banner" fit="contain" @click="goto(item.game_id)" />
       </el-carousel-item>
     </el-carousel>
     <div class="card_block">
@@ -18,7 +18,7 @@
           class="item"
           v-for="item in gameList"
           :key="item"
-          @click="goto(item.game_id, item.lock)"
+          @click="goto(item.game_id)"
         >
           <img v-if="item.icon" class="card_img" :src="item.icon" />
           <div class="bottom">
@@ -47,8 +47,8 @@ import { useRouter } from "vue-router";
 import { getBanner, getGameList } from "@/api/index";
 import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/defaults";
 const router = useRouter();
-const goto = (game_id, lock) => {
-  router.push({ path: "/gameItem", query: { game_id, lock } });
+const goto = (game_id) => {
+  router.push({ path: "/gameItem", query: { game_id } });
 };
 const fileList = ref<any>([1, 2, 3, 4, 5]);
 const gameList = ref<any>([1, 2, 3, 4, 5]);

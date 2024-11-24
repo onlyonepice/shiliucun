@@ -99,7 +99,7 @@ const handleMessage = (event: MessageEvent) => {
     token:token|| 123,
       game_id:info.value.game_id
     }
-    iframeRef.contentWindow?.postMessage(
+    iframeRef?.contentWindow?.postMessage(
           JSON.stringify(params),
           '*', // 支持跨域
         );
@@ -139,7 +139,7 @@ onMounted(()=>{
   // window.addEventListener('agree', handleMessage);
   // window.addEventListener('disagree', handleMessage);
 
-document.getElementById('myframe').contentWindow.location.reload();
+document.getElementById('myframe')?.contentWindow.location.reload();
 })
 onUnmounted(() => {
     console.log('页面即将销毁');
