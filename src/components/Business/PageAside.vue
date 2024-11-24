@@ -155,6 +155,7 @@ const onChoseMenu = (id: number) => {
     return openDialog("login");
   }
   choseMenu.value = id;
+  router.push(menuList.value[id]?.link);
 };
 </script>
 
