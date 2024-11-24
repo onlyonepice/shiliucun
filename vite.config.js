@@ -4,7 +4,6 @@ import pkg from "./package.json";
 import { warpperEnv } from "./build";
 import { getPluginsList } from "./build/plugins";
 import { include, exclude } from "./build/optimize";
-import { visualizer } from "rollup-plugin-visualizer";
 import { loadEnv } from "vite";
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root = process.cwd();
@@ -57,14 +56,6 @@ export default ({ mode }) => {
     },
     plugins: [
       getPluginsList(false, VITE_COMPRESSION),
-      // 分析打包结果
-      visualizer({
-        gzipSize: true,
-        brotliSize: true,
-        emitFile: false,
-        filename: "test.html", //分析图生成的文件名
-        open: true, //如果存在本地服务端口，将在打包后自动展示
-      }),
     ],
     // https://cn.vitejs.dev/config/dep-optimization-options.html#dep-optimization-options
     optimizeDeps: {
