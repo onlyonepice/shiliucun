@@ -85,3 +85,9 @@ export const getBaseConfigApi = () => {
 export const getNoticeConfigApi = () => {
   return http.request<responseType>("post", "/web/api/config/notice");
 };
+// 补填邀请码
+export const editUserInfoApi = (data: any) => {
+  return http.request<responseType>("post", "/web/api/user/edit", {
+   data,
+  })
+}
