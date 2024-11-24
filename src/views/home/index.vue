@@ -6,7 +6,7 @@
         v-for="item in fileList"
         :key="item"
       >
-        <el-image style="width: 100%" :src="item.banner" fit="contain" />
+        <el-image style="width: 100%" :src="item.banner" fit="contain" @click="goto(item.game_id, item.lock)" />
       </el-carousel-item>
     </el-carousel>
     <div class="card_block">
@@ -26,9 +26,14 @@
               {{ item.name }}
             </div>
             <div class="coupon"></div>
-            <div class="price">
-              {{ item.price ? item.price + "¥" : "免费" }}
-            </div>
+            <template v-if="item.price > 0 && item.lock === 1">
+              <div class="price">已购买</div>
+            </template>
+            <template v-else>
+              <div class="price">
+                {{ item.price ? item.price + "M币" : "免费" }}
+              </div>
+            </template>
           </div>
         </div>
       </div>

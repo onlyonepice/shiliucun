@@ -22,7 +22,7 @@
       <div class="detail_block">
           <div class="title">{{ info.name }}</div>
           <img v-if="info.icon" :src="info.icon"/>
-          <div class="action">
+          <!-- <div class="action">
               <div class="icon">
                   <img class="tips_icon" :src="heart">
                   <div>{{info?.hot_num}}</div>
@@ -35,22 +35,22 @@
                   <img class="tips_icon" :src="copy">
                   <div>分享</div>
               </div>
-          </div>
+          </div> -->
           <div class="pay_success" v-if="info.lock==1"><img class="tips_icon"  :src="success_icon"/>您已购买此游戏</div>
           <div><el-button @click="play(true)" class="btn-play" >立即玩</el-button></div>
           <div> <el-button v-if="info.lock==0" @click="play" class="btn-play" >试玩</el-button></div>
-         
-      </div> 
+
+      </div>
       <div class="introduction">
           <div class="title">游戏介绍</div>
           <div class="intro_body">
-            <div class="intro_tips">
+            <!-- <div class="intro_tips">
               <div class="tag">限制级</div>
               <div class="tag">MASOBU精选
                 </div>
               <div class="tag">知名女优
                 </div>
-            </div>
+            </div> -->
             <div class="intro_content">
              {{info.intro}}
             </div>
@@ -83,7 +83,8 @@ const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
 }
 const handleMessage = (event: MessageEvent) => {
-  const data = JSON.parse(event?.data)
+  let data = null;
+  data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
   if(data.action=="agree"){
     return useUserStoreHook().openPayGame(true,info.value)
      router.push('/recharge')
@@ -321,7 +322,7 @@ onUnmounted(() => {
 .card_block{
   margin-top:1.5vw;
   width: 100%;
- 
+
   width:calc(100% - 20px);
   .item_block{
     display: flex;
