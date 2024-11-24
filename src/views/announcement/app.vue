@@ -1,12 +1,19 @@
 <template>
   <div class="announcement">
-    <h1 style="color: #fff;margin-bottom: 2vw;">公告中心</h1>
+    <h1 style="color: #fff; margin-bottom: 2vw">公告中心</h1>
     <el-collapse v-model="activeNames" @change="handleChange">
-      <el-collapse-item :title="item.title" :name="item.id"  v-for="item in infoList" :key="item.id" >
-        <p style="font-size: 1.5vw;margin-bottom: 0.8vw;">{{ item.intro }}</p>
-        <p style="font-size: 1vw;margin-bottom: 0.6vw;">{{ item.created_at }}</p>
+      <el-collapse-item
+        :title="item.title"
+        :name="item.id"
+        v-for="item in infoList"
+        :key="item.id"
+      >
+        <p style="font-size: 1.5vw; margin-bottom: 0.8vw">{{ item.intro }}</p>
+        <p style="font-size: 1vw; margin-bottom: 0.6vw">
+          {{ item.created_at }}
+        </p>
         <p v-html="item.detail"></p>
-        </el-collapse-item>
+      </el-collapse-item>
     </el-collapse>
   </div>
 </template>
@@ -17,9 +24,9 @@ import { getNoticeConfigApi } from "@/api/index";
 const infoList = ref([]); // 公告列表
 const activeNames = ref([]); // 折叠面板选中项
 // 获取公告数据
-const gameInfo = async() => {
-  const { data, code }:any = await getNoticeConfigApi();
-  if( code === 200 ) {
+const gameInfo = async () => {
+  const { data, code }: any = await getNoticeConfigApi();
+  if (code === 200) {
     infoList.value = data;
   }
 };
@@ -40,7 +47,7 @@ gameInfo();
     border-top: none;
     --el-collapse-border-color: transparent;
   }
-  .el-collapse-item__header{
+  .el-collapse-item__header {
     background-color: #171616;
     color: #fff;
   }

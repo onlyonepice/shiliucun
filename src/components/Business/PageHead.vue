@@ -14,9 +14,9 @@
 import Logo from "@/assets/img/logo.png";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
-const download = ()=>{
+const download = () => {
   useUserStoreHook().openDownload(true);
-}
+};
 const onShare = () => {
   var textarea: any = document.createElement("textarea");
   textarea.style.position = "fixed";

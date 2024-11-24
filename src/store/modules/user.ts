@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
 import { store } from "@/store";
-import { postUserInfoApi, getBaseConfigApi, getNoticeConfigApi } from "@/api/index";
+import {
+  postUserInfoApi,
+  getBaseConfigApi,
+  getNoticeConfigApi,
+} from "@/api/index";
 import { removeToken } from "@/utils/auth";
 import router from "@/router";
 
@@ -33,7 +37,7 @@ export const useUserStore = defineStore({
     },
     openPayGame(type: Boolean, gameInfo) {
       this.openPayGameVisible = type;
-      this.currentGame = gameInfo
+      this.currentGame = gameInfo;
     },
     openDownload(type: Boolean) {
       this.openDownloadVisible = type;
@@ -59,7 +63,10 @@ export const useUserStore = defineStore({
           return;
         }
         this.openAnnouncement = true;
-        localStorage.setItem("configInfoIds", JSON.stringify(_list.concat(_list.push(data[0].id))));
+        localStorage.setItem(
+          "configInfoIds",
+          JSON.stringify(_list.concat(_list.push(data[0].id))),
+        );
       }
     },
     /** 基础配置 */

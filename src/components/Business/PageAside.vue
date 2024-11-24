@@ -37,7 +37,11 @@
         @click="onChoseMenu(item.id)"
       >
         <img v-if="item.iconType !== 'text'" :src="item.icon" alt="" />
-        <el-icon v-else style="color: rgba(255,255,255,.6);margin-right: 0.25vw;"><User /></el-icon>
+        <el-icon
+          v-else
+          style="color: rgba(255, 255, 255, 0.6); margin-right: 0.25vw"
+          ><User
+        /></el-icon>
         <p>{{ item.title }}</p>
       </div>
     </div>
@@ -81,7 +85,7 @@ import { useRouter, useRoute } from "vue-router";
 import MoneyCoin from "@/assets/img/money-coin.png";
 import MoreIcon from "@/assets/img/more-icon.png";
 import { CopyDocument, User } from "@element-plus/icons-vue";
-import { ElMessage, } from "element-plus";
+import { ElMessage } from "element-plus";
 const router = useRouter();
 const route = useRoute();
 const hasToken = ref(false);
@@ -146,7 +150,7 @@ const onEmail = () => {
   document.execCommand("copy");
   document.body.removeChild(textarea);
   ElMessage.success("复制邮箱成功");
-}
+};
 const onLogout = () => {
   useUserStoreHook().logOut();
 };
@@ -262,7 +266,7 @@ const onChoseMenu = (id: number) => {
   @include widthAndHeight(1.25vw, 1.25vw);
 }
 .btn-no-account-email {
-  background-color: rgba(0,0,0,0) !important;
+  background-color: rgba(0, 0, 0, 0) !important;
   span {
     width: 100%;
     @include flex(center, space-between, nowrap);

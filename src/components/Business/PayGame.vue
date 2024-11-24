@@ -9,13 +9,13 @@
     <div class="pay_game">
       <div class="top_block">
         <div class="right">
-          <div class="title">{{gameInfo?.name}}</div>
-          <div class="price">{{gameInfo?.price}}M币</div>
+          <div class="title">{{ gameInfo?.name }}</div>
+          <div class="price">{{ gameInfo?.price }}M币</div>
         </div>
-        <img :src="gameInfo.icon"/>
+        <img :src="gameInfo.icon" />
       </div>
       <div class="buy_title">当前余额</div>
-      <div class="buy_button">{{currentUser.coin}}M币</div>
+      <div class="buy_button">{{ currentUser.coin }}M币</div>
       <div class="buy_title">交易概览</div>
       <div class="item_tips">
         <div class="tips">金额</div>
@@ -23,14 +23,18 @@
       </div>
       <div class="item_tips">
         <div class="tips">优惠</div>
-        <div class="right_tips">{{gameInfo.price}}M币</div>
+        <div class="right_tips">{{ gameInfo.price }}M币</div>
       </div>
       <div class="item_tips">
         <div class="tips">支付</div>
-        <div class="right_tips" style="color:#f00a38">{{gameInfo.price}}M币</div>
+        <div class="right_tips" style="color: #f00a38">
+          {{ gameInfo.price }}M币
+        </div>
       </div>
       <div>
-        <el-button v-if="buyType" @click="goChange" class="btn-foot">{{ buyType == '1'?'余额不足去充值':'立即购买'}} </el-button>
+        <el-button v-if="buyType" @click="goChange" class="btn-foot"
+          >{{ buyType == "1" ? "余额不足去充值" : "立即购买" }}
+        </el-button>
       </div>
       <div>
         <el-button @click="handleClose" class="btn-foot cannel">取消</el-button>
@@ -41,40 +45,40 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
-import { getUserInfo,payGame } from "@/api/index";
+import { getUserInfo, payGame } from "@/api/index";
 import { ElMessage } from "element-plus";
-import { useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 const dialogVisible = ref(true);
-const currentUser:any = ref(true);
-const buyType:any = ref();
-const gameInfo:any = useUserStoreHook().currentGame
+const currentUser: any = ref(true);
+const buyType: any = ref();
+const gameInfo: any = useUserStoreHook().currentGame;
 
 const handleClose = () => {
-  useUserStoreHook().openPayGame(false,{});
+  useUserStoreHook().openPayGame(false, {});
 };
 const goChange = () => {
-    if(buyType.value==1){
-        router.push('/recharge')
-    }else if(buyType.value==2){
-        payGame({game_id:gameInfo.game_id}).then((res)=>{
-            console.log(res)
-            if(res.code==200){
-                ElMessage.success('购买成功！')
-                handleClose()
-                location.reload()
-            }else{
-                ElMessage.error('购买失败！')
-            }
-        })
-    }
+  if (buyType.value == 1) {
+    router.push("/recharge");
+  } else if (buyType.value == 2) {
+    payGame({ game_id: gameInfo.game_id }).then((res) => {
+      console.log(res);
+      if (res.code == 200) {
+        ElMessage.success("购买成功！");
+        handleClose();
+        location.reload();
+      } else {
+        ElMessage.error("购买失败！");
+      }
+    });
+  }
 };
 
 onMounted(() => {
   getUserInfo().then((res) => {
-    currentUser.value = res.data?.user
-    buyType.value = res.data?.user?.coin - gameInfo?.price < 0 ? '1':'2'
+    currentUser.value = res.data?.user;
+    buyType.value = res.data?.user?.coin - gameInfo?.price < 0 ? "1" : "2";
   });
 });
 </script>

@@ -6,8 +6,12 @@
     :before-close="handleClose"
     class="login-dialog"
   >
-  <img class="avatar" :src="useUserStoreHook().$state.userInfo.avatar_url" alt="">
-  <el-upload
+    <img
+      class="avatar"
+      :src="useUserStoreHook().$state.userInfo.avatar_url"
+      alt=""
+    />
+    <el-upload
       class="upload-demo"
       action="http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/open/img"
       :show-file-list="false"
@@ -15,14 +19,14 @@
       :multiple="false"
       :on-success="handleAvatarSuccess"
     >
-    <el-button type="primary">上传头像</el-button>
-  </el-upload>
-  <el-input
-    v-model="form.nickname"
-    style="width: 100%; margin-bottom: 1.25vw"
-    placeholder="请输入昵称"
-  />
-  <template #footer>
+      <el-button type="primary">上传头像</el-button>
+    </el-upload>
+    <el-input
+      v-model="form.nickname"
+      style="width: 100%; margin-bottom: 1.25vw"
+      placeholder="请输入昵称"
+    />
+    <template #footer>
       <div class="dialog-footer">
         <el-button @click="onSave" class="btn-foot">保存</el-button>
       </div>
@@ -42,7 +46,7 @@ const form = ref({
 const handleAvatarSuccess = (res: any) => {
   if (res.code === 200) {
     ElMessage.success("上传成功");
-    editUserInfoApi({avatar_url: res.data.url});
+    editUserInfoApi({ avatar_url: res.data.url });
     useUserStoreHook().handleGetUserInfo();
     emits("close");
   }
@@ -54,8 +58,8 @@ const onSave = () => {
       useUserStoreHook().handleGetUserInfo();
       emits("close");
     }
-  })
-}
+  });
+};
 </script>
 
 <style lang="scss">
@@ -65,7 +69,7 @@ const onSave = () => {
   display: none;
 }
 .avatar {
-  @include widthAndHeight(4.16667vw,4.16667vw);
+  @include widthAndHeight(4.16667vw, 4.16667vw);
   border-radius: 50%;
   margin: 0 auto 2vw;
   display: block;
@@ -75,13 +79,13 @@ const onSave = () => {
   margin-bottom: 2vw;
 }
 .btn-foot {
+  width: 100%;
+  @include flex(center, center, nowrap);
+  span {
     width: 100%;
     @include flex(center, center, nowrap);
-    span {
-      width: 100%;
-      @include flex(center, center, nowrap);
-    }
   }
+}
 .el-button--primary {
   background-color: #222121 !important;
   padding: 1vw 6vw !important;

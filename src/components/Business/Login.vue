@@ -71,9 +71,9 @@
             ? "重置密码"
             : openLoginType === "login"
               ? "登入"
-            : openLoginType === "editPassword"
-              ? "保存"
-              : "注册"
+              : openLoginType === "editPassword"
+                ? "保存"
+                : "注册"
         }}</el-button>
       </div>
     </template>
@@ -83,7 +83,11 @@
 import { ref, watch, Ref } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
-import { loginApi, sendVerificationCodeApi, editUserInfoApi } from "@/api/index";
+import {
+  loginApi,
+  sendVerificationCodeApi,
+  editUserInfoApi,
+} from "@/api/index";
 import { setToken } from "@/utils/auth";
 const dialogVisible = ref(true);
 const openLoginType = ref(""); // 登录方式
@@ -95,7 +99,8 @@ watch(
   () => useUserStoreHook().$state.openLoginType,
   (newVal) => {
     openLoginType.value = newVal;
-    newVal === 'editPassword' && (form.value.email = useUserStoreHook().$state.userInfo.email);
+    newVal === "editPassword" &&
+      (form.value.email = useUserStoreHook().$state.userInfo.email);
   },
   {
     immediate: true,
@@ -122,9 +127,9 @@ const onLogin = async () => {
     }
   }
   if (_form.password.length < 6) {
-      return ElMessage.error("密码长度最短6位");
-    }
-  if( openLoginType.value === "editPassword" ) {
+    return ElMessage.error("密码长度最短6位");
+  }
+  if (openLoginType.value === "editPassword") {
     await editUserInfoApi({ password: _form.password });
     return useUserStoreHook().openLogin(false);
   }

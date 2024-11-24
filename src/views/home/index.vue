@@ -6,7 +6,7 @@
         v-for="item in fileList"
         :key="item"
       >
-        <el-image style="width: 100%" :src="item.banner" fit="contain" @click="goto(item.game_id)" />
+        <el-image style="width: 100%" :src="item.banner" fit="contain" @click="goto(item.game_id, 'now')" />
       </el-carousel-item>
     </el-carousel>
     <div class="card_block">
@@ -37,6 +37,26 @@
           </div>
         </div>
       </div>
+      <div class="title" style="margin-top: 2vw;">
+        <div clas="text">敬请期待</div>
+      </div>
+      <div class="item_block">
+        <div
+          class="item"
+          v-for="item in gameListFeature"
+          :key="item"
+          @click="goto(item.game_id, 'feature')"
+        >
+          <img v-if="item.icon" class="card_img" :src="item.icon" />
+          <div class="bottom">
+            <div class="tips">
+              {{ item.name }}
+            </div>
+            <div class="coupon"></div>
+            <div class="price">查看详情</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -47,11 +67,12 @@ import { useRouter } from "vue-router";
 import { getBanner, getGameList } from "@/api/index";
 import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/defaults";
 const router = useRouter();
-const goto = (game_id) => {
-  router.push({ path: "/gameItem", query: { game_id } });
+const goto = (game_id, time = 'now') => {
+  router.push({ path: "/gameItem", query: { game_id, time } });
 };
 const fileList = ref<any>([1, 2, 3, 4, 5]);
 const gameList = ref<any>([1, 2, 3, 4, 5]);
+const gameListFeature = ref<any>([1, 2, 3, 4, 5]);
 
 onMounted(() => {
   getBanner().then((res) => {
@@ -61,9 +82,13 @@ onMounted(() => {
     }
   });
   getGameList({ id: 1 }).then((res) => {
-    console.log(res);
     if ((res.code = 200)) {
       gameList.value = res?.data?.list;
+    }
+  });
+  getGameList({ is_online: 0 }).then((res) => {
+    if ((res.code = 200)) {
+      gameListFeature.value = res?.data?.list;
     }
   });
 });
@@ -97,6 +122,7 @@ onMounted(() => {
     grid-gap: var(--xs, 0.625vw);
     gap: var(--xs, 0.625vw);
     overflow-x: auto;
+    flex-wrap: wrap;
   }
   .title {
     font-size: 1.45833vw;
@@ -118,8 +144,7 @@ onMounted(() => {
       background-image: url("@/assets/img/card-select.png");
     }
     cursor: pointer;
-
-    width: 14.16667vw;
+    width: 13.16667vw;
     padding: var(--3xs, 0.41667vw);
     position: relative;
     border-radius: 0.625vw;

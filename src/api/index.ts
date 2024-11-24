@@ -1,12 +1,12 @@
 import { http } from "@/utils/http";
 import { responseType } from "@/utils/type";
 const url = {
-  getBanner: '/web/api/index/banner',
-  getGameList: '/web/api/index/gameList',
-  gameInfo: '/web/api/index/gameInfo',
-  payGame: '/web/api/pay/game',
-  getUserInfo: '/web/api/user/info',
-  getBase: '/web/api/config/base'
+  getBanner: "/web/api/index/banner",
+  getGameList: "/web/api/index/gameList",
+  gameInfo: "/web/api/index/gameInfo",
+  payGame: "/web/api/pay/game",
+  getUserInfo: "/web/api/user/info",
+  getBase: "/web/api/config/base",
 };
 
 // 登录
@@ -89,6 +89,6 @@ export const getNoticeConfigApi = () => {
 // 补填邀请码
 export const editUserInfoApi = (data: any) => {
   return http.request<responseType>("post", "/web/api/user/edit", {
-   data,
-  })
-}
+    data,
+  });
+};
