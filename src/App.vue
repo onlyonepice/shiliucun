@@ -1,5 +1,5 @@
 <template>
-  <PageHead />
+  <PageHead @share="handleShare = true" />
   <div class="page-content">
     <PageAside />
     <div class="main-content">
@@ -9,6 +9,7 @@
   <Login v-if="openLoginVisible" />
   <PayGame v-if="openPayGameVisible" />
   <DownloadApp v-if="openDownloadVisible" />
+  <Share v-if="handleShare" @close="handleShare = false" />
   <Announcement v-if="useUserStoreHook().$state.openAnnouncement" />
 </template>
 <script lang="ts" setup>
@@ -19,6 +20,7 @@ import { getToken } from "@/utils/auth";
 const openLoginVisible = ref(useUserStoreHook().$state.openLoginVisible);
 const openPayGameVisible = ref(useUserStoreHook().$state.openPayGameVisible);
 const openDownloadVisible = ref(useUserStoreHook().$state.openDownloadVisible);
+const handleShare = ref(false);
 watch(
   () => useUserStoreHook().$state.openLoginVisible,
   (newVal) => {

@@ -16,11 +16,11 @@
         <div class="pageAside-coin" @click="choseMenu = 1">
           <div>
             <p class="coin-text">
-              {{ useUserStoreHook().$state.userInfo.coin }}币
+              {{ useUserStoreHook().$state.userInfo.coin }}喵币
             </p>
             <div class="coin-icon">
               <img :src="MoneyCoin" alt="" />
-              <span>Mode Coin</span>
+              <span>喵币</span>
             </div>
           </div>
           <img class="more-icon" :src="MoreIcon" alt="" />
@@ -155,7 +155,7 @@ const onLogout = () => {
   useUserStoreHook().logOut();
 };
 const onChoseMenu = (id: number) => {
-  if (!hasToken.value) {
+  if (!hasToken.value && id === 2) {
     return openDialog("login");
   }
   choseMenu.value = id;

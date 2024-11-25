@@ -11,22 +11,20 @@
   </div>
 </template>
 <script lang="ts" setup>
-import Logo from "@/assets/img/logo.png";
+import { ref } from "vue";
+import Logo from "@/assets/img/logo.jpg";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
+const emits = defineEmits(["share"]);
+const shareVisible= ref(false); // 分享
 const download = () => {
   useUserStoreHook().openDownload(true);
 };
 const onShare = () => {
-  var textarea: any = document.createElement("textarea");
-  textarea.style.position = "fixed";
-  textarea.style.opacity = 0;
-  textarea.value = useUserStoreHook().$state.configInfo.share_url;
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand("copy");
-  document.body.removeChild(textarea);
-  ElMessage.success("复制成功");
+  if( useUserStoreHook().$state.token === "" ) {
+    return useUserStoreHook().openLogin(true, "login");
+  }
+  emits('share')
 };
 </script>
 
