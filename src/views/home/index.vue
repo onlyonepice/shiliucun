@@ -142,18 +142,6 @@ onMounted(() => {
     background: var(--neutral-950, #171616);
   }
   .item {
-    &::after{
-      content: "";
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 200px;
-      background-image: url("@/assets/img/1.png");
-      z-index: 1;
-      background-size: 100% 100%;
-    }
     &:hover {
       border: 0.5px solid crimson;
       background-image: url("@/assets/img/card-select.png");
