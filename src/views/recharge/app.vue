@@ -8,17 +8,17 @@
       "
     >
       <div>
-        <p class="coin-text">{{ useUserStoreHook().$state.userInfo.coin }}币</p>
+        <p class="coin-text">{{ useUserStoreHook().$state.userInfo.coin }}喵币</p>
         <div class="coin-icon">
           <img :src="MoneyCoin" alt="" />
-          <span>Mode Coin</span>
+          <span>喵币</span>
         </div>
       </div>
       <img class="more-icon" :src="MoreIcon" alt="" />
     </div>
     <div class="recharge-desc">
       <img src="@/assets/img/tips-icon.png" alt="" />
-      您可以使用M币购买本平台的游戏，可通过充值获得M币。汇率结算单位：美元（实时汇率）
+      {{ Text }}
     </div>
     <div class="recharge-list">
       <div
@@ -36,9 +36,10 @@
           alt=""
           class="animate__animated animate__fadeIn"
         />
-        <p>{{ item.num }}M币</p>
+        <p>{{ item.num }}</p>
+        <p class="recharge-list__item_text">{{ item.add_text }}</p>
         <el-button style="width: 100%; text-align: center"
-          >¥{{ item.price }}</el-button
+          >{{ item.price }}</el-button
         >
       </div>
     </div>
@@ -145,6 +146,7 @@ const payLoading = ref(false); // 支付按钮loading
 const drawer = ref(false); // 侧边栏
 const historyList = ref([]); // 支付记录
 const historyType = ref(1); // 1:M币记录 2:充值记录
+const Text = ref("");
 const rechargeImgList = ref([
   {
     id: 0,
@@ -182,6 +184,7 @@ const getPayList = () => {
           (item.channelList = [...item.channelList, _item]);
       });
     });
+    Text.value = res.data.text;
   });
 };
 getPayList();
@@ -191,13 +194,15 @@ const drawerClose = () => {
 };
 // guide 弹窗关闭
 const handleClose = (type: Boolean) => {
-  console.log(type);
   if (!type) {
     chosePayType.value = "";
     rechargeId.value = -1;
     payLoading.value = false;
     return (rechargeVisible.value = false);
   } else {
+    if (useUserStoreHook().$state.token === "") {
+      return useUserStoreHook().openLogin(true, "login");
+    }
     payLoading.value = true;
     createPay();
   }
@@ -226,18 +231,21 @@ const createPay = async () => {
     timer.value = setInterval(() => {
       checkPayStatus(data.order_id);
       window.open(data.payurl, "externalWindow");
-    }, 1000);
+    }, 2000);
   }
 };
 // 轮训支付结果
 const checkPayStatus = async (orderId: String) => {
   const { data, code }: any = await getRechargeListApi({ orderId });
   if (code === 200) {
-    if (data.status === 1) {
+    // 1: 继续轮训 2: 失败 3: 成功
+    if (data.status === 3) {
       // 支付成功
       payLoading.value = false;
       rechargeVisible.value = false;
       chosePayType.value = "";
+    }
+    if( data.status !== 1 ) {
       clearInterval(timer.value);
     }
   }
@@ -284,14 +292,20 @@ const checkPayStatus = async (orderId: String) => {
     border-radius: 0.3125vw;
     object-fit: contain;
   }
-  p {
+  p:nth-of-type(1) {
     @include font(0.9375vw, 400, #f00a38, 1.25vw);
     text-align: center;
-    margin: 1.20833vw 0 3vw;
+    margin: 1.20833vw 0 1vw;
   }
   .el-button {
     @include flex(center, center, row);
   }
+}
+.recharge-list__item_text {
+  height: 1.04167vw;
+  @include font(0.625vw, 400, #b6b3b3, 1.04167vw);
+  text-align: center;
+  margin-bottom: 0.5vw;
 }
 .recharge-dialog {
   width: 23.64583vw;

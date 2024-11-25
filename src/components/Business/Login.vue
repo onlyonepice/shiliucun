@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="欢迎来到十六村"
+    title="欢迎来到 影游天堂"
     width="500"
     :before-close="handleClose"
     class="login-dialog"
@@ -52,7 +52,7 @@
       <el-input
         v-model="form.password2"
         style="width: 100%; margin-bottom: 1.25vw"
-        placeholder="请输入密码"
+        placeholder="请确认密码"
         type="password"
         :minlength="6"
         :show-password="!showPassword"
