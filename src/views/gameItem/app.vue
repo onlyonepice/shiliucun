@@ -2,15 +2,18 @@
   <div class="content">
     <div class="left_block">
       <div class="game_iframe">
+        <img class="full_screen"  v-if="show" :src="full_screen" @click="fullScreen"/>
         <iframe
           v-if="show"
+          allowfullscreen
           id="gameIframe"
           frameborder="0"
           style="border-radius: 20px; height: 34.94792vw; width: 100%"
           @onload="getHight"
           scrolling="auto"
           :src="iframe_url"
-        ></iframe>
+        >
+        </iframe>
         <img
           v-show="showUrl && !showUrl?.includes('.mp4') && !show"
           class="game_iframe"
@@ -56,12 +59,12 @@
                   <div>分享</div>
               </div>
           </div> -->
-        <div class="pay_success" v-if="info.lock == 1">
+        <div class="pay_success" v-if="info.lock == 1 && info.price > 0">
           <img class="tips_icon" :src="success_icon" />您已购买此游戏
         </div>
         <template v-if="route.query.time === 'now'">
           <div>
-            <el-button @click="play(true)" class="btn-play">立即玩</el-button>
+            <el-button @click="info.lock==0?payGame():play(true)" class="btn-play">{{info.lock==0?'立即购买':'立即玩' }}</el-button>
           </div>
           <div>
             <el-button v-if="info.lock == 0" @click="play" class="btn-play"
@@ -93,6 +96,7 @@
 import star from "@/assets/img/star.svg";
 import heart from "@/assets/img/heart.svg";
 import copy from "@/assets/img/copy.png";
+import full_screen from "@/assets/img/full_screen.png";
 import success_icon from "@/assets/img/success-filling.png";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
@@ -111,12 +115,20 @@ const token = getToken();
 const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
 };
+const payGame = ()=>{
+  useUserStoreHook().openPayGame(true, info.value);
+}
+const fullScreen = ()=>{
+  let iframes = document.getElementById("gameIframe") as HTMLIFrameElement;
+    iframes.requestFullscreen().catch(err => {
+        console.error(err);
+    });
+}
 const handleMessage = (event: MessageEvent) => {
   let data = null;
   data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
   if (data.action == "agree") {
     return useUserStoreHook().openPayGame(true, info.value);
-    router.push("/recharge");
   }
   if (data.action == "disagree") {
     return router.push("/home");
@@ -180,6 +192,17 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
+.full_screen{
+  &:hover{
+    opacity: 0.8;
+  }
+  height:2vw;
+  width: 2vw;
+  z-index: 10000;
+  position: absolute;
+  bottom:20px;
+  right: 20px;
+}
 .success_icon {
   width: 16.25vw;
   height: 9.16667vw;
@@ -335,6 +358,7 @@ onUnmounted(() => {
   display: none;
 }
 .game_iframe {
+  position: relative;
   width: calc(100% - 20px);
   height: 34.94792vw;
   width: 100%;

@@ -1,14 +1,15 @@
 <template>
   <div class="content">
-    <el-carousel class="banner" motion-blur :interval="5000">
-      <el-carousel-item
-        style="height: 225%"
-        v-for="item in fileList"
-        :key="item"
-      >
-        <el-image style="width: 100%" :src="item.banner" fit="contain" @click="goto(item.game_id, 'now')" />
-      </el-carousel-item>
-    </el-carousel>
+    <el-carousel class="banner" autoplay  v-if="fileList?.length">
+        <el-carousel-item
+          style="height: 225%"
+          v-for="item in fileList"
+          :key="item"
+        >
+          <el-image style="width: 100%" :src="item.banner" fit="contain" @click="goto(item.game_id, 'now')" />
+        </el-carousel-item>
+      </el-carousel>
+    <div class="banner_shelf" v-if="!fileList?.length" />
     <div class="card_block">
       <div class="title">
         <div clas="text">【全球首款】真人性愛模擬器</div>
@@ -70,9 +71,9 @@ const router = useRouter();
 const goto = (game_id, time = 'now') => {
   router.push({ path: "/gameItem", query: { game_id, time } });
 };
-const fileList = ref<any>([1, 2, 3, 4, 5]);
-const gameList = ref<any>([1, 2, 3, 4, 5]);
-const gameListFeature = ref<any>([1, 2, 3, 4, 5]);
+const fileList = ref<any>([]);
+const gameList = ref<any>([]);
+const gameListFeature = ref<any>([]);
 
 onMounted(() => {
   getBanner().then((res) => {
@@ -99,7 +100,9 @@ onMounted(() => {
 ::-webkit-scrollbar {
   display: none;
 }
-
+.banner_shelf{
+  height: 55vh;
+}
 .content {
   width: 100%;
   display: flex;
@@ -203,27 +206,12 @@ onMounted(() => {
 }
 .card_img {
   width: 100%;
-  height: 9.58333vw;
+  height: 7.5vw;
   border-radius: 0.41667vw;
   border-radius: var(--3xs, 0.41667vw);
   object-fit: cover;
 }
 .demonstration {
   color: var(--el-text-color-secondary);
-}
-
-.el-carousel__item h3 {
-  color: #475669;
-  opacity: 0.75;
-  margin: 0;
-  text-align: center;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
 }
 </style>
