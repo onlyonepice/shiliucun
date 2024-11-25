@@ -85,6 +85,7 @@ export const useUserStore = defineStore({
           .then((response) => {
             const data = response["data"];
             this.userInfo = data.user;
+            this.handleConfig();
             resolve(data);
           })
           .catch((error) => {

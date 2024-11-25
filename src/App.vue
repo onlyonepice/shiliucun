@@ -48,7 +48,6 @@ watch(
   },
   { immediate: true },
 );
-useUserStoreHook().handleConfig();
 useUserStoreHook().announcementDialog(true);
 </script>
 
