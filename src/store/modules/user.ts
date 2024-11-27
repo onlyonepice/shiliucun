@@ -45,6 +45,7 @@ export const useUserStore = defineStore({
     /** 前端登出（不调用接口） */
     logOut() {
       this.token = "";
+      this.userInfo = {};
       removeToken();
       router.push("/home");
     },
