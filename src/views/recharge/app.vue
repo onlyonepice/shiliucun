@@ -103,7 +103,7 @@
         @click="historyType !== 1 && (historyType = 1)"
         :class="historyType === 1 ? 'tab-chose' : ''"
       >
-        M币记录
+        喵币记录
       </div>
       <div
         @click="historyType !== 2 && (historyType = 2)"
@@ -113,12 +113,16 @@
       </div>
     </div>
     <div class="history-list" v-for="(item, index) in historyList" :key="index">
-      <p>{{ item.message || item.coin + " M币" }}</p>
-      <p>日期 {{ item.created_at }}</p>
-      <p>
-        {{ historyType === 2 ? "¥" : "" }}{{ item.num || item.orderAmt
-        }}{{ historyType === 1 ? " M币" : "" }}
-      </p>
+      <div>
+        <div class="history-id" v-if="historyType === 2">订单ID：{{ item.orderId }}</div>
+        <p>{{ item.message || item.coin }}</p>
+        <p>日期 {{ item.created_at }}</p>
+        <p>
+          {{ historyType === 2 ? "¥" : "" }}{{ item.num || item.orderAmt
+          }}
+        </p>
+      </div>
+      <div class="history-status" v-if="historyType === 2">{{ item.status_text }}</div>
     </div>
   </el-drawer>
 </template>
@@ -145,7 +149,7 @@ const chosePayType = ref(""); // 支付类型
 const payLoading = ref(false); // 支付按钮loading
 const drawer = ref(false); // 侧边栏
 const historyList = ref([]); // 支付记录
-const historyType = ref(1); // 1:M币记录 2:充值记录
+const historyType = ref(1); // 1:喵币记录 2:充值记录
 const Text = ref("");
 const rechargeImgList = ref([
   {
@@ -207,7 +211,7 @@ const handleClose = (type: Boolean) => {
     createPay();
   }
 };
-// M币记录/充值记录
+// 喵币记录/充值记录
 const getHistoryList = async () => {
   historyList.value = [];
   const { data, code }: any =
@@ -401,6 +405,14 @@ const checkPayStatus = async (orderId: String) => {
   border: 1px solid #3b3939;
   background-color: #222121;
   margin-top: 0.45vw;
+  @include flex(center, space-between, wrap);
+  .history-id {
+    @include font(0.825vw, 400, #fff, 1.04167vw);
+    margin-bottom: 0.625vw;
+  }
+  .history-status {
+    @include font(1.125vw, 400, #f00a38, 1.04167vw);
+  }
   p:nth-of-type(1) {
     @include font(0.72917vw, 400, #b6b3b3, 0.83333vw);
   }

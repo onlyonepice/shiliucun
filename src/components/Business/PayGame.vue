@@ -10,25 +10,25 @@
       <div class="top_block">
         <div class="right">
           <div class="title">{{ gameInfo?.name }}</div>
-          <div class="price">{{ gameInfo?.price }}M币</div>
+          <div class="price">{{ gameInfo?.price }}喵币</div>
         </div>
         <img :src="gameInfo.icon" />
       </div>
       <div class="buy_title">当前余额</div>
-      <div class="buy_button">{{ currentUser.coin }}M币</div>
+      <div class="buy_button">{{ currentUser.coin }}喵币</div>
       <div class="buy_title">交易概览</div>
       <div class="item_tips">
         <div class="tips">金额</div>
-        <div class="right_tips">M币</div>
+        <div class="right_tips">喵币</div>
       </div>
       <div class="item_tips">
         <div class="tips">优惠</div>
-        <div class="right_tips">{{ gameInfo.price }}M币</div>
+        <div class="right_tips">{{ gameInfo.price }}喵币</div>
       </div>
       <div class="item_tips">
         <div class="tips">支付</div>
         <div class="right_tips" style="color: #f00a38">
-          {{ gameInfo.price }}M币
+          {{ gameInfo.price }}喵币
         </div>
       </div>
       <div>
