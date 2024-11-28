@@ -49,7 +49,7 @@ export const createPayApi = (data: any) => {
 export const getRechargeListApi = (data: any) => {
   return http.request<responseType>("post", "/web/api/pay/status", { data });
 };
-// M币记录
+// 喵币记录
 export const getRechargeRecordApi = () => {
   return http.request<responseType>("post", "/web/api/user/log");
 };

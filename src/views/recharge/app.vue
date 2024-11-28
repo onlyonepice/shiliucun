@@ -103,7 +103,7 @@
         @click="historyType !== 1 && (historyType = 1)"
         :class="historyType === 1 ? 'tab-chose' : ''"
       >
-        M币记录
+        喵币记录
       </div>
       <div
         @click="historyType !== 2 && (historyType = 2)"
@@ -149,7 +149,7 @@ const chosePayType = ref(""); // 支付类型
 const payLoading = ref(false); // 支付按钮loading
 const drawer = ref(false); // 侧边栏
 const historyList = ref([]); // 支付记录
-const historyType = ref(1); // 1:M币记录 2:充值记录
+const historyType = ref(1); // 1:喵币记录 2:充值记录
 const Text = ref("");
 const rechargeImgList = ref([
   {
@@ -211,7 +211,7 @@ const handleClose = (type: Boolean) => {
     createPay();
   }
 };
-// M币记录/充值记录
+// 喵币记录/充值记录
 const getHistoryList = async () => {
   historyList.value = [];
   const { data, code }: any =

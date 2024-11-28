@@ -32,7 +32,7 @@
             </template>
             <template v-else>
               <div class="price">
-                {{ item.price ? item.price + "M币" : "免费" }}
+                {{ item.price ? item.price + "喵币" : "免费" }}
               </div>
             </template>
           </div>
