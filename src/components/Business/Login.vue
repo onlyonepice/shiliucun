@@ -138,6 +138,7 @@ const onLogin = async () => {
     useUserStoreHook().$state.token = data.token;
     setToken(data);
     useUserStoreHook().handleGetUserInfo();
+    location.reload()
   }
   useUserStoreHook().openLogin(false);
 };

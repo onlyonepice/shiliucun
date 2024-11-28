@@ -71,6 +71,10 @@
               >试玩</el-button
             >
           </div>
+          <div>
+            <el-button @click="wait" class="btn-play"
+              >畅玩4K</el-button>
+          </div>
         </template>
       </div>
       <div class="introduction">
@@ -103,6 +107,7 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { onMounted, ref, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { gameInfo } from "@/api/index";
+import { ElMessage } from "element-plus";
 
 const route = useRoute();
 const router = useRouter();
@@ -112,6 +117,13 @@ const show = ref<any>(false);
 const iframe_url = ref<any>("");
 const showUrl = ref<any>("");
 const token = getToken();
+const wait = ()=>{
+  ElMessage({
+    message: '敬请期待',
+    type: 'info',
+    plain: true,
+  })
+}
 const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
 };
@@ -127,6 +139,7 @@ const fullScreen = ()=>{
 const handleMessage = (event: MessageEvent) => {
   let data = null;
   data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+  console.log('data.action===>',data.action)
   if (data.action == "agree") {
     return useUserStoreHook().openPayGame(true, info.value);
   }
