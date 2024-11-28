@@ -128,6 +128,9 @@ const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
 };
 const payGame = ()=>{
+  if(!token){
+    return openDialog()
+  }
   useUserStoreHook().openPayGame(true, info.value);
 }
 const fullScreen = ()=>{
