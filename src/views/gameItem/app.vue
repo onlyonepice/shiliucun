@@ -27,38 +27,34 @@
         ></video>
       </div>
       <div class="card_block">
-        <div class="item_block">
-          <div
-            v-for="item in info?.intro_img_list"
+        <swiper
+          ref="{swiperRef}"
+          :centeredSlides="true"
+          :pagination="{
+            type: 'fraction',
+          }"
+          :slidesPerView="4"
+          :spaceBetween="20"
+          :navigation="true"
+          :modules="modules"
+          class="mySwiper"
+          @slideChange="onSlideChange"
+        >
+          <swiper-slide v-for="item in info?.intro_img_list"
             :key="item"
-            @click="showBlock(item)"
-          >
+            @click="showBlock(item)">
             <img class="card_img" v-if="!item?.includes('.mp4')" :src="item" />
             <video controls v-if="item?.includes('.mp4')" class="card_img">
               <source :src="item" type="video/mp4" />
             </video>
-          </div>
-        </div>
+          </swiper-slide>
+        </swiper>
       </div>
     </div>
     <div class="right_block">
       <div class="detail_block">
         <div class="title">{{ info.name }}</div>
         <img v-if="info.icon" :src="info.icon" />
-        <!-- <div class="action">
-              <div class="icon">
-                  <img class="tips_icon" :src="heart">
-                  <div>{{info?.hot_num}}</div>
-              </div>
-              <div class="icon">
-                  <img class="tips_icon" :src="star">
-                  <div>愿望清单</div>
-              </div>
-              <div class="icon">
-                  <img class="tips_icon" :src="copy">
-                  <div>分享</div>
-              </div>
-          </div> -->
         <div class="pay_success" v-if="info.lock == 1 && info.price > 0">
           <img class="tips_icon" :src="success_icon" />您已购买此游戏
         </div>
@@ -79,17 +75,8 @@
       </div>
       <div class="introduction">
         <div class="title">游戏介绍</div>
-        <div class="intro_body">
-          <!-- <div class="intro_tips">
-              <div class="tag">限制级</div>
-              <div class="tag">MASOBU精选
-                </div>
-              <div class="tag">知名女优
-                </div>
-            </div> -->
-          <div class="intro_content">
-            {{ info.intro }}
-          </div>
+        <div class="intro_content">
+          {{ info.intro }}
         </div>
       </div>
     </div>
@@ -99,16 +86,20 @@
 <script lang="ts" setup>
 import star from "@/assets/img/star.svg";
 import heart from "@/assets/img/heart.svg";
-import copy from "@/assets/img/copy.png";
-import full_screen from "@/assets/img/full_screen.png";
-import success_icon from "@/assets/img/success-filling.png";
+import copy from "@/assets/img/copy.webp";
+import full_screen from "@/assets/img/full_screen.webp";
+import success_icon from "@/assets/img/success-filling.webp";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 import { onMounted, ref, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { gameInfo } from "@/api/index";
 import { ElMessage } from "element-plus";
-
+import { Navigation } from 'swiper/modules';
+import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css/navigation';
+const modules = [Navigation];
 const route = useRoute();
 const router = useRouter();
 const game_id = route.query.game_id;
@@ -117,6 +108,7 @@ const show = ref<any>(false);
 const iframe_url = ref<any>("");
 const showUrl = ref<any>("");
 const token = getToken();
+const choseIndex = ref<any>(0);
 const wait = ()=>{
   ElMessage({
     message: '敬请期待',
@@ -133,6 +125,11 @@ const payGame = ()=>{
   }
   useUserStoreHook().openPayGame(true, info.value);
 }
+//
+const onSlideChange = (data: any) => {
+  choseIndex.value = data.activeIndex;
+  showBlock(info.value.intro_img_list[choseIndex.value]);
+};
 const fullScreen = ()=>{
   let iframes = document.getElementById("gameIframe") as HTMLIFrameElement;
     iframes.requestFullscreen().catch(err => {
@@ -142,7 +139,6 @@ const fullScreen = ()=>{
 const handleMessage = (event: MessageEvent) => {
   let data = null;
   data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-  console.log('data.action===>',data.action)
   if (data.action == "agree") {
     return useUserStoreHook().openPayGame(true, info.value);
   }
@@ -389,8 +385,6 @@ onUnmounted(() => {
 .card_block {
   margin-top: 1.5vw;
   width: 100%;
-
-  width: calc(100% - 20px);
   .item_block {
     display: flex;
     flex-direction: row;
@@ -422,5 +416,18 @@ onUnmounted(() => {
 }
 .demonstration {
   color: var(--el-text-color-secondary);
+}
+
+</style>
+<style lang="scss">
+@import "@/style/mixin.scss";
+
+.content {
+  .swiper-button-prev:after, .swiper-button-next:after {
+    font-size: 2vw;
+  }
+  .swiper-slide {
+    width: 15vw !important;
+  }
 }
 </style>

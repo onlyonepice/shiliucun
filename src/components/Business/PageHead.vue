@@ -12,7 +12,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import Logo from "@/assets/img/logo.jpg";
+import Logo from "@/assets/img/logo.webp";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
 const emits = defineEmits(["share"]);

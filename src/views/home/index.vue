@@ -144,7 +144,7 @@ onMounted(() => {
   .item {
     &:hover {
       border: 0.5px solid crimson;
-      background-image: url("@/assets/img/card-select.png");
+      background-image: url("@/assets/img/card-select.webp");
     }
     cursor: pointer;
     width: 13.16667vw;
@@ -155,7 +155,7 @@ onMounted(() => {
     cursor: pointer;
     background-color: var(--neutral-900, #222121);
     padding: 1.25vw;
-    background-image: url("@/assets/img/card.png");
+    background-image: url("@/assets/img/card.webp");
     background-position: 100% 100%;
     background-size: 200%;
     background-repeat: no-repeat;

@@ -17,7 +17,7 @@
       <img class="more-icon" :src="MoreIcon" alt="" />
     </div>
     <div class="recharge-desc">
-      <img src="@/assets/img/tips-icon.png" alt="" />
+      <img src="@/assets/img/tips-icon.webp" alt="" />
       {{ Text }}
     </div>
     <div class="recharge-list">
@@ -136,11 +136,11 @@ import {
   getRechargeRecordApi,
   getPayRecordApi,
 } from "@/api/index";
-import AliPay from "@/assets/img/ali-pay.png";
-import WeChatPay from "@/assets/img/wechat-pay.png";
-import UsdtPay from "@/assets/img/usdt-pay.jpg";
-import MoneyCoin from "@/assets/img/money-coin.png";
-import MoreIcon from "@/assets/img/more-icon.png";
+import AliPay from "@/assets/img/ali-pay.webp";
+import WeChatPay from "@/assets/img/wechat-pay.webp";
+import UsdtPay from "@/assets/img/usdt-pay.webp";
+import MoneyCoin from "@/assets/img/money-coin.webp";
+import MoreIcon from "@/assets/img/more-icon.webp";
 import { useUserStoreHook } from "@/store/modules/user";
 const rechargeList = ref([]); // 支付列表
 const rechargeVisible = ref(false); // 支付弹窗
@@ -288,7 +288,7 @@ const checkPayStatus = async (orderId: String) => {
   padding: 0.41667vw;
   box-sizing: border-box;
   background-color: #222121;
-  background-image: url("@/assets/img/list-item-bg.png");
+  background-image: url("@/assets/img/list-item-bg.webp");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   img {

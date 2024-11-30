@@ -57,7 +57,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import EditIcon from "@/assets/img/edit-icon.png";
+import EditIcon from "@/assets/img/edit-icon.webp";
 import { useUserStoreHook } from "@/store/modules/user";
 import { editUserInfoApi } from "@/api/index";
 import { ElMessage } from "element-plus";
