@@ -16,15 +16,15 @@ import Logo from "@/assets/img/logo.webp";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
 const emits = defineEmits(["share"]);
-const shareVisible= ref(false); // 分享
+const shareVisible = ref(false); // 分享
 const download = () => {
   useUserStoreHook().openDownload(true);
 };
 const onShare = () => {
-  if( useUserStoreHook().$state.token === "" ) {
+  if (useUserStoreHook().$state.token === "") {
     return useUserStoreHook().openLogin(true, "login");
   }
-  emits('share')
+  emits("share");
 };
 </script>
 

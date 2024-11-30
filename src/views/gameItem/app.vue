@@ -2,7 +2,12 @@
   <div class="content">
     <div class="left_block">
       <div class="game_iframe">
-        <img class="full_screen"  v-if="show" :src="full_screen" @click="fullScreen"/>
+        <img
+          class="full_screen"
+          v-if="show"
+          :src="full_screen"
+          @click="fullScreen"
+        />
         <iframe
           v-if="show"
           allowfullscreen
@@ -34,15 +39,17 @@
             type: 'fraction',
           }"
           :slidesPerView="4"
-          :spaceBetween="20"
+          :spaceBetween="0"
           :navigation="true"
           :modules="modules"
           class="mySwiper"
           @slideChange="onSlideChange"
         >
-          <swiper-slide v-for="item in info?.intro_img_list"
+          <swiper-slide
+            v-for="item in info?.intro_img_list"
             :key="item"
-            @click="showBlock(item)">
+            @click="showBlock(item)"
+          >
             <img class="card_img" v-if="!item?.includes('.mp4')" :src="item" />
             <video controls v-if="item?.includes('.mp4')" class="card_img">
               <source :src="item" type="video/mp4" />
@@ -60,7 +67,11 @@
         </div>
         <template v-if="route.query.time === 'now'">
           <div>
-            <el-button @click="info.lock==0?payGame():play(true)" class="btn-play">{{info.lock==0?'立即购买':'立即玩' }}</el-button>
+            <el-button
+              @click="info.lock == 0 ? payGame() : play(true)"
+              class="btn-play"
+              >{{ info.lock == 0 ? "立即购买" : "立即玩" }}</el-button
+            >
           </div>
           <div>
             <el-button v-if="info.lock == 0" @click="play" class="btn-play"
@@ -68,8 +79,7 @@
             >
           </div>
           <div>
-            <el-button @click="wait" class="btn-play"
-              >畅玩4K</el-button>
+            <el-button @click="wait" class="btn-play">畅玩4K</el-button>
           </div>
         </template>
       </div>
@@ -95,10 +105,10 @@ import { onMounted, ref, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { gameInfo } from "@/api/index";
 import { ElMessage } from "element-plus";
-import { Navigation } from 'swiper/modules';
-import 'swiper/css';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/css/navigation';
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/css/navigation";
 const modules = [Navigation];
 const route = useRoute();
 const router = useRouter();
@@ -109,33 +119,33 @@ const iframe_url = ref<any>("");
 const showUrl = ref<any>("");
 const token = getToken();
 const choseIndex = ref<any>(0);
-const wait = ()=>{
+const wait = () => {
   ElMessage({
-    message: '敬请期待',
-    type: 'info',
+    message: "敬请期待",
+    type: "info",
     plain: true,
-  })
-}
+  });
+};
 const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
 };
-const payGame = ()=>{
-  if(!token){
-    return openDialog()
+const payGame = () => {
+  if (!token) {
+    return openDialog();
   }
   useUserStoreHook().openPayGame(true, info.value);
-}
+};
 //
 const onSlideChange = (data: any) => {
   choseIndex.value = data.activeIndex;
   showBlock(info.value.intro_img_list[choseIndex.value]);
 };
-const fullScreen = ()=>{
+const fullScreen = () => {
   let iframes = document.getElementById("gameIframe") as HTMLIFrameElement;
-    iframes.requestFullscreen().catch(err => {
-        console.error(err);
-    });
-}
+  iframes.requestFullscreen().catch((err) => {
+    console.error(err);
+  });
+};
 const handleMessage = (event: MessageEvent) => {
   let data = null;
   data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
@@ -204,15 +214,15 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-.full_screen{
-  &:hover{
+.full_screen {
+  &:hover {
     opacity: 0.8;
   }
-  height:2vw;
+  height: 2vw;
   width: 2vw;
   z-index: 10000;
   position: absolute;
-  bottom:20px;
+  bottom: 20px;
   right: 20px;
 }
 .success_icon {
@@ -417,13 +427,13 @@ onUnmounted(() => {
 .demonstration {
   color: var(--el-text-color-secondary);
 }
-
 </style>
 <style lang="scss">
 @import "@/style/mixin.scss";
 
 .content {
-  .swiper-button-prev:after, .swiper-button-next:after {
+  .swiper-button-prev:after,
+  .swiper-button-next:after {
     font-size: 2vw;
   }
   .swiper-slide {

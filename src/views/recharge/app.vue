@@ -8,7 +8,9 @@
       "
     >
       <div>
-        <p class="coin-text">{{ useUserStoreHook().$state.userInfo.coin }}喵币</p>
+        <p class="coin-text">
+          {{ useUserStoreHook().$state.userInfo.coin }}喵币
+        </p>
         <div class="coin-icon">
           <img :src="MoneyCoin" alt="" />
           <span>喵币</span>
@@ -38,9 +40,9 @@
         />
         <p>{{ item.num }}</p>
         <p class="recharge-list__item_text">{{ item.add_text }}</p>
-        <el-button style="width: 100%; text-align: center"
-          >{{ item.price }}</el-button
-        >
+        <el-button style="width: 100%; text-align: center">{{
+          item.price
+        }}</el-button>
       </div>
     </div>
   </div>
@@ -114,15 +116,16 @@
     </div>
     <div class="history-list" v-for="(item, index) in historyList" :key="index">
       <div>
-        <div class="history-id" v-if="historyType === 2">订单ID：{{ item.orderId }}</div>
+        <div class="history-id" v-if="historyType === 2">
+          订单ID：{{ item.orderId }}
+        </div>
         <p>{{ item.message || item.coin }}</p>
         <p>日期 {{ item.created_at }}</p>
-        <p>
-          {{ historyType === 2 ? "¥" : "" }}{{ item.num || item.orderAmt
-          }}
-        </p>
+        <p>{{ historyType === 2 ? "¥" : "" }}{{ item.num || item.orderAmt }}</p>
       </div>
-      <div class="history-status" v-if="historyType === 2">{{ item.status_text }}</div>
+      <div class="history-status" v-if="historyType === 2">
+        {{ item.status_text }}
+      </div>
     </div>
   </el-drawer>
 </template>
@@ -249,7 +252,7 @@ const checkPayStatus = async (orderId: String) => {
       rechargeVisible.value = false;
       chosePayType.value = "";
     }
-    if( data.status !== 1 ) {
+    if (data.status !== 1) {
       clearInterval(timer.value);
     }
   }
