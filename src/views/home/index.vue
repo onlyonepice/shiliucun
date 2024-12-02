@@ -112,10 +112,10 @@ onMounted(() => {
     overflow-x: auto;
     @include relative();
     .item {
-      width: 130px;
+      width: 14vw;
       box-sizing: border-box;
       img {
-        width: 100px;
+        width: 11.5vw;
       }
     }
     .left {

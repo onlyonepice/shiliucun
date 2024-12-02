@@ -73,11 +73,11 @@
               >{{ info.lock == 0 ? "立即购买" : "立即玩" }}</el-button
             >
           </div>
-          <div>
+          <!-- <div>
             <el-button v-if="info.lock == 0" @click="play" class="btn-play"
               >试玩</el-button
             >
-          </div>
+          </div> -->
           <div>
             <el-button @click="wait" class="btn-play">畅玩4K</el-button>
           </div>
