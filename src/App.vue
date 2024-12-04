@@ -1,7 +1,7 @@
 <template>
-  <PageHead @share="handleShare = true" />
+  <PageHead @share="handleShare = true" v-if="currentRouter!=='/activity'"/>
   <div class="page-content">
-    <PageAside />
+    <PageAside v-if="currentRouter!=='/activity'"/>
     <div class="main-content">
       <router-view />
     </div>
@@ -16,11 +16,24 @@
 import { ref, watch } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
+import { useRouter } from "vue-router";
 
 const openLoginVisible = ref(useUserStoreHook().$state.openLoginVisible);
 const openPayGameVisible = ref(useUserStoreHook().$state.openPayGameVisible);
 const openDownloadVisible = ref(useUserStoreHook().$state.openDownloadVisible);
 const handleShare = ref(false);
+const currentRouter = ref('');
+const router = useRouter();
+
+
+
+watch(
+  () => router.currentRoute.value.path,
+  (newVal) => {
+    console.log('newVal====?',newVal)
+    currentRouter.value = newVal
+  },
+);
 watch(
   () => useUserStoreHook().$state.openLoginVisible,
   (newVal) => {

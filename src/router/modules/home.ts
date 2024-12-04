@@ -46,7 +46,17 @@ export default {
         default: () => import("@/views/gameItem/app.vue"),
       },
       meta: {
-        title: "游戏详情1",
+        title: "游戏详情",
+      },
+    },
+    {
+      path: "/activity",
+      name: "activity",
+      components: {
+        default: () => import("@/views/activity/app.vue"),
+      },
+      meta: {
+        title: "宣传页",
       },
     },
   ],
