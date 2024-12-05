@@ -6,17 +6,25 @@
     :before-close="handleClose"
     class="share-dialog"
   >
-  <div class="share-box">
-    <div>{{ useUserStoreHook().$state.userInfo.invite_code }}</div>
-    <el-icon style="cursor: pointer;" @click="onInvite(useUserStoreHook().$state.userInfo.invite_code)"><CopyDocument /></el-icon>
-  </div>
-  <p class="share-text">*您可以分享邀请码给好友，好友注册时填写邀请码</p>
-  <p class="share-title">邀请链接</p>
-  <div class="share-box">
-    <div>{{ useUserStoreHook().$state.configInfo.share_url }}</div>
-    <el-icon style="cursor: pointer;" @click="onInvite(useUserStoreHook().$state.configInfo.share_url)"><CopyDocument /></el-icon>
-  </div>
-  <p class="share-text">*您可以分享给好友，好友直接注册</p>
+    <div class="share-box">
+      <div>{{ useUserStoreHook().$state.userInfo.invite_code }}</div>
+      <el-icon
+        style="cursor: pointer"
+        @click="onInvite(useUserStoreHook().$state.userInfo.invite_code)"
+        ><CopyDocument
+      /></el-icon>
+    </div>
+    <p class="share-text">*您可以分享邀请码给好友，好友注册时填写邀请码</p>
+    <p class="share-title">邀请链接</p>
+    <div class="share-box">
+      <div>{{ useUserStoreHook().$state.configInfo.share_url }}</div>
+      <el-icon
+        style="cursor: pointer"
+        @click="onInvite(useUserStoreHook().$state.configInfo.share_url)"
+        ><CopyDocument
+      /></el-icon>
+    </div>
+    <p class="share-text">*您可以分享给好友，好友直接注册</p>
   </el-dialog>
 </template>
 <script lang="ts" setup>
@@ -28,7 +36,7 @@ const dialogVisible = ref(true); // 弹窗显示控制
 const emits = defineEmits(["close"]);
 const handleClose = () => {
   // 关闭弹窗
-  emits('close');
+  emits("close");
 };
 const onInvite = (url: string) => {
   // 复制
@@ -41,7 +49,7 @@ const onInvite = (url: string) => {
   document.execCommand("copy");
   document.body.removeChild(textarea);
   ElMessage.success("复制成功");
-}
+};
 </script>
 
 <style lang="scss">
@@ -59,19 +67,19 @@ const onInvite = (url: string) => {
   }
 }
 .share-box {
-  @include font(.72917vw, 400, #b6b3b3, 1.04167vw);
-  padding: .41667vw .41667vw .41667vw .83333vw;
+  @include font(0.72917vw, 400, #b6b3b3, 1.04167vw);
+  padding: 0.41667vw 0.41667vw 0.41667vw 0.83333vw;
   @include flex(center, space-between, nowrap);
-  border-radius: .41667vw;
+  border-radius: 0.41667vw;
   background-color: #222121;
-  margin-bottom: .41667vw;
+  margin-bottom: 0.41667vw;
   div {
     width: 80%;
   }
 }
 .share-text {
-  @include font(.72917vw, 400, #6f6d6d, 1.04167vw);
-  margin-bottom: .41667vw;
+  @include font(0.72917vw, 400, #6f6d6d, 1.04167vw);
+  margin-bottom: 0.41667vw;
 }
 .share-title {
   @include font(1.25vw, 400, #ffffff, 1.04167vw);

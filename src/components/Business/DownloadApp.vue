@@ -22,8 +22,8 @@
 </template>
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import Android from "@/assets/img/Android.png";
-import ios from "@/assets/img/ios.png";
+import Android from "@/assets/img/Android.webp";
+import ios from "@/assets/img/ios.webp";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getBaseConfigApi } from "@/api/index";
 //   import { ElLoading } from 'element-plus'

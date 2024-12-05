@@ -76,15 +76,16 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
-import GamePreview from "@/assets/img/game-preview.png";
-import ChargeCenter from "@/assets/img/charge-center.png";
-import RegisterIcon from "@/assets/img/register-icon.png";
-import AnnouncementIcon from "@/assets/img/announcement-icon.png";
-import LogoutIcon from "@/assets/img/logout-icon.png";
+import GamePreview from "@/assets/img/game-preview.webp";
+import ChargeCenter from "@/assets/img/charge-center.webp";
+import RegisterIcon from "@/assets/img/register-icon.webp";
+import AnnouncementIcon from "@/assets/img/announcement-icon.webp";
+import LogoutIcon from "@/assets/img/logout-icon.webp";
 import { useRouter, useRoute } from "vue-router";
 import MoneyCoin from "@/assets/img/money-coin.png";
 import MoreIcon from "@/assets/img/more-icon.png";
 // import { CopyDocument, User } from "@element-plus/icons-vue";
+import { CopyDocument, User } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 const router = useRouter();
 const route = useRoute();
@@ -170,7 +171,7 @@ const onChoseMenu = (id: number) => {
   @include widthAndHeight(16.66667vw, calc(100vh - 6.25vw));
   background-color: #171616;
   padding: 1.25vw;
-  background-image: url("@/assets/img/transparent-bg.png");
+  background-image: url("@/assets/img/transparent-bg.webp");
   background-position: 100% 100%;
   background-size: 200%;
   background-repeat: no-repeat;

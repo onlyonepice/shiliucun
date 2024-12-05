@@ -8,7 +8,9 @@
       "
     >
       <div>
-        <p class="coin-text">{{ useUserStoreHook().$state.userInfo.coin }}喵币</p>
+        <p class="coin-text">
+          {{ useUserStoreHook().$state.userInfo.coin }}喵币
+        </p>
         <div class="coin-icon">
           <img :src="MoneyCoin" alt="" />
           <span>喵币</span>
@@ -17,7 +19,7 @@
       <img class="more-icon" :src="MoreIcon" alt="" />
     </div>
     <div class="recharge-desc">
-      <img src="@/assets/img/tips-icon.png" alt="" />
+      <img src="@/assets/img/tips-icon.webp" alt="" />
       {{ Text }}
     </div>
     <div class="recharge-list">
@@ -38,9 +40,9 @@
         />
         <p>{{ item.num }}</p>
         <p class="recharge-list__item_text">{{ item.add_text }}</p>
-        <el-button style="width: 100%; text-align: center"
-          >{{ item.price }}</el-button
-        >
+        <el-button style="width: 100%; text-align: center">{{
+          item.price
+        }}</el-button>
       </div>
     </div>
   </div>
@@ -114,15 +116,16 @@
     </div>
     <div class="history-list" v-for="(item, index) in historyList" :key="index">
       <div>
-        <div class="history-id" v-if="historyType === 2">订单ID：{{ item.orderId }}</div>
+        <div class="history-id" v-if="historyType === 2">
+          订单ID：{{ item.orderId }}
+        </div>
         <p>{{ item.message || item.coin }}</p>
         <p>日期 {{ item.created_at }}</p>
-        <p>
-          {{ historyType === 2 ? "¥" : "" }}{{ item.num || item.orderAmt
-          }}
-        </p>
+        <p>{{ historyType === 2 ? "¥" : "" }}{{ item.num || item.orderAmt }}</p>
       </div>
-      <div class="history-status" v-if="historyType === 2">{{ item.status_text }}</div>
+      <div class="history-status" v-if="historyType === 2">
+        {{ item.status_text }}
+      </div>
     </div>
   </el-drawer>
 </template>
@@ -136,11 +139,11 @@ import {
   getRechargeRecordApi,
   getPayRecordApi,
 } from "@/api/index";
-import AliPay from "@/assets/img/ali-pay.png";
-import WeChatPay from "@/assets/img/wechat-pay.png";
-import UsdtPay from "@/assets/img/usdt-pay.jpg";
-import MoneyCoin from "@/assets/img/money-coin.png";
-import MoreIcon from "@/assets/img/more-icon.png";
+import AliPay from "@/assets/img/ali-pay.webp";
+import WeChatPay from "@/assets/img/wechat-pay.webp";
+import UsdtPay from "@/assets/img/usdt-pay.webp";
+import MoneyCoin from "@/assets/img/money-coin.webp";
+import MoreIcon from "@/assets/img/more-icon.webp";
 import { useUserStoreHook } from "@/store/modules/user";
 const rechargeList = ref([]); // 支付列表
 const rechargeVisible = ref(false); // 支付弹窗
@@ -249,7 +252,7 @@ const checkPayStatus = async (orderId: String) => {
       rechargeVisible.value = false;
       chosePayType.value = "";
     }
-    if( data.status !== 1 ) {
+    if (data.status !== 1) {
       clearInterval(timer.value);
     }
   }
@@ -288,7 +291,7 @@ const checkPayStatus = async (orderId: String) => {
   padding: 0.41667vw;
   box-sizing: border-box;
   background-color: #222121;
-  background-image: url("@/assets/img/list-item-bg.png");
+  background-image: url("@/assets/img/list-item-bg.webp");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   img {

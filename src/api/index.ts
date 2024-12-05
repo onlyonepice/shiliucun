@@ -2,7 +2,7 @@ import { http } from "@/utils/http";
 import { responseType } from "@/utils/type";
 const url = {
   getBanner: "/web/api/index/banner",
-  getGameList: "/web/api/index/gameList",
+  getGameList: "/web/api/index/typeGameList",
   gameInfo: "/web/api/index/gameInfo",
   payGame: "/web/api/pay/game",
   getUserInfo: "/web/api/user/info",
@@ -62,8 +62,8 @@ export const getBanner = () => {
   return http.request<responseType>("post", url.getBanner);
 };
 // 获取游戏
-export const getGameList = (data: any) => {
-  return http.request<responseType>("post", url.getGameList, { data });
+export const getGameList = () => {
+  return http.request<responseType>("post", url.getGameList);
 };
 // 获取游戏详情
 export const gameInfo = (data: any) => {

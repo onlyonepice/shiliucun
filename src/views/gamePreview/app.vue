@@ -107,7 +107,7 @@ getHomeBanner();
   padding: 0.41667vw;
   border-radius: 0.625vw;
   background-color: #222121;
-  background-image: url("@/assets/img/list-item-bg.png");
+  background-image: url("@/assets/img/list-item-bg.webp");
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }

@@ -1,60 +1,49 @@
 <template>
   <div class="content">
-    <el-carousel class="banner" autoplay  v-if="fileList?.length">
-        <el-carousel-item
-          style="height: 225%"
-          v-for="item in fileList"
-          :key="item"
-        >
-          <el-image style="width: 100%" :src="item.banner" fit="contain" @click="goto(item.game_id, 'now')" />
-        </el-carousel-item>
-      </el-carousel>
+    <el-carousel class="banner" autoplay v-if="fileList?.length">
+      <el-carousel-item
+        style="height: 225%"
+        v-for="item in fileList"
+        :key="item"
+      >
+        <el-image
+          style="width: 100%"
+          :src="item.banner"
+          fit="contain"
+          @click="goto(item.game_id, 'now')"
+        />
+      </el-carousel-item>
+    </el-carousel>
     <div class="banner_shelf" v-if="!fileList?.length" />
     <div class="card_block">
-      <div class="title">
-        <div clas="text">【全球首款】真人性愛模擬器</div>
-      </div>
-      <div class="item_block">
-        <div
-          class="item"
-          v-for="item in gameList"
-          :key="item"
-          @click="goto(item.game_id)"
-        >
-          <img v-if="item.icon" class="card_img" :src="item.icon" />
-          <div class="bottom">
-            <div class="tips">
-              {{ item.name }}
-            </div>
-            <div class="coupon"></div>
-            <template v-if="item.price > 0 && item.lock === 1">
-              <div class="price">已购买</div>
-            </template>
-            <template v-else>
-              <div class="price">
-                {{ item.price ? item.price + "喵币" : "免费" }}
-              </div>
-            </template>
-          </div>
+      <div v-for="(item, index) in gameList" :key="index">
+        <div class="title">
+          <div clas="text">{{ item.title }}</div>
         </div>
-      </div>
-      <div class="title" style="margin-top: 2vw;">
-        <div clas="text">敬请期待</div>
-      </div>
-      <div class="item_block">
-        <div
-          class="item"
-          v-for="item in gameListFeature"
-          :key="item"
-          @click="goto(item.game_id, 'feature')"
-        >
-          <img v-if="item.icon" class="card_img" :src="item.icon" />
-          <div class="bottom">
-            <div class="tips">
-              {{ item.name }}
+        <div class="item_block">
+          <el-icon class="left"><ArrowRightBold /></el-icon>
+          <el-icon class="right"><ArrowLeftBold /></el-icon>
+          <div
+            class="item"
+            v-for="(_item, _index) in item.items"
+            :key="_index"
+            @click="goto(_item.game_id)"
+          >
+            <img v-if="_item.icon" class="card_img" :src="_item.icon" />
+            <div class="bottom">
+              <div class="tips">
+                {{ _item.name }}
+              </div>
+              <div class="coupon"></div>
+              <template v-if="_item.price > 0 && _item.lock === 1">
+                <div class="price">已购买</div>
+              </template>
+              <template v-else>
+                <div class="price">
+                  {{ _item.price ? _item.price + "喵币" : "免费" }}
+                </div>
+              </template>
             </div>
-            <div class="coupon"></div>
-            <div class="price">查看详情</div>
           </div>
         </div>
       </div>
@@ -68,7 +57,7 @@ import { useRouter } from "vue-router";
 import { getBanner, getGameList } from "@/api/index";
 import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/defaults";
 const router = useRouter();
-const goto = (game_id, time = 'now') => {
+const goto = (game_id, time = "now") => {
   router.push({ path: "/gameItem", query: { game_id, time } });
 };
 const fileList = ref<any>([]);
@@ -82,14 +71,9 @@ onMounted(() => {
       fileList.value = res?.data?.list;
     }
   });
-  getGameList({ id: 1 }).then((res) => {
+  getGameList().then((res: any) => {
     if ((res.code = 200)) {
       gameList.value = res?.data?.list;
-    }
-  });
-  getGameList({ is_online: 0 }).then((res) => {
-    if ((res.code = 200)) {
-      gameListFeature.value = res?.data?.list;
     }
   });
 });
@@ -100,7 +84,7 @@ onMounted(() => {
 ::-webkit-scrollbar {
   display: none;
 }
-.banner_shelf{
+.banner_shelf {
   height: 55vh;
 }
 .content {
@@ -120,12 +104,28 @@ onMounted(() => {
   .item_block {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     grid-gap: 0.625vw;
     gap: 0.625vw;
     grid-gap: var(--xs, 0.625vw);
     gap: var(--xs, 0.625vw);
     overflow-x: auto;
-    flex-wrap: wrap;
+    @include relative();
+    .item {
+      width: 14vw;
+      box-sizing: border-box;
+      img {
+        width: 11.5vw;
+      }
+    }
+    .left {
+      @include absolute(1);
+      color: #fff;
+    }
+    .right {
+      @include absolute(1);
+      color: #fff;
+    }
   }
   .title {
     font-size: 1.45833vw;
@@ -144,7 +144,7 @@ onMounted(() => {
   .item {
     &:hover {
       border: 0.5px solid crimson;
-      background-image: url("@/assets/img/card-select.png");
+      background-image: url("@/assets/img/card-select.webp");
     }
     cursor: pointer;
     width: 13.16667vw;
@@ -155,7 +155,7 @@ onMounted(() => {
     cursor: pointer;
     background-color: var(--neutral-900, #222121);
     padding: 1.25vw;
-    background-image: url("@/assets/img/card.png");
+    background-image: url("@/assets/img/card.webp");
     background-position: 100% 100%;
     background-size: 200%;
     background-repeat: no-repeat;
@@ -210,7 +210,6 @@ onMounted(() => {
   border-radius: 0.41667vw;
   border-radius: var(--3xs, 0.41667vw);
   object-fit: cover;
-
 }
 .demonstration {
   color: var(--el-text-color-secondary);

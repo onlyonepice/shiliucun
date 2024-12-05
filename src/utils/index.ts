@@ -1,4 +1,4 @@
-// import downloadBg from "@/assets/img/common/eesa-waterMark.png";
+// import downloadBg from "@/assets/img/common/eesa-waterMark.webp";
 
 // 自定义判断元素类型JS
 export function toType(obj) {

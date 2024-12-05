@@ -2,7 +2,12 @@
   <div class="content">
     <div class="left_block">
       <div class="game_iframe">
-        <img class="full_screen"  v-if="show" :src="full_screen" @click="fullScreen"/>
+        <img
+          class="full_screen"
+          v-if="show"
+          :src="full_screen"
+          @click="fullScreen"
+        />
         <iframe
           v-if="show"
           allowfullscreen
@@ -27,8 +32,20 @@
         ></video>
       </div>
       <div class="card_block">
-        <div class="item_block">
-          <div
+        <swiper
+          ref="{swiperRef}"
+          :centeredSlides="true"
+          :pagination="{
+            type: 'fraction',
+          }"
+          :slidesPerView="4"
+          :spaceBetween="0"
+          :navigation="true"
+          :modules="modules"
+          class="mySwiper"
+          @slideChange="onSlideChange"
+        >
+          <swiper-slide
             v-for="item in info?.intro_img_list"
             :key="item"
             @click="showBlock(item)"
@@ -37,59 +54,39 @@
             <video controls v-if="item?.includes('.mp4')" class="card_img">
               <source :src="item" type="video/mp4" />
             </video>
-          </div>
-        </div>
+          </swiper-slide>
+        </swiper>
       </div>
     </div>
     <div class="right_block">
       <div class="detail_block">
         <div class="title">{{ info.name }}</div>
         <img v-if="info.icon" :src="info.icon" />
-        <!-- <div class="action">
-              <div class="icon">
-                  <img class="tips_icon" :src="heart">
-                  <div>{{info?.hot_num}}</div>
-              </div>
-              <div class="icon">
-                  <img class="tips_icon" :src="star">
-                  <div>愿望清单</div>
-              </div>
-              <div class="icon">
-                  <img class="tips_icon" :src="copy">
-                  <div>分享</div>
-              </div>
-          </div> -->
         <div class="pay_success" v-if="info.lock == 1 && info.price > 0">
           <img class="tips_icon" :src="success_icon" />您已购买此游戏
         </div>
         <template v-if="route.query.time === 'now'">
           <div>
-            <el-button @click="info.lock==0?payGame():play(true)" class="btn-play">{{info.lock==0?'立即购买':'立即玩' }}</el-button>
+            <el-button
+              @click="info.lock == 0 ? payGame() : play(true)"
+              class="btn-play"
+              >{{ info.lock == 0 ? "立即购买" : "立即玩" }}</el-button
+            >
           </div>
-          <div>
+          <!-- <div>
             <el-button v-if="info.lock == 0" @click="play" class="btn-play"
               >试玩</el-button
             >
-          </div>
+          </div> -->
           <div>
-            <el-button @click="wait" class="btn-play"
-              >畅玩4K</el-button>
+            <el-button @click="wait" class="btn-play">畅玩4K</el-button>
           </div>
         </template>
       </div>
       <div class="introduction">
         <div class="title">游戏介绍</div>
-        <div class="intro_body">
-          <!-- <div class="intro_tips">
-              <div class="tag">限制级</div>
-              <div class="tag">MASOBU精选
-                </div>
-              <div class="tag">知名女优
-                </div>
-            </div> -->
-          <div class="intro_content">
-            {{ info.intro }}
-          </div>
+        <div class="intro_content">
+          {{ info.intro }}
         </div>
       </div>
     </div>
@@ -99,16 +96,20 @@
 <script lang="ts" setup>
 import star from "@/assets/img/star.svg";
 import heart from "@/assets/img/heart.svg";
-import copy from "@/assets/img/copy.png";
-import full_screen from "@/assets/img/full_screen.png";
-import success_icon from "@/assets/img/success-filling.png";
+import copy from "@/assets/img/copy.webp";
+import full_screen from "@/assets/img/full_screen.webp";
+import success_icon from "@/assets/img/success-filling.webp";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 import { onMounted, ref, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { gameInfo } from "@/api/index";
 import { ElMessage } from "element-plus";
-
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/css/navigation";
+const modules = [Navigation];
 const route = useRoute();
 const router = useRouter();
 const game_id = route.query.game_id;
@@ -117,32 +118,37 @@ const show = ref<any>(false);
 const iframe_url = ref<any>("");
 const showUrl = ref<any>("");
 const token = getToken();
-const wait = ()=>{
+const choseIndex = ref<any>(0);
+const wait = () => {
   ElMessage({
-    message: '敬请期待',
-    type: 'info',
+    message: "敬请期待",
+    type: "info",
     plain: true,
-  })
-}
+  });
+};
 const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
 };
-const payGame = ()=>{
-  if(!token){
-    return openDialog()
+const payGame = () => {
+  if (!token) {
+    return openDialog();
   }
   useUserStoreHook().openPayGame(true, info.value);
-}
-const fullScreen = ()=>{
+};
+//
+const onSlideChange = (data: any) => {
+  choseIndex.value = data.activeIndex;
+  showBlock(info.value.intro_img_list[choseIndex.value]);
+};
+const fullScreen = () => {
   let iframes = document.getElementById("gameIframe") as HTMLIFrameElement;
-    iframes.requestFullscreen().catch(err => {
-        console.error(err);
-    });
-}
+  iframes.requestFullscreen().catch((err) => {
+    console.error(err);
+  });
+};
 const handleMessage = (event: MessageEvent) => {
   let data = null;
   data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-  console.log('data.action===>',data.action)
   if (data.action == "agree") {
     return useUserStoreHook().openPayGame(true, info.value);
   }
@@ -208,15 +214,15 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 @import "@/style/mixin.scss";
-.full_screen{
-  &:hover{
+.full_screen {
+  &:hover {
     opacity: 0.8;
   }
-  height:2vw;
+  height: 2vw;
   width: 2vw;
   z-index: 10000;
   position: absolute;
-  bottom:20px;
+  bottom: 20px;
   right: 20px;
 }
 .success_icon {
@@ -389,8 +395,6 @@ onUnmounted(() => {
 .card_block {
   margin-top: 1.5vw;
   width: 100%;
-
-  width: calc(100% - 20px);
   .item_block {
     display: flex;
     flex-direction: row;
@@ -422,5 +426,18 @@ onUnmounted(() => {
 }
 .demonstration {
   color: var(--el-text-color-secondary);
+}
+</style>
+<style lang="scss">
+@import "@/style/mixin.scss";
+
+.content {
+  .swiper-button-prev:after,
+  .swiper-button-next:after {
+    font-size: 2vw;
+  }
+  .swiper-slide {
+    width: 15vw !important;
+  }
 }
 </style>

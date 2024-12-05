@@ -1,7 +1,7 @@
 <template>
   <div class="pageHead">
     <div class="pageHead-content">
-      <img :src="Logo" alt="" />
+      <img :src="Logo" alt="" @click="onHome()" style="cursor: pointer;" />
       <div class="pageHead-content-right">
         <!-- <el-button @click="openDialog" class="btn-play">立即游玩</el-button> -->
         <el-button class="btn-share" @click="download()">下载APP</el-button>
@@ -12,19 +12,24 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import Logo from "@/assets/img/logo.jpg";
+import Logo from "@/assets/img/logo.webp";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const emits = defineEmits(["share"]);
-const shareVisible= ref(false); // 分享
+const shareVisible = ref(false); // 分享
 const download = () => {
   useUserStoreHook().openDownload(true);
 };
 const onShare = () => {
-  if( useUserStoreHook().$state.token === "" ) {
+  if (useUserStoreHook().$state.token === "") {
     return useUserStoreHook().openLogin(true, "login");
   }
-  emits('share')
+  emits("share");
+};
+const onHome = () => {
+  router.push("/home")
 };
 </script>
 
