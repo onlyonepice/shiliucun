@@ -139,8 +139,8 @@ const onLogin = async () => {
     setToken(data);
     useUserStoreHook().handleGetUserInfo();
     location.reload();
+    useUserStoreHook().openLogin(false);
   }
-  useUserStoreHook().openLogin(false);
 };
 // 忘记密码
 const onForget = () => {
