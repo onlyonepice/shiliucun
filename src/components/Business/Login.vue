@@ -20,10 +20,10 @@
         :show-password="!showPassword"
       />
       <div class="passwordTips">
-        <p class="passwordTips___uSglk" @click="onForget()">
-          忘记密码？/注册账号
+        <p class="passwordTips___uSglk" @click="onForget('restPassword')">
+          忘记密码？
         </p>
-        <!-- <p class="passwordTips___uSglk" @click="onForget()">注册账号</p> -->
+        <p class="passwordTips___uSglk" @click="onForget('register')">注册账号</p>
       </div>
     </template>
     <template v-else>
@@ -67,7 +67,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="onLogin" class="btn-foot">{{
-          resetPassword
+          useUserStoreHook().$state.openLoginType === "restPassword"
             ? "重置密码"
             : openLoginType === "login"
               ? "登入"
@@ -143,10 +143,9 @@ const onLogin = async () => {
   }
 };
 // 忘记密码
-const onForget = () => {
-  resetPassword.value = true;
+const onForget = (type: string) => {
   // 忘记密码
-  useUserStoreHook().$state.openLoginType = "register";
+  useUserStoreHook().$state.openLoginType = type;
 };
 
 const handleClose = () => {
