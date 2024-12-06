@@ -29,18 +29,33 @@
       </p>
     </div>
     <div class="account-item">
-      <template v-if="useUserStoreHook().$state.userInfo.invite_code">
-        <p class="account-item-left">邀请码</p>
-        <p class="account-item-right">
-          {{ useUserStoreHook().$state.userInfo.invite_code }}
-        </p>
+      <p class="account-item-left">邀请码</p>
+      <p class="account-item-right">
+        {{ useUserStoreHook().$state.userInfo.invite_code }}
+      </p>
+    </div>
+    <div class="account-item">
+      <template v-if="useUserStoreHook().$state.userInfo.shifu_info !== null">
+        <p class="account-item-left">师傅信息</p>
+        <div class="invite-info" v-if="inviteInfo !== null">
+          <img :src="useUserStoreHook().$state.userInfo.shifu_info.avatar_url" alt="">
+          <p>{{ useUserStoreHook().$state.userInfo.shifu_info.nickname }}</p>
+        </div>
       </template>
       <template v-else>
         <el-input
           v-model="inviteCode"
           style="width: 30vw; height: 2vw"
           placeholder="请输入邀请码"
-        />
+          maxlength="6"
+        >
+        <template #suffix>
+          <div class="invite-info" v-if="inviteInfo !== null">
+            <img :src="inviteInfo.avatar_url" alt="">
+            <p>{{ inviteInfo.nickname }}</p>
+          </div>
+        </template>
+        </el-input>
         <div
           class="account-item-right"
           style="cursor: pointer"
@@ -56,18 +71,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import EditIcon from "@/assets/img/edit-icon.webp";
 import { useUserStoreHook } from "@/store/modules/user";
-import { editUserInfoApi } from "@/api/index";
+import { editUserInfoApi, getInviteCodeApi } from "@/api/index";
 import { ElMessage } from "element-plus";
 const inviteCode = ref(""); // 邀请码
 const editDialogVisible = ref(false);
 // 修改邀请码
 const editCode = () => {
   editUserInfoApi({ invite_code: inviteCode.value }).then((res) => {
-    if (res.resp_code === 0) {
+    if (res.code === 200) {
       ElMessage.success("修改成功");
+      useUserStoreHook().handleGetUserInfo();
     }
   });
 };
@@ -75,6 +91,22 @@ const editCode = () => {
 const editPassword = () => {
   useUserStoreHook().openLogin(true, "editPassword");
 };
+const inviteInfo: Ref<any> = ref(null);
+watch(
+  () => inviteCode.value,
+  async(newVal) => {
+    if( newVal.length === 6 ) {
+      const { data, code } = await getInviteCodeApi({
+        invite_code: newVal,
+      });
+      if ( code === 200 ){
+        inviteInfo.value = data
+      }
+    }else{
+      inviteInfo.value = null;
+    }
+  },
+);
 </script>
 
 <style lang="scss">
@@ -115,6 +147,17 @@ const editPassword = () => {
     @include font(0.625vw, 400, #6f6d6d, 1.04167vw);
   }
   .account-item-right {
+    @include font(0.625vw, 400, #ffffff, 1.04167vw);
+  }
+}
+.invite-info {
+  @include flex(center,flex-start, nowrap);
+  img {
+    @include widthAndHeight(2vw, 2vw);
+    border-radius: 50%;
+    margin-right: 0.5vw;
+  }
+  p{
     @include font(0.625vw, 400, #ffffff, 1.04167vw);
   }
 }

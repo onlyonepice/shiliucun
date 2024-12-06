@@ -92,3 +92,8 @@ export const editUserInfoApi = (data: any) => {
     data,
   });
 };
+
+// 获取邀请码信息
+export const getInviteCodeApi = (data:any) => {
+  return http.request<responseType>("post", "/web/api/user/verifyInviteCode", {data});
+};

@@ -62,7 +62,15 @@
         v-model="form.invite_code"
         style="width: 100%; margin-bottom: 1.25vw"
         placeholder="请输入邀请码（选填）"
-      />
+        maxlength="6"
+      >
+      <template #suffix>
+        <div class="invite-info" v-if="inviteInfo !== null">
+          <img :src="inviteInfo.avatar_url" alt="">
+          <p>{{ inviteInfo.nickname }}</p>
+        </div>
+      </template>
+      </el-input>
     </template>
     <template #footer>
       <div class="dialog-footer">
@@ -87,8 +95,10 @@ import {
   loginApi,
   sendVerificationCodeApi,
   editUserInfoApi,
+  getInviteCodeApi,
 } from "@/api/index";
 import { setToken } from "@/utils/auth";
+import { isNull } from "mathjs";
 const dialogVisible = ref(true);
 const openLoginType = ref(""); // 登录方式
 const form: Ref<any> = ref({});
@@ -104,6 +114,22 @@ watch(
   },
   {
     immediate: true,
+  },
+);
+const inviteInfo: Ref<any> = ref(null);
+watch(
+  () => form.value.invite_code,
+  async(newVal) => {
+    if( newVal.length === 6 ) {
+      const { data, code } = await getInviteCodeApi({
+        invite_code: newVal,
+      });
+      if ( code === 200 ){
+        inviteInfo.value = data
+      }
+    }else{
+      inviteInfo.value = null;
+    }
   },
 );
 // 登陆/注册
@@ -224,5 +250,13 @@ const onSendCode = async () => {
 .el-input.is-disabled .el-input__wrapper {
   background-color: #222121;
   box-shadow: none;
+}
+.invite-info {
+  @include flex(center,flex-start, nowrap);
+  img {
+    @include widthAndHeight(2vw, 2vw);
+    border-radius: 50%;
+    margin-right: 0.5vw;
+  }
 }
 </style>
