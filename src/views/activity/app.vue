@@ -23,15 +23,13 @@
         <div class="button_footer"  v-if="platform"><a :href="platform=='iOS'?'https://img.shiliucun.com/package/ysjx.ipa':'https://img.shiliucun.com/package/ysjx.apk'">下载{{platform}} APP</a></div>
     </div>
    </div>
-   <div class="iframe"  v-show="show">
+   <div class="iframe"  v-if="show">
     <div class="return_activity" @click="returnPage">返回</div>
     <iframe
           allowfullscreen
           id="gameIframe"
           frameborder="0"
           style="width: 100vh;height:100vw"
-          @onload="getHight"
-          scrolling="auto"
           :src="iframe_url"
         >
     </iframe>
@@ -44,31 +42,32 @@
   import three from "@/assets/banner/three.jpg";
   import four from "@/assets/banner/four.webp";
 
-  import { onMounted, ref, onUnmounted } from "vue";
-  import { useRoute, useRouter } from "vue-router";
-  
-  const route = useRoute();
-  const router = useRouter();
+  import { onMounted, ref } from "vue";
+  var domainName = window.location.hostname;
   const iframe_url = ref<any>("");
   const fileList =[one,two]
   const show= ref(false)
+  const isHttps= ref(false)
   const platform= ref<any>(false)
+  if(domainName.includes('https')){
+    isHttps.value = true
+  }
   const play = (type)=>{
     show.value = true
     if(type==1){
-        iframe_url.value = 'https://web.shiliucun.com/rbldg_demo_play'
+      if(platform.value=='iOS'){
+        window.location.href = isHttps.value?'https://web.shiliucun.com/rbldg_demo_play':'http://websslv112.s3-website.ap-east-1.amazonaws.com/rbldg_demo_play';
+      }else{
+        iframe_url.value = isHttps.value?'https://web.shiliucun.com/rbldg_demo_play':'http://websslv112.s3-website.ap-east-1.amazonaws.com/rbldg_demo_play';
+      }
     }else{
-        iframe_url.value = 'https://web.shiliucun.com/azcty_demo_play'
+      if(platform.value=='iOS'){
+        window.location.href = isHttps.value?"https://web.shiliucun.com/azcty_demo_play":"http://websslv112.s3-website.ap-east-1.amazonaws.com/azcty_demo_play"
+      }else{
+        iframe_url.value = isHttps.value?"https://web.shiliucun.com/azcty_demo_play":"http://websslv112.s3-website.ap-east-1.amazonaws.com/azcty_demo_play"
+      }
     }
-  } 
-  const getHight = () => {
-  let iframes = window.parent.document.getElementsByTagName("gameIframe");
-  for (var i = 0, j = iframes.length; i < j; ++i) {
-    iframes[i].setAttribute(
-      "height",
-      iframes[i].contentWindow.document.body.scrollHeight,
-    );
-  }
+  
 };
   const goHome = ()=>{
     window.open('https://web.shiliucun.com/')
@@ -144,7 +143,7 @@
   }
   .iframe{
     position: relative;
-    transform: rotate(90deg)
+    transform: rotate(90deg);
   }
   .return_activity{
     top:10px;
