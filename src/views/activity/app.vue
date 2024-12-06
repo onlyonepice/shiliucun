@@ -49,21 +49,22 @@
   const show= ref(false)
   const isHttps= ref(false)
   const platform= ref<any>(false)
-  if(domainName.includes('https')){
+  if(domainName.includes('shiliucun')){
     isHttps.value = true
   }
   const play = (type)=>{
-    show.value = true
     if(type==1){
       if(platform.value=='iOS'){
-        window.location.href = isHttps.value?'https://web.shiliucun.com/rbldg_demo_play':'http://websslv112.s3-website.ap-east-1.amazonaws.com/rbldg_demo_play';
+         return window.open(`${isHttps.value?'https://web.shiliucun.com/rbldg_demo_play':'http://websslv112.s3-website.ap-east-1.amazonaws.com/rbldg_demo_play'}`)
       }else{
+        show.value = true
         iframe_url.value = isHttps.value?'https://web.shiliucun.com/rbldg_demo_play':'http://websslv112.s3-website.ap-east-1.amazonaws.com/rbldg_demo_play';
       }
     }else{
       if(platform.value=='iOS'){
-        window.location.href = isHttps.value?"https://web.shiliucun.com/azcty_demo_play":"http://websslv112.s3-website.ap-east-1.amazonaws.com/azcty_demo_play"
+        return window.open(`${isHttps.value?"https://web.shiliucun.com/azcty_demo_play":"http://websslv112.s3-website.ap-east-1.amazonaws.com/azcty_demo_play"}`) 
       }else{
+        show.value = true
         iframe_url.value = isHttps.value?"https://web.shiliucun.com/azcty_demo_play":"http://websslv112.s3-website.ap-east-1.amazonaws.com/azcty_demo_play"
       }
     }
