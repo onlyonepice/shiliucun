@@ -71,10 +71,7 @@
 
 };
   const goHome = ()=>{
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPod/i) || userAgent.match(/Android/i)) {
-      window.open("https://phone.shiliucun.com", "_self");
-    }
+    window.open('https://phone.shiliucun.com/')
   }
 
  const getMobileOperatingSystem =()=> {

@@ -42,9 +42,15 @@ router.beforeEach(async (to, from, next) => {
   if (typeof to.meta?.title === "string") {
     document.title = to.meta?.title;
   }
+  console.log(to);
+
   // 如果跳转的是 home或者重定向到首页直接放行，不然会路由跳转死循环
   if (to.path === "/ssl" || to.path === "/tt" || to.path === "/") {
-    next("/home");
+    if( to.fullPath === "/activity" ){
+      next("/activity");
+    }else{
+      next("/home");
+    }
   }
   if (getToken()) {
     await useUserStoreHook().handleGetUserInfo();
