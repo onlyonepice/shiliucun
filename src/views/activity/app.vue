@@ -71,7 +71,7 @@
   
 };
   const goHome = ()=>{
-    window.open('http://phonev1.s3-website.ap-northeast-3.amazonaws.com/')
+    window.open('https://phone.shiliucun.com/')
   }
 
  const getMobileOperatingSystem =()=> {

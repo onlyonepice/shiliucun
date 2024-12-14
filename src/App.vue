@@ -37,7 +37,7 @@ const getMobileOperatingSystem =()=> {
 }
 onMounted(()=>{
   if(getMobileOperatingSystem()){
-    return window.open('http://phonev1.s3-website.ap-northeast-3.amazonaws.com/')
+    return window.open('https://phone.shiliucun.com/')
     }
 })
 watch(
