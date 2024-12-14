@@ -125,7 +125,7 @@ const choseMenu = ref(0);
 watch(
   () => choseMenu.value,
   (val) => {
-    router.push(menuList.value[val]?.link);
+    val !== -1 && router.push(menuList.value[val].link ||  "/home");
   },
 );
 watch(

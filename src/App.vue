@@ -13,7 +13,7 @@
   <Announcement v-if="useUserStoreHook().$state.openAnnouncement" />
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
 import { useRouter } from "vue-router";
@@ -24,11 +24,9 @@ const openDownloadVisible = ref(useUserStoreHook().$state.openDownloadVisible);
 const handleShare = ref(false);
 const currentRouter = ref('');
 const router = useRouter();
-
 watch(
   () => router.currentRoute.value.path,
   (newVal) => {
-    console.log('newVal====?',newVal)
     currentRouter.value = newVal
   },
 );

@@ -12,7 +12,7 @@
     <div class="icon_block">
         <div class="paly_button" @click="play(1)">立即试玩</div>
         <img class="game_icon" :src="three"/>
-    </div> 
+    </div>
     <div class="icon_block">
         <div class="paly_button" @click="play(2)">立即试玩</div>
         <img class="game_icon" :src="four"/>
@@ -35,7 +35,7 @@
     </iframe>
    </div>
   </template>
-  
+
   <script lang="ts" setup>
   import one from "@/assets/banner/one.webp";
   import two from "@/assets/banner/two.webp";
@@ -62,21 +62,24 @@
       }
     }else{
       if(platform.value=='iOS'){
-        return window.open(`${isHttps.value?"https://web.shiliucun.com/azcty_demo_play":"http://websslv112.s3-website.ap-east-1.amazonaws.com/azcty_demo_play"}`) 
+        return window.open(`${isHttps.value?"https://web.shiliucun.com/azcty_demo_play":"http://websslv112.s3-website.ap-east-1.amazonaws.com/azcty_demo_play"}`)
       }else{
         show.value = true
         iframe_url.value = isHttps.value?"https://web.shiliucun.com/azcty_demo_play":"http://websslv112.s3-website.ap-east-1.amazonaws.com/azcty_demo_play"
       }
     }
-  
+
 };
   const goHome = ()=>{
-    window.open('https://phone.shiliucun.com/')
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPod/i) || userAgent.match(/Android/i)) {
+      window.open("https://phone.shiliucun.com", "_self");
+    }
   }
 
  const getMobileOperatingSystem =()=> {
   var userAgent = navigator.userAgent || navigator.vendor || window.opera;
- 
+
   if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPod/i)) {
     return 'iOS';
   } else if (userAgent.match(/Android/i)) {
@@ -85,7 +88,7 @@
     return false;
   }
 }
- 
+
   const returnPage = ()=>{
     show.value = false
   }
@@ -94,7 +97,7 @@
   });
 
   </script>
-  
+
   <style lang="scss" scoped>
   @import "@/style/mixin.scss";
   a{
@@ -169,4 +172,3 @@
     }
   }
   </style>
-  
