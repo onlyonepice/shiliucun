@@ -51,15 +51,16 @@
     v-model="rechargeVisible"
     title="交易概览"
     class="recharge-dialog"
+    :show-close="false"
   >
     <template v-if="!payLoading">
       <div class="recharge-header">
         <span>项目</span>
-        <span>{{ rechargeList[rechargeId].num }}M 币</span>
+        <span>{{ rechargeList[rechargeId].num }}</span>
       </div>
       <div class="recharge-header">
         <span>价格</span>
-        <span>¥{{ rechargeList[rechargeId].price }}</span>
+        <span>{{ rechargeList[rechargeId].price }}</span>
       </div>
       <div class="recharge-title">择支付方式</div>
       <div class="recharge-img">
@@ -205,6 +206,8 @@ const handleClose = (type: Boolean) => {
     chosePayType.value = "";
     rechargeId.value = -1;
     payLoading.value = false;
+    console.log("关闭弹窗=======");
+    clearInterval(timer.value);
     return (rechargeVisible.value = false);
   } else {
     if (useUserStoreHook().$state.token === "") {
@@ -232,11 +235,10 @@ const createPay = async () => {
     wd_id: rechargeList.value[rechargeId.value].id,
     channel: chosePayType.value,
   });
-  console.log(data, code);
   if (code === 200) {
     // 轮训支付结果
     timer.value = setInterval(() => {
-      checkPayStatus(data.order_id);
+      checkPayStatus(data.orderId);
       window.open(data.payurl, "externalWindow");
     }, 2000);
   }

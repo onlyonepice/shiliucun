@@ -37,7 +37,7 @@
     <div class="account-item">
       <template v-if="useUserStoreHook().$state.userInfo.shifu_info !== null">
         <p class="account-item-left">师傅信息</p>
-        <div class="invite-info" v-if="inviteInfo !== null">
+        <div class="invite-info" v-if="useUserStoreHook().$state.userInfo.shifu_info !== null">
           <img :src="useUserStoreHook().$state.userInfo.shifu_info.avatar_url" alt="">
           <p>{{ useUserStoreHook().$state.userInfo.shifu_info.nickname }}</p>
         </div>

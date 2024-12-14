@@ -66,8 +66,12 @@
         </div>
       </template>
       <div class="menusTitle___19IQ3" style="margin-top: 1.25vw">联系我们</div>
-      <el-button class="btn-no-account btn-no-account-email" @click="onEmail()">
-        <p>{{ useUserStoreHook().$state.configInfo.email }}</p>
+      <el-button class="btn-no-account btn-no-account-email" @click="onEmail('email')">
+        <p>邮箱：{{ useUserStoreHook().$state.configInfo.email }}</p>
+        <el-icon><CopyDocument /></el-icon>
+      </el-button>
+      <el-button class="btn-no-account btn-no-account-email" @click="onEmail('tg')">
+        <p>TG：{{ useUserStoreHook().$state.configInfo.tg }}</p>
         <el-icon><CopyDocument /></el-icon>
       </el-button>
     </div>
@@ -141,11 +145,11 @@ watch(
 const openDialog = (type: string) => {
   useUserStoreHook().openLogin(true, type);
 };
-const onEmail = () => {
+const onEmail = (type: string) => {
   var textarea: any = document.createElement("textarea");
   textarea.style.position = "fixed";
   textarea.style.opacity = 0;
-  textarea.value = useUserStoreHook().$state.configInfo.email;
+  textarea.value = useUserStoreHook().$state.configInfo[type];
   document.body.appendChild(textarea);
   textarea.select();
   document.execCommand("copy");
@@ -268,6 +272,11 @@ const onChoseMenu = (id: number) => {
 }
 .btn-no-account-email {
   background-color: rgba(0, 0, 0, 0) !important;
+  margin-left: 0 !important;
+  @include flex(center, space-between, nowrap);
+  p {
+    margin-right: 0.5vw;
+  }
   span {
     width: 100%;
     @include flex(center, space-between, nowrap);

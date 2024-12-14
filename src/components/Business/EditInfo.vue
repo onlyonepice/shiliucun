@@ -13,7 +13,7 @@
     />
     <el-upload
       class="upload-demo"
-      action="http://api-1980831594.ap-east-1.elb.amazonaws.com/web/api/open/img"
+      :action="VITE_GLOB_API_URL + '/web/api/open/img'"
       :show-file-list="false"
       :auto-upload="true"
       :multiple="false"
@@ -38,6 +38,7 @@ import { ref, watch, Ref } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { editUserInfoApi } from "@/api/index";
 import { ElMessage } from "element-plus";
+const { VITE_GLOB_API_URL } = import.meta.env;
 const dialogVisible = ref(true);
 const emits = defineEmits(["close"]);
 const form = ref({
