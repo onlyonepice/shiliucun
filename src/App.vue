@@ -13,7 +13,7 @@
   <Announcement v-if="useUserStoreHook().$state.openAnnouncement" />
 </template>
 <script lang="ts" setup>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
 import { useRouter } from "vue-router";
@@ -25,8 +25,21 @@ const handleShare = ref(false);
 const currentRouter = ref('');
 const router = useRouter();
 
-
-
+const getMobileOperatingSystem =()=> {
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPod/i)) {
+    return 'iOS';
+  } else if (userAgent.match(/Android/i)) {
+    return 'Android';
+  } else {
+    return false;
+  }
+}
+onMounted(()=>{
+  if(getMobileOperatingSystem()){
+    return window.open('http://phonev1.s3-website.ap-northeast-3.amazonaws.com/')
+    }
+})
 watch(
   () => router.currentRoute.value.path,
   (newVal) => {

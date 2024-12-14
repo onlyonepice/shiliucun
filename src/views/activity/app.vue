@@ -20,7 +20,7 @@
     <div style="height:50px"></div>
     <div class="button_block">
         <div class="button_footer" @click="goHome">主站畅玩</div>
-        <div class="button_footer"  v-if="platform"><a :href="platform=='iOS'?'https://img.shiliucun.com/package/ysjx.ipa':'https://img.shiliucun.com/package/ysjx.apk'">下载{{platform}} APP</a></div>
+        <div class="button_footer"  v-if="platform=='Android'"><a :href="'https://img.shiliucun.com/package/ysjx.apk'">下载{{platform}} APP</a></div>
     </div>
    </div>
    <div class="iframe"  v-if="show">
@@ -71,10 +71,10 @@
   
 };
   const goHome = ()=>{
-    window.open('https://web.shiliucun.com/')
+    window.open('http://phonev1.s3-website.ap-northeast-3.amazonaws.com/')
   }
 
-  function getMobileOperatingSystem() {
+ const getMobileOperatingSystem =()=> {
   var userAgent = navigator.userAgent || navigator.vendor || window.opera;
  
   if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPod/i)) {
@@ -87,12 +87,10 @@
 }
  
   const returnPage = ()=>{
-    console.log(' platform.valu1e===>',)
     show.value = false
   }
   onMounted(() => {
      platform.value = getMobileOperatingSystem()
-    
   });
 
   </script>
