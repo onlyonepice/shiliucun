@@ -25,21 +25,6 @@ const handleShare = ref(false);
 const currentRouter = ref('');
 const router = useRouter();
 
-const getMobileOperatingSystem =()=> {
-  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-  if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPod/i)) {
-    return 'iOS';
-  } else if (userAgent.match(/Android/i)) {
-    return 'Android';
-  } else {
-    return false;
-  }
-}
-onMounted(()=>{
-  if(getMobileOperatingSystem()){
-    return window.open('https://phone.shiliucun.com/')
-    }
-})
 watch(
   () => router.currentRoute.value.path,
   (newVal) => {
