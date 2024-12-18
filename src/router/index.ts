@@ -52,9 +52,7 @@ router.beforeEach(async (to, from, next) => {
       next("/home");
     }
   }
-  if (getToken()) {
-    await useUserStoreHook().handleGetUserInfo();
-  }
+  await useUserStoreHook().handleGetUserInfo();
   next();
 });
 

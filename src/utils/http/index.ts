@@ -12,7 +12,7 @@ import {
 } from "./types.d";
 import { toType } from "../index";
 import { ElMessage } from "element-plus";
-import { getToken } from "@/utils/auth";
+import { getToken, removeToken } from "@/utils/auth";
 import { stringify } from "qs";
 const { VITE_GLOB_API_URL } = import.meta.env;
 import { useUserStoreHook } from "@/store/modules/user";
@@ -139,6 +139,9 @@ class PureHttp {
             case 400:
               console.log("未登录");
               ElMessage.error(data?.msg);
+              break;
+            case 403:
+              removeToken();
               break;
             default:
               if (config.params && config.params.hideError) return data;

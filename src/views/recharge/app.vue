@@ -237,9 +237,9 @@ const createPay = async () => {
   });
   if (code === 200) {
     // 轮训支付结果
+    window.open(data.payurl, "externalWindow");
     timer.value = setInterval(() => {
       checkPayStatus(data.orderId);
-      window.open(data.payurl, "externalWindow");
     }, 2000);
   }
 };

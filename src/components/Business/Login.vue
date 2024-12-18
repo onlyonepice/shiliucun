@@ -33,7 +33,7 @@
         placeholder="请输入邮箱地址"
         :disabled="openLoginType === 'editPassword'"
       />
-      <div class="registerCode" v-if="openLoginType !== 'editPassword'">
+      <div class="registerCode" v-if="openLoginType === 'restPassword'">
         <el-input
           v-model="form.code"
           style="width: 64%"
@@ -143,10 +143,10 @@ const onLogin = async () => {
     if (
       _form.email === "" ||
       _form.password === "" ||
-      _form.password2 === "" ||
-      _form.code === ""
+      _form.password2 === ""
+      // _form.code === ""
     ) {
-      return ElMessage.error("请晚上注册信息");
+      return ElMessage.error("请完善注册信息");
     }
     if (_form.password !== _form.password2) {
       return ElMessage.error("两次密码不一致");
