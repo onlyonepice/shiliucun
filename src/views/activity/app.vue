@@ -71,7 +71,7 @@
 
 };
   const goHome = ()=>{
-    window.open('https://phone.shiliucun.com/')
+    window.open('https://www.shiliucun.com/')
   }
 
  const getMobileOperatingSystem =()=> {
