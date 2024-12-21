@@ -8,14 +8,18 @@ pnpm install
 
 ### Compiles and hot-reloads for development
 
+### 运行
+
 ```
 pnpm run serve
 ```
 
 ### Compiles and minifies for production
 
+### 打包dev
+
 ```
-pnpm run build
+pnpm run build:dev
 ```
 
 ### Lints and fixes files
