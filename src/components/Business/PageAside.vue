@@ -3,15 +3,18 @@
     <div class="pageAside-top">
       <template v-if="hasToken">
         <div class="userInfo___1qh4o">
-          <img :src="useUserStoreHook().$state.userInfo.avatar_url" alt="" />
-          <div>
-            <p class="userInfo___1qh4o-id">
-              {{ useUserStoreHook().$state.userInfo.nickname }}
-            </p>
-            <p class="userInfo___1qh4o-name">
-              UID {{ useUserStoreHook().$state.userInfo.uid }}
-            </p>
+          <div class="userInfo___1qh4o-avatar">
+            <img :src="useUserStoreHook().$state.userInfo.avatar_url" alt="" />
+            <div>
+              <p class="userInfo___1qh4o-id">
+                {{ useUserStoreHook().$state.userInfo.nickname }}
+              </p>
+              <p class="userInfo___1qh4o-name">
+                UID {{ useUserStoreHook().$state.userInfo.uid }}
+              </p>
+            </div>
           </div>
+          <img class="userInfo___vip" :src="Vip" alt="" v-if="useUserStoreHook().$state.userInfo.vip">
         </div>
         <div class="pageAside-coin" @click="choseMenu = 1">
           <div>
@@ -85,6 +88,7 @@ import ChargeCenter from "@/assets/img/charge-center.webp";
 import RegisterIcon from "@/assets/img/register-icon.webp";
 import AnnouncementIcon from "@/assets/img/announcement-icon.webp";
 import LogoutIcon from "@/assets/img/logout-icon.webp";
+import Vip from "@/assets/img/vip.webp";
 import { useRouter, useRoute } from "vue-router";
 import MoneyCoin from "@/assets/img/money-coin.webp";
 import MoreIcon from "@/assets/img/more-icon.webp";
@@ -243,6 +247,12 @@ const onChoseMenu = (id: number) => {
   }
   .userInfo___1qh4o-name {
     @include font(0.625vw, 400, #6f6d6d, 1.04167vw);
+  }
+  .userInfo___1qh4o-avatar {
+    @include flex(center, space-between, nowrap);
+  }
+  .userInfo___vip {
+    @include widthAndHeight(2vw, 1.6vw);
   }
 }
 .pageAside-coin {
