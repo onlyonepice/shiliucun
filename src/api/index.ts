@@ -94,6 +94,11 @@ export const editUserInfoApi = (data: any) => {
 };
 
 // 获取邀请码信息
-export const getInviteCodeApi = (data:any) => {
-  return http.request<responseType>("post", "/web/api/user/verifyInviteCode", {data});
+export const getInviteCodeApi = (data: any) => {
+  return http.request<responseType>("post", "/web/api/user/verifyInviteCode", { data });
+};
+
+// 获取邀请下载
+export const invite = () => {
+  return http.request<responseType>("post", "/web/api/team/index");
 };

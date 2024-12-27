@@ -9,6 +9,7 @@
   <Login v-if="openLoginVisible" />
   <PayGame v-if="openPayGameVisible" />
   <DownloadApp v-if="openDownloadVisible" />
+  <DownloadInvite v-if="openDownloadInvite" />
   <Share v-if="handleShare" @close="handleShare = false" />
   <Announcement v-if="useUserStoreHook().$state.openAnnouncement" />
 </template>
@@ -21,6 +22,7 @@ import { useRouter } from "vue-router";
 const openLoginVisible = ref(useUserStoreHook().$state.openLoginVisible);
 const openPayGameVisible = ref(useUserStoreHook().$state.openPayGameVisible);
 const openDownloadVisible = ref(useUserStoreHook().$state.openDownloadVisible);
+const openDownloadInvite = ref(useUserStoreHook().$state.openDownloadInvite);
 const handleShare = ref(false);
 const currentRouter = ref('');
 const router = useRouter();
@@ -46,6 +48,12 @@ watch(
   () => useUserStoreHook().$state.openDownloadVisible,
   (newVal) => {
     openDownloadVisible.value = newVal;
+  },
+);
+watch(
+  () => useUserStoreHook().$state.openDownloadInvite,
+  (newVal) => {
+    openDownloadInvite.value = newVal;
   },
 );
 watch(

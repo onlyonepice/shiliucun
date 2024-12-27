@@ -10,7 +10,7 @@
           style="width: 100%"
           :src="item.banner"
           fit="contain"
-          @click="goto(item.game_id, 'now')"
+          @click="goto(item.game_id, 'now',item.url)"
         />
       </el-carousel-item>
     </el-carousel>
@@ -57,8 +57,8 @@ import { useRouter } from "vue-router";
 import { getBanner, getGameList } from "@/api/index";
 import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/defaults";
 const router = useRouter();
-const goto = (game_id, time = "now") => {
-  router.push({ path: "/gameItem", query: { game_id, time } });
+const goto = (game_id, time = "now", path) => {
+  router.push({ path: path ? path:'/gameItem', query: { game_id, time } });
 };
 const fileList = ref<any>([]);
 const gameList = ref<any>([]);

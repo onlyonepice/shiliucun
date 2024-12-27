@@ -16,9 +16,11 @@ export const useUserStore = defineStore({
     openPayGameVisible: false, // 购买游戏弹窗
     openAnnouncement: false, // 打开公告弹窗
     openDownloadVisible: false, // 打开公告弹窗
+    openDownloadInvite: false, // 打开下载邀请
     announcementInfo: [], // 公告信息
     openLoginType: "login", // 登录弹窗类型 login/register
     currentGame: {},
+    inviteInfo: {},
     configInfo: {}, // 配置信息
     userInfo: {
       avatar_url: "",
@@ -41,6 +43,12 @@ export const useUserStore = defineStore({
     },
     openDownload(type: Boolean) {
       this.openDownloadVisible = type;
+    },
+    openDownloadInviteDlg(type: Boolean, data?) {
+      this.openDownloadInvite = type;
+      if (data) {
+        this.inviteInfo = data
+      }
     },
     /** 前端登出（不调用接口） */
     logOut() {

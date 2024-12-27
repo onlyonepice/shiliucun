@@ -22,6 +22,14 @@
       <img src="@/assets/img/tips-icon.webp" alt="" />
       {{ Text }}
     </div>
+      <div  class="invite_block" v-for="(item, index) in inviteList" :key="index">
+      <div class="left"> 
+        <div class="title">{{ item?.title }}</div>
+        <div class="num_text">{{ item?.num_text.substring(0,9)}}<span class="red">{{ item?.num_text.substring(9,15)}}</span></div>
+        <div class="share_text">{{ item?.text }}</div>
+      </div>
+      <div class="button_block" @click="openInvite({share_text:item.share_text,invite_code:inviteCode})"><div class="button_com">立即完成</div></div>
+    </div>
     <div class="recharge-list">
       <div
         v-for="(item, index) in rechargeList"
@@ -132,13 +140,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import {
   getPayListApi,
   createPayApi,
   getRechargeListApi,
   getRechargeRecordApi,
   getPayRecordApi,
+  invite
 } from "@/api/index";
 import AliPay from "@/assets/img/ali-pay.webp";
 import WeChatPay from "@/assets/img/wechat-pay.webp";
@@ -153,6 +162,8 @@ const chosePayType = ref(""); // 支付类型
 const payLoading = ref(false); // 支付按钮loading
 const drawer = ref(false); // 侧边栏
 const historyList = ref([]); // 支付记录
+const inviteList = ref<any>(); 
+const inviteCode = ref<any>(); 
 const historyType = ref(1); // 1:喵币记录 2:充值记录
 const Text = ref("");
 const rechargeImgList = ref([
@@ -181,6 +192,9 @@ watch(
     getHistoryList();
   },
 );
+const openInvite = (data)=>{
+  useUserStoreHook().openDownloadInviteDlg(true,data)
+}
 // 获取支付列表
 const getPayList = () => {
   getPayListApi().then((res: any) => {
@@ -259,10 +273,58 @@ const checkPayStatus = async (orderId: String) => {
     }
   }
 };
+onMounted(()=>{
+  invite().then((val)=>{
+    inviteList.value = val.data.config
+    inviteCode.value = val.data.invite_code
+  })
+})
 </script>
 
 <style lang="scss">
 @import "@/style/mixin.scss";
+.invite_block{
+  margin-top:10px;
+  width: 100%;
+  padding: 1vw;
+  background:  #222121;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  .title{
+    color: #fff;
+  }
+  .num_text{
+    color: #696767;
+    font-size: 12px;
+    margin: 10px 0;
+  }
+  .share_text{
+    font-size: 12px;
+    color: #cac7c7;
+  }
+  .red{
+    color: #e8347c;
+  }
+  .button_com{
+    &:active{
+      opacity: 0.8;
+    }
+    cursor: pointer;
+   width: 130px;
+   height:40px;
+   line-height: 40px;
+   text-align: center;
+   border-radius:50px;
+   color:#fff;
+   background: #f00a38;
+  }
+  .button_block{
+   margin-left: 50px;
+  }
+}
 
 .recharge {
   width: 62.5vw;
