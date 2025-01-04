@@ -6,7 +6,7 @@
         <!-- <el-button @click="openDialog" class="btn-play">立即游玩</el-button> -->
         <el-button class="btn-share" @click="download()">下载APP</el-button>
         <el-button class="btn-share" @click="onShare()">分享链接</el-button>
-        <el-button class="btn-share" @click="onConstor()" v-if="useUserStoreHook().$state.token">联系客服</el-button>
+        <el-button class="btn-share" @click="onConstor()">联系客服</el-button>
       </div>
     </div>
   </div>
@@ -31,6 +31,9 @@ const onShare = () => {
 };
 // 联系客服
 const onConstor = () => {
+  if (useUserStoreHook().$state.token === "") {
+    return useUserStoreHook().openLogin(true, "login");
+  }
   window.open(useUserStoreHook().$state.configInfo.cs_url)
 };
 const onHome = () => {
