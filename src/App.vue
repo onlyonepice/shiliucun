@@ -65,7 +65,6 @@ watch(
   },
   { immediate: true },
 );
-useUserStoreHook().announcementDialog(true);
 </script>
 
 <style lang="scss">

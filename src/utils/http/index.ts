@@ -14,7 +14,6 @@ import { toType } from "../index";
 import { ElMessage } from "element-plus";
 import { getToken, removeToken } from "@/utils/auth";
 import { stringify } from "qs";
-const { VITE_GLOB_API_URL } = import.meta.env;
 import { useUserStoreHook } from "@/store/modules/user";
 
 const { CancelToken } = Axios;
@@ -103,7 +102,7 @@ class PureHttp {
         // 定义请求链接
         config.url =
           config.url.indexOf("http") === -1
-            ? `${VITE_GLOB_API_URL}${config.url}`
+            ? `${useUserStoreHook().$state.apiList[useUserStoreHook().$state.choseApi]}${config.url}`
             : config.url;
 
         return config;
@@ -140,10 +139,10 @@ class PureHttp {
               console.log("未登录");
               ElMessage.error(data?.msg);
               break;
-            case 403:
-              removeToken();
-              break;
-            default:
+              case 403:
+                removeToken();
+                break;
+              default:
               if (config.params && config.params.hideError) return data;
               ElMessage.error(data?.msg || "Error");
               break;
@@ -152,6 +151,11 @@ class PureHttp {
         return data;
       },
       (error: PureHttpError) => {
+        useUserStoreHook().$state.choseApi++;
+        if( useUserStoreHook().$state.choseApi > useUserStoreHook().$state.apiList.length ){
+          useUserStoreHook().$state.choseApi = useUserStoreHook().$state.apiList.length - 1;
+        }
+        useUserStoreHook().$state.choseApi < useUserStoreHook().$state.apiList.length && useUserStoreHook().announcementDialog();
         const $error = error;
         $error.message !== "canceled" && ElMessage.error($error);
         // onErrorHandling();

@@ -52,7 +52,7 @@ router.beforeEach(async (to, from, next) => {
       next("/home");
     }
   }
-  await useUserStoreHook().handleGetUserInfo();
+  useUserStoreHook().announcementDialog();
   next();
 });
 

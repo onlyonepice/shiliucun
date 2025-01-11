@@ -29,6 +29,11 @@ export const useUserStore = defineStore({
       uid: "",
       coin: 0,
     }, // 用户信息
+    apiList: [
+      "https://pro.shiliu.uk",
+      "https://pro.yingyou.uk",
+    ],
+    choseApi: 0,
   }),
   getters: {},
   actions: {
@@ -60,6 +65,7 @@ export const useUserStore = defineStore({
     async announcementDialog() {
       const { data, code } = await getNoticeConfigApi();
       code === 200 && (this.announcementInfo = data[0]);
+      code === 200 && useUserStoreHook().handleGetUserInfo();
       if (data.length === 0) {
         return;
       }
